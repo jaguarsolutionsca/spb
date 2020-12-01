@@ -1,0 +1,79 @@
+﻿////////////////////////////////////////////////
+// APP-JAGUAR variables
+////////////////////////////////////////////////
+
+$grey-darker: #4d5052;
+$grey-dark: #737679;
+$grey: #8e9296;
+$grey-light: #bec2c5;
+$grey-lighter: #e7eaec;
+
+$black-ter: hsl(0, 0%, 14%);
+
+$orange: #E99002;
+$green: #43ac6a;
+$cyan: #5bc0de;
+$red: #f34657;
+
+$primary: #008cba !default;
+$warning: $orange;
+
+$primary-lightest: whitesmoke;
+$primary-middle: skyblue;
+$primary-light: aliceblue;
+
+$data-change-background: #f1f2f3;
+$selected-background: $data-change-background;
+
+$orange-invert: #fff;
+$warning-invert: $orange-invert;
+
+$family-sans-serif: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+$body-size: 13px;
+
+$radius: 0;
+$radius-small: 0;
+$radius-large: 0;
+
+$subtitle-color: $grey;
+
+$bulmaswatch-import-font: true !default;
+
+// navbar
+$navbar-background-color: transparent;
+$navbar-item-color: $grey-lighter;
+$navbar-item-hover-color: #fff;
+$navbar-item-active-color: #fff;
+$navbar-item-hover-background-color: rgba(#000, 0.1);
+$navbar-dropdown-arrow: $grey-lighter;
+$navbar-breakpoint: 0;
+
+// modal
+$modal-background-background-color: rgba(#000, 0.5);
+$button-text-hover-background-color: white;
+$modal-card-head-background-color: $primary;
+$modal-card-title-color: white;
+
+// table
+$table-color: $grey-dark !default;
+$table-cell-padding: .6em !default;
+//$table-cell-border: 1px solid #d3e3f8;
+
+// menu
+$menu-item-color: #999;
+$menu-item-active-color: black;
+$menu-item-active-background-color: lightgray;
+$menu-item-hover-background-color: $grey-darker;
+$menu-item-hover-color: $grey-light;
+$menu-label-color: #AAA;
+$menu-label-font-size: 0.9em;
+
+// notification
+$notification-background-color: $primary-lightest;
+
+//box
+$box-background-color: white;
+
+//tabs
+$tabs-toggle-link-active-background-color: $primary;
+$tabs-toggle-link-active-border-color: $primary;

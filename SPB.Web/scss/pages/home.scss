@@ -1,0 +1,47 @@
+﻿////////////////////////////////////////////////
+// Home
+////////////////////////////////////////////////
+
+#app-home {
+    .js-security {
+        background-color: $primary-lightest;
+        padding: 0.75rem;
+        box-shadow: 0 4px 2px -2px #f0f0f0;
+    }
+
+    .js-widget {
+        white-space: nowrap;
+
+        .tile {
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
+
+            i {
+                width: 100%;
+            }
+
+            div {
+                font-weight: 100;
+                font-size: 30px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .is-child {
+            padding-right: 1rem;
+
+            &:first-child {
+                padding-left: 1rem;
+            }
+        }
+
+        a:not(.js-disabled) {
+            text-decoration: underline;
+        }
+    }
+
+    .box {
+        height: 100%;
+    }
+}

@@ -1,0 +1,195 @@
+﻿////////////////////////////////////////////////
+// APP-JAGUAR overrides
+////////////////////////////////////////////////
+
+@if $bulmaswatch-import-font {
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700);
+}
+
+.button,
+.control.has-icons-left .icon,
+.control.has-icons-right .icon,
+.input,
+.pagination-ellipsis,
+.pagination-link,
+.pagination-next,
+.pagination-previous,
+.select,
+.select select,
+.textarea {
+    height: 2.534em;
+}
+
+
+.input,
+.textarea {
+    box-shadow: none;
+}
+
+.textarea {
+    height: 100%;
+}
+
+@include desktop {
+    .has-dropdown .navbar-item {
+        color: $text;
+    }
+}
+
+@include touch {
+    .navbar-menu {
+        background-color: inherit;
+    }
+
+    @each $name, $pair in $colors {
+        $color: nth($pair, 1);
+        $color-invert: nth($pair, 2);
+
+        &.is-#{$name} {
+            .navbar-item,
+            .navbar-link {
+                color: $color-invert;
+            }
+        }
+    }
+}
+
+.progress,
+.tag {
+    border-radius: $radius;
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 100;
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    //font-size: 24px;
+    font-size: 200%;
+}
+
+h3 {
+    //font-size: 16px;
+    font-size: 125%;
+}
+
+h4 {
+    //font-size: 13px;
+    font-size: 100%;
+}
+
+h5 {
+    font-size: 12px;
+}
+
+h6 {
+    font-size: 10px;
+}
+
+h3, h4, h5 {
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+h4 { //report specific
+    margin-top: -6px;
+    margin-bottom: 10px;
+}
+
+
+.field {
+    .label {
+        color: $body-color;
+    }
+
+    .field-label {
+        .label {
+            padding-top: 6px;
+        }
+    }
+
+    .field-body {
+        & > span {
+            padding-top: 6px;
+        }
+
+        label.checkbox {
+            padding-top: 7px;
+        }
+    }
+
+    &.js-checkbox-row {
+        label.checkbox {
+            padding-top: 0;
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+.footer {
+    padding: 1.5rem;
+    z-index: 2;
+
+    .content {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.modal {
+    flex-direction: column; //IE11 fix
+    
+    .modal-card-foot {
+        justify-content: space-between;
+        background-color: $primary-lightest;
+    }
+}
+
+
+.content {
+    .tabs {
+        ul {
+            margin-left: unset;
+            margin-top: unset;
+        }
+
+        li + li {
+            margin-top: 0;
+        }
+    }
+
+    .notification {
+        h3 {
+            color: unset;
+        }
+    }
+}
+
+
+// Because .js-head needs z-index=4 for the select control caret to show under .js-head and the .navbar-item.has-dropdown to show above .js-head. LOL
+.select:not(.is-multiple):not(.is-loading)::after {
+    z-index: 3;
+}
+// Same deal
+.control.has-icons-left .icon, .control.has-icons-right .icon {
+    z-index: 3;
+}

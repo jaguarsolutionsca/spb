@@ -1,0 +1,201 @@
+﻿
+$table-width: 600px;
+$table-height: 285px;
+$table-th-height: 32px;
+$scrollbar-width: 16px;
+
+$strikeout-color: whitesmoke;
+
+table.js-inline {
+    tbody {
+        tr {
+            cursor: pointer;
+
+            &:not(.js-not-same):not(.js-strikeout):hover {
+                td, select, input {
+                    background-color: $table-row-hover-background-color;
+                }
+            }
+        }
+    }
+
+    thead th {
+        color: $body-color;
+    }
+
+    td {
+        &.js-inline-input {
+            padding: 0.2em 0 0 0;
+        }
+
+        &.js-inline-select {
+            padding: 0.2em 0 0 0;
+        }
+
+        .js-static-checkbox {
+            width: 100%;
+            text-align: center;
+        }
+
+        .js-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &.js-readonly {
+            pointer-events: none;
+        }
+
+        &.js-grayout {
+            background-color: $primary-lightest;
+
+            select, input {
+                background-color: $primary-lightest;
+            }
+        }
+
+        &.js-drop, &.js-add {
+            opacity: 0.2;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &.js-td-33 {
+            width: 33px;
+            max-width: 33px;
+        }
+    }
+
+    input {
+        height: 2em;
+        border-color: transparent;
+    }
+
+    label.checkbox {
+        width: 100%;
+        text-align: center;
+        vertical-align: sub;
+
+        input[type="checkbox"] {
+            height: auto;
+        }
+    }
+
+    input[type="date"] {
+        width: 142px;
+    }
+
+    .select select:not([multiple]) {
+        border: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-right: 2em;
+        height: 2em;
+    }
+
+    .select:not(.is-multiple):not(is-loading)::after {
+        border-color: transparent;
+        right: 1em;
+    }
+
+    tr {
+        &.js-readonly {
+            td:not(:nth-child(n+2)) {
+                pointer-events: none;
+            }
+        }
+
+        &.is-selected {
+            background-color: $selected-background;
+        }
+
+        &.js-strikeout {
+            background-color: #feebed;
+
+            td:not(:nth-child(2)) {
+                background-color: #feebed;
+
+                input, select {
+                    background-color: #feebed;
+                }
+            }
+        }
+    }
+
+    .js-insert-row {
+        td {
+            border-width: 0 0 2px !important;
+        }
+    }
+
+
+    // "js-no-spinner" by default
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+}
+
+.js-scrollable-table-container {
+    //height: $table-height;
+    overflow: hidden;
+
+    table {
+        //width: $table-width + $scrollbar-width;
+        thead {
+            display: block;
+        }
+
+        tbody {
+            //height: $table-tbody-height;
+            display: block;
+            overflow: auto;
+        }
+    }
+
+    &#example {
+        height: $table-height;
+
+        table {
+            width: $table-width + $scrollbar-width;
+
+            thead {
+                th {
+                    width: 200px;
+                }
+
+                th + th {
+                    width: 100px;
+                }
+
+                th + th + th {
+                    width: 300px + $scrollbar-width;
+                }
+            }
+
+            tbody {
+                height: $table-height - $table-th-height;
+
+                td {
+                    width: 200px;
+                }
+
+                td + td {
+                    width: 100px;
+                }
+
+                td + td + td {
+                    width: 300px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+﻿@charset "utf-8";
+
+@import "variables.scss";
+@import "../_BaseApp/scss/bulma.scss";
+@import "overrides.scss";
+
+/*Components, Pages and User controls*/
+@import "./pages/pages.scss";
+@import "./pages/layout.scss";
+@import "./pages/home.scss";
+@import "./pages/ticket.scss";
+@import "./pages/wfr.scss";
+@import "./pages/opsmap.scss";
+
+@import "./usercontrols/usercontrols.scss";
+@import "./usercontrols/calendar.scss";
+@import "./usercontrols/table.scss";

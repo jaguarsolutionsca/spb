@@ -1,0 +1,165 @@
+﻿////////////////////////////////////////////////
+// Layout
+////////////////////////////////////////////////
+
+$logo-width: 250px;
+$logo-height: 3.25rem;
+$logo-height-2: 6.5rem;
+$logo-break: $tablet;
+$content-margin-bottom: 1.5rem;
+
+.js-uc-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    z-index: 5;
+
+    .js-logo {
+        display: flex;
+        justify-content: space-between;
+        width: $logo-width;
+        min-height: $logo-height;
+        align-items: center;
+        transition: width .3s ease-in-out;
+        background-color: darken($primary, 5);
+        font-weight: bold;
+        font-size: 125%;
+
+        @media screen and (max-width: $logo-break) {
+            width: 100%;
+            position: fixed;
+            z-index: 2;
+        }
+
+        .js-bars {
+            margin-left: 1rem;
+            color: $grey-lighter;
+
+            button {
+                width: 32px;
+                height: 32px;
+                border-radius: 32px;
+            }
+        }
+
+        a {
+            line-height: $logo-height;
+            color: $grey-lighter;
+        }
+    }
+
+    .js-navbar {
+        flex-grow: 5;
+        min-height: $logo-height;
+        background-color: $primary;
+
+        @media screen and (max-width: $logo-break) {
+            margin-top: $logo-height;
+        }
+
+        .js-navbar-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            height: 100%;
+
+            .js-items {
+                display: flex;
+                align-items: center;
+                padding-left: 1rem;
+
+                & > div {
+                    margin-right: 1rem;
+                }
+
+                span {
+                    white-space: nowrap;
+                }
+
+                .navbar-dropdown {
+                    > a.navbar-item, > div.navbar-item {
+                        padding-right: 1rem;
+
+                        button, div {
+                            width: 100%;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.js-layout {
+    &.js-close {
+        .js-uc-aside {
+            left: -$logo-width;
+        }
+
+        .js-uc-main {
+            margin-left: 0;
+
+            .js-fixed-heading {
+                .js-head {
+                    padding-right: 0;
+                }
+            }
+        }
+    }
+}
+
+.js-uc-aside {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: $logo-height;
+    width: $logo-width;
+    transition: left .3s ease-out;
+    padding: 1rem;
+    z-index: 6;
+    overflow: hidden;
+
+    .js-wrapper {
+        height: 100%;
+        margin-right: -50px;
+        padding-right: 50px;
+        overflow-y: scroll;
+    }
+
+    @media screen and (max-width: $logo-break) {
+        margin-top: $logo-height-2;
+    }
+
+    a.is-active {
+        font-weight: 600;
+    }
+}
+
+.js-uc-main {
+    margin-left: $logo-width;
+    transition: margin-left .3s ease-out;
+    margin-bottom: $content-margin-bottom;
+    padding-top: 3.25rem;
+
+    .js-fixed-heading {
+        .js-head {
+            padding-right: $logo-width;
+            transition: padding-right .3s ease-out;
+        }
+    }
+
+    @media screen and (max-width: $logo-break) {
+        margin-left: 0;
+        padding-top: 6.5rem;
+
+        .js-fixed-heading {
+            .js-head {
+                padding-right: 0;
+            }
+        }
+    }
+}

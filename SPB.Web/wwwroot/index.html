@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+    <title>Portail SPB</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="lib/toastify.min.css" defer>
+    <link rel="stylesheet" id="app_css">
+
+    <link rel="stylesheet" href="all.min.css" defer>
+    <link rel="stylesheet" id="cie_css">
+    <link rel="stylesheet" href="cie/cie.css">
+</head>
+<body>
+
+    <div id="app-root">
+        <div class="content-wrapper">
+            <div class="banner"><div class="column"><div class="box"><div class="header"></div><div class="ants"></div></div></div></div>
+        </div>
+    </div>
+
+    <script src="lib/polyfill.js"></script>
+    <script src="lib/i18n.js"></script>
+    <script src="lib/morphdom-umd.js"></script>
+    <script src="lib/toastify.min.js"></script>
+    <script src="lib/system-production.js"></script>
+
+    <script id="import_main" type="text/javascript">
+        var APP = {};
+        (function (callback) {
+
+            var robins = ["https://localhost:44347"]
+            var urlBag = "/spb.web/api/portalbag?u=" + btoa(window.location.href)
+
+            function selectServer() {
+                var index = Math.floor(Math.random() * Math.floor(robins.length))
+                var host = robins[index]
+
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            var bag = JSON.parse(xhr.responseText)
+
+                            APP.cid = bag.cid
+                            APP.portalbag = JSON.parse(xhr.responseText)
+                            APP.root = ""
+                            APP.api = "api"
+                            APP.name = "Gestion/Paye"
+
+                            document.getElementById("app_css").href = "app.css?v=" + new Date().getTime()
+                            document.getElementById("cie_css").href = "cie/" + bag.cid + "/cie.css"
+                            document.body.className = "cie-" + bag.cid
+                            document.body.dataset.instance = bag.instance
+
+                            var js_file = "app.js?v=" + new Date().getTime()
+                            callback(js_file)
+                        }
+                        else if (xhr.status == 500) {
+                        }
+                        else {
+                            xhr.done = true
+                            setTimeout(selectServer, 100)
+                        }
+                    }
+                }
+                xhr.onerror = function () {
+                    if (typeof xhr.done == "undefined")
+                        setTimeout(selectServer, 100)
+                }
+                xhr.open("GET", host + urlBag, true)
+                xhr.send()
+            }
+
+            selectServer()
+
+        })(function (js_file) {
+            var addScript = function (src, onload) {
+                var me = document.getElementById("import_main")
+                var s = document.createElement("script")
+                s.src = src
+                s.type = "text/javascript"
+                s.onload = onload
+                me.parentNode.insertBefore(s, me)
+            }
+            addScript(js_file, function () { System.import("src/app") })
+        })
+    </script>
+</body>
+</html>

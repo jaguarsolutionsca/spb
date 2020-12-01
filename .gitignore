@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs
+/SPB.Service/bin/Debug
+/SPB.Service/obj
+/SPB.Web/bin/Debug
+/SPB.Web/log
+/SPB.Web/obj
+/SPB.Web/appsettings.Development.json

@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "wwwroot/app.css",
+    "inputFile": "scss/app.scss"
+  },
+  {
+    "outputFile": "wwwroot/cie/cie.css",
+    "inputFile": "scss/cie/_cie.scss"
+  },
+  {
+    "outputFile": "wwwroot/cie/2/cie.css",
+    "inputFile": "scss/cie/2.scss"
+  }
+]
