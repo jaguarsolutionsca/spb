@@ -178,51 +178,23 @@ namespace BaseApp.DAL
             return pagedList;
         }
 
-        public DTO.Account_Select Account_SelectBy_credential(string email, string password)
+        public DTO.Account_Select Account_SelectBy_credential(string email, string password, int? cid)
         {
-            var id = -1;
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Account]";
-                var columns = "ID";
-                var where = "Email=@p1 AND Password=@p2";
-
-                command.CommandText = @"SELECT " + columns + " FROM " + table + " WHERE " + where;
-                command.Parameters.AddWithValue("@p1", crypto.Encrypt(email));
-                command.Parameters.AddWithValue("@p2", password);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        id = reader.GetInt32(0);
-                    }
-                }
-            }
-            return (id == -1 ? null : spAccount_Select(id));
+            var query = "app.Account_SelectBy_Credential";
+            var parameters = new Service.KVList()
+                .AddParam("@email", crypto.Encrypt(email))
+                .AddParam("@password", password)
+                .AddParam("@cid", cid);
+            return queryEntity<DTO.Account_Select>(query, parameters).Decrypt(crypto);
         }
 
-        public DTO.Account_Select Account_SelectBy_email(string email)
+        public DTO.Account_Select Account_SelectBy_email(string email, int? cid)
         {
-            var id = -1;
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Account]";
-                var columns = "ID";
-                var where = "Email=@p1";
-
-                command.CommandText = @"SELECT " + columns + " FROM " + table + " WHERE " + where;
-                command.Parameters.AddWithValue("@p1", crypto.Encrypt(email));
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        id = reader.GetInt32(0);
-                    }
-                }
-            }
-            return (id == -1 ? null : spAccount_Select(id));
+            var query = "app.Account_SelectBy_Email";
+            var parameters = new Service.KVList()
+                .AddParam("@email", crypto.Encrypt(email))
+                .AddParam("@cid", cid);
+            return queryEntity<DTO.Account_Select>(query, parameters).Decrypt(crypto);
         }
 
         public void Account_Update_LastActivity(int id, DateTime lastActivity)
@@ -315,6 +287,12 @@ namespace BaseApp.DAL
                 command.ExecuteNonQuery();
             }
             return spAccount_Select(id);
+        }
+
+        public List<int> Account_GetPermissionList(int id)
+        {
+            var query = "app.Account_GetPermissionList";
+            return queryList<int>(query, "@uid", id);
         }
     }
 }

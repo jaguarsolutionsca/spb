@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace BaseApp.Web.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize, ApiController]
     public class AccountController : _CoreController
     {
         [HttpGet("search")]
@@ -50,14 +50,14 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpPost]
-        public Account_Select_PK Create([FromBody] Account_Select_Update uto)
+        public Account_Select_PK Create([FromBody] Account_Update uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.Account_Insert(uto, buildUIRouterUrl("accept-invitation/{guid}"));
         }
 
         [HttpPut]
-        public ActionResult Update([FromBody] Account_Select_Update uto)
+        public ActionResult Update([FromBody] Account_Update uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             app.Account_Update(uto);
@@ -65,7 +65,7 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete([FromBody] Account_Select_UK key)
+        public ActionResult Delete([FromBody] Account_UK key)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             app.Account_Delete(key.id, key.updatedUtc);

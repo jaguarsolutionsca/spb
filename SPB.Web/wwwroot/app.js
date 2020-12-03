@@ -1278,7 +1278,7 @@ System.register("_BaseApp/src/lib-ts/domlib", [], function (exports_4, context_4
 });
 System.register("_BaseApp/src/auth", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc"], function (exports_5, context_5) {
     "use strict";
-    var App, Router, Misc, NS, loginData, state, returnUrl, storage, steps, currentStep, formTemplate, formForgottenTemplate, formRemindedTemplate, formNewPasswordTemplate, pageTemplate, fetch, fetchInvitation, fetchReset, render, postRender, getFormState, valid, html5Valid, ensurePasswordMatch, ensureComplexityRequirement, signin, signout, forgotPassword, setCurrentStep, getAuthorization, getEmail, getName, getUID, getCurrentYear, getRegionLUID, getRegionText, getDistrictLUID, getDistrictText, getPermissions, hasPerm, getRoles, hasRole, getUserCaps, requireAuthentication, isAuthenticated, redirectToSignin, refreshLoginData, createLoginData, b64DecodeUnicode, persistLoginData, restoreLoginData, destroyLoginData, hasLoginData;
+    var App, Router, Misc, NS, loginData, state, returnUrl, storage, steps, currentStep, formTemplate, formForgottenTemplate, formRemindedTemplate, formNewPasswordTemplate, pageTemplate, fetch, fetchInvitation, fetchReset, render, postRender, getFormState, valid, html5Valid, ensurePasswordMatch, ensureComplexityRequirement, signin, signout, forgotPassword, setCurrentStep, getAuthorization, getEmail, getName, getUID, getPermissions, hasPerm, getRoles, hasRole, getUserCaps, requireAuthentication, isAuthenticated, redirectToSignin, refreshLoginData, createLoginData, b64DecodeUnicode, persistLoginData, restoreLoginData, destroyLoginData, hasLoginData;
     var __moduleName = context_5 && context_5.id;
     return {
         setters: [
@@ -1497,31 +1497,6 @@ System.register("_BaseApp/src/auth", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     return null;
                 return loginData.user.uid;
             });
-            exports_5("getCurrentYear", getCurrentYear = function () {
-                if (loginData == undefined || loginData.user == undefined)
-                    return null;
-                return loginData.user.year;
-            });
-            exports_5("getRegionLUID", getRegionLUID = function () {
-                if (loginData == undefined || loginData.user == undefined)
-                    return null;
-                return loginData.user.regionLUID;
-            });
-            exports_5("getRegionText", getRegionText = function () {
-                if (loginData == undefined || loginData.user == undefined)
-                    return null;
-                return loginData.user.regionLUID_Text;
-            });
-            exports_5("getDistrictLUID", getDistrictLUID = function () {
-                if (loginData == undefined || loginData.user == undefined)
-                    return null;
-                return loginData.user.districtLUID;
-            });
-            exports_5("getDistrictText", getDistrictText = function () {
-                if (loginData == undefined || loginData.user == undefined)
-                    return null;
-                return loginData.user.districtLUID_Text;
-            });
             exports_5("getPermissions", getPermissions = function () {
                 if (loginData == undefined || loginData.user == undefined)
                     return [];
@@ -1585,11 +1560,7 @@ System.register("_BaseApp/src/auth", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     permissions: perms,
                     roles: role,
                     uid: +payload["uid"],
-                    year: +payload["year"],
-                    regionLUID: +payload["regionLUID"],
-                    regionLUID_Text: payload["regionLUID_Text"],
-                    districtLUID: +payload["districtLUID"],
-                    districtLUID_Text: payload["districtLUID_Text"],
+                    cid: +payload["cid"],
                 };
                 loginData.expiry = payload["exp"];
             };
@@ -3533,7 +3504,7 @@ System.register("src/fr-CA", [], function (exports_32, context_32) {
 });
 System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, context_33) {
     "use strict";
-    var Auth, buttonTemplate, pageTODO, pageAccounts, pageAircraft, pageCost, pageFire, pageHome, pageWeather, isAdmin, isAppManager, hasAccounts_Edit, hasAircraft_CanEditHired, hasAircraft_CanUseDataEntry, hasCost_CanUseDataEntry, hasFire_CanEditDailySituation, hasFire_CanManageFireUpdate, hasFire_CanUseDataEntry, hasHome_CanEditAllinDistrict, hasHome_CanEditAllinProvince, hasHome_CanEditAllinRegion, hasHome_CanEditHistoricalData, hasHome_CanViewAdminManagement, hasHome_CanViewAdminModule, hasWeather_CanUseDataEntry, canEditSecurity, canBuildSecurity, canEditHomeSecurity, canDebug, canViewLogs, canViewWebgen, enableEmail, evaluatePermissions;
+    var Auth, ROLE_SUPPORT, isSupport, hasPermission, canDoThis, canDoThat, Feature, feature, assignFeature;
     var __moduleName = context_33 && context_33.id;
     return {
         setters: [
@@ -3544,60 +3515,41 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
                     "getName": Auth_4["getName"],
                     "getUID": Auth_4["getUID"],
                     "getRoles": Auth_4["getRoles"],
-                    "getCurrentYear": Auth_4["getCurrentYear"],
-                    "getRegionLUID": Auth_4["getRegionLUID"],
-                    "getRegionText": Auth_4["getRegionText"],
-                    "getDistrictLUID": Auth_4["getDistrictLUID"],
-                    "getDistrictText": Auth_4["getDistrictText"],
                     "refreshLoginData": Auth_4["refreshLoginData"]
                 });
             }
         ],
         execute: function () {
-            exports_33("buttonTemplate", buttonTemplate = function (pageid) {
-                return "\n<a class=\"button is-outlined\" href=\"#/admin/page/" + pageid + "\">\n    <span class=\"icon is-small\">\n        <i class=\"fa fa-lock\"></i>\n    </span>\n</a>";
-            });
-            exports_33("pageTODO", pageTODO = -1);
-            //
-            exports_33("pageAccounts", pageAccounts = 1);
-            exports_33("pageAircraft", pageAircraft = 1002);
-            exports_33("pageCost", pageCost = 1009);
-            exports_33("pageFire", pageFire = 4);
-            exports_33("pageHome", pageHome = 2);
-            exports_33("pageWeather", pageWeather = 1008);
-            //
-            //
-            //
-            exports_33("evaluatePermissions", evaluatePermissions = function () {
-                var _a;
-                exports_33("isAdmin", isAdmin = Auth.hasRole(1));
-                isAppManager = Auth.hasRole(4) || isAdmin;
-                //
-                exports_33("hasAccounts_Edit", hasAccounts_Edit = Auth.hasPerm(100));
-                exports_33("hasAircraft_CanEditHired", hasAircraft_CanEditHired = Auth.hasPerm(100201));
-                exports_33("hasAircraft_CanUseDataEntry", hasAircraft_CanUseDataEntry = Auth.hasPerm(100200));
-                exports_33("hasCost_CanUseDataEntry", hasCost_CanUseDataEntry = Auth.hasPerm(100900));
-                exports_33("hasFire_CanEditDailySituation", hasFire_CanEditDailySituation = Auth.hasPerm(406));
-                exports_33("hasFire_CanManageFireUpdate", hasFire_CanManageFireUpdate = Auth.hasPerm(402));
-                exports_33("hasFire_CanUseDataEntry", hasFire_CanUseDataEntry = Auth.hasPerm(400));
-                exports_33("hasHome_CanEditAllinDistrict", hasHome_CanEditAllinDistrict = Auth.hasPerm(207));
-                exports_33("hasHome_CanEditAllinProvince", hasHome_CanEditAllinProvince = Auth.hasPerm(209));
-                exports_33("hasHome_CanEditAllinRegion", hasHome_CanEditAllinRegion = Auth.hasPerm(208));
-                exports_33("hasHome_CanEditHistoricalData", hasHome_CanEditHistoricalData = Auth.hasPerm(210));
-                exports_33("hasHome_CanViewAdminManagement", hasHome_CanViewAdminManagement = Auth.hasPerm(201));
-                exports_33("hasHome_CanViewAdminModule", hasHome_CanViewAdminModule = Auth.hasPerm(200));
-                exports_33("hasWeather_CanUseDataEntry", hasWeather_CanUseDataEntry = Auth.hasPerm(100800));
-                //
-                exports_33("canEditSecurity", canEditSecurity = isAppManager);
-                exports_33("canBuildSecurity", canBuildSecurity = isAdmin);
-                exports_33("canEditHomeSecurity", canEditHomeSecurity = isAppManager);
-                exports_33("canDebug", canDebug = false); //isAdmin;
-                exports_33("canViewLogs", //isAdmin;
-                canViewLogs = isAppManager);
-                exports_33("canViewWebgen", canViewWebgen = isAppManager);
-                //
-                exports_33("enableEmail", enableEmail = (_a = window.APP.portalbag.feature.enableEmail) !== null && _a !== void 0 ? _a : false);
-            });
+            ROLE_SUPPORT = 1;
+            isSupport = function () { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); };
+            hasPermission = function (permid) { return (Auth.getPermissions().indexOf(permid) != -1) || isSupport(); };
+            // Block 100
+            exports_33("canDoThis", canDoThis = function () { return hasPermission(101); });
+            exports_33("canDoThat", canDoThat = function () { return hasPermission(102); });
+            Feature = /** @class */ (function () {
+                function Feature() {
+                    this.feat = {};
+                }
+                Feature.prototype.assignFeature = function (feature) { this.feat = feature; };
+                Object.defineProperty(Feature.prototype, "private107", {
+                    get: function () { var _a; return (_a = this.feat.private107) !== null && _a !== void 0 ? _a : []; },
+                    enumerable: false,
+                    configurable: true
+                });
+                Object.defineProperty(Feature.prototype, "private208", {
+                    get: function () { var _a; return (_a = this.feat.private208) !== null && _a !== void 0 ? _a : []; },
+                    enumerable: false,
+                    configurable: true
+                });
+                Object.defineProperty(Feature.prototype, "private110", {
+                    get: function () { var _a; return (_a = this.feat.private110) !== null && _a !== void 0 ? _a : []; },
+                    enumerable: false,
+                    configurable: true
+                });
+                return Feature;
+            }());
+            feature = new Feature();
+            exports_33("assignFeature", assignFeature = function (newFeature) { return feature.assignFeature(newFeature); });
         }
     };
 });
@@ -3682,9 +3634,9 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
         }
     };
 });
-System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "src/admin/lookupdata", "src/permission", "src/layout"], function (exports_35, context_35) {
+System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "src/layout"], function (exports_35, context_35) {
     "use strict";
-    var App, Router, Misc, Lookup, Perm, Layout, NS, menuData, yesterday, today, tomorrow, tomorrow_2, tomorrow_3, tomorrow_4, region, getMenuData, clearMenuData, renderDropdown, menuTemplate, pageTemplate, fetchState, fetch, render, postRender, getFormState, onchange, gotoFire, uploadPerimeter, gotoTicket, ongotoFire, ongotoTicket, loadToolsState, saveToolsState;
+    var App, Router, Misc, Layout, NS, menuData, yesterday, today, tomorrow, tomorrow_2, tomorrow_3, tomorrow_4, region, getMenuData, clearMenuData, renderDropdown, menuTemplate, pageTemplate, fetchState, fetch, render, postRender, getFormState, onchange, gotoFire, uploadPerimeter, gotoTicket, ongotoFire, ongotoTicket, loadToolsState, saveToolsState;
     var __moduleName = context_35 && context_35.id;
     return {
         setters: [
@@ -3697,12 +3649,6 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
             function (Misc_13) {
                 Misc = Misc_13;
             },
-            function (Lookup_1) {
-                Lookup = Lookup_1;
-            },
-            function (Perm_1) {
-                Perm = Perm_1;
-            },
             function (Layout_1) {
                 Layout = Layout_1;
             }
@@ -3712,279 +3658,47 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
             exports_35("getMenuData", getMenuData = function () {
                 if (menuData != undefined)
                     return menuData;
-                var year = Perm.getCurrentYear();
-                today = new Date();
-                yesterday = new Date();
-                yesterday.setDate(today.getDate() - 1);
-                tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
-                tomorrow_2 = new Date();
-                tomorrow_2.setDate(today.getDate() + 2);
-                tomorrow_3 = new Date();
-                tomorrow_3.setDate(today.getDate() + 3);
-                tomorrow_4 = new Date();
-                tomorrow_4.setDate(today.getDate() + 4);
-                //
-                region = Perm.getRegionLUID();
-                //
-                var isOpsFMS2020 = (year >= 2020);
                 menuData = [
                     {
-                        name: "Fires",
+                        name: "Territoires",
                         icon: "far fa-fire",
                         columnClass: "is-half-tablet is-one-third-widescreen",
                         canView: true,
-                        securityPage: Perm.pageFire,
                         sections: [
                             {
-                                name: "Data Entry", icon: "fal fa-table", canView: Perm.hasFire_CanUseDataEntry,
+                                name: "Entrée de données", icon: "fal fa-table",
                                 links: [
                                     { name: "Daily Fire", href: "#/firedays", ns: ["App_firedays", "App_fireday", "App_firemap"] },
                                     { name: "Fire History", href: "#/fires", ns: ["App_fires", "App_fire"] },
-                                    { name: "Wildfire Report", href: "#/wfrs", ns: ["App_wfrs", "App_wfr"] },
-                                    { name: "Daily Situation", href: "#/firesituations", ns: ["App_firesituations", "App_firesituation"] },
-                                    { name: "Fire Update", hidden: !isOpsFMS2020, canView: Perm.hasFire_CanManageFireUpdate, href: "#/fireupdates", ns: ["App_fireupdates", "App_fireupdate"] },
-                                    { name: "Check Fire Indicies", hidden: true },
-                                    { name: "Today's Fire", href: "#/fireday/" + Misc.formatYYYYMMDD(today, "") + "/" + Perm.getRegionLUID() },
-                                    { name: "Yesterday's Fire", href: "#/fireday/" + Misc.formatYYYYMMDD(yesterday, "") + "/" + Perm.getRegionLUID(), classes: "has-text-weight-bold" },
-                                    { name: "goto fire", markup: gotoFire(), noSidebar: true, },
                                 ]
                             },
                             {
-                                name: "Reports", icon: "fal fa-file-alt", canView: true,
+                                name: "Rapports", icon: "fal fa-file-alt", canView: true,
                                 links: [
                                     { name: "Daily Fire", onclick: "App_rpt_bydate.fetch_dailyfire()" },
                                     { name: "Fire History", onclick: "App_rpt_byfire.fetch_firehistory()" },
-                                    { name: "Wildfire Report", onclick: "App_rpt_byfire.fetch_wfr()" },
-                                    { name: "Daily Situation", onclick: "App_rpt_bydate.fetch_dailysituation()" },
-                                    { name: "District Fire", href: "/opsfms.web/excel/odata_fire.xlsx" },
-                                    { name: "Wildfire Pivot", href: "/opsfms.web/excel/odata_wfr.xlsx" },
-                                ]
-                            },
-                            {
-                                name: "Maps", icon: "fal fa-map-marker-alt",
-                                links: [
-                                    { name: "Fire Display", onclick: "App_rpt_bydate.fetch_firesitmap();" },
-                                    { name: "Fire Danger Classes", onclick: "App_rpt_bydate.fetch_6plex();" },
-                                    { name: "Upload Perimeter", markup: uploadPerimeter() },
-                                ]
-                            },
-                            {
-                                name: "gov.mb.ca", icon: "fas fa-external-link", maxrows: 3,
-                                links: [
-                                    { name: "Fire Hazard Maps", href: "https://www.gov.mb.ca/sd/fire/Fire-Hazard/index.html" },
-                                    { name: "Fire Status Reports", href: "https://www.gov.mb.ca/sd/fire/Fire-Status/index.html" },
-                                    { name: "Fire Status Displays", href: "https://www.gov.mb.ca/sd/fire/Fire-Display/index.html" },
-                                    { name: "Fire Situation Reports", href: "https://www.gov.mb.ca/sd/fire/Fire-Situation/index.html" },
-                                    { name: "Fire Update Reports", href: "https://www.gov.mb.ca/sd/fire/Fire-Update/index.html" },
-                                    { name: "FireView", href: "https://www.gov.mb.ca/sd/fire/Fire-Maps/fireview/fireview.html", hidden: false },
-                                ]
-                            },
-                            {
-                                name: "Activity", icon: "far fa-clock", hidden: true,
-                                links: [
-                                    { name: "*Radio Message Log" },
                                 ]
                             },
                         ]
                     },
                     {
-                        name: "Weather",
+                        name: "Essences",
                         icon: "far fa-sun-cloud",
                         columnClass: "is-half-tablet is-one-third-widescreen",
                         canView: true,
-                        securityPage: Perm.pageWeather,
                         sections: [
                             {
-                                name: "Data Entry", icon: "fal fa-table", canView: Perm.hasWeather_CanUseDataEntry,
+                                name: "Entrée de données", icon: "fal fa-table",
                                 links: [
                                     { name: "Weather/Day", hidden: true },
                                     { name: "Weather/Station", hidden: true },
-                                    { name: "Forecast", hidden: true },
-                                    { name: "Weather Forecast", hidden: !isOpsFMS2020, href: "#/weatherforecasts", ns: ["App_weatherforecasts", "App_weatherforecast"] },
-                                    { name: "Station", href: "#/stations", ns: ["App_stations", "App_station"] },
-                                    { name: "Greenup", href: "#/springs", ns: ["App_springs"] },
                                 ]
                             },
                             {
-                                name: "Reports", icon: "fal fa-file-alt",
+                                name: "Rapports", icon: "fal fa-file-alt",
                                 links: [
                                     { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
                                     { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
-                                    { name: "Hourly Weather/Day", onclick: "App_rpt_hourly.fetch_byday()" },
-                                    { name: "Hourly Weather/Station", onclick: "App_rpt_hourly.fetch_bystation()" },
-                                    { name: "Hourly Weather/Region", onclick: "App_rpt_hourly.fetch_byregion()" },
-                                    { name: "Station Report", onclick: "App_rpt_stnbyregion.fetch()" },
-                                ]
-                            },
-                            {
-                                name: "Internal Links", icon: "fal fa-chart-bar",
-                                links: [
-                                    { name: "Bar Chart", hidden: true },
-                                    { name: "Hauling Chart", hidden: true },
-                                    { name: "Forecast Charts", href: "https://www.gov.mb.ca/sd/fire/Wx-Display/cc/weather.html" },
-                                ]
-                            },
-                            {
-                                name: "Maps", icon: "fal fa-map-marker-alt",
-                                links: [
-                                    { name: "Temperature", onclick: "App_rpt_wxbydate.fetch_temp()" },
-                                    { name: "Relative Humidity", onclick: "App_rpt_wxbydate.fetch_rh()" },
-                                    { name: "Wind Direction", onclick: "App_rpt_wxbydate.fetch_wd()", hidden: true },
-                                    { name: "Wind Speed", onclick: "App_rpt_wxbydate.fetch_ws()" },
-                                    { name: "Precipitation", onclick: "App_rpt_wxbydate.fetch_rain()" },
-                                    { name: "DSR", onclick: "App_rpt_wxbydate.fetch_dsr()" },
-                                ]
-                            },
-                            {
-                                name: "Fcst Reports", icon: "fal fa-file-alt",
-                                links: [
-                                    { name: "Noon Today", href: App.url("report/weather/forecast?date=" + Misc.formatYYYYMMDD(today, "") + "&region=" + region), isExternal: true },
-                                    { name: "Noon Tomorrow", href: App.url("report/weather/forecast?date=" + Misc.formatYYYYMMDD(tomorrow, "") + "&region=" + region), isExternal: true },
-                                    { name: "Next 2 days", href: App.url("report/weather/forecast?date=" + Misc.formatYYYYMMDD(tomorrow_2, "") + "&region=" + region), isExternal: true },
-                                    { name: "Next 3 days", href: App.url("report/weather/forecast?date=" + Misc.formatYYYYMMDD(tomorrow_3, "") + "&region=" + region), isExternal: true },
-                                    { name: "Next 4 days", href: App.url("report/weather/forecast?date=" + Misc.formatYYYYMMDD(tomorrow_4, "") + "&region=" + region), isExternal: true },
-                                    { name: "By Date", onclick: "App_rpt_wxbydate.fetch_forecast()" },
-                                    { name: "Forecast Pivot Table", href: "/opsfms.web/excel/odata_forecast.xlsx" },
-                                ]
-                            },
-                            {
-                                name: "Lightning", icon: "far fa-bolt",
-                                links: [
-                                    { name: "Historical", onclick: "App_rpt_period.fetch_lightning()" },
-                                    { name: "Last hour", href: App.url("map/lightning/last/1"), isExternal: true },
-                                    { name: "Last 12 hours", href: App.url("map/lightning/last/12"), isExternal: true },
-                                    { name: "Last 24 hours", href: App.url("map/lightning/last/24"), isExternal: true },
-                                    { name: "Last 48 hours", href: App.url("map/lightning/last/48"), isExternal: true },
-                                    { name: "Last 72 hours", href: App.url("map/lightning/last/72"), isExternal: true },
-                                ]
-                            },
-                            {
-                                name: "gov.mb.ca", icon: "fas fa-external-link", maxrows: 2,
-                                links: [
-                                    { name: "Fire Weather Calculations", href: "https://www.gov.mb.ca/sd/fire/Wx-Report/index.html" },
-                                    { name: "Fire Weather Forecast Reports", href: "https://www.gov.mb.ca/sd/fire/Wx-Forecast/index.html" },
-                                    { name: "Contour Maps", href: "https://www.gov.mb.ca/sd/fire/Wx-Display/index.html" },
-                                    { name: "WeatherView", href: "https://www.gov.mb.ca/sd/fire/Wx-Display/weatherview/weatherview.html", hidden: false },
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        name: "Aircraft",
-                        icon: "far fa-plane",
-                        columnClass: "is-half-tablet is-one-third-widescreen",
-                        canView: true,
-                        securityPage: Perm.pageAircraft,
-                        sections: [
-                            {
-                                name: "Data Entry", icon: "fal fa-table", canView: Perm.hasAircraft_CanUseDataEntry,
-                                links: [
-                                    { name: "Attack Base", href: "#/attackbases", ns: ["App_attackbases", "App_attackbase"] },
-                                    { name: "Aircraft", href: "#/aircrafts", ns: ["App_aircrafts", "App_aircraft"] },
-                                    { name: "Registration", href: "#/aircraftregistrations", ns: ["App_aircraftregistrations", "App_aircraftregistration"] },
-                                    { name: "Company", href: "#/aircraftcompanys", ns: ["App_aircraftcompanys", "App_aircraftcompany"] },
-                                    { name: "Contract", href: "#/aircraftcontracts", ns: ["App_aircraftcontracts", "App_aircraftcontract"] },
-                                    { name: "Standby Aircraft", href: "#/standbydays", ns: ["App_standbydays", "App_standbyday"], hidden: true },
-                                    { name: "*AFF", hidden: true },
-                                    { name: "*Heli. Manifest", hidden: true },
-                                ]
-                            },
-                            {
-                                name: "Reports", icon: "fal fa-file-alt", canView: true,
-                                links: [
-                                    { name: "Attack Base", href: App.url("report/aircraft/attackbase"), isExternal: true },
-                                    { name: "Aircraft", href: App.url("report/aircraft/aircraft"), isExternal: true },
-                                    { name: "Registration", onclick: "App_rpt_byyear.fetch_registration()" },
-                                    { name: "Company", onclick: "App_rpt_byyear.fetch_company()" },
-                                    { name: "Contract", onclick: "App_rpt_byyear.fetch_contract()" },
-                                    { name: "Aircraft Pivot Table ", href: "/opsfms.web/excel/odata_flight.xlsx" },
-                                ]
-                            },
-                            {
-                                name: "Maps", icon: "fal fa-map-marker-alt",
-                                links: [
-                                    { name: "Attack Base", href: App.url("map/attackbase?year=" + year), isExternal: true },
-                                ]
-                            },
-                            {
-                                name: "Activity", icon: "far fa-clock", hidden: true,
-                                links: [
-                                    { name: "*Aircraft" },
-                                    { name: "*Helicopter" },
-                                    { name: "*Waterbomber" },
-                                    { name: "*Other Aircraft" },
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        name: "Costs",
-                        icon: "far fa-money-bill",
-                        columnClass: "is-half-tablet",
-                        canView: true,
-                        securityPage: Perm.pageCost,
-                        sections: [
-                            {
-                                name: "Data Entry", icon: "fal fa-table",
-                                links: [
-                                    { name: "Flight Ticket", href: "#/tickets", ns: ["App_tickets", "App_ticket", "App_ticketdetails", "App_ticketdetail"] },
-                                    { name: "Daily Costs", href: "#/mses", ns: ["App_mses", "App_mseday"] },
-                                    { name: "Fire Ops", href: "#/fops", ns: ["App_commitfops"] },
-                                    { name: "Charge Back / EFF", href: "#/cbacks", ns: ["App_commitcbacks"] },
-                                    { name: "goto ticket", markup: gotoTicket(), noSidebar: true, },
-                                    { name: "*Invoice Scanning", hidden: true, },
-                                ]
-                            },
-                            {
-                                name: "Reports", icon: "fal fa-file-alt",
-                                links: [
-                                    { name: "Flight Ticket (Single)", onclick: "App_rpt_byticket.fetch()" },
-                                    { name: "Summary Flight Ticket", onclick: "App_rpt_byrange.fetch_ticketsummary()" },
-                                    { name: "Manpower/Supp (by Date)", onclick: "App_rpt_bydate.fetch_manpowersupply()" },
-                                    { name: "Manpower/Supp (by Fire)", onclick: "App_rpt_byfire.fetch_manpowersupply()" },
-                                    { name: "Equipment (by Date)", onclick: "App_rpt_bydate.fetch_equipment()" },
-                                    { name: "Equipment (by Fire)", onclick: "App_rpt_byfire.fetch_equipment()" },
-                                    { name: "Fire Cost Report", onclick: "App_rpt_byrange.fetch_firecost()" },
-                                    { name: "Flight Ticket Filter", href: "/opsfms.web/excel/odata_ticket.xlsx" },
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        name: "Tools",
-                        icon: "fa fa-wrench",
-                        columnClass: "is-half-tablet",
-                        canView: true,
-                        toolButton: "<a class=\"button is-small is-outlined\" href=\"#/admin/lookups/tools\"><span class=\"icon is-small\"><i class=\"far fa-tasks\"></i></span></a>",
-                        sections: [
-                            {
-                                hidden: true,
-                                name: "Compute", icon: "fal fa-calculator-alt",
-                                links: [
-                                    { name: "Detection Assessment" },
-                                    { name: "Coordinate Conversions" },
-                                    { name: "FWI Calculator" },
-                                ]
-                            },
-                            {
-                                name: "Internal Sites", icon: "far fa-external-link",
-                                links: [
-                                    { name: "Fire Maps" },
-                                    { name: "DSR Charts" },
-                                ]
-                            },
-                            {
-                                name: "Public Sites", icon: "far fa-external-link",
-                                links: [
-                                    { name: "CFS Fire M3 hotspots", href: "https://cwfis.cfs.nrcan.gc.ca/maps/fm3?type=tri" },
-                                ]
-                            },
-                            {
-                                name: "Operations", icon: "fal fa-phone-office",
-                                links: [
-                                    { name: "AM conference call" },
-                                    { name: "PM conference call" },
                                 ]
                             },
                         ]
@@ -3993,47 +3707,19 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                         name: "Administration",
                         icon: "fa fa-cogs",
                         columnClass: "is-half-tablet",
-                        canView: Perm.hasHome_CanViewAdminModule,
+                        canView: true,
                         sections: [
                             {
-                                name: "Management", icon: "fas fa-lock", canView: Perm.hasHome_CanViewAdminModule,
+                                name: "Gestion", icon: "fas fa-lock",
                                 links: [
-                                    { name: "Accounts", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
-                                    { name: "Pages Security", href: "#/admin/apages", ns: ["App_Apages", "App_Apage"], canView: Perm.canBuildSecurity },
+                                    { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
+                                    { name: "Matrice de sécurité", href: "#/admin/apages", ns: ["App_Apages", "App_Apage"] },
                                     { name: "Audit", href: "#/admin/audittrails", ns: ["App_auditTrails"] },
-                                    { name: "Server Monitoring", hidden: true },
-                                    { name: "Scheduler", hidden: true },
-                                    { name: "Web Generator", canView: Perm.canViewWebgen, href: "/opsfms.gen" },
-                                    { name: "Log Files", href: "#", canView: Perm.canViewLogs, onclick: "return App.download('/log/latest', 'log.txt')" },
-                                ]
-                            },
-                            {
-                                name: "Configuration", icon: "fa fa-cog",
-                                links: [
-                                    { name: "Setup Values", href: "#/configs", ns: ["App_configs", "App_config", "App_greenups", "App_greenup"] },
-                                    { name: "Code Tables", href: "#/admin/lookups/action", ns: ["App_Lookups", "App_Lookup"] },
-                                    { name: "Map Info", hidden: true },
-                                    { name: "Cell Assignment", hidden: true },
                                 ]
                             },
                         ]
                     },
                 ];
-                var onlyUnique = function (value, index, self) { return self.indexOf(value) === index; };
-                var tools = loadToolsState();
-                var codes = tools.map(function (one) { return one.code; }).filter(onlyUnique).sort();
-                menuData[4].sections = codes.map(function (code) {
-                    var meta = tools.filter(function (one) { return one.code == code; });
-                    return {
-                        hidden: false,
-                        name: meta[0].value1,
-                        icon: meta[0].value2,
-                        links: meta.map(function (one) { return ({
-                            name: one.description,
-                            href: one.value3
-                        }); })
-                    };
-                });
                 return menuData;
             });
             exports_35("clearMenuData", clearMenuData = function () {
@@ -4074,21 +3760,18 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                     return "\n        <div class=\"column " + (section.maxrows == undefined ? columnClass : "") + "\">\n            <h3><i class=\"" + section.icon + "\"></i> " + section.name + "</h3>\n            <div class=\"js-links\">" + reduceSection() + "</div>\n        </div>\n";
                 };
                 var menuItemTemplate = function (menuItem) {
-                    var securityButton = menuItem.securityPage ? "\n            <a class=\"button is-small is-outlined\" href=\"#/admin/page/" + menuItem.securityPage + "\">\n                <span class=\"icon is-small\"><i class=\"fa fa-lock\"></i></span>\n            </a>" : "";
-                    var toolButton = menuItem.toolButton;
-                    var hasButtons = (Perm.canEditSecurity && (securityButton || toolButton));
-                    return "\n<div class=\"column is-half-tablet is-one-third-fullhd\">\n    <div class=\"box\">\n        <div class=\"js-widget\">\n" + (hasButtons ? "\n            <div class=\"js-flex-end\">\n                " + (securityButton ? securityButton : "") + "\n                " + (toolButton ? toolButton : "") + "\n            </div>\n" : "") + "\n            <div class=\"tile\">\n                <i class=\"" + menuItem.icon + " fa-4x\"></i>\n                <div>" + menuItem.name + "</div>\n            </div>\n            <div class=\"columns is-mobile is-multiline\">\n                " + menuItem.sections.filter(function (one) { return one.canView == undefined || one.canView; }).reduce(function (html, item) { return html + sectionTemplate(item, menuItem.columnClass); }, "") + "\n            </div>\n        </div>\n    </div>\n</div>\n";
+                    return "\n<div class=\"column is-half-tablet is-one-third-fullhd\">\n    <div class=\"box\">\n        <div class=\"js-widget\">\n            <div class=\"tile\">\n                <i class=\"" + menuItem.icon + " fa-4x\"></i>\n                <div>" + menuItem.name + "</div>\n            </div>\n            <div class=\"columns is-mobile is-multiline\">\n                " + menuItem.sections.filter(function (one) { return one.canView == undefined || one.canView; }).reduce(function (html, item) { return html + sectionTemplate(item, menuItem.columnClass); }, "") + "\n            </div>\n        </div>\n    </div>\n</div>\n";
                 };
                 return menuItems.filter(function (one) { return one.canView; }).reduce(function (html, item) { return html + menuItemTemplate(item); }, "");
             };
             pageTemplate = function (menu) {
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n" + (Perm.canEditHomeSecurity ? "\n        <div class=\"js-flex-end js-security\">\n            <div class=\"level-item\">\n                " + Perm.buttonTemplate(Perm.pageHome) + "\n            </div>\n        </div>\n" : "") + "\n\n    <div style=\"padding:1rem;\">\n        <div class=\"columns is-multiline\">\n            " + menu + "\n        </div>\n    </div>\n</form>\n";
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n    <div style=\"padding:1rem;\">\n        <div class=\"columns is-multiline\">\n            " + menu + "\n        </div>\n    </div>\n</form>\n";
             };
             fetchState = function () {
                 return Promise
-                    .resolve()
-                    .then(Lookup.fetch_tools())
-                    .then(function () { saveToolsState(Lookup.get_tools(Perm.getCurrentYear())); });
+                    .resolve();
+                //.then(Lookup.fetch_tools())
+                //.then(() => { saveToolsState(Lookup.get_tools(Perm.getCurrentYear())) })
             };
             exports_35("fetch", fetch = function () {
                 App.setRenderDomain(Layout);
@@ -4174,8 +3857,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             function (App_9) {
                 App = App_9;
             },
-            function (Perm_2) {
-                Perm = Perm_2;
+            function (Perm_1) {
+                Perm = Perm_1;
             },
             function (Main_1) {
                 Main = Main_1;
@@ -4188,7 +3871,6 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             exports_36("NS", NS = "App_Layout");
             exports_36("render", render = function () {
                 Main.saveUIState();
-                Perm.evaluatePermissions();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
                 var ucMain = "\n" + Home.render() + "\n";
@@ -4199,7 +3881,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 Home.postRender();
             });
             renderHeader = function () {
-                return "\n<header class=\"js-uc-header\">\n\n    <div class=\"js-logo\">\n        <div class=\"js-bars\">\n            <button class=\"button is-primary\" onclick=\"" + NS + ".menuClick()\">\n                <div class=\"icon\"><i class=\"fas fa-bars\"></i></div>\n            </button>\n        </div>\n        <a href=\"#\" onclick=\"" + NS + ".toggle('opsfms')\">\n            <span>OpsFMS</span>\n        </a>\n        <div style=\"width:20px;margin-right:1rem;\">&nbsp;</div>\n    </div>\n\n    <div class=\"js-navbar\">\n        <div class=\"js-navbar-items\">\n            <div class=\"js-items\">\n                <div>\n                    <span class=\"has-text-grey-light\">Year:</span> <span class=\"has-text-white\">" + Perm.getCurrentYear() + "</span>\n                </div>\n                <div>\n                    <span class=\"has-text-grey-light\">Region:</span> <span class=\"has-text-white\">" + Perm.getRegionText() + "</span>\n                </div>\n                <div>\n                    <span class=\"has-text-grey-light\">District:</span> <span class=\"has-text-white\">" + Perm.getDistrictText() + "</span>\n                </div>\n            </div>\n            <div class=\"js-items\">\n                <button class=\"button is-primary\" onclick=\"" + NS + ".help()\" style=\"font-size:125%\">\n                    <span class=\"icon\"><i class=\"fas fa-question-circle\"></i></span>\n                </button>\n                <div class=\"navbar-item has-dropdown\" onclick=\"" + NS + ".toggleProfileMenu(this)\">\n                    <a class=\"navbar-link\">\n                        " + Perm.getEmail() + "\n                    </a>\n                    <div class=\"navbar-dropdown\">\n                        <div class=\"navbar-item\">\n                            <div><b>" + Perm.getName() + "</b></div>\n                        </div>\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-primary\" onclick=\"" + NS + ".toggleProfileMenu();" + NS + ".editProfile()\">\n                                <i class=\"far fa-user\"></i>&nbsp;&nbsp;Edit Profile\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-outlined\" onclick=\"" + NS + ".toggleProfileMenu();App_Auth.signout();\">\n                                <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <a href=\"#\" class=\"navbar-item\">\n                            <div>Terms of Service</div>\n                        </a>\n                    </div>\n                </div>\n                <button class=\"button is-primary\" onclick=\"App_Auth.signout();\">\n                    <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                </button>\n            </div>\n        </div>\n    </div>\n\n</header>";
+                return "\n<header class=\"js-uc-header\">\n\n    <div class=\"js-logo\">\n        <div class=\"js-bars\">\n            <button class=\"button is-primary\" onclick=\"" + NS + ".menuClick()\">\n                <div class=\"icon\"><i class=\"fas fa-bars\"></i></div>\n            </button>\n        </div>\n        <a href=\"#\" onclick=\"" + NS + ".toggle('opsfms')\">\n            <span>OpsFMS</span>\n        </a>\n        <div style=\"width:20px;margin-right:1rem;\">&nbsp;</div>\n    </div>\n\n    <div class=\"js-navbar\">\n        <div class=\"js-navbar-items\">\n            <div class=\"js-items\">\n                <button class=\"button is-primary\" onclick=\"" + NS + ".help()\" style=\"font-size:125%\">\n                    <span class=\"icon\"><i class=\"fas fa-question-circle\"></i></span>\n                </button>\n                <div class=\"navbar-item has-dropdown\" onclick=\"" + NS + ".toggleProfileMenu(this)\">\n                    <a class=\"navbar-link\">\n                        " + Perm.getEmail() + "\n                    </a>\n                    <div class=\"navbar-dropdown\">\n                        <div class=\"navbar-item\">\n                            <div><b>" + Perm.getName() + "</b></div>\n                        </div>\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-primary\" onclick=\"" + NS + ".toggleProfileMenu();" + NS + ".editProfile()\">\n                                <i class=\"far fa-user\"></i>&nbsp;&nbsp;Edit Profile\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-outlined\" onclick=\"" + NS + ".toggleProfileMenu();App_Auth.signout();\">\n                                <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <a href=\"#\" class=\"navbar-item\">\n                            <div>Terms of Service</div>\n                        </a>\n                    </div>\n                </div>\n                <button class=\"button is-primary\" onclick=\"App_Auth.signout();\">\n                    <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                </button>\n            </div>\n        </div>\n    </div>\n\n</header>";
             };
             menuTemplate = function (menuItems) {
                 var linkTemplate = function (link) {
@@ -4282,8 +3964,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_3) {
-                Perm = Perm_3;
+            function (Perm_2) {
+                Perm = Perm_2;
             },
             function (Layout_2) {
                 Layout = Layout_2;

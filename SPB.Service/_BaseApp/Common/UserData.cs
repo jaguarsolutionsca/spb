@@ -11,12 +11,8 @@ namespace BaseApp.Common
     {
         public const string ClaimType_Name = "name";
         public const string ClaimType_UID = "uid";
+        public const string ClaimType_CID = "cid";
         public const string ClaimType_Perms = "perms";
-        public const string ClaimType_Year = "year";
-        public const string ClaimType_RegionLUID = "regionLUID";
-        public const string ClaimType_RegionLUID_Text = "regionLUID_Text";
-        public const string ClaimType_DistrictLUID = "districtLUID";
-        public const string ClaimType_DistrictLUID_Text = "districtLUID_Text";
 
         public static bool HasBearerAuthorization(string authorizationHeader)
         {

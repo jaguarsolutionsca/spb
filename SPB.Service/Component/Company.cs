@@ -271,13 +271,13 @@ namespace BaseApp.Service
         public int? Company_GetID(string company)
         {
             var query = "select id from app.Company where Name=@p1";
-            return repo.executeScalar<int?>(query, "@p1", company);
+            return repo.queryScalar<int?>(query, "@p1", company);
         }
 
         public object Company_GetFeature(int id)
         {
-            var query = "select value3 from dbo.Lookup where Groupe='APP' and Code='Feature' and CID=@cid";
-            var scalar = repo.executeScalar<string>(query, "@cid", id);
+            var query = "select Features from app.Company where ID=@cid";
+            var scalar = repo.queryScalar<string>(query, "@cid", id);
             var json = scalar ?? "{}";
 
             var feature = JsonSerializer.Deserialize<object>(json);

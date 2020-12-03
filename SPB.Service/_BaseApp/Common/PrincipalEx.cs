@@ -33,25 +33,11 @@ namespace BaseApp.Common
             return uid;
         }
 
-        public static int Get_Year(this IPrincipal principal)
+        public static int Get_CID(this IPrincipal principal)
         {
             var claimsPrincipal = (ClaimsPrincipal)principal;
-            int.TryParse(claimsPrincipal.Claims.SingleOrDefault(one => one.Type == UserData.ClaimType_Year)?.Value, out int year);
-            return year;
-        }
-
-        public static int Get_RegionLUID(this IPrincipal principal)
-        {
-            var claimsPrincipal = (ClaimsPrincipal)principal;
-            int.TryParse(claimsPrincipal.Claims.SingleOrDefault(one => one.Type == UserData.ClaimType_RegionLUID)?.Value, out int region);
-            return region;
-        }
-
-        public static int Get_DistrictLUID(this IPrincipal principal)
-        {
-            var claimsPrincipal = (ClaimsPrincipal)principal;
-            int.TryParse(claimsPrincipal.Claims.SingleOrDefault(one => one.Type == UserData.ClaimType_DistrictLUID)?.Value, out int district);
-            return district;
+            int.TryParse(claimsPrincipal.Claims.SingleOrDefault(one => one.Type == UserData.ClaimType_CID)?.Value, out int cid);
+            return cid;
         }
 
         public static List<int> Get_Permissions(this IPrincipal principal)

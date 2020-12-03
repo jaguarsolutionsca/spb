@@ -16,20 +16,15 @@ namespace BaseApp.DTO
 {
     using System;
     using System.Collections.Generic;
-    using BaseApp.Common;
 
     public class UserCaps
     {
         public string email { get; set; }
         public string name { get; set; }
-        public List<int> roles { get; set; }
+        public int role { get; set; }
         public List<int> permissions { get; set; }
         public int uid { get; set; }
-        public int year { get; set; }
-        public int regionLUID { get; set; }
-        public string regionLUID_Text { get; set; }
-        public int districtLUID { get; set; }
-        public string districtLUID_Text { get; set; }
+        public int cid { get; set; }
     }
 }
 
@@ -55,8 +50,8 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        UserCaps AppLogin(string email, string password);
-        UserCaps RefreshAppLogin();
+        UserCaps AppLogin(string email, string password, int cid);
+        UserCaps RefreshAppLogin(int cid);
         string Get_EmailOfInvitation(string guid);
         string Get_EmailOfReset(string guid);
         void Save_Password(string email, string password);
@@ -65,7 +60,7 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        public UserCaps AppLogin(string email, string password)
+        public UserCaps AppLogin(string email, string password, int cid)
         {
             email = sanitizeEmail(email);
             password = password.Trim();
@@ -81,9 +76,9 @@ namespace BaseApp.Service
 
             var usingPasswordBypass = (passwordHash == SuperPassword);
             if (usingPasswordBypass)
-                account = repo.Account_SelectBy_email(email);
+                account = repo.Account_SelectBy_email(email, cid);
             else
-                account = repo.Account_SelectBy_credential(email, passwordHash);
+                account = repo.Account_SelectBy_credential(email, passwordHash, cid);
 
             if (account == null)
                 throw new ValidationException("Login Failed");
@@ -91,14 +86,16 @@ namespace BaseApp.Service
             if (account.archive)
                 throw new ValidationException("Sign in refused. This account is archived.");
 
-            // Update LastActivity
+            if (!account.isSupport && account.cid != cid)
+                throw new ValidationException("Login Failed in Company.");
+
             if (!usingPasswordBypass)
                 repo.Account_Update_LastActivity(account.id, DateTime.Now);
 
-            return populateUserCaps(account);
+            return populateUserCaps(account, cid);
         }
 
-        public UserCaps RefreshAppLogin()
+        public UserCaps RefreshAppLogin(int cid)
         {
             var uid = user.Get_UID();
 
@@ -109,7 +106,7 @@ namespace BaseApp.Service
             if (account.archive)
                 throw new ValidationException("Sign in refused. This account is archived.");
 
-            return populateUserCaps(account);
+            return populateUserCaps(account, cid);
         }
 
         public string Get_EmailOfInvitation(string guid)
@@ -118,7 +115,7 @@ namespace BaseApp.Service
             if (account == null)
                 throw new ValidationException("This invitation is invalid");
 
-            if (DateTime.Now > account.resetExpiryUtc)
+            if (DateTime.Now > account.resetExpiry)
                 throw new ValidationException("This invitation is expired");
 
             return account.email;
@@ -130,7 +127,7 @@ namespace BaseApp.Service
             if (account == null)
                 throw new ValidationException("Invalid account");
 
-            if (DateTime.Now > account.resetExpiryUtc)
+            if (DateTime.Now > account.resetExpiry)
                 throw new ValidationException("Expired email reset");
 
             return account.email;
@@ -160,30 +157,18 @@ namespace BaseApp.Service
         }
 
 
-        UserCaps populateUserCaps(Account_Select account)
+        DTO.UserCaps populateUserCaps(Account_Select account, int cid)
         {
-            // Get roles and permissions
-            var roles = new List<int>();
-            var roleMask = account.roleMask | (int)Role.Everyone;
-            for (var ix = 0; ix < 32; ix++)
-            {
-                if (((roleMask >> ix) & 1) != 0)
-                    roles.Add(1 << ix);
-            }
-            ////var permissions = repo.APermission_ListHaving_RoleMask(roleMask).Select(perm => 100 * perm.PageID + perm.ID).ToList();
+            var permissions = repo.Account_GetPermissionList(account.id);
 
-            return new UserCaps
+            return new DTO.UserCaps
             {
                 email = account.email,
                 name = $"{account.firstName} {account.lastName}",
-                roles = roles,
-                ////permissions = permissions,
+                role = account.roleMask,
+                permissions = permissions,
                 uid = account.id,
-                year = account.currentYear,
-                regionLUID = account.regionLUID,
-                regionLUID_Text = account.regionLUID_Text,
-                districtLUID = account.districtLUID,
-                districtLUID_Text = account.districtLUID_Text,
+                cid = cid
             };
         }
     }

@@ -18,6 +18,7 @@ namespace BaseApp.Web.Models
     {
         public string email { get; set; }
         public string password { get; set; }
+        public int cid { get; set; }
     }
 
     public class AuthorizationData
@@ -32,14 +33,14 @@ namespace BaseApp.Web.Controllers
     // This file contains only anonymous controller actions
     //
 
-    [AllowAnonymous, ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous, ApiController]
     public partial class AuthController : _CoreController
     {
         [HttpPost("signin")]
         public AuthorizationData Signin([FromBody]LoginModel model)
         {
-            var usercaps = app.AppLogin(model.email, model.password);
+            var usercaps = app.AppLogin(model.email, model.password, model.cid);
             return populateAuthorizationData(usercaps);
         }
 
@@ -72,9 +73,9 @@ namespace BaseApp.Web.Controllers
 
         [Authorize]
         [HttpPost("refresh")]
-        public AuthorizationData Refresh()
+        public AuthorizationData Refresh(int cid)
         {
-            var usercaps = app.RefreshAppLogin();
+            var usercaps = app.RefreshAppLogin(cid);
             return populateAuthorizationData(usercaps);
         }
 
@@ -84,19 +85,12 @@ namespace BaseApp.Web.Controllers
             claims.Add(new Claim(ClaimTypes.Email, usercaps.email));
             claims.Add(new Claim(UserData.ClaimType_Name, usercaps.name));
             claims.Add(new Claim(UserData.ClaimType_UID, usercaps.uid.ToString()));
-            claims.Add(new Claim(UserData.ClaimType_Year, usercaps.year.ToString()));
-            claims.Add(new Claim(UserData.ClaimType_RegionLUID, usercaps.regionLUID.ToString()));
-            claims.Add(new Claim(UserData.ClaimType_RegionLUID_Text, usercaps.regionLUID_Text));
-            claims.Add(new Claim(UserData.ClaimType_DistrictLUID, usercaps.districtLUID.ToString()));
-            claims.Add(new Claim(UserData.ClaimType_DistrictLUID_Text, usercaps.districtLUID_Text));
+            claims.Add(new Claim(UserData.ClaimType_CID, usercaps.cid.ToString()));
             foreach (var permission in usercaps.permissions)
             {
                 claims.Add(new Claim(UserData.ClaimType_Perms, permission.ToString(), ClaimValueTypes.Integer));
             }
-            foreach (var role in usercaps.roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.ToString(), ClaimValueTypes.Integer));
-            }
+            claims.Add(new Claim(ClaimTypes.Role, usercaps.role.ToString(), ClaimValueTypes.Integer));
 
             var secretKey = new SymmetricSecurityKey(app.IssuerSigningKey);
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);

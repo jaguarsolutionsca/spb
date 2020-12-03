@@ -4,13 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 
 namespace BaseApp.DAL
 {
     internal partial class Repo : IDisposable
     {
-        public T executeScalar<T>(string command_text, Service.KVList parameters = null)
+        public T queryScalar<T>(string command_text, Service.KVList parameters = null)
         {
             T scalar = default(T);
             using (var command = connex.CreateCommand())
@@ -36,14 +38,14 @@ namespace BaseApp.DAL
             return scalar;
         }
         
-        public T executeScalar<T>(string command_text, string parameter_name, object parameter_value)
+        public T queryScalar<T>(string command_text, string parameter_name, object parameter_value)
         {
             var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
-            return executeScalar<T>(command_text, parameters);
+            return queryScalar<T>(command_text, parameters);
 
         }
 
-        public List<T> executeQuery<T>(string command_text, Service.KVList parameters = null)
+        public List<T> queryList<T>(string command_text, Service.KVList parameters = null)
         {
             var properties = typeof(T).GetProperties();
             var instance = Activator.CreateInstance<T>();
@@ -62,11 +64,28 @@ namespace BaseApp.DAL
 
                 using (var reader = command.ExecuteReader())
                 {
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select((one, ix) => { return reader.GetName(ix).ToLower(); }).ToList();
+
+                    var map = new int?[properties.Length];
+                    for (var ix = 0; ix < properties.Length; ix++)
+                    {
+                        var propName = properties[ix].Name.ToLower();
+                        var iy = columns.IndexOf(propName);
+                        if (iy != -1)
+                            map[ix] = iy;
+                    }
+
                     while (reader.Read())
                     {
-                        foreach (var propinfo in properties)
-                            propinfo.SetValue(instance, reader[propinfo.Name], null);
-
+                        for (var ix = 0; ix < properties.Length; ix++)
+                        {
+                            if (map[ix].HasValue)
+                            {
+                                var value = reader[map[ix].Value];
+                                if (value != null && value != DBNull.Value)
+                                    properties[ix].SetValue(instance, value, null);
+                            }
+                        }
                         list.Add(instance);
                     }
                 }
@@ -74,10 +93,87 @@ namespace BaseApp.DAL
             return list;
         }
 
-        public List<T> executeQuery<T>(string command_text, string parameter_name, object parameter_value)
+        public List<T> queryList<T>(string command_text, string parameter_name, object parameter_value)
         {
             var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
-            return executeQuery<T>(command_text, parameters);
+            return queryList<T>(command_text, parameters);
+        }
+
+        public T queryEntity<T>(string command_text, Service.KVList parameters = null)
+        {
+            var properties = typeof(T).GetProperties();
+            var instance = Activator.CreateInstance<T>();
+
+            T entity = default;
+            using (var command = connex.CreateCommand())
+            {
+                command.CommandText = command_text;
+                command.CommandType = (command_text.Contains(" ") ? CommandType.Text : CommandType.StoredProcedure);
+
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                        command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select((one, ix) => { return reader.GetName(ix).ToLower(); }).ToList();
+
+                    var map = new int?[properties.Length];
+                    for (var ix = 0; ix < properties.Length; ix++)
+                    {
+                        var propName = properties[ix].Name.ToLower();
+                        var iy = columns.IndexOf(propName);
+                        if (iy != -1)
+                            map[ix] = iy;
+                    }
+
+                    if (reader.Read())
+                    {
+                        for (var ix = 0; ix < properties.Length; ix++)
+                        {
+                            if (map[ix].HasValue)
+                            {
+                                var value = reader[map[ix].Value];
+                                if (value != null && value != DBNull.Value)
+                                    properties[ix].SetValue(instance, value, null);
+                            }
+                        }
+                        entity = instance;
+                    }
+                }
+            }
+            return entity;
+        }
+
+        public T queryEntity<T>(string command_text, string parameter_name, object parameter_value)
+        {
+            var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
+            return queryEntity<T>(command_text, parameters);
+        }
+
+        public void queryNonQuery(string command_text, Service.KVList parameters = null)
+        {
+            using (var command = connex.CreateCommand())
+            {
+                command.CommandText = command_text;
+                command.CommandType = (command_text.Contains(" ") ? CommandType.Text : CommandType.StoredProcedure);
+
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                        command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                }
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void queryNonQuery(string command_text, string parameter_name, object parameter_value)
+        {
+            var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
+            queryNonQuery(command_text, parameters);
         }
     }
 }

@@ -22,11 +22,7 @@ export interface UserCaps {
     roles: number[]
     permissions: number[]
     uid: number
-    year: number
-    regionLUID: number
-    regionLUID_Text: string
-    districtLUID: number
-    districtLUID_Text: string
+    cid: number
 }
 
 var loginData = <LoginData>{};
@@ -414,36 +410,6 @@ export const getUID = () => {
     return loginData.user.uid;
 }
 
-export const getCurrentYear = () => {
-    if (loginData == undefined || loginData.user == undefined)
-        return null;
-    return loginData.user.year;
-}
-
-export const getRegionLUID = () => {
-    if (loginData == undefined || loginData.user == undefined)
-        return null;
-    return loginData.user.regionLUID;
-}
-
-export const getRegionText = () => {
-    if (loginData == undefined || loginData.user == undefined)
-        return null;
-    return loginData.user.regionLUID_Text;
-}
-
-export const getDistrictLUID = () => {
-    if (loginData == undefined || loginData.user == undefined)
-        return null;
-    return loginData.user.districtLUID;
-}
-
-export const getDistrictText = () => {
-    if (loginData == undefined || loginData.user == undefined)
-        return null;
-    return loginData.user.districtLUID_Text;
-}
-
 export const getPermissions = () => {
     if (loginData == undefined || loginData.user == undefined)
         return [];
@@ -519,11 +485,7 @@ const createLoginData = (token: string) => {
         permissions: perms,
         roles: role,
         uid: +payload["uid"],
-        year: +payload["year"],
-        regionLUID: +payload["regionLUID"],
-        regionLUID_Text: payload["regionLUID_Text"],
-        districtLUID: +payload["districtLUID"],
-        districtLUID_Text: payload["districtLUID_Text"],
+        cid: +payload["cid"],
     };
     loginData.expiry = payload["exp"];
 }

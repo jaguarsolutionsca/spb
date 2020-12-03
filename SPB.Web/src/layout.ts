@@ -29,8 +29,6 @@ export const NS = "App_Layout";
 export const render = () => {
     Main.saveUIState();
 
-    Perm.evaluatePermissions();
-
     // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
     // so they can potentially have an impact over there.
     let ucMain = `
@@ -72,17 +70,6 @@ const renderHeader = () => {
 
     <div class="js-navbar">
         <div class="js-navbar-items">
-            <div class="js-items">
-                <div>
-                    <span class="has-text-grey-light">Year:</span> <span class="has-text-white">${Perm.getCurrentYear()}</span>
-                </div>
-                <div>
-                    <span class="has-text-grey-light">Region:</span> <span class="has-text-white">${Perm.getRegionText()}</span>
-                </div>
-                <div>
-                    <span class="has-text-grey-light">District:</span> <span class="has-text-white">${Perm.getDistrictText()}</span>
-                </div>
-            </div>
             <div class="js-items">
                 <button class="button is-primary" onclick="${NS}.help()" style="font-size:125%">
                     <span class="icon"><i class="fas fa-question-circle"></i></span>
