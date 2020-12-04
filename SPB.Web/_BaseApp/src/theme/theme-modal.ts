@@ -29,7 +29,7 @@ export const renderModalDelete = (id: string, onclick: string) => {
         </section>
         <footer class="modal-card-foot">
             <button class="button" onclick="App_Theme.closeModal(this);">
-                <!--<span class="icon"><i class="fa fa-reply"></i></span>--> <span>${i18n("CANCEL")}</span>
+                <span>${i18n("CANCEL")}</span>
             </button>
             <button class="button is-danger" onclick="App_Theme.closeModal(this);${onclick}">
                 <span class="icon"><i class="fa fa-times"></i></span> <span>${i18n("Yes, Delete")}</span>

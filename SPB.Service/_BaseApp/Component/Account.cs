@@ -459,7 +459,7 @@ namespace BaseApp.Service
 
         public void Auto_Archive()
         {
-            repo.Account_AutoArchive();
+            repo.queryNonQuery("app.Account_AutoArchive");
         }
 
         public void Reset_PasswordBy_Admin(int id, string url)

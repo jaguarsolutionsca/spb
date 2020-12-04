@@ -177,136 +177,11 @@ namespace BaseApp.DAL
             pagedList.pager.rowCount = (pagedList.list.Count > 0 ? pagedList.list[0].totalCount : 0);
             return pagedList;
         }
-
-        public DTO.Account_Select Account_SelectBy_credential(string email, string password, int? cid)
-        {
-            var query = "app.Account_SelectBy_Credential";
-            var parameters = new Service.KVList()
-                .AddParam("@email", crypto.Encrypt(email))
-                .AddParam("@password", password)
-                .AddParam("@cid", cid);
-            return queryEntity<DTO.Account_Select>(query, parameters).Decrypt(crypto);
-        }
-
-        public DTO.Account_Select Account_SelectBy_email(string email, int? cid)
-        {
-            var query = "app.Account_SelectBy_Email";
-            var parameters = new Service.KVList()
-                .AddParam("@email", crypto.Encrypt(email))
-                .AddParam("@cid", cid);
-            return queryEntity<DTO.Account_Select>(query, parameters).Decrypt(crypto);
-        }
-
-        public void Account_Update_LastActivity(int id, DateTime lastActivity)
-        {
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Account]";
-                var column = "LastActivity";
-                var where = "ID=@p1";
-
-                command.CommandText = $"UPDATE {table} SET {column}=@p2, ResetGuid=NULL, ResetExpiry=NULL WHERE {where}";
-                command.Parameters.AddWithValue("@p1", id);
-                command.Parameters.AddWithValue("@p2", lastActivity);
-                command.ExecuteNonQuery();
-            }
-        }
-
-        public DTO.Account_Select Account_SelectBy_ResetGuid(string guid)
-        {
-            var id = -1;
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Account]";
-                var columns = "ID";
-                var where = "ResetGuid=@p1";
-
-                command.CommandText = @"SELECT " + columns + " FROM " + table + " WHERE " + where;
-                command.Parameters.AddWithValue("@p1", guid);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        id = reader.GetInt32(0);
-                    }
-                }
-            }
-            return (id == -1 ? null : spAccount_Select(id));
-        }
-
-        public void Account_SetPassword(string email, string password)
-        {
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Account]";
-                var column = "Password";
-                var where = "Email=@p1";
-
-                command.CommandText = $"UPDATE {table} SET {column}=@p2 WHERE {where}";
-                command.Parameters.AddWithValue("@p1", crypto.Encrypt(email));
-                command.Parameters.AddWithValue("@p2", password);
-                command.ExecuteNonQuery();
-            }
-        }
-
-        public void Account_ResetPassword(string email, Guid guid, DateTime expiry, bool forcedReset = false, bool unArchive = false)
-        {
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Account]";
-                var where = "Email=@p1";
-                var archive = $"{(unArchive ? "0" : "Archive")}";
-
-                command.CommandText = $"UPDATE {table} SET Password=NULL, ResetGuid=@p2, ResetExpiry=@p3, IsReset=@p4, Archive={archive} WHERE {where}";
-                command.Parameters.AddWithValue("@p1", crypto.Encrypt(email));
-                command.Parameters.AddWithValue("@p2", guid);
-                command.Parameters.AddWithValue("@p3", expiry);
-                command.Parameters.AddWithValue("@p4", forcedReset);
-                command.ExecuteNonQuery();
-            }
-        }
-
-        public void Account_AutoArchive()
-        {
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_AutoArchive";
-                command.CommandType = CommandType.StoredProcedure;
-                command.ExecuteNonQuery();
-            }
-        }
-
-        public DTO.Account_Select Account_FixLookup(int id)
-        {
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_FixLookup";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@ID", id);
-                command.ExecuteNonQuery();
-            }
-            return spAccount_Select(id);
-        }
-
-        public List<int> Account_GetPermissionList(int id)
-        {
-            var query = "app.Account_GetPermissionList";
-            return queryList<int>(query, "@uid", id);
-        }
     }
 }
 
 namespace BaseApp.Service
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using BaseApp.Common;
-    using BaseApp.DTO;
-    using BaseApp.Mapper;
-
     internal class EmailFields
     {
         public string subject { get; set; }
@@ -315,9 +190,9 @@ namespace BaseApp.Service
 
         public static EmailFields Build_Invitation(string url)
         {
-            var line1 = "You have been invited to join OpsFMS by your administrator.";
-            var line2 = "Click this link to set your account password:";
-            var line3 = "This link will expire in one week.";
+            var line1 = "Vous êtes invité à joindre l'application SPB par votre administrateur.";
+            var line2 = "Cliquez ce lien pour créer un mot de passe:";
+            var line3 = "Ce lien est valide pour une durée de une semaine.";
 
             var subject = $"OpsFMS Invitation";
             var bodyHtml = $@"
@@ -347,11 +222,11 @@ namespace BaseApp.Service
 
         public static EmailFields Build_ResetPasswordBy_Admin(string url)
         {
-            var line1 = "Your OpsFMS administrator has requested a password reset for your account.";
-            var line2 = "Click this link to create a new password:";
-            var line3 = "This link will expire in one week.";
+            var line1 = "Votre administrateur SPB exige que vous changiez de mot de passe.";
+            var line2 = "Cliquez ce lien pour créer un nouveau mot de passe:";
+            var line3 = "Ce lien est valide pour une durée de une semaine.";
 
-            var subject = $"OpsFMS Password Reset by Administrator";
+            var subject = $"Nouveau mot de passe exigé";
             var bodyHtml = $@"
                 <div style='padding: 10px;'>
                     <p>{line1}</p>
@@ -379,12 +254,12 @@ namespace BaseApp.Service
 
         public static EmailFields Build_ResetPasswordBy_Self(string url)
         {
-            var line1 = "Let's fix that password thing!";
-            var line2 = "Click this link to create a new password:";
-            var line3 = "This link will expire in one week.";
-            var line4 = "NOTE: If you didn't request this email, you may safely ignore it";
+            var line1 = "Réparons ce problème de mot de passe!";
+            var line2 = "Cliquez ce lien pour créer un nouveau mot de passe:";
+            var line3 = "Ce lien est valide pour une durée de une semaine.";
+            var line4 = "NOTE: Vous n'avez qu'à ignorer ce courriel si vous n'avez pas demandé ce courriel";
 
-            var subject = $"OpsFMS Password Reset";
+            var subject = $"Demande de nouveau mot de passe";
             var bodyHtml = $@"
                 <div style='padding: 10px;'>
                     <p>{line1}</p>

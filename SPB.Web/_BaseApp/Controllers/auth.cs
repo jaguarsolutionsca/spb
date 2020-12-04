@@ -73,9 +73,9 @@ namespace BaseApp.Web.Controllers
 
         [Authorize]
         [HttpPost("refresh")]
-        public AuthorizationData Refresh(int cid)
+        public AuthorizationData Refresh()
         {
-            var usercaps = app.RefreshAppLogin(cid);
+            var usercaps = app.RefreshAppLogin();
             return populateAuthorizationData(usercaps);
         }
 

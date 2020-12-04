@@ -1,4 +1,5 @@
 ﻿
+
 CREATE VIEW [app].[Account_Select]
 AS
 SELECT
@@ -16,6 +17,7 @@ SELECT
 	acc.LastActivity, 
 	acc.IsAdminReset, 
 	acc.FirstName, 
+	acc.AutoArchive, 
 	acc.LastName, 
 	acc.Comment, 
 	acc.Archive, 

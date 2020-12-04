@@ -86,6 +86,11 @@
     <Build Include="app\Stored Procedures\Account_SelectBy_Email.sql" />
     <Build Include="app\Stored Procedures\Account_SelectBy_Credential.sql" />
     <Build Include="app\Stored Procedures\Account_GetPermissionList.sql" />
+    <Build Include="app\Stored Procedures\Account_Update_LastActivity.sql" />
+    <Build Include="app\Stored Procedures\Account_SetPassword.sql" />
+    <Build Include="app\Stored Procedures\Account_SelectBy_ResetGUID.sql" />
+    <Build Include="app\Stored Procedures\Account_ResetPassword.sql" />
+    <Build Include="app\Stored Procedures\Account_AutoArchive.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />

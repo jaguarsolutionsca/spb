@@ -40,7 +40,7 @@ namespace BaseApp.DAL
         
         public T queryScalar<T>(string command_text, string parameter_name, object parameter_value)
         {
-            var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
+            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             return queryScalar<T>(command_text, parameters);
 
         }
@@ -95,7 +95,7 @@ namespace BaseApp.DAL
 
         public List<T> queryList<T>(string command_text, string parameter_name, object parameter_value)
         {
-            var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
+            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             return queryList<T>(command_text, parameters);
         }
 
@@ -149,7 +149,7 @@ namespace BaseApp.DAL
 
         public T queryEntity<T>(string command_text, string parameter_name, object parameter_value)
         {
-            var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
+            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             return queryEntity<T>(command_text, parameters);
         }
 
@@ -172,7 +172,7 @@ namespace BaseApp.DAL
 
         public void queryNonQuery(string command_text, string parameter_name, object parameter_value)
         {
-            var parameters = new Service.KVList().AddParam(parameter_name, parameter_value);
+            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             queryNonQuery(command_text, parameters);
         }
     }
@@ -182,10 +182,15 @@ namespace BaseApp.Service
 {
     public class KVList : List<KeyValuePair<string, object>>
     {
-        public KVList AddParam(string key, object value)
+        public KVList Add(string key, object value)
         {
             this.Add(new KeyValuePair<string, object>(key, value));
             return this;
+        }
+
+        public static KVList Build()
+        {
+            return new KVList();
         }
     }
 }

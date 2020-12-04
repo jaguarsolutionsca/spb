@@ -74,7 +74,7 @@ namespace BaseApp.Web.Controllers
             var referer = HttpContext.Request.Headers["Referer"].ToString();
             if (referer.EndsWith("/"))
                 referer = referer.Substring(0, referer.Length - 1);
-            return $"{referer}/#/{route}";
+            return $"{referer}#/{route}";
         }
 
         public PortalBag buildPortalBag(Uri uri)
