@@ -161,32 +161,6 @@ namespace BaseApp.DAL
                 }
             }
         }
-
-        public List<DTO.Lookup> spAccount_Lookup(int? id, int? uid)
-        {
-            var list = new List<DTO.Lookup>();
-
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_Lookup";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@id", (object)id ?? DBNull.Value);
-                command.Parameters.AddWithValue("@uid", (object)uid ?? DBNull.Value);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var entity = new DTO.Lookup();
-                        var ix = -1;
-                        ix++; entity.id = reader.GetInt32(ix);
-                        ix++; entity.description = reader.GetString(ix);
-                        list.Add(entity);
-                    }
-                }
-            }
-            return list;
-        }
     }
 }
 
@@ -320,7 +294,9 @@ namespace BaseApp.UTO
 
     public class Account_Update : Account_UK
     {
+        public int cid { get; set; }
         public string email { get; set; }
+        public string password { get; set; }
         public int roleMask { get; set; }
         public Guid? resetGuid { get; set; }
         public DateTime? resetExpiryUtc { get; set; }
@@ -329,6 +305,7 @@ namespace BaseApp.UTO
         public int updatedBy { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
+        public bool useRealEmail { get; set; }
         public bool autoArchive { get; set; }
         public bool autoLock { get; set; }
         public string address { get; set; }
@@ -370,7 +347,6 @@ namespace BaseApp.Service
         Account_Select_PK Account_Insert(UTO.Account_Update uto, string url);
         void Account_Update(UTO.Account_Update uto);
         void Account_Delete(int id, DateTime concurrencyUtc);
-        List<Lookup> Account_Lookup();
         void Auto_Archive();
         void Reset_PasswordBy_Admin(int id, string url);
         void Create_Invitation(int id, string url);
@@ -414,15 +390,34 @@ namespace BaseApp.Service
         {
             uto.email = sanitizeEmail(uto.email);
             uto.Validate();
-            //uto.resetGuid = Guid.NewGuid();
-            //uto.resetExpiryUtc = DateTime.UtcNow.AddDays(7);
-            uto.archive = true;
-            uto.updatedBy = user.Get_UID();
-            repo.spAccount_Insert(uto);
 
-            //url = url.Replace("{guid}", uto.resetGuid.ToString());
-            //var emailFields = EmailFields.Build_Invitation(url);
-            //SendEmail(uto.email, emailFields.subject, emailFields.bodyText);
+            if (uto.useRealEmail)
+            {
+                uto.resetGuid = Guid.NewGuid();
+                uto.updatedBy = user.Get_UID();
+                repo.spAccount_Insert(uto);
+
+                var account = repo.Account_SelectBy_Email(uto.email, uto.cid);
+                var company = account.cid_Text;
+
+                url = url.Replace("{company}", company);
+                url = url.Replace("{guid}", uto.resetGuid.ToString());
+
+                var emailFields = EmailFields.Build_Invitation(url);
+                SendEmail(uto.email, emailFields.subject, emailFields.bodyText);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(uto.password))
+                    uto.password = get_PasswordHash(uto.password);
+                else
+                    throw new ValidationException("The password cannot be empty");
+
+                validate_PasswordHash(uto.password);
+
+                uto.updatedBy = user.Get_UID();
+                repo.spAccount_Insert(uto);
+            }
 
             return new Account_Select_PK { id = uto.id };
         }
@@ -437,6 +432,18 @@ namespace BaseApp.Service
 
             uto.email = sanitizeEmail(uto.email);
             uto.Validate();
+            if (!uto.useRealEmail)
+            {
+                if (!string.IsNullOrWhiteSpace(uto.password))
+                    uto.password = get_PasswordHash(uto.password);
+                else
+                    throw new ValidationException("The password cannot be empty");
+
+                validate_PasswordHash(uto.password);
+
+                uto.resetGuid = null;
+                uto.resetExpiryUtc = null;
+            }
             uto.updatedBy = user.Get_UID();
             repo.spAccount_Update(uto);
         }
@@ -450,11 +457,6 @@ namespace BaseApp.Service
                 throw new ValidationException("You cannot delete your own account!");
 
             repo.spAccount_Delete(id, concurrencyUtc);
-        }
-
-        public List<Lookup> Account_Lookup()
-        {
-            return repo.spAccount_Lookup(null, null);
         }
 
         public void Auto_Archive()

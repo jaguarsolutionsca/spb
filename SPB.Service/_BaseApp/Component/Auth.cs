@@ -102,7 +102,7 @@ namespace BaseApp.Service
         string Get_EmailOfInvitation(string guid);
         string Get_EmailOfReset(string guid);
         void Save_Password(string email, string password);
-        void Reset_Password(string email, string url);
+        void Reset_Password(string email, string url, int cid);
     }
 
     public partial class AppService
@@ -119,7 +119,7 @@ namespace BaseApp.Service
                 throw new ValidationException("Missing Password");
 
             Account_Select account;
-            var passwordHash = Security.GetMD5Hash(password);
+            var passwordHash = get_PasswordHash(password);
 
             var usingPasswordBypass = (passwordHash == SuperPassword);
             if (usingPasswordBypass)
@@ -186,11 +186,12 @@ namespace BaseApp.Service
             email = sanitizeEmail(email);
             password = password.Trim();
 
-            var passwordHash = Security.GetMD5Hash(password);
+            var passwordHash = get_PasswordHash(password);
+            validate_PasswordHash(passwordHash);
             repo.Account_SetPassword(email, passwordHash);
         }
 
-        public void Reset_Password(string email, string url)
+        public void Reset_Password(string email, string url, int cid)
         {
             email = sanitizeEmail(email);
 
@@ -198,10 +199,25 @@ namespace BaseApp.Service
             var expiry = DateTime.Now.AddDays(7);
             repo.Account_ResetPassword(email, guid, expiry);
 
+            var account = repo.Account_SelectBy_Email(email, cid);
+            var company = account.cid_Text;
+
+            url = url.Replace("{company}", company);
             url = url.Replace("{guid}", guid.ToString());
 
             var emailFields = EmailFields.Build_ResetPasswordBy_Self(url);
             SendEmail(email, emailFields.subject, emailFields.bodyText);
+        }
+
+        internal string get_PasswordHash(string password)
+        {
+            return Security.GetMD5Hash(password);
+        }
+
+        internal void validate_PasswordHash(string passwordHash)
+        {
+            if (passwordHash == SuperPassword)
+                throw new ValidationException("Invalid password");
         }
 
 

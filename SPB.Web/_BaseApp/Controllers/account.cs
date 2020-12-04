@@ -28,13 +28,6 @@ namespace BaseApp.Web.Controllers
             return app.Account_Search(pager);
         }
 
-        [HttpGet("lookup")]
-        public List<Lookup> Lookup()
-        {
-            app.RequirePermission(Perm.Accounts_Edit);
-            return app.Account_Lookup();
-        }
-
         [HttpGet("{id}")]
         public Account_Select Get(int id)
         {

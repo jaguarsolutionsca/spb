@@ -175,6 +175,7 @@ const formNewPasswordTemplate = (item: IState, step: steps) => {
             </span>
         </div>
     </div>
+<!--
     <div style="margin: 1rem;">
         <p style="margin: 1rem;">Passwords must meet the following complexity requirements:</p>
         <ul style="padding-left: 5rem; list-style: disc;">
@@ -184,6 +185,7 @@ const formNewPasswordTemplate = (item: IState, step: steps) => {
             <li>At least one special character</li>
         </ul>
     </div>
+-->
     <div class="field">
         <div class="control has-icons-left">
             <input type="password" class="input" id="App_Auth_password" placeholder="${i18n("PASSWORD")}" onkeyup="App_Auth.ensurePasswordMatch()" required>
@@ -329,10 +331,11 @@ export const ensurePasswordMatch = () => {
 }
 
 const ensureComplexityRequirement = (password: string) => {
-    if (password.length < 8) return false;
-    if (password == password.toUpperCase()) return false;
-    if (password == password.toLowerCase()) return false;
-    return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+    return password.length > 0;
+    //if (password.length < 8) return false;
+    //if (password == password.toUpperCase()) return false;
+    //if (password == password.toLowerCase()) return false;
+    //return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
 }
 
 export const signin = (step: number = 0) => {

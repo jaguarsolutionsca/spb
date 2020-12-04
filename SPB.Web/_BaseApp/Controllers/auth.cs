@@ -67,7 +67,7 @@ namespace BaseApp.Web.Controllers
         [HttpPost("request-password-reset")]
         public ActionResult RequestPasswordReset([FromBody] LoginModel model)
         {
-            app.Reset_Password(model.email, buildUIRouterUrl("reset-password/{guid}"));
+            app.Reset_Password(model.email, buildUIRouterUrl("reset-password/{guid}"), model.cid);
             return NoContent();
         }
 
