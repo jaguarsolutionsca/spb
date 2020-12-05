@@ -63,13 +63,15 @@ const renderHeader = () => {
             </button>
         </div>
         <a href="#" onclick="${NS}.toggle('opsfms')">
-            <span>OpsFMS</span>
+            <span>Gestion/Paye</span>
         </a>
         <div style="width:20px;margin-right:1rem;">&nbsp;</div>
     </div>
 
     <div class="js-navbar">
         <div class="js-navbar-items">
+            <div class="js-items">
+            </div>
             <div class="js-items">
                 <button class="button is-primary" onclick="${NS}.help()" style="font-size:125%">
                     <span class="icon"><i class="fas fa-question-circle"></i></span>

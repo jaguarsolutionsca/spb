@@ -10,7 +10,7 @@ SET NOCOUNT ON
 ;
 SELECT
 	*
-FROM app.Account_Select
+FROM app.Account_Full
 WHERE
 	EMail = @email AND
 	Password = @password AND

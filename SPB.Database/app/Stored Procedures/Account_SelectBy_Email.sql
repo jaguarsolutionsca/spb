@@ -9,7 +9,7 @@ SET NOCOUNT ON
 ;
 SELECT
 	*
-FROM app.Account_Select
+FROM app.Account_Full
 WHERE
 	EMail = @email AND
 	Archive = 0 AND

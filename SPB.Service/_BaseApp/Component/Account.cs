@@ -7,16 +7,185 @@ namespace BaseApp.DAL
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
 
     internal partial class Repo
     {
-        DTO.Account_Select _account_reader(SqlDataReader reader)
+        public DTO.PagedList<DTO.Account_Search, DTO.Account_Search_Filter> spAccount_List(DTO.Pager<DTO.Account_Search_Filter> pagerData)
+        {
+            var pagedList = new DTO.PagedList<DTO.Account_Search, DTO.Account_Search_Filter>();
+            pagedList.pager = pagerData;
+            pagedList.list = new List<DTO.Account_Search>();
+            var list = pagedList.list;
+
+            using (var command = connex.CreateCommand())
+            {
+                command.CommandText = "app.Account_List";
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Archive", (object)pagerData.filter.archive ?? DBNull.Value);
+                command.Parameters.AddWithValue("@RegionLUID", (object)pagerData.filter.regionLUID ?? DBNull.Value);
+                command.Parameters.AddWithValue("@DistrictLUID", (object)pagerData.filter.districtLUID ?? DBNull.Value);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var entity = new DTO.Account_Search();
+                        var ix = -1;
+                        ix++; entity.id = reader.GetInt32(ix);
+                        ix++; entity.email = reader.GetString(ix);
+                        ix++; entity.roleMask = reader.GetInt32(ix);
+                        ix++; entity.roleMask_Text = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        ix++; entity.resetGuid = reader.IsDBNull(ix) ? (Guid?)null : reader.GetGuid(ix);
+                        ix++; entity.resetExpiryUtc = reader.IsDBNull(ix) ? (DateTime?)null : reader.GetDateTime(ix);
+                        ix++; entity.lastActivityUtc = reader.IsDBNull(ix) ? (DateTime?)null : reader.GetDateTime(ix);
+                        ix++; entity.archive = reader.GetBoolean(ix);
+                        ix++; entity.createdUtc = reader.GetDateTime(ix);
+                        ix++; entity.updatedUtc = reader.GetDateTime(ix);
+                        ix++; entity.updatedBy = reader.GetInt32(ix);
+                        ix++; entity.firstName = reader.GetString(ix);
+                        ix++; entity.lastName = reader.GetString(ix);
+                        ix++; entity.regionLUID = reader.GetInt32(ix);
+                        ix++; entity.regionLUID_Text = reader.GetString(ix);
+                        ix++; entity.districtLUID = reader.GetInt32(ix);
+                        ix++; entity.districtLUID_Text = reader.GetString(ix);
+                        ix++; entity.phone1 = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        ix++; entity.phone2 = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        ix++; entity.fax = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        ix++; entity.readyToArchive = reader.GetBoolean(ix);
+                        ix++; entity.address = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        ix++; entity.town = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        ix++; entity.postalCode = reader.IsDBNull(ix) ? null : reader.GetString(ix);
+                        list.Add(entity.Decrypt(crypto));
+                    }
+                }
+            }
+
+            if (pagerData.filter.readyToArchive.HasValue)
+            {
+                list = list.Where(one => one.readyToArchive == pagerData.filter.readyToArchive.Value).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(pagerData.searchText))
+            {
+                var search = pagerData.searchText.ToLower();
+                list = list.Where(one => {
+                    return one.email.ToLower().Contains(search) ||
+                        one.firstName.ToLower().Contains(search) ||
+                        one.lastName.ToLower().Contains(search);
+                }).ToList();
+            }
+
+            foreach (var entity in list)
+            {
+                entity.totalCount = list.Count;
+            }
+
+            if (!string.IsNullOrEmpty(pagedList.pager.sortColumn))
+            {
+                var sortBy = pagedList.pager.sortColumn.ToLower();
+                var ascending = string.Compare(pagedList.pager.sortDirection ?? "ASC", "ASC", true) == 0;
+                switch (sortBy)
+                {
+                    case "email":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.email, b.email, true) :
+                            string.Compare(b.email, a.email, true));
+                        break;
+
+                    case "rolemask_text":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.roleMask_Text, b.roleMask_Text, true) :
+                            string.Compare(b.roleMask_Text, a.roleMask_Text, true));
+                        break;
+
+                    case "firstname":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.firstName, b.firstName, true) :
+                            string.Compare(b.firstName, a.firstName, true));
+                        break;
+
+                    case "lastname":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.lastName, b.lastName, true) :
+                            string.Compare(b.lastName, a.lastName, true));
+                        break;
+
+                    case "regionluid_text":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.regionLUID_Text, b.regionLUID_Text, true) :
+                            string.Compare(b.regionLUID_Text, a.regionLUID_Text, true));
+                        break;
+
+                    case "districtluid_text":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.districtLUID_Text, b.districtLUID_Text, true) :
+                            string.Compare(b.districtLUID_Text, a.districtLUID_Text, true));
+                        break;
+
+                    case "archive":
+                        list.Sort((a, b) => ascending ?
+                            (a.archive ? 1 : 0) - (b.archive ? 1 : 0) :
+                            (b.archive ? 1 : 0) - (a.archive ? 1 : 0));
+                        break;
+
+                    case "readytoarchive":
+                        list.Sort((a, b) => ascending ?
+                            (a.readyToArchive ? 1 : 0) - (b.readyToArchive ? 1 : 0) :
+                            (b.readyToArchive ? 1 : 0) - (a.readyToArchive ? 1 : 0));
+                        break;
+
+                    case "haspendingemail":
+                        list.Sort((a, b) => ascending ?
+                            (a.hasPendingEmail ? 1 : 0) - (b.hasPendingEmail ? 1 : 0) :
+                            (b.hasPendingEmail ? 1 : 0) - (a.hasPendingEmail ? 1 : 0));
+                        break;
+
+                    case "lastactivityutc":
+                        list.Sort((a, b) => ascending ?
+                            DateTime.Compare(a.lastActivityUtc ?? DateTime.MinValue, b.lastActivityUtc ?? DateTime.MinValue) :
+                            DateTime.Compare(b.lastActivityUtc ?? DateTime.MinValue, a.lastActivityUtc ?? DateTime.MinValue));
+                        break;
+
+                    case "address":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.address, b.address, true) :
+                            string.Compare(b.address, a.address, true));
+                        break;
+
+                    case "town":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.town, b.town, true) :
+                            string.Compare(b.town, a.town, true));
+                        break;
+
+                    case "postalcode":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.postalCode, b.postalCode, true) :
+                            string.Compare(b.postalCode, a.postalCode, true));
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            pagedList.list = list
+                .Skip((pagedList.pager.pageNo - 1) * pagedList.pager.pageSize)
+                .Take(pagedList.pager.pageSize)
+                .ToList();
+
+            pagedList.pager.rowCount = (pagedList.list.Count > 0 ? pagedList.list[0].totalCount : 0);
+            return pagedList;
+        }
+
+        DTO.Account_Full _account_reader(SqlDataReader reader)
         {
             if (reader.Read())
             {
-                var entity = new DTO.Account_Select();
+                var entity = new DTO.Account_Full();
                 var ix = -1;
-                ix++; entity.id = reader.GetInt32(ix);
+                ix++; entity.uid = reader.GetInt32(ix);
                 ix++; entity.cid = reader.GetInt32(ix);
                 ix++; entity.cid_Text = reader.GetString(ix);
                 ix++; entity.email = reader.GetString(ix);
@@ -39,7 +208,7 @@ namespace BaseApp.DAL
             return null;
         }
 
-        public DTO.Account_Select spAccount_Select(int id)
+        public DTO.Account_Full spAccount_Select(int id)
         {
             using (var command = connex.CreateCommand())
             {
@@ -54,7 +223,7 @@ namespace BaseApp.DAL
             }
         }
 
-        public DTO.Account_Select spAccount_New()
+        public DTO.Account_Full spAccount_New()
         {
             using (var command = connex.CreateCommand())
             {
@@ -93,7 +262,7 @@ namespace BaseApp.DAL
                 command.Parameters.Add(id);
                 command.ExecuteNonQuery();
 
-                uto.id = (int)id.Value;
+                uto.uid = (int)id.Value;
             }
         }
 
@@ -103,7 +272,7 @@ namespace BaseApp.DAL
             {
                 command.CommandText = "dbo.Account_Update";
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@ID", uto.id);
+                command.Parameters.AddWithValue("@ID", uto.uid);
                 command.Parameters.AddWithValue("@Email", crypto.Encrypt(uto.email));
                 command.Parameters.AddWithValue("@RoleMask", uto.roleMask);
                 command.Parameters.AddWithValue("@ResetGuid", (object)uto.resetGuid ?? DBNull.Value);
@@ -230,7 +399,7 @@ namespace BaseApp.DTO
         public bool? readyToArchive { get; set; }
     }
 
-    public class Account_Select : Account_Select_PK
+    public class Account_Full : Account_PK
     {
         public object xtra { get; set; }
         public int cid { get; set; }
@@ -247,6 +416,10 @@ namespace BaseApp.DTO
         public bool isAdminReset { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
+        public bool useRealEmail { get; set; }
+        public int? archiveDays { get; set; }
+        public bool readyToArchive { get; set; }
+        public int year { get; set; }
         public string comment { get; set; }
         public bool archive { get; set; }
         public DateTime created { get; set; }
@@ -260,7 +433,7 @@ namespace BaseApp.DTO
         public bool canResetPassword { get; set; }
         public bool canCreateInvitation { get; set; }
 
-        internal Account_Select Decrypt(Crypto crypto)
+        internal Account_Full Decrypt(Crypto crypto)
         {
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
@@ -270,9 +443,9 @@ namespace BaseApp.DTO
         }
     }
 
-    public class Account_Select_PK
+    public class Account_PK
     {
-        public int id { get; set; }
+        public int uid { get; set; }
     }
 
     public class Account_Summary : DTO_Summary
@@ -287,7 +460,7 @@ namespace BaseApp.UTO
     using System.Collections.Generic;
     using BaseApp.Common;
 
-    public class Account_UK : DTO.Account_Select_PK
+    public class Account_UK : DTO.Account_PK
     {
         public DateTime updatedUtc { get; set; }
     }
@@ -342,9 +515,9 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         PagedList<Account_Search, Account_Search_Filter> Account_Search(Pager<Account_Search_Filter> pagerData);
-        Account_Select Get_Account_Select(int id, string url);
-        Account_Select GetNew_Account_Select();
-        Account_Select_PK Account_Insert(UTO.Account_Update uto, string url);
+        Account_Full Get_Account_Select(int id, string url);
+        Account_Full GetNew_Account_Select();
+        Account_PK Account_Insert(UTO.Account_Update uto, string url);
         void Account_Update(UTO.Account_Update uto);
         void Account_Delete(int id, DateTime concurrencyUtc);
         void Auto_Archive();
@@ -360,7 +533,7 @@ namespace BaseApp.Service
             return list;
         }
 
-        public Account_Select Get_Account_Select(int id, string url)
+        public Account_Full Get_Account_Select(int id, string url)
         {
             var item = repo.spAccount_Select(id);
             var xtra = repo.spAccount_Summary(id);
@@ -378,7 +551,7 @@ namespace BaseApp.Service
             return item;
         }
 
-        public Account_Select GetNew_Account_Select()
+        public Account_Full GetNew_Account_Select()
         {
             //RequirePermission(Perm.TODO);
 
@@ -386,7 +559,7 @@ namespace BaseApp.Service
             return item;
         }
 
-        public Account_Select_PK Account_Insert(UTO.Account_Update uto, string url)
+        public Account_PK Account_Insert(UTO.Account_Update uto, string url)
         {
             uto.email = sanitizeEmail(uto.email);
             uto.Validate();
@@ -419,15 +592,15 @@ namespace BaseApp.Service
                 repo.spAccount_Insert(uto);
             }
 
-            return new Account_Select_PK { id = uto.id };
+            return new Account_PK { uid = uto.uid };
         }
 
         public void Account_Update(UTO.Account_Update uto)
         {
-            if (uto.id == 1 && user.Get_UID() != 1)
+            if (uto.uid == 1 && user.Get_UID() != 1)
                 throw new ValidationException("Only the administrator can update this account!");
 
-            if (uto.id == user.Get_UID() && uto.archive)
+            if (uto.uid == user.Get_UID() && uto.archive)
                 throw new ValidationException("You cannot archive your own account!");
 
             uto.email = sanitizeEmail(uto.email);

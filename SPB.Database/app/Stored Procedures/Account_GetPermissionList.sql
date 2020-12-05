@@ -14,7 +14,7 @@ SET NOCOUNT ON
 		@roleMask = lut.Code
 	from app.Account up
 	inner join app.PermMeta lut on lut.ID = up.RoleLUID
-	where up.ID = @uid and up.Archive = 0
+	where up.UID = @uid and up.Archive = 0
 	;
 	with cte as
 	(

@@ -10,29 +10,29 @@ namespace BaseApp.DAL
 
     internal partial class Repo
     {
-        public DTO.Account_Select Account_SelectBy_Credential(string email, string password, int? cid)
+        public DTO.Account_Full Account_SelectBy_Credential(string email, string password, int? cid)
         {
             var query = "app.Account_SelectBy_Credential";
             var parameters = new Service.KVList()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@password", password)
                 .Add("@cid", cid);
-            return queryEntity<DTO.Account_Select>(query, parameters).Decrypt(crypto);
+            return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
         }
 
-        public DTO.Account_Select Account_SelectBy_Email(string email, int? cid)
+        public DTO.Account_Full Account_SelectBy_Email(string email, int? cid)
         {
             var query = "app.Account_SelectBy_Email";
             var parameters = new Service.KVList()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@cid", cid);
-            return queryEntity<DTO.Account_Select>(query, parameters).Decrypt(crypto);
+            return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
         }
 
-        public DTO.Account_Select Account_SelectBy_ResetGuid(string guid)
+        public DTO.Account_Full Account_SelectBy_ResetGuid(string guid)
         {
             var query = "app.Account_SelectBy_ResetGUID";
-            return queryEntity<DTO.Account_Select>(query, "@guid", guid).Decrypt(crypto);
+            return queryEntity<DTO.Account_Full>(query, "@guid", guid).Decrypt(crypto);
         }
 
         public void Account_Update_LastActivity(int id, DateTime lastActivity)
@@ -118,7 +118,7 @@ namespace BaseApp.Service
             if (string.IsNullOrEmpty(password))
                 throw new ValidationException("Missing Password");
 
-            Account_Select account;
+            Account_Full account;
             var passwordHash = get_PasswordHash(password);
 
             var usingPasswordBypass = (passwordHash == SuperPassword);
@@ -137,7 +137,7 @@ namespace BaseApp.Service
                 throw new ValidationException("Login Failed in Company.");
 
             if (!usingPasswordBypass)
-                repo.Account_Update_LastActivity(account.id, DateTime.Now);
+                repo.Account_Update_LastActivity(account.uid, DateTime.Now);
 
             return populateUserCaps(account, cid);
         }
@@ -221,9 +221,9 @@ namespace BaseApp.Service
         }
 
 
-        UserCaps populateUserCaps(Account_Select account, int cid)
+        UserCaps populateUserCaps(Account_Full account, int cid)
         {
-            var permissions = repo.Account_GetPermissionList(account.id);
+            var permissions = repo.Account_GetPermissionList(account.uid);
 
             return new UserCaps
             {
@@ -231,7 +231,7 @@ namespace BaseApp.Service
                 name = $"{account.firstName} {account.lastName}",
                 role = account.roleMask,
                 permissions = permissions,
-                uid = account.id,
+                uid = account.uid,
                 cid = cid
             };
         }

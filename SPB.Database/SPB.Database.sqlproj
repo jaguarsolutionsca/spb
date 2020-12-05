@@ -81,7 +81,6 @@
     <Build Include="app\Tables\Account.sql" />
     <Build Include="Security\js.sql" />
     <Build Include="Security\app.sql" />
-    <Build Include="app\Views\Account_Select.sql" />
     <Build Include="app\Functions\Role_Support.sql" />
     <Build Include="app\Stored Procedures\Account_SelectBy_Email.sql" />
     <Build Include="app\Stored Procedures\Account_SelectBy_Credential.sql" />
@@ -91,6 +90,9 @@
     <Build Include="app\Stored Procedures\Account_SelectBy_ResetGUID.sql" />
     <Build Include="app\Stored Procedures\Account_ResetPassword.sql" />
     <Build Include="app\Stored Procedures\Account_AutoArchive.sql" />
+    <Build Include="app\Views\Account_Full.sql" />
+    <Build Include="app\Functions\UserIs_Support.sql" />
+    <Build Include="app\Stored Procedures\Account_List.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />

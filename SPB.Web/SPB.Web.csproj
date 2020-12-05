@@ -10,6 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\admin\account.ts" />
+    <None Remove="src\admin\accounts.ts" />
+    <None Remove="src\admin\layout.ts" />
+    <None Remove="src\admin\main.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\app.css" />
   </ItemGroup>
 
@@ -32,6 +39,13 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\admin\account.ts" />
+    <TypeScriptCompile Include="src\admin\accounts.ts" />
+    <TypeScriptCompile Include="src\admin\layout.ts" />
+    <TypeScriptCompile Include="src\admin\main.ts" />
   </ItemGroup>
 
 

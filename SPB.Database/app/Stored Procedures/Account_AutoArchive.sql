@@ -1,17 +1,22 @@
 ﻿CREATE PROCEDURE [app].[Account_AutoArchive]
+(
+	@cid int
+)
 AS
 BEGIN
 SET NOCOUNT ON
 ;
-DECLARE @autoArchiveMonths int = 4;
---SELECT @autoArchiveMonths = Number1 FROM ConfigConstant WHERE Name = 'AA-MONTH';
 
-UPDATE app.Account
+UPDATE
+	app.Account
 SET
-	Archive = 1
-WHERE 
-	AutoArchive = 1 AND 
-	Archive = 0 AND 
-	DATEDIFF(MONTH, ISNULL(LastActivity, Created), GETDATE()) >= @autoArchiveMonths
+	app.Account.Archive = 1
+FROM
+	app.Account acc
+INNER JOIN
+	app.Account_Full af ON af.UID = acc.UID
+WHERE
+	af.ReadyToArchive = 1 AND
+	af.CID = @cid
 ;
 END

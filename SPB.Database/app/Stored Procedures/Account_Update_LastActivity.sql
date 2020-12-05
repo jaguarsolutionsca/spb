@@ -13,6 +13,6 @@ SET
 	lastActivity = @lastActivity, 
 	ResetGuid = NULL, 
 	ResetExpiry = NULL 
-WHERE ID = @uid
+WHERE UID = @uid
 
 END

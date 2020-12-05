@@ -61,13 +61,29 @@ export const getMenuData = () => {
 
     menuData = [
         {
+            name: "Application",
+            icon: "fad fa-cogs",
+            columnClass: "is-half-tablet",
+            canView: true,
+            sections: [
+                {
+                    name: "Gestion", icon: "fas fa-lock",
+                    links: [
+                        { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
+                        { name: "Matrice de sécurité", href: "#/admin/apages", ns: ["App_Apages", "App_Apage"] },
+                        { name: "Audit", href: "#/admin/audittrails", ns: ["App_auditTrails"] },
+                    ]
+                },
+            ]
+        },
+        {
             name: "Territoires",
-            icon: "far fa-fire",
+            icon: "fad fa-map-marker-alt",
             columnClass: "is-half-tablet is-one-third-widescreen",
             canView: true,
             sections: [
                 {
-                    name: "Entrée de données", icon: "fal fa-table",
+                    name: "Saisie", icon: "fal fa-table",
                     links: [
                         { name: "Daily Fire", href: "#/firedays", ns: ["App_firedays", "App_fireday", "App_firemap"] },
                         { name: "Fire History", href: "#/fires", ns: ["App_fires", "App_fire"] },
@@ -84,12 +100,12 @@ export const getMenuData = () => {
         },
         {
             name: "Essences",
-            icon: "far fa-sun-cloud",
+            icon: "fad fa-trees",
             columnClass: "is-half-tablet is-one-third-widescreen",
             canView: true,
             sections: [
                 {
-                    name: "Entrée de données", icon: "fal fa-table",
+                    name: "Saisie", icon: "fal fa-table",
                     links: [
                         { name: "Weather/Day", hidden: true },
                         { name: "Weather/Station", hidden: true },
@@ -105,17 +121,133 @@ export const getMenuData = () => {
             ]
         },
         {
-            name: "Administration",
-            icon: "fa fa-cogs",
-            columnClass: "is-half-tablet",
+            name: "Fournisseurs",
+            icon: "fad fa-user-tag",
+            columnClass: "is-half-tablet is-one-third-widescreen",
             canView: true,
             sections: [
                 {
-                    name: "Gestion", icon: "fas fa-lock",
+                    name: "Saisie", icon: "fal fa-table",
                     links: [
-                        { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
-                        { name: "Matrice de sécurité", href: "#/admin/apages", ns: ["App_Apages", "App_Apage"] },
-                        { name: "Audit", href: "#/admin/audittrails", ns: ["App_auditTrails"] },
+                        { name: "Weather/Day", hidden: true },
+                        { name: "Weather/Station", hidden: true },
+                    ]
+                },
+                {
+                    name: "Rapports", icon: "fal fa-file-alt",
+                    links: [
+                        { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
+                        { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
+                    ]
+                },
+            ]
+        },
+        {
+            name: "Usines",
+            icon: "fad fa-industry-alt",
+            columnClass: "is-half-tablet is-one-third-widescreen",
+            canView: true,
+            sections: [
+                {
+                    name: "Saisie", icon: "fal fa-table",
+                    links: [
+                        { name: "Weather/Day", hidden: true },
+                        { name: "Weather/Station", hidden: true },
+                    ]
+                },
+                {
+                    name: "Rapports", icon: "fal fa-file-alt",
+                    links: [
+                        { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
+                        { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
+                    ]
+                },
+            ]
+        },
+        {
+            name: "Contrats",
+            icon: "fad fa-file-signature",
+            columnClass: "is-half-tablet is-one-third-widescreen",
+            canView: true,
+            sections: [
+                {
+                    name: "Saisie", icon: "fal fa-table",
+                    links: [
+                        { name: "Weather/Day", hidden: true },
+                        { name: "Weather/Station", hidden: true },
+                    ]
+                },
+                {
+                    name: "Rapports", icon: "fal fa-file-alt",
+                    links: [
+                        { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
+                        { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
+                    ]
+                },
+            ]
+        },
+        {
+            name: "Livraisons",
+            icon: "fad fa-truck-container",
+            columnClass: "is-half-tablet is-one-third-widescreen",
+            canView: true,
+            sections: [
+                {
+                    name: "Saisie", icon: "fal fa-table",
+                    links: [
+                        { name: "Weather/Day", hidden: true },
+                        { name: "Weather/Station", hidden: true },
+                    ]
+                },
+                {
+                    name: "Rapports", icon: "fal fa-file-alt",
+                    links: [
+                        { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
+                        { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
+                    ]
+                },
+            ]
+        },
+        {
+            name: "Indexations",
+            icon: "fad fa-book",
+            columnClass: "is-half-tablet is-one-third-widescreen",
+            canView: true,
+            sections: [
+                {
+                    name: "Saisie", icon: "fal fa-table",
+                    links: [
+                        { name: "Weather/Day", hidden: true },
+                        { name: "Weather/Station", hidden: true },
+                    ]
+                },
+                {
+                    name: "Rapports", icon: "fal fa-file-alt",
+                    links: [
+                        { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
+                        { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
+                    ]
+                },
+            ]
+        },
+        {
+            name: "Rapports",
+            icon: "fad fa-file-spreadsheet",
+            columnClass: "is-half-tablet is-one-third-widescreen",
+            canView: true,
+            sections: [
+                {
+                    name: "Saisie", icon: "fal fa-table",
+                    links: [
+                        { name: "Weather/Day", hidden: true },
+                        { name: "Weather/Station", hidden: true },
+                    ]
+                },
+                {
+                    name: "Rapports", icon: "fal fa-file-alt",
+                    links: [
+                        { name: "Weather/Day", onclick: "App_rpt_wxbydate.fetch_wxbyday()" },
+                        { name: "Weather/Station", onclick: "App_rpt_wxbystation.fetch()" },
                     ]
                 },
             ]

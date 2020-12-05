@@ -24,7 +24,7 @@ namespace BaseApp.DAL
                     {
                         var entity = new DTO.Profile_Select();
                         var ix = -1;
-                        ix++; entity.id = reader.GetInt32(ix);
+                        ix++; entity.uid = reader.GetInt32(ix);
                         ix++; entity.email = reader.GetString(ix);
                         ix++; entity.firstName = reader.GetString(ix);
                         ix++; entity.lastName = reader.GetString(ix);
@@ -73,7 +73,7 @@ namespace BaseApp.DTO
     using BaseApp.Common;
     using System;
 
-    public class Profile_Select : Account_Select_PK
+    public class Profile_Select : Account_PK
     {
         public string email { get; set; }
         public string firstName { get; set; }

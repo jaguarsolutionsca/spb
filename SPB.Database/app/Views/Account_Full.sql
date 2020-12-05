@@ -1,9 +1,7 @@
-﻿
-
-CREATE VIEW [app].[Account_Select]
+﻿CREATE VIEW [app].[Account_Full]
 AS
 SELECT
-	acc.ID, 
+	acc.UID, 
 	acc.CID, 
 	comp.Name [CID_Text],
 	acc.Email, 
@@ -17,8 +15,11 @@ SELECT
 	acc.LastActivity, 
 	acc.IsAdminReset, 
 	acc.FirstName, 
-	acc.AutoArchive, 
 	acc.LastName, 
+	acc.UseRealEmail, 
+	acc.ArchiveDays, 
+	CAST(CASE WHEN ISNULL(acc.ArchiveDays,0) > 0 AND acc.Archive = 0 AND DATEDIFF(DAY, ISNULL(acc.LastActivity, acc.Created), GETDATE()) >= acc.ArchiveDays THEN 1 ELSE 0 END AS bit) [ReadyToArchive],
+	acc.Year,
 	acc.Comment, 
 	acc.Archive, 
 	acc.Created, 
@@ -28,9 +29,9 @@ SELECT
 FROM app.Account acc
 INNER JOIN app.Company comp ON acc.CID = comp.ID 
 INNER JOIN app.PermMeta meta ON acc.RoleLUID = meta.ID
-INNER JOIN app.Account acc2 ON acc2.ID = acc.UpdatedBy
+INNER JOIN app.Account acc2 ON acc2.UID = acc.UpdatedBy
 GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'app', @level1type = N'VIEW', @level1name = N'Account_Select';
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'app', @level1type = N'VIEW', @level1name = N'Account_Full';
 
 
 GO
@@ -161,5 +162,5 @@ Begin DesignProperties =
       End
    End
 End
-', @level0type = N'SCHEMA', @level0name = N'app', @level1type = N'VIEW', @level1name = N'Account_Select';
+', @level0type = N'SCHEMA', @level0name = N'app', @level1type = N'VIEW', @level1name = N'Account_Full';
 

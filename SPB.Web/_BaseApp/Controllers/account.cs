@@ -29,21 +29,21 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public Account_Select Get(int id)
+        public Account_Full Get(int id)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.Get_Account_Select(id, buildUIRouterUrl("accept-invitation/{guid}"));
         }
 
         [HttpGet("new")]
-        public Account_Select GetNew()
+        public Account_Full GetNew()
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.GetNew_Account_Select();
         }
 
         [HttpPost]
-        public Account_Select_PK Create([FromBody] Account_Update uto)
+        public Account_PK Create([FromBody] Account_Update uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.Account_Insert(uto, buildUIRouterUrl("accept-invitation/{guid}"));
@@ -61,23 +61,23 @@ namespace BaseApp.Web.Controllers
         public ActionResult Delete([FromBody] Account_UK key)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            app.Account_Delete(key.id, key.updatedUtc);
+            app.Account_Delete(key.uid, key.updatedUtc);
             return NoContent();
         }
 
         [HttpPost("reset-password")]
-        public ActionResult ResetPassword([FromBody] Account_Select_PK model)
+        public ActionResult ResetPassword([FromBody] Account_PK model)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            app.Reset_PasswordBy_Admin(model.id, buildUIRouterUrl("reset-password/{guid}"));
+            app.Reset_PasswordBy_Admin(model.uid, buildUIRouterUrl("reset-password/{guid}"));
             return NoContent();
         }
 
         [HttpPost("create-invitation")]
-        public ActionResult CreateInvitation([FromBody] Account_Select_PK model)
+        public ActionResult CreateInvitation([FromBody] Account_PK model)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            app.Create_Invitation(model.id, buildUIRouterUrl("accept-invitation/{guid}"));
+            app.Create_Invitation(model.uid, buildUIRouterUrl("accept-invitation/{guid}"));
             return NoContent();
         }
 

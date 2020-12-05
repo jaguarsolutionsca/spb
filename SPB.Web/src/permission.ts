@@ -1,7 +1,7 @@
 ﻿"use strict"
 
 import * as Auth from "../_BaseApp/src/auth"
-export { getEmail, getName, getUID, getRoles, refreshLoginData } from "../_BaseApp/src/auth"
+export { getEmail, getName, getUID, getRoles, getCurrentYear, refreshLoginData } from "../_BaseApp/src/auth"
 
 
 const ROLE_SUPPORT = 1;

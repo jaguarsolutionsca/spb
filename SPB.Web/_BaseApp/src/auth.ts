@@ -23,6 +23,7 @@ export interface UserCaps {
     permissions: number[]
     uid: number
     cid: number
+    year: number
 }
 
 var loginData = <LoginData>{};
@@ -411,6 +412,12 @@ export const getUID = () => {
     if (loginData == undefined || loginData.user == undefined)
         return null;
     return loginData.user.uid;
+}
+
+export const getCurrentYear = () => {
+    if (loginData == undefined || loginData.user == undefined)
+        return null;
+    return loginData.user.year;
 }
 
 export const getPermissions = () => {
