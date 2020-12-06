@@ -247,7 +247,7 @@ namespace BaseApp.DTO
         public bool useRealEmail { get; set; }
         public int? archiveDays { get; set; }
         public bool readyToArchive { get; set; }
-        public int year { get; set; }
+        public int currentYear { get; set; }
         public string comment { get; set; }
         public bool archive { get; set; }
         public DateTime created { get; set; }

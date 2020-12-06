@@ -19,7 +19,7 @@ SELECT
 	acc.UseRealEmail, 
 	acc.ArchiveDays, 
 	CAST(CASE WHEN ISNULL(acc.ArchiveDays,0) > 0 AND acc.Archive = 0 AND DATEDIFF(DAY, ISNULL(acc.LastActivity, acc.Created), GETDATE()) >= acc.ArchiveDays THEN 1 ELSE 0 END AS bit) [ReadyToArchive],
-	acc.Year,
+	acc.[CurrentYear],
 	acc.Comment, 
 	acc.Archive, 
 	acc.Created, 

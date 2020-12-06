@@ -4,7 +4,7 @@ import * as App from "../../_BaseApp/src/core/app"
 import * as Lookup from "../../_BaseApp/src/admin/lookupdata"
 
 
-export { LookupData, Role, fetch_authrole, authrole } from "../../_BaseApp/src/admin/lookupdata"
+export { LookupData, fetch_authrole, authrole } from "../../_BaseApp/src/admin/lookupdata"
 
 
 const yearFilter = (one: Lookup.LookupData, year: number) => year >= one.started && (one.ended == undefined || year <= one.ended);

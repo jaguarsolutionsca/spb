@@ -23,39 +23,36 @@ interface IKey {
 }
 
 interface IState {
+    uid: number
     xtra: any
-    id: number
+    cie: number
+    cie_Text: string
     email: string
+    password: string
+    roleLUID: number
+    roleLUID_Text: string
     roleMask: number
+    isSupport: boolean
     resetGuid: string
-    resetExpiryUtc: Date
-    lastActivityUtc: Date
-    archive: boolean
-    createdUtc: Date
-    updatedUtc: Date
-    updatedBy: number
-    by: string
+    resetExpiry: Date
+    lastActivity: Date
+    isAdminReset: boolean
     firstName: string
     lastName: string
-    regionLUID: number
-    regionLUID_Text: string
-    districtLUID: number
-    districtLUID_Text: string
-    phone1: string
-    phone2: string
-    fax: string
-    machineID: number
+    useRealEmail: boolean
+    archiveDays: number
+    readyToArchive: boolean
     currentYear: number
-    autoArchive: boolean
-    autoLock: boolean
+    comment: string
+    archive: boolean
+    created: Date
+    updated: Date
+    updatedBy: number
+    by: string
+    //
     canExtendInvitation: boolean
     canResetPassword: boolean
     canCreateInvitation: boolean
-    emailSubject: string
-    emailBody: string
-    address: string
-    town: string
-    postalCode: string
 }
 
 
@@ -69,73 +66,47 @@ let emailSubject: string;
 let emailBody: string;
 
 
-const formTemplate = (item: IState, roleList: Lookup.Role[]) => {
-    const roleTemplate = (role: Lookup.Role, roleMask: number, index: number) => {
-        let mask = Math.pow(2, index);
-        let selected = (roleMask & mask) != 0;
-        return `
-        <div>
-            <label class="checkbox">
-                <input type="checkbox" ${selected ? "checked" : ""} name="${NS}_roles" onchange="${NS}.onchange(this)" data-mask="${mask}"> ${role.name}
-            </label>
-        </div>`;
-    };
+const formTemplate = (item: IState, roleList: Lookup.LookupData[]) => {
 
-    const roleCheckboxes = roleList.reduce((html, one, index) => html + (index > 1 ? roleTemplate(one, item.roleMask, index) : ""), "");
+    let roleLUID = Theme.renderRadios(NS, "roleLUID", Lookup.authrole, state.roleLUID, false);
 
-    let pendingMailto = "";
-    if (item.emailBody) {
-        pendingMailto = `${item.email}?subject=${item.emailSubject}&body=${item.emailBody}`;
-    }
+    let canCreateFullAccount = true;//Perm.canCreateFullAccount();
 
     return `
     <!-- edit -->
     <div class="columns js-2-columns">
     <div class="column">
-    ${Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 50, true)}
-${!isNew ? `
-    <div class="field is-horizontal">
-        <div class="field-label"><label class="label">&nbsp;</label></div>
-        <div class="field-body"><span><a href="mailto:${item.email}"><i class="far fa-envelope"></i> ${i18n("SEND EMAIL TO")} ${item.email}</a></span></div>
-    </div>
-` : ``}
+    ${canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n(`USEREALEMAIL_HELP_${item.useRealEmail}`)) : ""}
+
+${item.useRealEmail ? `
+    ${Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, <Theme.IOptText>{ required: true, size: "js-width-50" })}
+    ${!isNew ? `
+        <div class="field is-horizontal">
+            <div class="field-label"><label class="label">&nbsp;</label></div>
+            <div class="field-body"><span><a href="mailto:${item.email}"><i class="far fa-envelope"></i> ${i18n("SEND EMAIL TO")} ${item.email}</a></span></div>
+        </div>
+    ` : ``}
+` : `
+    ${Theme.renderTextField2(NS, "email", item.email, i18n("USERNAME"), 50, <Theme.IOptText>{ required: true, size: "js-width-50" })}
+    ${Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, <Theme.IOptText>{ required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true })}
+`}
+
     ${Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true)}
     ${Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true)}
-    ${Theme.renderTextField(NS, "address", item.address, i18n("ADDRESS"), 50)}
-    ${Theme.renderTextField(NS, "town", item.town, i18n("TOWN"), 50, false, "js-width-50")}
-    ${Theme.renderTextField(NS, "postalCode", item.postalCode, i18n("POSTALCODE"), 50, false, "js-width-25")}
-    ${Theme.renderTextField(NS, "phone1", item.phone1, i18n("PHONE1"), 50, false, "js-width-50")}
-    ${Theme.renderTextField(NS, "phone2", item.phone2, i18n("PHONE2"), 50, false, "js-width-50")}
-    ${Theme.renderTextField(NS, "fax", item.fax, i18n("FAX"), 50, false, "js-width-50")}
-    ${Theme.renderNumberField(NS, "machineID", item.machineID, i18n("MACHINEID"), false, "js-width-25")}
 
 ${!isNew ? `
-    ${Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiryUtc), i18n("RESETEXPIRYUTC"))}
-    ${Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivityUtc), i18n("LASTACTIVITYUTC"))}
+    ${Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiry), i18n("RESETEXPIRY"))}
+    ${Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivity), i18n("LASTACTIVITY"))}
     <div class="field is-horizontal">
         <div class="field-label"><label class="label">&nbsp;</label></div>
         <div class="field-body">${resetPasswordButton(item)}</div>
     </div>
 ` : ``}
-${pendingMailto ? `
-    <div class="field is-horizontal">
-        <div class="field-label"><label class="label">Pending Email</label></div>
-        <div class="field-body"><span><a href="mailto:${pendingMailto}"><i class="far fa-envelope"></i> Send Pending Email</a></span></div>
-    </div>
-` : ``}
     </div>
     <div class="column">
     ${Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season")}
-    <div class="field is-horizontal">
-        <div class="field-label"><label class="label" for="${NS}_roleMask">${i18n("ROLEMASK")}</label></div>
-        <div class="field-body">
-            <div class="field js-checkbox-row">
-                ${roleCheckboxes}
-            </div>
-        </div>
-    </div>
-    <!--${Theme.renderCheckboxField(NS, "autoLock", item.autoLock, i18n("AUTOLOCK"), "Lock user out of OpsFMS after 5 minutes of inactivity")}-->
-    ${Theme.renderCheckboxField(NS, "autoArchive", item.autoArchive, i18n("AUTOARCHIVE"), "<em>Flag for Archive</em> after 4 months of inactivity")}
+    ${Theme.renderRadioField(roleLUID, i18n("ROLELUID"))}
+    ${Theme.renderNumberField(NS, "archiveDays", item.archiveDays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived")}
 ${!isNew ? `
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled")}
 ` : ``}
@@ -257,7 +228,7 @@ export const render = () => {
     const form = formTemplate(state, Lookup.authrole);
     emailBody = undefined;
 
-    const tab = tabTemplate(state.id, state.xtra);
+    const tab = tabTemplate(state.uid, state.xtra);
     const dirty = dirtyTemplate();
     const warning = App.warningTemplate();
     return pageTemplate(state, form, tab, warning, dirty);
@@ -276,23 +247,12 @@ export const inContext = () => {
 const getFormState = () => {
     let clone = Misc.clone(state) as IState;
     clone.email = Misc.fromInputText(`${NS}_email`, state.email);
-    clone.roleMask = Misc.fromInputCheckboxMask(`${NS}_roles`, state.roleMask);
-    clone.roleMask = (clone.roleMask & 0xFFFFFFFC) | (state.roleMask & 0x00000003);
-    clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
     clone.firstName = Misc.fromInputText(`${NS}_firstName`, state.firstName);
     clone.lastName = Misc.fromInputText(`${NS}_lastName`, state.lastName);
-    clone.regionLUID = Misc.fromSelectNumber(`${NS}_regionLUID`, state.regionLUID);
-    clone.districtLUID = Misc.fromSelectNumber(`${NS}_districtLUID`, state.districtLUID);
-    clone.phone1 = Misc.fromInputTextNullable(`${NS}_phone1`, state.phone1);
-    clone.phone2 = Misc.fromInputTextNullable(`${NS}_phone2`, state.phone2);
-    clone.fax = Misc.fromInputTextNullable(`${NS}_fax`, state.fax);
-    clone.machineID = Misc.fromInputNumberNullable(`${NS}_machineID`, state.machineID);
     clone.currentYear = Misc.fromInputNumber(`${NS}_currentYear`, state.currentYear);
-    clone.autoArchive = Misc.fromInputCheckbox(`${NS}_autoArchive`, state.autoArchive);
-    clone.autoLock = Misc.fromInputCheckbox(`${NS}_autoLock`, state.autoLock);
-    clone.address = Misc.fromInputTextNullable(`${NS}_address`, state.address);
-    clone.town = Misc.fromInputTextNullable(`${NS}_town`, state.town);
-    clone.postalCode = Misc.fromInputTextNullable(`${NS}_postalCode`, state.postalCode);
+    clone.roleLUID = Misc.fromRadioNumber(`${NS}_roleLUID`, state.roleLUID);
+    clone.archiveDays = Misc.fromInputNumber(`${NS}_archiveDays`, state.archiveDays);
+    clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
     return clone;
 };
 
@@ -310,9 +270,6 @@ const html5Valid = (): boolean => {
 
 export const onchange = (input: HTMLInputElement) => {
     state = getFormState();
-    if (input.id == `${NS}_regionLUID`) {
-        state.districtLUID = null;
-    }
     App.render();
 };
 
@@ -353,7 +310,7 @@ export const save = (done = false) => {
 }
 
 export const drop = () => {
-    (<any>key).updatedUtc = state.updatedUtc;
+    (<any>key).updated = state.updated;
     App.prepareRender();
     App.DELETE("/account", key)
         .then(_ => {

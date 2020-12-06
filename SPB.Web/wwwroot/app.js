@@ -3558,7 +3558,6 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/admin/lookupdata"], funct
         setters: [
             function (lookupdata_1_1) {
                 exports_34({
-                    "Role": lookupdata_1_1["Role"],
                     "fetch_authrole": lookupdata_1_1["fetch_authrole"],
                     "authrole": lookupdata_1_1["authrole"]
                 });
@@ -4160,17 +4159,9 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             isNew = false;
             isDirty = false;
             formTemplate = function (item, roleList) {
-                var roleTemplate = function (role, roleMask, index) {
-                    var mask = Math.pow(2, index);
-                    var selected = (roleMask & mask) != 0;
-                    return "\n        <div>\n            <label class=\"checkbox\">\n                <input type=\"checkbox\" " + (selected ? "checked" : "") + " name=\"" + NS + "_roles\" onchange=\"" + NS + ".onchange(this)\" data-mask=\"" + mask + "\"> " + role.name + "\n            </label>\n        </div>";
-                };
-                var roleCheckboxes = roleList.reduce(function (html, one, index) { return html + (index > 1 ? roleTemplate(one, item.roleMask, index) : ""); }, "");
-                var pendingMailto = "";
-                if (item.emailBody) {
-                    pendingMailto = item.email + "?subject=" + item.emailSubject + "&body=" + item.emailBody;
-                }
-                return "\n    <!-- edit -->\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 50, true) + "\n" + (!isNew ? "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n    </div>\n" : "") + "\n    " + Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "address", item.address, i18n("ADDRESS"), 50) + "\n    " + Theme.renderTextField(NS, "town", item.town, i18n("TOWN"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "postalCode", item.postalCode, i18n("POSTALCODE"), 50, false, "js-width-25") + "\n    " + Theme.renderTextField(NS, "phone1", item.phone1, i18n("PHONE1"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "phone2", item.phone2, i18n("PHONE2"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "fax", item.fax, i18n("FAX"), 50, false, "js-width-50") + "\n    " + Theme.renderNumberField(NS, "machineID", item.machineID, i18n("MACHINEID"), false, "js-width-25") + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiryUtc), i18n("RESETEXPIRYUTC")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivityUtc), i18n("LASTACTIVITYUTC")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n" + (pendingMailto ? "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">Pending Email</label></div>\n        <div class=\"field-body\"><span><a href=\"mailto:" + pendingMailto + "\"><i class=\"far fa-envelope\"></i> Send Pending Email</a></span></div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\" for=\"" + NS + "_roleMask\">" + i18n("ROLEMASK") + "</label></div>\n        <div class=\"field-body\">\n            <div class=\"field js-checkbox-row\">\n                " + roleCheckboxes + "\n            </div>\n        </div>\n    </div>\n    <!--" + Theme.renderCheckboxField(NS, "autoLock", item.autoLock, i18n("AUTOLOCK"), "Lock user out of OpsFMS after 5 minutes of inactivity") + "-->\n    " + Theme.renderCheckboxField(NS, "autoArchive", item.autoArchive, i18n("AUTOARCHIVE"), "<em>Flag for Archive</em> after 4 months of inactivity") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n    " + Theme.renderBlame(item, isNew) + "\n";
+                var roleLUID = Theme.renderRadios(NS, "roleLUID", Lookup.authrole, state.roleLUID, false);
+                var canCreateFullAccount = true; //Perm.canCreateFullAccount();
+                return "\n    <!-- edit -->\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + (canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n("USEREALEMAIL_HELP_" + item.useRealEmail)) : "") + "\n\n" + (item.useRealEmail ? "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, { required: true, size: "js-width-50" }) + "\n    " + (!isNew ? "\n        <div class=\"field is-horizontal\">\n            <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n            <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n        </div>\n    " : "") + "\n" : "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("USERNAME"), 50, { required: true, size: "js-width-50" }) + "\n    " + Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, { required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true }) + "\n") + "\n\n    " + Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true) + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiry), i18n("RESETEXPIRY")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivity), i18n("LASTACTIVITY")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    " + Theme.renderRadioField(roleLUID, i18n("ROLELUID")) + "\n    " + Theme.renderNumberField(NS, "archiveDays", item.archiveDays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             resetPasswordButton = function (item) {
                 var title;
@@ -4242,7 +4233,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 var year = state.currentYear;
                 var form = formTemplate(state, Lookup.authrole);
                 emailBody = undefined;
-                var tab = layout_3.tabTemplate(state.id, state.xtra);
+                var tab = layout_3.tabTemplate(state.uid, state.xtra);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -4258,23 +4249,12 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             getFormState = function () {
                 var clone = Misc.clone(state);
                 clone.email = Misc.fromInputText(NS + "_email", state.email);
-                clone.roleMask = Misc.fromInputCheckboxMask(NS + "_roles", state.roleMask);
-                clone.roleMask = (clone.roleMask & 0xFFFFFFFC) | (state.roleMask & 0x00000003);
-                clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
                 clone.firstName = Misc.fromInputText(NS + "_firstName", state.firstName);
                 clone.lastName = Misc.fromInputText(NS + "_lastName", state.lastName);
-                clone.regionLUID = Misc.fromSelectNumber(NS + "_regionLUID", state.regionLUID);
-                clone.districtLUID = Misc.fromSelectNumber(NS + "_districtLUID", state.districtLUID);
-                clone.phone1 = Misc.fromInputTextNullable(NS + "_phone1", state.phone1);
-                clone.phone2 = Misc.fromInputTextNullable(NS + "_phone2", state.phone2);
-                clone.fax = Misc.fromInputTextNullable(NS + "_fax", state.fax);
-                clone.machineID = Misc.fromInputNumberNullable(NS + "_machineID", state.machineID);
                 clone.currentYear = Misc.fromInputNumber(NS + "_currentYear", state.currentYear);
-                clone.autoArchive = Misc.fromInputCheckbox(NS + "_autoArchive", state.autoArchive);
-                clone.autoLock = Misc.fromInputCheckbox(NS + "_autoLock", state.autoLock);
-                clone.address = Misc.fromInputTextNullable(NS + "_address", state.address);
-                clone.town = Misc.fromInputTextNullable(NS + "_town", state.town);
-                clone.postalCode = Misc.fromInputTextNullable(NS + "_postalCode", state.postalCode);
+                clone.roleLUID = Misc.fromRadioNumber(NS + "_roleLUID", state.roleLUID);
+                clone.archiveDays = Misc.fromInputNumber(NS + "_archiveDays", state.archiveDays);
+                clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
                 return clone;
             };
             valid = function (formState) {
@@ -4289,9 +4269,6 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             };
             exports_38("onchange", onchange = function (input) {
                 state = getFormState();
-                if (input.id == NS + "_regionLUID") {
-                    state.districtLUID = null;
-                }
                 App.render();
             });
             exports_38("cancel", cancel = function () {
@@ -4333,7 +4310,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .catch(App.render);
             });
             exports_38("drop", drop = function () {
-                key.updatedUtc = state.updatedUtc;
+                key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/account", key)
                     .then(function (_) {

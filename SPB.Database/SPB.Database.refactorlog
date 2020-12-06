@@ -28,4 +28,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[CIE]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="3cb4c16d-1954-4e17-afd9-1a9a384c43d3" ChangeDateTime="12/06/2020 16:11:44">
+    <Property Name="ElementName" Value="[app].[Account].[Year]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[app].[Account]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CurrentYear]" />
+  </Operation>
 </Operations>
