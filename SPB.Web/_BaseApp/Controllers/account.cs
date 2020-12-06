@@ -3,6 +3,7 @@ using BaseApp.DTO;
 using BaseApp.Service;
 using BaseApp.UTO;
 using BaseApp.Web.Controllers;
+using BaseApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -79,9 +80,24 @@ namespace BaseApp.Web.Controllers
             return NoContent();
         }
 
-        [HttpPost("auto-archive}")]
-        public ActionResult AutoArchive(int cie)
+        [HttpPost("refresh")]
+        public AuthorizationData Refresh()
         {
+            var usercaps = app.RefreshAppLogin();
+            return populateAuthorizationData(usercaps);
+        }
+
+        [HttpGet("role")]
+        public List<Lookup> Lookup_Role()
+        {
+            var uid = User.Get_UID();
+            return app.Account_GetRoleLookup(uid);
+        }
+
+        [HttpPost("auto-archive")]
+        public ActionResult AutoArchive()
+        {
+            var cie = User.Get_CIE();
             app.RequirePermission(Perm.Accounts_Edit);
             app.Auto_Archive(cie);
             return NoContent();

@@ -71,44 +71,6 @@ namespace BaseApp.Web.Controllers
             return NoContent();
         }
 
-        [Authorize]
-        [HttpPost("refresh")]
-        public AuthorizationData Refresh()
-        {
-            var usercaps = app.RefreshAppLogin();
-            return populateAuthorizationData(usercaps);
-        }
-
-        AuthorizationData populateAuthorizationData(UserCaps usercaps)
-        {
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Email, usercaps.email));
-            claims.Add(new Claim(UserData.ClaimType_Name, usercaps.name));
-            claims.Add(new Claim(UserData.ClaimType_UID, usercaps.uid.ToString()));
-            claims.Add(new Claim(UserData.ClaimType_CIE, usercaps.cie.ToString()));
-            foreach (var permission in usercaps.permissions)
-            {
-                claims.Add(new Claim(UserData.ClaimType_Perms, permission.ToString(), ClaimValueTypes.Integer));
-            }
-            claims.Add(new Claim(ClaimTypes.Role, usercaps.role.ToString(), ClaimValueTypes.Integer));
-
-            var secretKey = new SymmetricSecurityKey(app.IssuerSigningKey);
-            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-            var tokenOptions = new JwtSecurityToken(
-                issuer: app.Issuer,
-                audience: app.Audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(app.FormsAuthenticationTimeoutTotalMinutes),
-                signingCredentials: signinCredentials
-            );
-
-            return new AuthorizationData
-            {
-                token = new JwtSecurityTokenHandler().WriteToken(tokenOptions)
-            };
-        }
-
 
         //
         // Link from email

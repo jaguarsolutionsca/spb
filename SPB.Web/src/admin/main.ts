@@ -5,7 +5,7 @@ import * as Router from "../../_BaseApp/src/core/router"
 //
 import * as Perm from "../permission"
 import * as accounts from "./accounts"
-//import * as account from "./account"
+import * as account from "./account"
 //import * as profile from "./profile"
 //import * as DataFiles from "./datafiles"
 //import * as DataFile from "./datafile"
@@ -19,7 +19,7 @@ import * as accounts from "./accounts"
 // Mainly used for event handlers
 //
 (<any>window).App_accounts = accounts;
-//(<any>window).App_account = account;
+(<any>window).App_account = account;
 //(<any>window).App_profile = profile;
 //(<any>window).App_DataFiles = DataFiles;
 //(<any>window).App_DataFile = DataFile;
@@ -29,7 +29,7 @@ import * as accounts from "./accounts"
 
 export const startup = () => {
     Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
-//    Router.addRoute("^#/admin/account/(.*)$", account.fetch);
+    Router.addRoute("^#/admin/account/(.*)$", account.fetch);
     //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
     //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
     //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
@@ -40,8 +40,8 @@ export const startup = () => {
 export const render = () => {
     return `
     ${accounts.render()}
+    ${account.render()}
 `;
-    //${account.render()}
     //${DataFiles.render()}
     //${DataFile.render()}
     //${Lookups.render()}
@@ -50,7 +50,7 @@ export const render = () => {
 
 export const postRender = () => {
     accounts.postRender();
-    //account.postRender();
+    account.postRender();
     //DataFiles.postRender();
     //DataFile.postRender();
     //Lookups.postRender();

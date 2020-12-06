@@ -1723,10 +1723,47 @@ System.register("_BaseApp/src/main", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         }
     };
 });
-System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], function (exports_10, context_10) {
+System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_10, context_10) {
+    "use strict";
+    var App, authrole, fetch_authrole;
+    var __moduleName = context_10 && context_10.id;
+    return {
+        setters: [
+            function (App_4) {
+                App = App_4;
+            }
+        ],
+        execute: function () {
+            exports_10("fetch_authrole", fetch_authrole = function () {
+                return function (data) {
+                    if (authrole != undefined && authrole.length > 0)
+                        return;
+                    return App.GET("/account/role").then(function (json) { exports_10("authrole", authrole = json); });
+                };
+            });
+        }
+    };
+});
+System.register("_BaseApp/src/lang/en-CA", [], function (exports_11, context_11) {
+    "use strict";
+    var en_CA;
+    var __moduleName = context_11 && context_11.id;
+    return {
+        setters: [],
+        execute: function () {
+            exports_11("en_CA", en_CA = {
+                values: {
+                    "EMAIL": "Email",
+                    "PASSWORD": "Password"
+                }
+            });
+        }
+    };
+});
+System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], function (exports_12, context_12) {
     "use strict";
     var Misc, NullPager, render, renderStatic, sortableHeaderLink, headerLink, rowNumber, asParams, searchTemplate;
-    var __moduleName = context_10 && context_10.id;
+    var __moduleName = context_12 && context_12.id;
     return {
         setters: [
             function (Misc_2) {
@@ -1734,8 +1771,8 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
             }
         ],
         execute: function () {
-            exports_10("NullPager", NullPager = { pageNo: 1, pageSize: 1000, rowCount: 0, searchText: "", sortColumn: "", sortDirection: "", filter: {} });
-            exports_10("render", render = function (pager, ns, sizes, searchHtml, customHtml) {
+            exports_12("NullPager", NullPager = { pageNo: 1, pageSize: 1000, rowCount: 0, searchText: "", sortColumn: "", sortDirection: "", filter: {} });
+            exports_12("render", render = function (pager, ns, sizes, searchHtml, customHtml) {
                 if (searchHtml === void 0) { searchHtml = null; }
                 if (customHtml === void 0) { customHtml = null; }
                 var rowFirst = ((pager.pageNo - 1) * pager.pageSize) + 1;
@@ -1755,10 +1792,10 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                 }
                 return "\n<div class=\"level\">\n    <div class=\"level-left\">\n        <div class=\"field is-horizontal\">\n            <div class=\"field-body\">\n                " + (searchHtml != undefined && searchHtml.length > 0 ? searchHtml : "") + "\n                " + (customHtml != undefined && customHtml.length > 0 ? customHtml : "") + "\n            </div>\n        </div>\n    </div>\n    <div class=\"level-right\">\n        <div class=\"field is-grouped\">\n            <div class=\"dropdown is-right is-hoverable\" xx-js-skip-render-class=\"is-active\">\n                <div class=\"dropdown-trigger\">\n                    <button class=\"button\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\" title=\"" + i18n("Options") + "\">\n                        <span>" + i18n("%{rowFirst}-%{rowLast} of %{rowCount} Records", { rowFirst: rowFirst, rowLast: rowLast, rowCount: pager.rowCount }) + "</span>\n                        <span class=\"icon is-small\"><i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i></span>\n                    </button>\n                </div>\n                <div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\">\n                    <div class=\"dropdown-content\">\n                        <a class=\"dropdown-item\" href=\"#\" onclick=\"" + firstPage + ";return false;\">\n                            <span class=\"far fa-fast-backward\" style=\"width: 15px;\"></span>\n                            " + i18n("Go To First Page") + "\n                        </a>\n                        <a class=\"dropdown-item\" href=\"#\" onclick=\"" + lastPage + ";return false;\">\n                            <span class=\"far fa-fast-forward\" style=\"width: 15px;\"></span>\n                            " + i18n("Go To Last Page") + "\n                        </a>\n                        <hr class=\"dropdown-divider\">\n                        " + allSizes + "\n                    </div>\n                </div>\n            </div>\n            <div class=\"buttons has-addons\" style=\"margin-left: 4px;\">\n                <button type=\"button\" class=\"button\" " + (pager.pageNo == 1 ? "disabled" : "") + " onclick=\"" + firstPage + "\"><i class=\"fal fa-fast-backward\"></i></button>\n                <button type=\"button\" class=\"button\" " + (pager.pageNo == 1 ? "disabled" : "") + " onclick=\"" + prevPage + "\"><i class=\"fal fa-step-backward\"></i></button>\n                <button type=\"button\" class=\"button\" " + (pager.pageNo == pageCount ? "disabled" : "") + " onclick=\"" + nextPage + "\"><i class=\"fal fa-step-forward\"></i></button>\n                <button type=\"button\" class=\"button\" " + (pager.pageNo == pageCount ? "disabled" : "") + " onclick=\"" + lastPage + "\"><i class=\"fal fa-fast-forward\"></i></button>\n            </div>\n        </div>\n    </div>\n</div>";
             });
-            exports_10("renderStatic", renderStatic = function (pager) {
+            exports_12("renderStatic", renderStatic = function (pager) {
                 return "\n<div class=\"js-container\">\n    <div class=\"js-filter-column\"></div>\n    <div class=\"js-control\">\n        <span><em>" + pager.rowCount + " records found</strong></em>\n    </div>\n</div>";
             });
-            exports_10("sortableHeaderLink", sortableHeaderLink = function (pager, ns, linkText, columnName, defaultDirection /*"ASC"*/, style) {
+            exports_12("sortableHeaderLink", sortableHeaderLink = function (pager, ns, linkText, columnName, defaultDirection /*"ASC"*/, style) {
                 if (style === void 0) { style = ""; }
                 var indicator = "";
                 var sorting = "";
@@ -1773,13 +1810,13 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                     indicator = '&nbsp;<i class="fa fa-sort-down" style="visibility: hidden;"></i>';
                 return "<th" + sorting + " " + (style ? "style=\"" + style + "\"" : "") + "><a href=\"#\" onclick=\"" + ns + ".sortBy('" + columnName + "', '" + nextDir + "');return false;\">" + linkText + indicator + "</a></th>";
             });
-            exports_10("headerLink", headerLink = function (linkText) {
+            exports_12("headerLink", headerLink = function (linkText) {
                 return "<th class=\"js-no-sorting\">" + linkText + "</th>";
             });
-            exports_10("rowNumber", rowNumber = function (pager, index) {
+            exports_12("rowNumber", rowNumber = function (pager, index) {
                 return 1 + index + ((pager.pageNo - 1) * pager.pageSize);
             });
-            exports_10("asParams", asParams = function (pager) {
+            exports_12("asParams", asParams = function (pager) {
                 var searchText = (pager.searchText != undefined ? encodeURIComponent(pager.searchText) : "");
                 var params = "pn=" + pager.pageNo + "&ps=" + pager.pageSize + "&sc=" + pager.sortColumn + "&sd=" + pager.sortDirection + "&st=" + searchText;
                 if (pager.filter != undefined) {
@@ -1801,52 +1838,8 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                 }
                 return params;
             });
-            exports_10("searchTemplate", searchTemplate = function (pager, ns, xtra) {
+            exports_12("searchTemplate", searchTemplate = function (pager, ns, xtra) {
                 return "\n    <div class=\"field\">\n        <label class=\"label\">" + i18n("Search") + "</label>\n        <div class=\"control has-icons-left\" style=\"width:125px;\">\n            <input class=\"input\" type=\"text\" placeholder=\"" + i18n("Search") + "\" value=\"" + Misc.toInputText(pager.searchText) + "\" xonchange=\"" + ns + ".search(this)\" onkeydown=\"if (event.keyCode == 13) " + ns + ".search(event.target)\" " + (xtra || "") + ">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fas fa-search\"></i>\n            </span>\n        </div>\n    </div>";
-            });
-        }
-    };
-});
-System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_11, context_11) {
-    "use strict";
-    var App, authrole, lutGroup, fetch_authrole, fetch_lutGroup;
-    var __moduleName = context_11 && context_11.id;
-    return {
-        setters: [
-            function (App_4) {
-                App = App_4;
-            }
-        ],
-        execute: function () {
-            exports_11("fetch_authrole", fetch_authrole = function () {
-                return function (data) {
-                    if (authrole != undefined && authrole.length > 0)
-                        return;
-                    return App.GET("/auth/role").then(function (json) { exports_11("authrole", authrole = json); });
-                };
-            });
-            exports_11("fetch_lutGroup", fetch_lutGroup = function () {
-                return function (data) {
-                    if (lutGroup != undefined && lutGroup.length > 0)
-                        return;
-                    return App.GET("/lookup/lutGroup").then(function (json) { exports_11("lutGroup", lutGroup = json); });
-                };
-            });
-        }
-    };
-});
-System.register("_BaseApp/src/lang/en-CA", [], function (exports_12, context_12) {
-    "use strict";
-    var en_CA;
-    var __moduleName = context_12 && context_12.id;
-    return {
-        setters: [],
-        execute: function () {
-            exports_12("en_CA", en_CA = {
-                values: {
-                    "EMAIL": "Email",
-                    "PASSWORD": "Password"
-                }
             });
         }
     };
@@ -3557,84 +3550,23 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
         }
     };
 });
-System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
+System.register("src/admin/lookupdata", ["_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
     "use strict";
-    var App, yearFilter, dateFilter, district, fetch_district, get_district_plus_hq, get_district, get_district_plus_hq_inRegion, get_district_inRegion, region, fetch_region, get_region_plus_hq, get_region, fcause, fetch_fcause, get_fcause, tools, fetch_tools, get_tools;
+    var yearFilter, dateFilter;
     var __moduleName = context_34 && context_34.id;
     return {
         setters: [
-            function (App_7) {
-                App = App_7;
-            },
             function (lookupdata_1_1) {
                 exports_34({
+                    "Role": lookupdata_1_1["Role"],
                     "fetch_authrole": lookupdata_1_1["fetch_authrole"],
-                    "authrole": lookupdata_1_1["authrole"],
-                    "fetch_lutGroup": lookupdata_1_1["fetch_lutGroup"],
-                    "lutGroup": lookupdata_1_1["lutGroup"]
+                    "authrole": lookupdata_1_1["authrole"]
                 });
             }
         ],
         execute: function () {
             yearFilter = function (one, year) { return year >= one.started && (one.ended == undefined || year <= one.ended); };
             dateFilter = function (one, date) { return date >= one.started && (one.ended == undefined || date <= one.ended); };
-            exports_34("fetch_district", fetch_district = function () {
-                return function (data) {
-                    if (district != undefined && district.length > 0)
-                        return;
-                    return App.GET("/lookup/district").then(function (json) { district = json; });
-                };
-            });
-            exports_34("get_district_plus_hq", get_district_plus_hq = function (year) { return district.filter(function (one) { return yearFilter(one, year); }); });
-            exports_34("get_district", get_district = function (year) { return district.filter(function (one) { return yearFilter(one, year) && one.value1 != "HQ"; }); });
-            exports_34("get_district_plus_hq_inRegion", get_district_plus_hq_inRegion = function (regionLUID, year) {
-                return district
-                    .filter(function (one) { return yearFilter(one, year); })
-                    .filter(function (one) { return +one.value2 == regionLUID; })
-                    .map(function (one) { return ({
-                    id: one.id,
-                    code: one.code,
-                    description: one.description,
-                    disabled: false
-                }); });
-            });
-            exports_34("get_district_inRegion", get_district_inRegion = function (regionLUID, year) {
-                return district
-                    .filter(function (one) { return yearFilter(one, year); })
-                    .filter(function (one) { return +one.value2 == regionLUID; })
-                    .filter(function (one) { return one.value1 != "HQ"; })
-                    .map(function (one) { return ({
-                    id: one.id,
-                    code: one.code,
-                    description: one.description,
-                    disabled: false
-                }); });
-            });
-            exports_34("fetch_region", fetch_region = function () {
-                return function (data) {
-                    if (region != undefined && region.length > 0)
-                        return;
-                    return App.GET("/lookup/region").then(function (json) { region = json; });
-                };
-            });
-            exports_34("get_region_plus_hq", get_region_plus_hq = function (year) { return region.filter(function (one) { return yearFilter(one, year); }); });
-            exports_34("get_region", get_region = function (year) { return region.filter(function (one) { return yearFilter(one, year) && one.code != "HQ"; }); });
-            exports_34("fetch_fcause", fetch_fcause = function () {
-                return function (data) {
-                    if (fcause != undefined && fcause.length > 0)
-                        return;
-                    return App.GET("/lookup/cause").then(function (json) { fcause = json; });
-                };
-            });
-            exports_34("get_fcause", get_fcause = function (year) { return fcause.filter(function (one) { return yearFilter(one, year); }); });
-            exports_34("fetch_tools", fetch_tools = function () {
-                return function (data) {
-                    if (tools != undefined && tools.length > 0)
-                        return;
-                    return App.GET("/lookup/by/tools").then(function (json) { tools = json; });
-                };
-            });
-            exports_34("get_tools", get_tools = function (year) { return tools; });
         }
     };
 });
@@ -3644,8 +3576,8 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
     var __moduleName = context_35 && context_35.id;
     return {
         setters: [
-            function (App_8) {
-                App = App_8;
+            function (App_7) {
+                App = App_7;
             },
             function (Router_4) {
                 Router = Router_4;
@@ -3990,8 +3922,8 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], fun
     var __moduleName = context_36 && context_36.id;
     return {
         setters: [
-            function (App_9) {
-                App = App_9;
+            function (App_8) {
+                App = App_8;
             },
             function (layout_1_1) {
                 layout_1 = layout_1_1;
@@ -4023,8 +3955,8 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
     var __moduleName = context_37 && context_37.id;
     return {
         setters: [
-            function (App_10) {
-                App = App_10;
+            function (App_9) {
+                App = App_9;
             },
             function (Router_5) {
                 Router = Router_5;
@@ -4174,9 +4106,9 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_37("gotoDetail", gotoDetail = function (id) {
-                setSelectedRow(id);
-                Router.goto("#/admin/account/" + id);
+            exports_37("gotoDetail", gotoDetail = function (cid) {
+                setSelectedRow(cid);
+                Router.goto("#/admin/account/" + cid);
             });
             exports_37("create", create = function () {
                 Router.goto("#/admin/account/new");
@@ -4192,21 +4124,270 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
         }
     };
 });
-System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts"], function (exports_38, context_38) {
+// File: account.ts
+System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/auth", "src/admin/lookupdata", "src/admin/layout"], function (exports_38, context_38) {
     "use strict";
-    var Router, accounts, startup, render, postRender;
+    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, key, state, fetchedState, isNew, isDirty, emailSubject, emailBody, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
     var __moduleName = context_38 && context_38.id;
     return {
         setters: [
+            function (App_10) {
+                App = App_10;
+            },
             function (Router_6) {
                 Router = Router_6;
             },
-            function (accounts_1) {
-                accounts = accounts_1;
+            function (Misc_15) {
+                Misc = Misc_15;
+            },
+            function (Theme_2) {
+                Theme = Theme_2;
+            },
+            function (Auth_5) {
+                Auth = Auth_5;
+            },
+            function (Lookup_1) {
+                Lookup = Lookup_1;
+            },
+            function (layout_3_1) {
+                layout_3 = layout_3_1;
             }
         ],
         execute: function () {
-            //import * as account from "./account"
+            exports_38("NS", NS = "App_account");
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            formTemplate = function (item, roleList) {
+                var roleTemplate = function (role, roleMask, index) {
+                    var mask = Math.pow(2, index);
+                    var selected = (roleMask & mask) != 0;
+                    return "\n        <div>\n            <label class=\"checkbox\">\n                <input type=\"checkbox\" " + (selected ? "checked" : "") + " name=\"" + NS + "_roles\" onchange=\"" + NS + ".onchange(this)\" data-mask=\"" + mask + "\"> " + role.name + "\n            </label>\n        </div>";
+                };
+                var roleCheckboxes = roleList.reduce(function (html, one, index) { return html + (index > 1 ? roleTemplate(one, item.roleMask, index) : ""); }, "");
+                var pendingMailto = "";
+                if (item.emailBody) {
+                    pendingMailto = item.email + "?subject=" + item.emailSubject + "&body=" + item.emailBody;
+                }
+                return "\n    <!-- edit -->\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 50, true) + "\n" + (!isNew ? "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n    </div>\n" : "") + "\n    " + Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "address", item.address, i18n("ADDRESS"), 50) + "\n    " + Theme.renderTextField(NS, "town", item.town, i18n("TOWN"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "postalCode", item.postalCode, i18n("POSTALCODE"), 50, false, "js-width-25") + "\n    " + Theme.renderTextField(NS, "phone1", item.phone1, i18n("PHONE1"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "phone2", item.phone2, i18n("PHONE2"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "fax", item.fax, i18n("FAX"), 50, false, "js-width-50") + "\n    " + Theme.renderNumberField(NS, "machineID", item.machineID, i18n("MACHINEID"), false, "js-width-25") + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiryUtc), i18n("RESETEXPIRYUTC")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivityUtc), i18n("LASTACTIVITYUTC")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n" + (pendingMailto ? "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">Pending Email</label></div>\n        <div class=\"field-body\"><span><a href=\"mailto:" + pendingMailto + "\"><i class=\"far fa-envelope\"></i> Send Pending Email</a></span></div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\" for=\"" + NS + "_roleMask\">" + i18n("ROLEMASK") + "</label></div>\n        <div class=\"field-body\">\n            <div class=\"field js-checkbox-row\">\n                " + roleCheckboxes + "\n            </div>\n        </div>\n    </div>\n    <!--" + Theme.renderCheckboxField(NS, "autoLock", item.autoLock, i18n("AUTOLOCK"), "Lock user out of OpsFMS after 5 minutes of inactivity") + "-->\n    " + Theme.renderCheckboxField(NS, "autoArchive", item.autoArchive, i18n("AUTOARCHIVE"), "<em>Flag for Archive</em> after 4 months of inactivity") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n    " + Theme.renderBlame(item, isNew) + "\n";
+            };
+            resetPasswordButton = function (item) {
+                var title;
+                var helpText;
+                var onclick;
+                if (item.canResetPassword) {
+                    title = i18n("Reset Password");
+                    helpText = i18n("<p><b>Note:</b> This will prevent the user from login until the user re-enters a new password.</p><br><p>An email will be sent to the user with a link to do so.</p>");
+                    onclick = NS + ".resetPassword()";
+                }
+                if (item.canCreateInvitation) {
+                    title = i18n("Create Invitation");
+                    helpText = i18n("<p>Create an invitation for this user to join OpsFMS.</p><br><p>An email will be sent to the user with a link to do so.</p>");
+                    onclick = NS + ".createInvitation()";
+                }
+                if (item.canExtendInvitation) {
+                    title = i18n("Extend Invitation");
+                    helpText = i18n("Re-invite this user to OpsFMS because he/she didn't go through the process before the <b>Password Reset Expiry</b>.</p><br><p>An email will be sent to the user with a link to do so.</p>");
+                    onclick = NS + ".createInvitation()";
+                }
+                if (title)
+                    return Theme.renderButtonWithConfirm(title, "fas fa-lock", helpText, onclick, false, false, true);
+                else
+                    return "";
+            };
+            canUpdate = function () {
+                return (isNew || key.id != 1 || Auth.getRoles().indexOf(1) != -1);
+            };
+            pageTemplate = function (item, form, tab, warning, dirty) {
+                var readonly = !canUpdate();
+                var buttons = [];
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_3.icon + "\"></i> <span>" + (isNew ? i18n("New Account") : item.xtra && item.xtra.title) + "</span></div>\n            <div class=\"subtitle\">" + (isNew ? i18n("Editing New account") : i18n("Editing account Details")) + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, "#/admin/account/new", buttons)) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+            };
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            clearState = function () {
+                state = {};
+            };
+            exports_38("fetchState", fetchState = function (id) {
+                isNew = isNaN(id);
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
+                clearState();
+                var url = "/account/" + (isNew ? "new" : id);
+                return App.GET(url)
+                    .then(function (payload) {
+                    state = payload;
+                    fetchedState = Misc.clone(state);
+                    key = { id: id };
+                })
+                    .then(Lookup.fetch_authrole());
+            });
+            exports_38("fetch", fetch = function (params) {
+                var id = +params[0];
+                App.prepareRender(NS, i18n("account"));
+                layout_3.prepareMenu();
+                fetchState(id)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_38("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var year = state.currentYear;
+                var form = formTemplate(state, Lookup.authrole);
+                emailBody = undefined;
+                var tab = layout_3.tabTemplate(state.id, state.xtra);
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_38("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+                App.setPageTitle(isNew ? i18n("New account") : state.xtra.title);
+            });
+            exports_38("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.email = Misc.fromInputText(NS + "_email", state.email);
+                clone.roleMask = Misc.fromInputCheckboxMask(NS + "_roles", state.roleMask);
+                clone.roleMask = (clone.roleMask & 0xFFFFFFFC) | (state.roleMask & 0x00000003);
+                clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
+                clone.firstName = Misc.fromInputText(NS + "_firstName", state.firstName);
+                clone.lastName = Misc.fromInputText(NS + "_lastName", state.lastName);
+                clone.regionLUID = Misc.fromSelectNumber(NS + "_regionLUID", state.regionLUID);
+                clone.districtLUID = Misc.fromSelectNumber(NS + "_districtLUID", state.districtLUID);
+                clone.phone1 = Misc.fromInputTextNullable(NS + "_phone1", state.phone1);
+                clone.phone2 = Misc.fromInputTextNullable(NS + "_phone2", state.phone2);
+                clone.fax = Misc.fromInputTextNullable(NS + "_fax", state.fax);
+                clone.machineID = Misc.fromInputNumberNullable(NS + "_machineID", state.machineID);
+                clone.currentYear = Misc.fromInputNumber(NS + "_currentYear", state.currentYear);
+                clone.autoArchive = Misc.fromInputCheckbox(NS + "_autoArchive", state.autoArchive);
+                clone.autoLock = Misc.fromInputCheckbox(NS + "_autoLock", state.autoLock);
+                clone.address = Misc.fromInputTextNullable(NS + "_address", state.address);
+                clone.town = Misc.fromInputTextNullable(NS + "_town", state.town);
+                clone.postalCode = Misc.fromInputTextNullable(NS + "_postalCode", state.postalCode);
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById(NS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_38("onchange", onchange = function (input) {
+                state = getFormState();
+                if (input.id == NS + "_regionLUID") {
+                    state.districtLUID = null;
+                }
+                App.render();
+            });
+            exports_38("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_38("create", create = function () {
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/account", formState)
+                    .then(function (payload) {
+                    var newkey = payload;
+                    emailSubject = payload.emailSubject;
+                    emailBody = payload.emailBody;
+                    Misc.toastSuccessSave();
+                    Router.goto("#/admin/account/" + newkey.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_38("save", save = function (done) {
+                if (done === void 0) { done = false; }
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/account", formState)
+                    .then(function (_) {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto("#/admin/accounts/", 100);
+                    else
+                        Router.goto("#/admin/account/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_38("drop", drop = function () {
+                key.updatedUtc = state.updatedUtc;
+                App.prepareRender();
+                App.DELETE("/account", key)
+                    .then(function (_) {
+                    clearState();
+                    Router.goto("#/admin/accounts/", 250);
+                })
+                    .catch(App.render);
+            });
+            exports_38("resetPassword", resetPassword = function () {
+                App.POST("/account/reset-password", key)
+                    .then(function (_) {
+                    Misc.toastSuccess(i18n("Password reset sent"));
+                    Router.goto("#/admin/account/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_38("createInvitation", createInvitation = function () {
+                App.POST("/account/create-invitation", key)
+                    .then(function (_) {
+                    Misc.toastSuccess(i18n("Invitation sent"));
+                    Router.goto("#/admin/account/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = function () {
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
+System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account"], function (exports_39, context_39) {
+    "use strict";
+    var Router, accounts, account, startup, render, postRender;
+    var __moduleName = context_39 && context_39.id;
+    return {
+        setters: [
+            function (Router_7) {
+                Router = Router_7;
+            },
+            function (accounts_1) {
+                accounts = accounts_1;
+            },
+            function (account_1) {
+                account = account_1;
+            }
+        ],
+        execute: function () {
             //import * as profile from "./profile"
             //import * as DataFiles from "./datafiles"
             //import * as DataFile from "./datafile"
@@ -4218,32 +4399,31 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
             // Mainly used for event handlers
             //
             window.App_accounts = accounts;
-            //(<any>window).App_account = account;
+            window.App_account = account;
             //(<any>window).App_profile = profile;
             //(<any>window).App_DataFiles = DataFiles;
             //(<any>window).App_DataFile = DataFile;
             //(<any>window).App_Lookups = Lookups;
             //(<any>window).App_Lookup = Lookup;
-            exports_38("startup", startup = function () {
+            exports_39("startup", startup = function () {
                 Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
-                //    Router.addRoute("^#/admin/account/(.*)$", account.fetch);
+                Router.addRoute("^#/admin/account/(.*)$", account.fetch);
                 //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
                 //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
                 //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
                 //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
                 //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
             });
-            exports_38("render", render = function () {
-                return "\n    " + accounts.render() + "\n";
-                //${account.render()}
+            exports_39("render", render = function () {
+                return "\n    " + accounts.render() + "\n    " + account.render() + "\n";
                 //${DataFiles.render()}
                 //${DataFile.render()}
                 //${Lookups.render()}
                 //${Lookup.render()}
             });
-            exports_38("postRender", postRender = function () {
+            exports_39("postRender", postRender = function () {
                 accounts.postRender();
-                //account.postRender();
+                account.postRender();
                 //DataFiles.postRender();
                 //DataFile.postRender();
                 //Lookups.postRender();
@@ -4252,10 +4432,10 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main"], function (exports_39, context_39) {
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main"], function (exports_40, context_40) {
     "use strict";
     var App, Perm, Main, Home, Admin, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
-    var __moduleName = context_39 && context_39.id;
+    var __moduleName = context_40 && context_40.id;
     return {
         setters: [
             function (App_11) {
@@ -4275,8 +4455,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             }
         ],
         execute: function () {
-            exports_39("NS", NS = "App_Layout");
-            exports_39("render", render = function () {
+            exports_40("NS", NS = "App_Layout");
+            exports_40("render", render = function () {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
@@ -4284,7 +4464,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 var menu = menuTemplate(Home.getMenuData());
                 return "\n<div class=\"js-layout " + (Main.state.menuOpened ? "" : "js-close") + "\">\n" + renderHeader() + "\n" + renderAsideMenu(menu) + "\n<section class=\"js-uc-main js-waitable\">\n" + ucMain + "\n</section>\n</div>\n";
             });
-            exports_39("postRender", postRender = function () {
+            exports_40("postRender", postRender = function () {
                 Home.postRender();
                 Admin.postRender();
             });
@@ -4328,33 +4508,33 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_39("menuClick", menuClick = function () {
+            exports_40("menuClick", menuClick = function () {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_39("toggle", toggle = function (entry) {
+            exports_40("toggle", toggle = function (entry) {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_39("setOpenedMenu", setOpenedMenu = function (entry) {
+            exports_40("setOpenedMenu", setOpenedMenu = function (entry) {
                 Main.state.subMenu = entry;
             });
-            exports_39("editProfile", editProfile = function () {
+            exports_40("editProfile", editProfile = function () {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_39("toggleProfileMenu", toggleProfileMenu = function (element) {
+            exports_40("toggleProfileMenu", toggleProfileMenu = function (element) {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main"], function (exports_40, context_40) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main"], function (exports_41, context_41) {
     "use strict";
     var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_40 && context_40.id;
+    var __moduleName = context_41 && context_41.id;
     return {
         setters: [
             function (App_12) {
@@ -4363,8 +4543,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
             },
-            function (Theme_2) {
-                Theme = Theme_2;
+            function (Theme_3) {
+                Theme = Theme_3;
             },
             function (LatLong_1) {
                 LatLong = LatLong_1;
@@ -4401,7 +4581,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_40("startup", startup = function (hasPublicHomePage) {
+            exports_41("startup", startup = function (hasPublicHomePage) {
                 if (hasPublicHomePage === void 0) { hasPublicHomePage = false; }
                 var main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 var router = main.router;
@@ -4420,18 +4600,18 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                 //ConfigMain.startup();
                 loadUIState();
             });
-            exports_40("loadUIState", loadUIState = function () {
+            exports_41("loadUIState", loadUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
-                exports_40("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_41("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_40("state", state = {
+                    exports_41("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_40("saveUIState", saveUIState = function () {
+            exports_41("saveUIState", saveUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -4439,10 +4619,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_41, context_41) {
+System.register("src/app", ["src/main"], function (exports_42, context_42) {
     "use strict";
     var main;
-    var __moduleName = context_41 && context_41.id;
+    var __moduleName = context_42 && context_42.id;
     return {
         setters: [
             function (main_1) {

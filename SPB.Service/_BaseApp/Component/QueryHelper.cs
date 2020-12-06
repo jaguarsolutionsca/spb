@@ -48,7 +48,6 @@ namespace BaseApp.DAL
         public List<T> queryList<T>(string command_text, Service.KVList parameters = null)
         {
             var properties = typeof(T).GetProperties();
-            var instance = Activator.CreateInstance<T>();
 
             var list = new List<T>();
             using (var command = connex.CreateCommand())
@@ -77,6 +76,7 @@ namespace BaseApp.DAL
 
                     while (reader.Read())
                     {
+                        var instance = Activator.CreateInstance<T>();
                         for (var ix = 0; ix < properties.Length; ix++)
                         {
                             if (map[ix].HasValue)

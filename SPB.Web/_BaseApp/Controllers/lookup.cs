@@ -12,6 +12,7 @@ namespace BaseApp.Web.Controllers
     [Authorize]
     public partial class LookupController : _CoreController
     {
+        /*
         [HttpGet]
         public PagedList<Lookup_Search, Lookup_Search_Filter> Search(string groupe, int? year, int pn, int ps, string sc, string sd, string st)
         {
@@ -52,5 +53,6 @@ namespace BaseApp.Web.Controllers
             app.Delete_Lookup(key.id, key.updatedUtc);
             return NoContent();
         }
+        */
     }
 }

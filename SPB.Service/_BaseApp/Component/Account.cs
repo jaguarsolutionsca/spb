@@ -1,10 +1,10 @@
 ﻿// File: Component/Account.cs
 
+using System;
+using System.Collections.Generic;
+
 namespace BaseApp.DAL
 {
-    using BaseApp.Common;
-    using System;
-    using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
@@ -107,7 +107,7 @@ namespace BaseApp.DAL
 
         public DTO.Account_Full spAccount_Select(int uid)
         {
-            return queryEntity<DTO.Account_Full>("app.Account_Select", "@uid", uid);
+            return queryEntity<DTO.Account_Full>("app.Account_Select", "@uid", uid)?.Decrypt(crypto);
         }
 
         public DTO.Account_Full spAccount_New(int cie)
@@ -184,39 +184,15 @@ namespace BaseApp.DAL
             }
         }
 
-        public DTO.Account_Summary spAccount_Summary(int id)
+        public DTO.Account_Summary spAccount_Summary(int uid)
         {
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_Summary";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@id", id);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        var entity = new DTO.Account_Summary();
-                        var ix = -1;
-                        ix++; entity.title = reader.IsDBNull(ix) ? null : reader.GetString(ix);
-                        ix++; entity.fileCount = reader.GetInt32(ix);
-
-                        entity.title = crypto.Decrypt(entity.title);
-                        return entity;
-                    }
-                    return null;
-                }
-            }
+            return queryEntity<DTO.Account_Summary>("app.Account_Summary", "@uid", uid);
         }
     }
 }
 
 namespace BaseApp.DTO
 {
-    using System;
-    using System.Collections.Generic;
-    using BaseApp.Common;
-
     public class Account_Search : Account_PK
     {
         public int totalCount { get; set; }
@@ -230,7 +206,7 @@ namespace BaseApp.DTO
         public int year { get; set; }
         public bool archive { get; set; }
 
-        internal Account_Search Decrypt(Crypto crypto)
+        internal Account_Search Decrypt(Common.Crypto crypto)
         {
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
@@ -279,13 +255,11 @@ namespace BaseApp.DTO
         public int updatedBy { get; set; }
         public string by { get; set; }
         //
-        public string emailBody { get; set; }
-        public string emailSubject { get; set; }
         public bool canExtendInvitation { get; set; }
         public bool canResetPassword { get; set; }
         public bool canCreateInvitation { get; set; }
 
-        internal Account_Full Decrypt(Crypto crypto)
+        internal Account_Full Decrypt(Common.Crypto crypto)
         {
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
@@ -300,18 +274,15 @@ namespace BaseApp.DTO
         public int uid { get; set; }
     }
 
-    public class Account_Summary : DTO_Summary
+    public class Account_Summary
     {
+        public string title { get; set; }
         public int fileCount { get; set; }
     }
 }
 
 namespace BaseApp.UTO
 {
-    using System;
-    using System.Collections.Generic;
-    using BaseApp.Common;
-
     public class Account_UK : DTO.Account_PK
     {
         public DateTime updatedUtc { get; set; }
@@ -340,24 +311,22 @@ namespace BaseApp.UTO
         internal void Validate()
         {
             if (!email.Contains("@"))
-                throw new ValidationException("Email requires an '@' character");
+                throw new Common.ValidationException("Email requires an '@' character");
 
             if (email.Length > 50)
-                throw new ValidationException("Email is too long (max length = 50)");
+                throw new Common.ValidationException("Email is too long (max length = 50)");
 
             if (firstName.Length > 50)
-                throw new ValidationException("FirstName is too long (max length = 50)");
+                throw new Common.ValidationException("FirstName is too long (max length = 50)");
 
             if (lastName.Length > 50)
-                throw new ValidationException("LastName is too long (max length = 50)");
+                throw new Common.ValidationException("LastName is too long (max length = 50)");
         }
     }
 }
 
 namespace BaseApp.Service
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using BaseApp.Common;
@@ -392,20 +361,11 @@ namespace BaseApp.Service
             item.canExtendInvitation = (item.resetGuid != null && item.resetExpiry != null && item.resetExpiry < DateTime.UtcNow && item.lastActivity == null && !item.archive);
             item.canResetPassword = (item.resetGuid != null && item.resetExpiry != null && item.lastActivity != null && !item.archive);
             item.canCreateInvitation = (item.resetGuid == null && item.resetExpiry == null && item.lastActivity == null && item.archive);
-            if (item.resetExpiry.HasValue && item.resetExpiry > DateTime.UtcNow)
-            {
-                url = url.Replace("{guid}", item.resetGuid.ToString());
-                var emailFields = (item.isAdminReset ? EmailFields.Build_ResetPasswordBy_Admin(url) : EmailFields.Build_Invitation(url));
-                item.emailSubject = emailFields.subject;
-                item.emailBody = emailFields.bodyText.Replace("\n", "%0D%0A");
-            }
             return item;
         }
 
         public Account_Full Account_New(int cie)
         {
-            //RequirePermission(Perm.TODO);
-
             var item = repo.spAccount_New(cie);
             return item;
         }

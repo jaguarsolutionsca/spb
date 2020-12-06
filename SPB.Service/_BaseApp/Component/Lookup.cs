@@ -1,30 +1,13 @@
 ﻿// File: Component/Lookup.cs
 
+using System;
+using System.Collections.Generic;
+
 namespace BaseApp.DAL
 {
-    using System;
-    using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
     using BaseApp.Common;
-
-    internal class Lookup
-    {
-        public int ID { get; set; }
-        public string Groupe { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
-        public string Value1 { get; set; }
-        public string Value2 { get; set; }
-        public string Value3 { get; set; }
-        public int Started { get; set; }
-        public int? Ended { get; set; }
-        public int? SortOrder { get; set; }
-        public bool Archive { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Updated { get; set; }
-        public int UpdatedBy { get; set; }
-    }
 
     internal class Lookup_Search
     {
@@ -79,44 +62,6 @@ namespace BaseApp.DAL
 
     internal partial class Repo
     {
-        public List<Lookup> Lookup_Where(string where = "WHERE 1=0")
-        {
-            var list = new List<Lookup>();
-
-            using (var command = connex.CreateCommand())
-            {
-                var table = "[dbo].[Lookup]";
-                var columns = "ID,Groupe,Code,Description,Value1,Value2,Value3,Started,Ended,SortOrder,Archive,Created,Updated,UpdatedBy";
-                command.CommandText = $"SELECT {columns} FROM {table} {where}";
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var entity = new Lookup();
-                        var ix = -1;
-                        ix++; entity.ID = reader.GetInt32(ix);
-                        ix++; entity.Groupe = reader.GetString(ix);
-                        ix++; entity.Code = reader.IsDBNull(ix) ? null : reader.GetString(ix);
-                        ix++; entity.Description = reader.GetString(ix);
-                        ix++; entity.Value1 = reader.IsDBNull(ix) ? null : reader.GetString(ix);
-                        ix++; entity.Value2 = reader.IsDBNull(ix) ? null : reader.GetString(ix);
-                        ix++; entity.Value3 = reader.IsDBNull(ix) ? null : reader.GetString(ix);
-                        ix++; entity.Started = reader.GetInt32(ix);
-                        ix++; entity.Ended = reader.IsDBNull(ix) ? (int?)null : reader.GetInt32(ix);
-                        ix++; entity.SortOrder = reader.IsDBNull(ix) ? (int?)null : reader.GetInt32(ix);
-                        ix++; entity.Archive = reader.GetBoolean(ix);
-                        ix++; entity.Created = reader.GetDateTime(ix);
-                        ix++; entity.Updated = reader.GetDateTime(ix);
-                        ix++; entity.UpdatedBy = reader.GetInt32(ix);
-                        list.Add(entity);
-                    }
-                }
-            }
-
-            return list;
-        }
-
         public PagedList<Lookup_Search, DTO.Lookup_Search_Filter> spLookup_Search(DTO.Pager<DTO.Lookup_Search_Filter> pagerData)
         {
             var list = new PagedList<Lookup_Search, DTO.Lookup_Search_Filter>(pagerData);
@@ -265,10 +210,6 @@ namespace BaseApp.DAL
 
 namespace BaseApp.DTO
 {
-    using System;
-    using System.Collections.Generic;
-    using BaseApp.Common;
-
     public class Lookup_Search
     {
         public int totalCount { get; set; }
@@ -287,11 +228,16 @@ namespace BaseApp.DTO
         public DateTime updatedUtc { get; set; }
         public int updatedBy { get; set; }
         public string by { get; set; }
+
+        internal Lookup_Search Decrypt(Common.Crypto crypto)
+        {
+            by = crypto.Decrypt(by);
+            return this;
+        }
     }
 
     public class Lookup_Search_Key
     {
-
     }
 
     public class Lookup_Search_Filter : Lookup_Search_Key
@@ -347,25 +293,25 @@ namespace BaseApp.DTO
         internal void Validate()
         {
             if (groupe.Length > 12)
-                throw new ValidationException("Groupe is too long (max length = 12)");
+                throw new Common.ValidationException("Groupe is too long (max length = 12)");
 
             if (code?.Length > 9)
-                throw new ValidationException("Code is too long (max length = 9)");
+                throw new Common.ValidationException("Code is too long (max length = 9)");
 
             if (description.Length > 50)
-                throw new ValidationException("Description is too long (max length = 50)");
+                throw new Common.ValidationException("Description is too long (max length = 50)");
 
             if (value1?.Length > 50)
-                throw new ValidationException("Value1 is too long (max length = 50)");
+                throw new Common.ValidationException("Value1 is too long (max length = 50)");
 
             if (value2?.Length > 50)
-                throw new ValidationException("Value2 is too long (max length = 50)");
+                throw new Common.ValidationException("Value2 is too long (max length = 50)");
 
             if (value3?.Length > 1024)
-                throw new ValidationException("Value3 is too long (max length = 1024)");
+                throw new Common.ValidationException("Value3 is too long (max length = 1024)");
 
             if (ended.HasValue && ended < started)
-                throw new ValidationException("The end year must be greater than or equal to the start year");
+                throw new Common.ValidationException("The end year must be greater than or equal to the start year");
 
         }
     }
@@ -466,8 +412,6 @@ namespace BaseApp.Mapper
 
 namespace BaseApp.Service
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using BaseApp.Common;
@@ -476,6 +420,7 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
+        /*
         PagedList<Lookup_Search, Lookup_Search_Filter> Search_AllLookup(Pager<Lookup_Search_Filter> pagerData);
         PagedList<Lookup_Search, Lookup_Search_Filter> Search_Lookup(Pager<Lookup_Search_Filter> pagerData);
         Lookup_Detail Get_Lookup(int id);
@@ -483,10 +428,12 @@ namespace BaseApp.Service
         Lookup_Detail_PK Create_Lookup(Lookup_Model model);
         void Update_Lookup(Lookup_Model model);
         void Delete_Lookup(int id, DateTime concurrencyUtc);
+        */
     }
 
     public partial class AppService
     {
+        /*
         public PagedList<Lookup_Search, Lookup_Search_Filter> Search_AllLookup(Pager<Lookup_Search_Filter> pagerData)
         {
             //RequirePermission(Perm.Admin_Account);
@@ -561,5 +508,6 @@ namespace BaseApp.Service
 
             repo.spLookup_Delete(id, concurrencyUtc);
         }
+        */
     }
 }

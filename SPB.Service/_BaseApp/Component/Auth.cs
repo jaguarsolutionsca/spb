@@ -1,8 +1,9 @@
 ﻿
+using System;
+using System.Collections.Generic;
+
 namespace BaseApp.DAL
 {
-    using System;
-    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using BaseApp.Common;
@@ -60,20 +61,11 @@ namespace BaseApp.DAL
                 .Add("@unArchive", unArchive);
             queryNonQuery(query, parameters);
         }
-
-        public List<int> Account_GetPermissionList(int uid)
-        {
-            var query = "app.Account_GetPermissionList";
-            return queryList<int>(query, "@uid", uid);
-        }
     }
 }
 
 namespace BaseApp.DTO
 {
-    using System;
-    using System.Collections.Generic;
-
     public class UserCaps
     {
         public string email { get; set; }
@@ -87,13 +79,9 @@ namespace BaseApp.DTO
 
 namespace BaseApp.Service
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using BaseApp.Common;
     using BaseApp.DTO;
-    using BaseApp.Mapper;
 
     public partial interface IAppService
     {
@@ -103,6 +91,7 @@ namespace BaseApp.Service
         string Get_EmailOfReset(string guid);
         void Save_Password(string email, string password);
         void Reset_Password(string email, string url, int cie);
+        List<Lookup> Account_GetRoleLookup(int uid);
     }
 
     public partial class AppService
@@ -209,6 +198,14 @@ namespace BaseApp.Service
             SendEmail(email, emailFields.subject, emailFields.bodyText);
         }
 
+        public List<Lookup> Account_GetRoleLookup(int uid)
+        {
+            var list = repo.queryList<Lookup>("app.Account_GetRoleLookup", "@uid", uid);
+
+            return list;
+        }
+
+
         internal string get_PasswordHash(string password)
         {
             return Security.GetMD5Hash(password);
@@ -223,7 +220,7 @@ namespace BaseApp.Service
 
         UserCaps populateUserCaps(Account_Full account, int cie)
         {
-            var permissions = repo.Account_GetPermissionList(account.uid);
+            var permissions = repo.queryList<int>("app.Account_GetPermissionList", "@uid", account.uid);
 
             return new UserCaps
             {

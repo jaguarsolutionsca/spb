@@ -255,7 +255,7 @@ export const create = () => {
 };
 
 export const autoArchive = () => {
-    App.POST("/account/auto-archive", { cie: state.cie })
+    App.POST("/account/auto-archive", null)
         .then(_ => {
             Misc.toastSuccess(i18n("Auto Archive Executed"));
             Router.goto(`#/admin/accounts`, 10);

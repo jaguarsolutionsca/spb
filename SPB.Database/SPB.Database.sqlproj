@@ -94,6 +94,8 @@
     <Build Include="app\Functions\UserIs_Support.sql" />
     <Build Include="app\Stored Procedures\Account_List.sql" />
     <Build Include="app\Stored Procedures\Account_Select.sql" />
+    <Build Include="app\Stored Procedures\Account_Summary.sql" />
+    <Build Include="app\Stored Procedures\Account_GetRoleLookup.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
