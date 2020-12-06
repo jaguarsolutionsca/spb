@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [app].[Account_AutoArchive]
 (
-	@cid int
+	@cie int
 )
 AS
 BEGIN
@@ -17,6 +17,6 @@ INNER JOIN
 	app.Account_Full af ON af.UID = acc.UID
 WHERE
 	af.ReadyToArchive = 1 AND
-	af.CID = @cid
+	af.CIE = @cie
 ;
 END

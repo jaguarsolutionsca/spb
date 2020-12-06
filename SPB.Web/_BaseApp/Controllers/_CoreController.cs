@@ -20,7 +20,7 @@ namespace BaseApp.Web.Controllers
     {
         public bool isDev { get; set; }
         public string instance { get; set; }
-        public int cid { get; set; }
+        public int cie { get; set; }
         public object feature { get; set; }
     }
 
@@ -93,20 +93,20 @@ namespace BaseApp.Web.Controllers
             var company_from_domain = HttpRequestHelper.CompanyFromDomain(uri);
 
             var id = app.Company_GetID(company_from_query) ?? app.Company_GetID(company_from_domain);
-            var cid = id.Value;
+            var cie = id.Value;
 
 
             //
             // Get network features from the database
             //
-            var feature = app.Company_GetFeature(cid);
+            var feature = app.Company_GetFeature(cie);
 
 
             return new PortalBag
             {
                 isDev = isDev,
                 instance = instance,
-                cid = cid,
+                cie = cie,
                 feature = feature
             };
         }

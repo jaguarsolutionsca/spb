@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [app].[Account] (
     [UID]          INT              IDENTITY (0, 1) NOT NULL,
-    [CID]          INT              NOT NULL,
+    [CIE]          INT              NOT NULL,
     [Email]        NVARCHAR (50)    NOT NULL,
     [Password]     NVARCHAR (50)    NULL,
     [RoleLUID]     INT              NOT NULL,
@@ -19,7 +19,7 @@
     [Updated]      DATETIME         NOT NULL,
     [UpdatedBy]    INT              CONSTRAINT [DF_Account_ModifiedBy] DEFAULT ((0)) NOT NULL,
     CONSTRAINT [PK_Account] PRIMARY KEY CLUSTERED ([UID] ASC),
-    CONSTRAINT [FK_Account_Company] FOREIGN KEY ([CID]) REFERENCES [app].[Company] ([ID])
+    CONSTRAINT [FK_Account_Company] FOREIGN KEY ([CIE]) REFERENCES [app].[Company] ([CIE])
 );
 
 

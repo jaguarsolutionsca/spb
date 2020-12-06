@@ -1563,7 +1563,7 @@ System.register("_BaseApp/src/auth", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     permissions: perms,
                     roles: role,
                     uid: +payload["uid"],
-                    cid: +payload["cid"],
+                    cie: +payload["cie"],
                 };
                 loginData.expiry = payload["exp"];
             };
@@ -3984,37 +3984,309 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home"], function (exports_36, context_36) {
+System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_36, context_36) {
     "use strict";
-    var App, Perm, Main, Home, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
+    var App, layout_1, icon, prepareMenu, tabTemplate;
     var __moduleName = context_36 && context_36.id;
     return {
         setters: [
             function (App_9) {
                 App = App_9;
             },
+            function (layout_1_1) {
+                layout_1 = layout_1_1;
+            }
+        ],
+        execute: function () {
+            exports_36("icon", icon = "far fa-user");
+            exports_36("prepareMenu", prepareMenu = function () {
+                layout_1.setOpenedMenu("Administration-Management");
+            });
+            exports_36("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+                if (isNew === void 0) { isNew = false; }
+                var isAccounts = App.inContext("App_accounts");
+                var isAccount = App.inContext("App_account");
+                var isFiles = window.location.hash.startsWith("#/files/account");
+                var isFile = window.location.hash.startsWith("#/file/account");
+                var showDetail = !isAccounts;
+                var showFiles = showDetail && xtra;
+                var showFile = isFile;
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isAccounts ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/accounts\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isAccount ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/account/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Account Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.fileCount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            });
+        }
+    };
+});
+// File: accounts.ts
+System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout"], function (exports_37, context_37) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, layout_2, NS, key, state, uiSelectedRow, autoArchiveButton, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_archive, filter_readyToArchive, gotoDetail, create, autoArchive;
+    var __moduleName = context_37 && context_37.id;
+    return {
+        setters: [
+            function (App_10) {
+                App = App_10;
+            },
+            function (Router_5) {
+                Router = Router_5;
+            },
             function (Perm_1) {
                 Perm = Perm_1;
+            },
+            function (Misc_14) {
+                Misc = Misc_14;
+            },
+            function (Theme_1) {
+                Theme = Theme_1;
+            },
+            function (Pager_1) {
+                Pager = Pager_1;
+            },
+            function (layout_2_1) {
+                layout_2 = layout_2_1;
+            }
+        ],
+        execute: function () {
+            exports_37("NS", NS = "App_accounts");
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "EMAIL", sortDirection: "ASC", filter: { archive: undefined, readyToArchive: undefined } }
+            };
+            autoArchiveButton = function () {
+                var title = i18n("Auto Archive");
+                var helpText = i18n("<p><b>Note:</b> This will archive all records having the <b><em>Ready to Archive</em></b> flag set.</p>");
+                var onclick = NS + ".autoArchive()";
+                return Theme.renderButtonWithConfirm(title, "far fa-lock-open-alt", helpText, onclick, false, false, true);
+            };
+            filterTemplate = function (archive, readyToArchive) {
+                var filters = [];
+                filters.push(Theme.renderDropdownFilter(NS, "archive", archive, i18n("ARCHIVE")));
+                filters.push(Theme.renderDropdownFilter(NS, "readyToArchive", readyToArchive, i18n("READYTOARCHIVE")));
+                return filters.join("");
+            };
+            trTemplate = function (item, rowNumber) {
+                return "\n<tr class=\"" + (isSelectedRow(item.uid) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail(" + item.uid + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.firstName) + "</td>\n    <td>" + Misc.toStaticText(item.lastName) + "</td>\n    <td>" + Misc.toStaticText(item.roleLUID_Text) + "</td>\n    <td>" + Misc.toStaticDateTime(item.lastActivity) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.readyToArchive) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n</tr>";
+            };
+            tableTemplate = function (tbody, pager) {
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FIRSTNAME"), "firstName", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastName", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ROLEMASK"), "roleLUID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTACTIVITY"), "lastActivity", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("READYTOARCHIVE"), "readyToArchive", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (xtra, pager, table, tab, warning, dirty) {
+                var readonly = false;
+                var buttons = [];
+                buttons.push(autoArchiveButton());
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_2.icon + "\"></i> " + i18n("All accounts") + "</div>\n            <div class=\"subtitle\">" + i18n("List of accounts") + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderListActionButtons2(NS, i18n("Add New"), buttons)) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+            };
+            exports_37("fetchState", fetchState = function (id) {
+                Router.registerDirtyExit(null);
+                return App.GET("/account/search/?" + Pager.asParams(state.pager))
+                    .then(function (payload) {
+                    state = payload;
+                    key = {};
+                });
+            });
+            exports_37("fetch", fetch = function (params) {
+                var id = +params[0];
+                App.prepareRender(NS, i18n("accounts"));
+                layout_2.prepareMenu();
+                fetchState(id)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            refresh = function () {
+                App.prepareRender(NS, i18n("accounts"));
+                App.GET("/account/search/?" + Pager.asParams(state.pager))
+                    .then(function (payload) {
+                    state = payload;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            };
+            exports_37("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var warning = App.warningTemplate();
+                var dirty = "";
+                var tbody = state.list.reduce(function (html, item, index) {
+                    var rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, rowNumber);
+                }, "");
+                var year = Perm.getCurrentYear();
+                var archive = Theme.renderNullableBooleanOptionsReverse(state.pager.filter.archive, ["All", i18n("Archived"), i18n("Active")]);
+                var readyToArchive = Theme.renderNullableBooleanOptions(state.pager.filter.readyToArchive, ["All", i18n("Ready"), i18n("Not Ready")]);
+                var filter = filterTemplate(archive, readyToArchive);
+                var search = Pager.searchTemplate(state.pager, NS);
+                var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
+                var table = tableTemplate(tbody, state.pager);
+                var tab = layout_2.tabTemplate(null, null);
+                return pageTemplate(state.xtra, pager, table, tab, dirty, warning);
+            });
+            exports_37("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+            });
+            exports_37("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            setSelectedRow = function (uid) {
+                if (uiSelectedRow == undefined)
+                    uiSelectedRow = { uid: uid };
+                uiSelectedRow.uid = uid;
+            };
+            isSelectedRow = function (uid) {
+                if (uiSelectedRow == undefined)
+                    return false;
+                return (uiSelectedRow.uid == uid);
+            };
+            exports_37("goto", goto = function (pageNo, pageSize) {
+                state.pager.pageNo = pageNo;
+                state.pager.pageSize = pageSize;
+                refresh();
+            });
+            exports_37("sortBy", sortBy = function (columnName, direction) {
+                state.pager.pageNo = 1;
+                state.pager.sortColumn = columnName;
+                state.pager.sortDirection = direction;
+                refresh();
+            });
+            exports_37("search", search = function (element) {
+                state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_37("filter_archive", filter_archive = function (element) {
+                var value = element.options[element.selectedIndex].value;
+                var archive = (value.length > 0 ? value == "true" : undefined);
+                if (archive == state.pager.filter.archive)
+                    return;
+                state.pager.filter.archive = archive;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_37("filter_readyToArchive", filter_readyToArchive = function (element) {
+                var value = element.options[element.selectedIndex].value;
+                var readyToArchive = (value.length > 0 ? value == "true" : undefined);
+                if (readyToArchive == state.pager.filter.readyToArchive)
+                    return;
+                state.pager.filter.readyToArchive = readyToArchive;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_37("gotoDetail", gotoDetail = function (id) {
+                setSelectedRow(id);
+                Router.goto("#/admin/account/" + id);
+            });
+            exports_37("create", create = function () {
+                Router.goto("#/admin/account/new");
+            });
+            exports_37("autoArchive", autoArchive = function () {
+                App.POST("/account/auto-archive", null)
+                    .then(function (_) {
+                    Misc.toastSuccess(i18n("Auto Archive Executed"));
+                    Router.goto("#/admin/accounts", 10);
+                })
+                    .catch(App.render);
+            });
+        }
+    };
+});
+System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts"], function (exports_38, context_38) {
+    "use strict";
+    var Router, accounts, startup, render, postRender;
+    var __moduleName = context_38 && context_38.id;
+    return {
+        setters: [
+            function (Router_6) {
+                Router = Router_6;
+            },
+            function (accounts_1) {
+                accounts = accounts_1;
+            }
+        ],
+        execute: function () {
+            //import * as account from "./account"
+            //import * as profile from "./profile"
+            //import * as DataFiles from "./datafiles"
+            //import * as DataFile from "./datafile"
+            //import * as Lookups from "./lookups"
+            //import * as Lookup from "./lookup"
+            //
+            // Global references to application objects
+            // These must match the "NS" values defined in modules
+            // Mainly used for event handlers
+            //
+            window.App_accounts = accounts;
+            //(<any>window).App_account = account;
+            //(<any>window).App_profile = profile;
+            //(<any>window).App_DataFiles = DataFiles;
+            //(<any>window).App_DataFile = DataFile;
+            //(<any>window).App_Lookups = Lookups;
+            //(<any>window).App_Lookup = Lookup;
+            exports_38("startup", startup = function () {
+                Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
+                //    Router.addRoute("^#/admin/account/(.*)$", account.fetch);
+                //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
+                //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
+                //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
+                //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
+                //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
+            });
+            exports_38("render", render = function () {
+                return "\n    " + accounts.render() + "\n";
+                //${account.render()}
+                //${DataFiles.render()}
+                //${DataFile.render()}
+                //${Lookups.render()}
+                //${Lookup.render()}
+            });
+            exports_38("postRender", postRender = function () {
+                accounts.postRender();
+                //account.postRender();
+                //DataFiles.postRender();
+                //DataFile.postRender();
+                //Lookups.postRender();
+                //Lookup.postRender();
+            });
+        }
+    };
+});
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main"], function (exports_39, context_39) {
+    "use strict";
+    var App, Perm, Main, Home, Admin, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
+    var __moduleName = context_39 && context_39.id;
+    return {
+        setters: [
+            function (App_11) {
+                App = App_11;
+            },
+            function (Perm_2) {
+                Perm = Perm_2;
             },
             function (Main_1) {
                 Main = Main_1;
             },
             function (Home_2) {
                 Home = Home_2;
+            },
+            function (Admin_1) {
+                Admin = Admin_1;
             }
         ],
         execute: function () {
-            exports_36("NS", NS = "App_Layout");
-            exports_36("render", render = function () {
+            exports_39("NS", NS = "App_Layout");
+            exports_39("render", render = function () {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
-                var ucMain = "\n" + Home.render() + "\n";
+                var ucMain = "\n" + Home.render() + "\n" + Admin.render() + "\n";
                 var menu = menuTemplate(Home.getMenuData());
                 return "\n<div class=\"js-layout " + (Main.state.menuOpened ? "" : "js-close") + "\">\n" + renderHeader() + "\n" + renderAsideMenu(menu) + "\n<section class=\"js-uc-main js-waitable\">\n" + ucMain + "\n</section>\n</div>\n";
             });
-            exports_36("postRender", postRender = function () {
+            exports_39("postRender", postRender = function () {
                 Home.postRender();
+                Admin.postRender();
             });
             renderHeader = function () {
                 return "\n<header class=\"js-uc-header\">\n\n    <div class=\"js-logo\">\n        <div class=\"js-bars\">\n            <button class=\"button is-primary\" onclick=\"" + NS + ".menuClick()\">\n                <div class=\"icon\"><i class=\"fas fa-bars\"></i></div>\n            </button>\n        </div>\n        <a href=\"#\" onclick=\"" + NS + ".toggle('opsfms')\">\n            <span>Gestion/Paye</span>\n        </a>\n        <div style=\"width:20px;margin-right:1rem;\">&nbsp;</div>\n    </div>\n\n    <div class=\"js-navbar\">\n        <div class=\"js-navbar-items\">\n            <div class=\"js-items\">\n            </div>\n            <div class=\"js-items\">\n                <button class=\"button is-primary\" onclick=\"" + NS + ".help()\" style=\"font-size:125%\">\n                    <span class=\"icon\"><i class=\"fas fa-question-circle\"></i></span>\n                </button>\n                <div class=\"navbar-item has-dropdown\" onclick=\"" + NS + ".toggleProfileMenu(this)\">\n                    <a class=\"navbar-link\">\n                        " + Perm.getEmail() + "\n                    </a>\n                    <div class=\"navbar-dropdown\">\n                        <div class=\"navbar-item\">\n                            <div><b>" + Perm.getName() + "</b></div>\n                        </div>\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-primary\" onclick=\"" + NS + ".toggleProfileMenu();" + NS + ".editProfile()\">\n                                <i class=\"far fa-user\"></i>&nbsp;&nbsp;Edit Profile\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-outlined\" onclick=\"" + NS + ".toggleProfileMenu();App_Auth.signout();\">\n                                <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <a href=\"#\" class=\"navbar-item\">\n                            <div>Terms of Service</div>\n                        </a>\n                    </div>\n                </div>\n                <button class=\"button is-primary\" onclick=\"App_Auth.signout();\">\n                    <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                </button>\n            </div>\n        </div>\n    </div>\n\n</header>";
@@ -4056,43 +4328,43 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_36("menuClick", menuClick = function () {
+            exports_39("menuClick", menuClick = function () {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_36("toggle", toggle = function (entry) {
+            exports_39("toggle", toggle = function (entry) {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_36("setOpenedMenu", setOpenedMenu = function (entry) {
+            exports_39("setOpenedMenu", setOpenedMenu = function (entry) {
                 Main.state.subMenu = entry;
             });
-            exports_36("editProfile", editProfile = function () {
+            exports_39("editProfile", editProfile = function () {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_36("toggleProfileMenu", toggleProfileMenu = function (element) {
+            exports_39("toggleProfileMenu", toggleProfileMenu = function (element) {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home"], function (exports_37, context_37) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main"], function (exports_40, context_40) {
     "use strict";
-    var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_37 && context_37.id;
+    var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, state, html_lang, startup, loadUIState, saveUIState;
+    var __moduleName = context_40 && context_40.id;
     return {
         setters: [
-            function (App_10) {
-                App = App_10;
+            function (App_12) {
+                App = App_12;
             },
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
             },
-            function (Theme_1) {
-                Theme = Theme_1;
+            function (Theme_2) {
+                Theme = Theme_2;
             },
             function (LatLong_1) {
                 LatLong = LatLong_1;
@@ -4100,14 +4372,17 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_2) {
-                Perm = Perm_2;
+            function (Perm_3) {
+                Perm = Perm_3;
             },
             function (Layout_2) {
                 Layout = Layout_2;
             },
             function (Home_3) {
                 Home = Home_3;
+            },
+            function (AdminMain_1) {
+                AdminMain = AdminMain_1;
             }
         ],
         execute: function () {
@@ -4126,7 +4401,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_37("startup", startup = function (hasPublicHomePage) {
+            exports_40("startup", startup = function (hasPublicHomePage) {
                 if (hasPublicHomePage === void 0) { hasPublicHomePage = false; }
                 var main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 var router = main.router;
@@ -4137,7 +4412,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                         Home.clearMenuData();
                     }
                 });
-                //AdminMain.startup();
+                AdminMain.startup();
                 //FireMain.startup();
                 //WeatherMain.startup();
                 //AircraftMain.startup();
@@ -4145,18 +4420,18 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                 //ConfigMain.startup();
                 loadUIState();
             });
-            exports_37("loadUIState", loadUIState = function () {
+            exports_40("loadUIState", loadUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
-                exports_37("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_40("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_37("state", state = {
+                    exports_40("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_37("saveUIState", saveUIState = function () {
+            exports_40("saveUIState", saveUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -4164,10 +4439,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_38, context_38) {
+System.register("src/app", ["src/main"], function (exports_41, context_41) {
     "use strict";
     var main;
-    var __moduleName = context_38 && context_38.id;
+    var __moduleName = context_41 && context_41.id;
     return {
         setters: [
             function (main_1) {
@@ -4179,305 +4454,6 @@ System.register("src/app", ["src/main"], function (exports_38, context_38) {
             // Startup code
             //
             main.startup();
-        }
-    };
-});
-System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_39, context_39) {
-    "use strict";
-    var App, layout_1, icon, prepareMenu, tabTemplate;
-    var __moduleName = context_39 && context_39.id;
-    return {
-        setters: [
-            function (App_11) {
-                App = App_11;
-            },
-            function (layout_1_1) {
-                layout_1 = layout_1_1;
-            }
-        ],
-        execute: function () {
-            exports_39("icon", icon = "far fa-user");
-            exports_39("prepareMenu", prepareMenu = function () {
-                layout_1.setOpenedMenu("Administration-Management");
-            });
-            exports_39("tabTemplate", tabTemplate = function (id, xtra, isNew) {
-                if (isNew === void 0) { isNew = false; }
-                var isAccounts = App.inContext("App_accounts");
-                var isAccount = App.inContext("App_account");
-                var isFiles = window.location.hash.startsWith("#/files/account");
-                var isFile = window.location.hash.startsWith("#/file/account");
-                var showDetail = !isAccounts;
-                var showFiles = showDetail && xtra;
-                var showFile = isFile;
-                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isAccounts ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/accounts\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isAccount ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/account/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Account Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.fileCount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
-            });
-        }
-    };
-});
-// File: accounts.ts
-System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/admin/layout"], function (exports_40, context_40) {
-    "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_2, NS, key, state, uiSelectedRow, autoArchiveButton, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_archive, filter_regionLUID, filter_districtLUID, filter_readyToArchive, gotoDetail, create, autoArchive;
-    var __moduleName = context_40 && context_40.id;
-    return {
-        setters: [
-            function (App_12) {
-                App = App_12;
-            },
-            function (Router_5) {
-                Router = Router_5;
-            },
-            function (Perm_3) {
-                Perm = Perm_3;
-            },
-            function (Misc_14) {
-                Misc = Misc_14;
-            },
-            function (Theme_2) {
-                Theme = Theme_2;
-            },
-            function (Pager_1) {
-                Pager = Pager_1;
-            },
-            function (Lookup_1) {
-                Lookup = Lookup_1;
-            },
-            function (layout_2_1) {
-                layout_2 = layout_2_1;
-            }
-        ],
-        execute: function () {
-            exports_40("NS", NS = "App_accounts");
-            state = {
-                list: [],
-                pager: { pageNo: 1, pageSize: 20, sortColumn: "EMAIL", sortDirection: "ASC", filter: { archive: undefined, regionLUID: undefined, districtLUID: undefined, readyToArchive: undefined } }
-            };
-            autoArchiveButton = function () {
-                var title = i18n("Auto Archive");
-                var helpText = i18n("<p><b>Note:</b> This will archive all records having the <b><em>Ready to Archive</em></b> flag set.</p>");
-                var onclick = NS + ".autoArchive()";
-                return Theme.renderButtonWithConfirm(title, "far fa-lock-open-alt", helpText, onclick, false, false, true);
-            };
-            filterTemplate = function (archive, regionLUID, districtLUID, readyToArchive) {
-                var filters = [];
-                filters.push(Theme.renderDropdownFilter(NS, "regionLUID", regionLUID, i18n("REGION")));
-                filters.push(Theme.renderDropdownFilter(NS, "districtLUID", districtLUID, i18n("DISTRICT")));
-                filters.push(Theme.renderDropdownFilter(NS, "archive", archive, i18n("ARCHIVE")));
-                filters.push(Theme.renderDropdownFilter(NS, "readyToArchive", readyToArchive, i18n("READYTOARCHIVE")));
-                return filters.join("");
-            };
-            trTemplate = function (item, rowNumber) {
-                return "\n<tr class=\"" + (isSelectedRow(item.id) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail(" + item.id + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.firstName) + "</td>\n    <td>" + Misc.toStaticText(item.lastName) + "</td>\n    <td>" + Misc.toStaticText(item.regionLUID_Text) + "</td>\n    <td>" + Misc.toStaticText(item.districtLUID_Text) + "</td>\n    <td>" + Misc.toStaticText(item.phone1) + "</td>\n    <!--<td>" + Misc.toStaticText(item.roleMask_Text) + "</td>-->\n    <td>" + Misc.toStaticDateTime(item.lastActivityUtc) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.readyToArchive) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.hasPendingEmail) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n</tr>";
-            };
-            tableTemplate = function (tbody, pager) {
-                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FIRSTNAME"), "firstName", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastName", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REGION"), "regionLUID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DISTRICT"), "districtLUID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PHONE1"), "phone1", "ASC") + "\n            <!--" + Pager.sortableHeaderLink(pager, NS, i18n("ROLEMASK"), "roleMask_Text", "ASC") + "-->\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTACTIVITYUTC"), "lastActivityUtc", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("READYTOARCHIVE"), "readyToArchive", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("HASPENDINGEMAIL"), "hasPendingEmail", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
-            };
-            pageTemplate = function (xtra, pager, table, tab, warning, dirty) {
-                var readonly = false;
-                var buttons = [];
-                buttons.push(autoArchiveButton());
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_2.icon + "\"></i> " + i18n("All accounts") + "</div>\n            <div class=\"subtitle\">" + i18n("List of accounts") + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderListActionButtons2(NS, i18n("Add New"), buttons)) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
-            };
-            exports_40("fetchState", fetchState = function (id) {
-                Router.registerDirtyExit(null);
-                return App.GET("/account/search/?" + Pager.asParams(state.pager))
-                    .then(function (payload) {
-                    state = payload;
-                    key = {};
-                })
-                    .then(Lookup.fetch_region())
-                    .then(Lookup.fetch_district());
-            });
-            exports_40("fetch", fetch = function (params) {
-                var id = +params[0];
-                App.prepareRender(NS, i18n("accounts"));
-                layout_2.prepareMenu();
-                fetchState(id)
-                    .then(App.render)
-                    .catch(App.render);
-            });
-            refresh = function () {
-                App.prepareRender(NS, i18n("accounts"));
-                App.GET("/account/search/?" + Pager.asParams(state.pager))
-                    .then(function (payload) {
-                    state = payload;
-                })
-                    .then(App.render)
-                    .catch(App.render);
-            };
-            exports_40("render", render = function () {
-                if (!inContext())
-                    return "";
-                if (App.fatalError())
-                    return App.fatalErrorTemplate();
-                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
-                    return App.warningTemplate() || App.unexpectedTemplate();
-                var warning = App.warningTemplate();
-                var dirty = "";
-                var tbody = state.list.reduce(function (html, item, index) {
-                    var rowNumber = Pager.rowNumber(state.pager, index);
-                    return html + trTemplate(item, rowNumber);
-                }, "");
-                var year = Perm.getCurrentYear();
-                var lookup_region = Lookup.get_region(year);
-                var lookup_district = Lookup.get_district(year);
-                var regionLUID = Theme.renderOptions(lookup_region, state.pager.filter.regionLUID, true, "All");
-                var districtLUID = Theme.renderOptions(lookup_district, state.pager.filter.districtLUID, true, "All");
-                var archive = Theme.renderNullableBooleanOptionsReverse(state.pager.filter.archive, ["All", i18n("Archived"), i18n("Active")]);
-                var readyToArchive = Theme.renderNullableBooleanOptions(state.pager.filter.readyToArchive, ["All", i18n("Ready"), i18n("Not Ready")]);
-                var filter = filterTemplate(archive, regionLUID, districtLUID, readyToArchive);
-                var search = Pager.searchTemplate(state.pager, NS);
-                var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
-                var table = tableTemplate(tbody, state.pager);
-                var tab = layout_2.tabTemplate(null, null);
-                return pageTemplate(state.xtra, pager, table, tab, dirty, warning);
-            });
-            exports_40("postRender", postRender = function () {
-                if (!inContext())
-                    return;
-            });
-            exports_40("inContext", inContext = function () {
-                return App.inContext(NS);
-            });
-            setSelectedRow = function (id) {
-                if (uiSelectedRow == undefined)
-                    uiSelectedRow = { id: id };
-                uiSelectedRow.id = id;
-            };
-            isSelectedRow = function (id) {
-                if (uiSelectedRow == undefined)
-                    return false;
-                return (uiSelectedRow.id == id);
-            };
-            exports_40("goto", goto = function (pageNo, pageSize) {
-                state.pager.pageNo = pageNo;
-                state.pager.pageSize = pageSize;
-                refresh();
-            });
-            exports_40("sortBy", sortBy = function (columnName, direction) {
-                state.pager.pageNo = 1;
-                state.pager.sortColumn = columnName;
-                state.pager.sortDirection = direction;
-                refresh();
-            });
-            exports_40("search", search = function (element) {
-                state.pager.searchText = element.value;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_40("filter_archive", filter_archive = function (element) {
-                var value = element.options[element.selectedIndex].value;
-                var archive = (value.length > 0 ? value == "true" : undefined);
-                if (archive == state.pager.filter.archive)
-                    return;
-                state.pager.filter.archive = archive;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_40("filter_regionLUID", filter_regionLUID = function (element) {
-                var value = element.options[element.selectedIndex].value;
-                var regionLUID = (value.length > 0 ? +value : undefined);
-                if (regionLUID == state.pager.filter.regionLUID)
-                    return;
-                state.pager.filter.districtLUID = undefined;
-                state.pager.filter.regionLUID = regionLUID;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_40("filter_districtLUID", filter_districtLUID = function (element) {
-                var value = element.options[element.selectedIndex].value;
-                var districtLUID = (value.length > 0 ? +value : undefined);
-                if (districtLUID == state.pager.filter.districtLUID)
-                    return;
-                state.pager.filter.regionLUID = undefined;
-                state.pager.filter.districtLUID = districtLUID;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_40("filter_readyToArchive", filter_readyToArchive = function (element) {
-                var value = element.options[element.selectedIndex].value;
-                var readyToArchive = (value.length > 0 ? value == "true" : undefined);
-                if (readyToArchive == state.pager.filter.readyToArchive)
-                    return;
-                state.pager.filter.readyToArchive = readyToArchive;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_40("gotoDetail", gotoDetail = function (id) {
-                setSelectedRow(id);
-                Router.goto("#/admin/account/" + id);
-            });
-            exports_40("create", create = function () {
-                Router.goto("#/admin/account/new");
-            });
-            exports_40("autoArchive", autoArchive = function () {
-                App.POST("/account/auto-archive", null)
-                    .then(function (_) {
-                    Misc.toastSuccess(i18n("Auto Archive Executed"));
-                    Router.goto("#/admin/accounts", 10);
-                })
-                    .catch(App.render);
-            });
-        }
-    };
-});
-System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts"], function (exports_41, context_41) {
-    "use strict";
-    var Router, accounts, startup, render, postRender;
-    var __moduleName = context_41 && context_41.id;
-    return {
-        setters: [
-            function (Router_6) {
-                Router = Router_6;
-            },
-            function (accounts_1) {
-                accounts = accounts_1;
-            }
-        ],
-        execute: function () {
-            //import * as account from "./account"
-            //import * as profile from "./profile"
-            //import * as DataFiles from "./datafiles"
-            //import * as DataFile from "./datafile"
-            //import * as Lookups from "./lookups"
-            //import * as Lookup from "./lookup"
-            //
-            // Global references to application objects
-            // These must match the "NS" values defined in modules
-            // Mainly used for event handlers
-            //
-            window.App_accounts = accounts;
-            //(<any>window).App_account = account;
-            //(<any>window).App_profile = profile;
-            //(<any>window).App_DataFiles = DataFiles;
-            //(<any>window).App_DataFile = DataFile;
-            //(<any>window).App_Lookups = Lookups;
-            //(<any>window).App_Lookup = Lookup;
-            exports_41("startup", startup = function () {
-                Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
-                //    Router.addRoute("^#/admin/account/(.*)$", account.fetch);
-                //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
-                //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
-                //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
-                //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
-                //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
-            });
-            exports_41("render", render = function () {
-                return "\n    " + accounts.render() + "\n";
-                //${account.render()}
-                //${DataFiles.render()}
-                //${DataFile.render()}
-                //${Lookups.render()}
-                //${Lookup.render()}
-            });
-            exports_41("postRender", postRender = function () {
-                accounts.postRender();
-                //account.postRender();
-                //DataFiles.postRender();
-                //DataFile.postRender();
-                //Lookups.postRender();
-                //Lookup.postRender();
-            });
         }
     };
 });

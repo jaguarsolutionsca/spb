@@ -11,7 +11,7 @@ import * as Main from "./main"
 // Use these in both render() and postRender()
 //
 import * as Home from "./home"
-//import * as Admin from "./admin/main"
+import * as Admin from "./admin/main"
 //import * as Profile from "./admin/profile"
 //import * as Fire from "./fire/main"
 //import * as Weather from "./weather/main"
@@ -33,6 +33,7 @@ export const render = () => {
     // so they can potentially have an impact over there.
     let ucMain = `
 ${Home.render()}
+${Admin.render()}
 `;
 
     let menu = menuTemplate(Home.getMenuData());
@@ -50,6 +51,7 @@ ${ucMain}
 
 export const postRender = () => {
     Home.postRender();
+    Admin.postRender()
 }
 
 const renderHeader = () => {

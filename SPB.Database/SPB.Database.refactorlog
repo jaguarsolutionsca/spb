@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="4c79a4e2-bcbe-4b66-8fa8-6782a45b6cb0" ChangeDateTime="12/05/2020 11:48:35">
+    <Property Name="ElementName" Value="[app].[Account].[CID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[app].[Account]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CIE]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3974cb79-75da-4a4b-a0d8-42fd674e8177" ChangeDateTime="12/05/2020 11:49:10">
+    <Property Name="ElementName" Value="[app].[Company].[ID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[app].[Company]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CIE]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c675dd19-a21a-4974-8bce-3e4e3a4cb81a" ChangeDateTime="12/05/2020 11:53:52">
+    <Property Name="ElementName" Value="[app].[Lookup].[CID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[app].[Lookup]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CIE]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="80e3416f-3871-4221-a751-43385e53c8ab" ChangeDateTime="12/05/2020 11:54:13">
+    <Property Name="ElementName" Value="[app].[Perm].[CID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[app].[Perm]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[CIE]" />
+  </Operation>
+</Operations>

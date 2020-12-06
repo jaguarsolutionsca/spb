@@ -17,13 +17,13 @@ interface LoginData {
 }
 
 export interface UserCaps {
+    uid: number
+    cie: number
+    year: number
     email: string
     name: string
     roles: number[]
     permissions: number[]
-    uid: number
-    cid: number
-    year: number
 }
 
 var loginData = <LoginData>{};
@@ -495,7 +495,7 @@ const createLoginData = (token: string) => {
         permissions: perms,
         roles: role,
         uid: +payload["uid"],
-        cid: +payload["cid"],
+        cie: +payload["cie"],
     };
     loginData.expiry = payload["exp"];
 }

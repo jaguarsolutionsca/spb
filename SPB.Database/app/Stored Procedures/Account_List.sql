@@ -1,23 +1,23 @@
 ﻿CREATE PROCEDURE [app].[Account_List]
 (
-	@cid int = NULL,
+	@cie int = NULL,
     @Archive bit = NULL,
-	@uid int = NULL
+    @ReadyToArchive bit = NULL
 )
 AS
 BEGIN
 SET NOCOUNT ON
 ;
 
-DECLARE @IsSupport bit = app.UserIs_Support(@uid);
+--DECLARE @IsSupport bit = app.UserIs_Support(@uid);
 
 SELECT * 
-FROM app.Account
+FROM app.Account_Full
 WHERE
 (
-    ((@cid IS NULL) OR (CID = @cid)) AND
+    ((@cie IS NULL) OR (CIE = @cie)) AND
     ((@Archive IS NULL) OR (Archive = @Archive)) AND
-	(@IsSupport = 1)
+    ((@ReadyToArchive IS NULL) OR (ReadyToArchive = @ReadyToArchive))
 )
 ;
 

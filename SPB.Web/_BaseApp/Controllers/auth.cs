@@ -18,7 +18,7 @@ namespace BaseApp.Web.Models
     {
         public string email { get; set; }
         public string password { get; set; }
-        public int cid { get; set; }
+        public int cie { get; set; }
     }
 
     public class AuthorizationData
@@ -40,7 +40,7 @@ namespace BaseApp.Web.Controllers
         [HttpPost("signin")]
         public AuthorizationData Signin([FromBody]LoginModel model)
         {
-            var usercaps = app.AppLogin(model.email, model.password, model.cid);
+            var usercaps = app.AppLogin(model.email, model.password, model.cie);
             return populateAuthorizationData(usercaps);
         }
 
@@ -67,7 +67,7 @@ namespace BaseApp.Web.Controllers
         [HttpPost("request-password-reset")]
         public ActionResult RequestPasswordReset([FromBody] LoginModel model)
         {
-            app.Reset_Password(model.email, buildUIRouterUrl("reset-password/{guid}"), model.cid);
+            app.Reset_Password(model.email, buildUIRouterUrl("reset-password/{guid}"), model.cie);
             return NoContent();
         }
 
@@ -85,7 +85,7 @@ namespace BaseApp.Web.Controllers
             claims.Add(new Claim(ClaimTypes.Email, usercaps.email));
             claims.Add(new Claim(UserData.ClaimType_Name, usercaps.name));
             claims.Add(new Claim(UserData.ClaimType_UID, usercaps.uid.ToString()));
-            claims.Add(new Claim(UserData.ClaimType_CID, usercaps.cid.ToString()));
+            claims.Add(new Claim(UserData.ClaimType_CIE, usercaps.cie.ToString()));
             foreach (var permission in usercaps.permissions)
             {
                 claims.Add(new Claim(UserData.ClaimType_Perms, permission.ToString(), ClaimValueTypes.Integer));

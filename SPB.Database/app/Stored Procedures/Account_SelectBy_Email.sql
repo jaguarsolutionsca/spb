@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [app].[Account_SelectBy_Email]
 (
     @email nvarchar(128),
-	@cid int = NULL
+	@cie int = NULL
 )
 AS
 BEGIN
@@ -14,7 +14,7 @@ WHERE
 	EMail = @email AND
 	Archive = 0 AND
 	(
-		( @cid is not null and CID = @cid ) OR
+		( @cie is not null and CIE = @cie ) OR
 		( IsSupport = 1 )
 	)
 ;

@@ -17,33 +17,31 @@ namespace BaseApp.Web.Controllers
     public class AccountController : _CoreController
     {
         [HttpGet("search")]
-        public PagedList<Account_Search, Account_Search_Filter> Search(bool? archive, int? regionLUID, int? districtLUID, bool? readyToArchive, int pn, int ps, string sc, string sd, string st)
+        public PagedList<Account_Search, Account_Search_Filter> Search(bool? archive, bool? readyToArchive, int pn, int ps, string sc, string sd, string st)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             var pager = new Pager<Account_Search_Filter>(pn, ps, sc, sd, st);
             pager.filter.archive = archive;
-            pager.filter.regionLUID = regionLUID;
-            pager.filter.districtLUID = districtLUID;
             pager.filter.readyToArchive = readyToArchive;
             return app.Account_Search(pager);
         }
 
-        [HttpGet("{id}")]
-        public Account_Full Get(int id)
+        [HttpGet("{uid}")]
+        public Account_Full Select(int uid)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            return app.Get_Account_Select(id, buildUIRouterUrl("accept-invitation/{guid}"));
+            return app.Account_Select(uid, buildUIRouterUrl("accept-invitation/{guid}"));
         }
 
-        [HttpGet("new")]
-        public Account_Full GetNew()
+        [HttpGet("new/{cie}")]
+        public Account_Full New(int cie)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            return app.GetNew_Account_Select();
+            return app.Account_New(cie);
         }
 
         [HttpPost]
-        public Account_PK Create([FromBody] Account_Update uto)
+        public Account_PK Insert([FromBody] Account_Update uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.Account_Insert(uto, buildUIRouterUrl("accept-invitation/{guid}"));
@@ -81,11 +79,11 @@ namespace BaseApp.Web.Controllers
             return NoContent();
         }
 
-        [HttpPost("auto-archive")]
-        public ActionResult AutoArchive()
+        [HttpPost("auto-archive}")]
+        public ActionResult AutoArchive(int cie)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            app.Auto_Archive();
+            app.Auto_Archive(cie);
             return NoContent();
         }
     }

@@ -2,8 +2,8 @@
 AS
 SELECT
 	acc.UID, 
-	acc.CID, 
-	comp.Name [CID_Text],
+	acc.CIE, 
+	comp.Name [CIE_Text],
 	acc.Email, 
 	acc.Password,
 	acc.RoleLUID, 
@@ -27,7 +27,7 @@ SELECT
 	acc.UpdatedBy, 
 	acc2.Email [By]
 FROM app.Account acc
-INNER JOIN app.Company comp ON acc.CID = comp.ID 
+INNER JOIN app.Company comp ON acc.CIE = comp.CIE
 INNER JOIN app.PermMeta meta ON acc.RoleLUID = meta.ID
 INNER JOIN app.Account acc2 ON acc2.UID = acc.UpdatedBy
 GO

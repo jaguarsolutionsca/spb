@@ -33,11 +33,11 @@ namespace BaseApp.Common
             return uid;
         }
 
-        public static int Get_CID(this IPrincipal principal)
+        public static int Get_CIE(this IPrincipal principal)
         {
             var claimsPrincipal = (ClaimsPrincipal)principal;
-            int.TryParse(claimsPrincipal.Claims.SingleOrDefault(one => one.Type == UserData.ClaimType_CID)?.Value, out int cid);
-            return cid;
+            int.TryParse(claimsPrincipal.Claims.SingleOrDefault(one => one.Type == UserData.ClaimType_CIE)?.Value, out int cie);
+            return cie;
         }
 
         public static List<int> Get_Permissions(this IPrincipal principal)

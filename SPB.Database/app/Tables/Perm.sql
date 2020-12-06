@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [app].[Perm] (
-    [CID]       INT NOT NULL,
+    [CIE]       INT NOT NULL,
     [PermID]    INT NOT NULL,
     [PermValue] INT NOT NULL,
-    CONSTRAINT [PK_Perm] PRIMARY KEY CLUSTERED ([CID] ASC, [PermID] ASC)
+    CONSTRAINT [PK_Perm] PRIMARY KEY CLUSTERED ([CIE] ASC, [PermID] ASC)
 );
 

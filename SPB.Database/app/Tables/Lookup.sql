@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [app].[Lookup] (
     [ID]          INT            IDENTITY (1, 1) NOT NULL,
-    [CID]         INT            NULL,
+    [CIE]         INT            NULL,
     [Groupe]      NVARCHAR (12)  NOT NULL,
     [Code]        NVARCHAR (9)   NULL,
     [Description] NVARCHAR (50)  NOT NULL,
@@ -14,6 +14,6 @@
     [Updated]     DATETIME       CONSTRAINT [DF_Lookup_Updated] DEFAULT (getdate()) NOT NULL,
     [UpdatedBy]   INT            CONSTRAINT [DF_Lookup_UpdatedBy] DEFAULT ((0)) NOT NULL,
     CONSTRAINT [PK_Lookup] PRIMARY KEY CLUSTERED ([ID] ASC),
-    CONSTRAINT [FK_Lookup_Company] FOREIGN KEY ([CID]) REFERENCES [app].[Company] ([ID])
+    CONSTRAINT [FK_Lookup_Company] FOREIGN KEY ([CIE]) REFERENCES [app].[Company] ([CIE])
 );
 

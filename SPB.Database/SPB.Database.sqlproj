@@ -93,8 +93,13 @@
     <Build Include="app\Views\Account_Full.sql" />
     <Build Include="app\Functions\UserIs_Support.sql" />
     <Build Include="app\Stored Procedures\Account_List.sql" />
+    <Build Include="app\Stored Procedures\Account_Select.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
+    <None Include="02.schema.project_to_dev.scmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="SPB.Database.refactorlog" />
   </ItemGroup>
 </Project>

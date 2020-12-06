@@ -2,7 +2,7 @@
 (
     @email nvarchar(128),
 	@password nvarchar(128),
-	@cid int = NULL
+	@cie int = NULL
 )
 AS
 BEGIN
@@ -16,7 +16,7 @@ WHERE
 	Password = @password AND
 	Archive = 0 AND
 	(
-		( @cid is not null and CID = @cid ) OR
+		( @cie is not null and CIE = @cie ) OR
 		( IsSupport = 1 )
 	)
 ;

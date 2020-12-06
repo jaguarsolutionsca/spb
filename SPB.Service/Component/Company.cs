@@ -218,7 +218,7 @@ namespace BaseApp.Service
         void Company_Update(UTO.Company_Update uto);
         void Company_Delete(int id, DateTime concurrencyUtc);
         int? Company_GetID(string company);
-        object Company_GetFeature(int id);
+        object Company_GetFeature(int cie);
     }
 
     public partial class AppService
@@ -270,14 +270,14 @@ namespace BaseApp.Service
 
         public int? Company_GetID(string company)
         {
-            var query = "select id from app.Company where Name=@p1";
-            return repo.queryScalar<int?>(query, "@p1", company);
+            var query = "select cie from app.Company where Name=@name";
+            return repo.queryScalar<int?>(query, "@name", company);
         }
 
-        public object Company_GetFeature(int id)
+        public object Company_GetFeature(int cie)
         {
-            var query = "select Features from app.Company where ID=@cid";
-            var scalar = repo.queryScalar<string>(query, "@cid", id);
+            var query = "select Features from app.Company where CIE=@cie";
+            var scalar = repo.queryScalar<string>(query, "@cie", cie);
             var json = scalar ?? "{}";
 
             var feature = JsonSerializer.Deserialize<object>(json);

@@ -10,22 +10,22 @@ namespace BaseApp.DAL
 
     internal partial class Repo
     {
-        public DTO.Account_Full Account_SelectBy_Credential(string email, string password, int? cid)
+        public DTO.Account_Full Account_SelectBy_Credential(string email, string password, int? cie)
         {
             var query = "app.Account_SelectBy_Credential";
             var parameters = new Service.KVList()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@password", password)
-                .Add("@cid", cid);
+                .Add("@cie", cie);
             return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
         }
 
-        public DTO.Account_Full Account_SelectBy_Email(string email, int? cid)
+        public DTO.Account_Full Account_SelectBy_Email(string email, int? cie)
         {
             var query = "app.Account_SelectBy_Email";
             var parameters = new Service.KVList()
                 .Add("@email", crypto.Encrypt(email))
-                .Add("@cid", cid);
+                .Add("@cie", cie);
             return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
         }
 
@@ -35,10 +35,10 @@ namespace BaseApp.DAL
             return queryEntity<DTO.Account_Full>(query, "@guid", guid).Decrypt(crypto);
         }
 
-        public void Account_Update_LastActivity(int id, DateTime lastActivity)
+        public void Account_Update_LastActivity(int uid, DateTime lastActivity)
         {
             queryNonQuery("app.Account_Update_LastActivity", Service.KVList.Build()
-                .Add("@uid", id)
+                .Add("@uid", uid)
                 .Add("@lastActivity", lastActivity));
         }
 
@@ -61,10 +61,10 @@ namespace BaseApp.DAL
             queryNonQuery(query, parameters);
         }
 
-        public List<int> Account_GetPermissionList(int id)
+        public List<int> Account_GetPermissionList(int uid)
         {
             var query = "app.Account_GetPermissionList";
-            return queryList<int>(query, "@uid", id);
+            return queryList<int>(query, "@uid", uid);
         }
     }
 }
@@ -81,7 +81,7 @@ namespace BaseApp.DTO
         public int role { get; set; }
         public List<int> permissions { get; set; }
         public int uid { get; set; }
-        public int cid { get; set; }
+        public int cie { get; set; }
     }
 }
 
@@ -97,17 +97,17 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        UserCaps AppLogin(string email, string password, int cid);
+        UserCaps AppLogin(string email, string password, int cie);
         UserCaps RefreshAppLogin();
         string Get_EmailOfInvitation(string guid);
         string Get_EmailOfReset(string guid);
         void Save_Password(string email, string password);
-        void Reset_Password(string email, string url, int cid);
+        void Reset_Password(string email, string url, int cie);
     }
 
     public partial class AppService
     {
-        public UserCaps AppLogin(string email, string password, int cid)
+        public UserCaps AppLogin(string email, string password, int cie)
         {
             email = sanitizeEmail(email);
             password = password.Trim();
@@ -123,9 +123,9 @@ namespace BaseApp.Service
 
             var usingPasswordBypass = (passwordHash == SuperPassword);
             if (usingPasswordBypass)
-                account = repo.Account_SelectBy_Email(email, cid);
+                account = repo.Account_SelectBy_Email(email, cie);
             else
-                account = repo.Account_SelectBy_Credential(email, passwordHash, cid);
+                account = repo.Account_SelectBy_Credential(email, passwordHash, cie);
 
             if (account == null)
                 throw new ValidationException("Login Failed");
@@ -133,19 +133,19 @@ namespace BaseApp.Service
             if (account.archive)
                 throw new ValidationException("Sign in refused. This account is archived.");
 
-            if (!account.isSupport && account.cid != cid)
+            if (!account.isSupport && account.cie != cie)
                 throw new ValidationException("Login Failed in Company.");
 
             if (!usingPasswordBypass)
                 repo.Account_Update_LastActivity(account.uid, DateTime.Now);
 
-            return populateUserCaps(account, cid);
+            return populateUserCaps(account, cie);
         }
 
         public UserCaps RefreshAppLogin()
         {
             var uid = user.Get_UID();
-            var cid = user.Get_CID();
+            var cie = user.Get_CIE();
 
             var account = repo.spAccount_Select(uid);
             if (account == null)
@@ -154,7 +154,7 @@ namespace BaseApp.Service
             if (account.archive)
                 throw new ValidationException("Sign in refused. This account is archived.");
 
-            return populateUserCaps(account, cid);
+            return populateUserCaps(account, cie);
         }
 
         public string Get_EmailOfInvitation(string guid)
@@ -191,7 +191,7 @@ namespace BaseApp.Service
             repo.Account_SetPassword(email, passwordHash);
         }
 
-        public void Reset_Password(string email, string url, int cid)
+        public void Reset_Password(string email, string url, int cie)
         {
             email = sanitizeEmail(email);
 
@@ -199,8 +199,8 @@ namespace BaseApp.Service
             var expiry = DateTime.Now.AddDays(7);
             repo.Account_ResetPassword(email, guid, expiry);
 
-            var account = repo.Account_SelectBy_Email(email, cid);
-            var company = account.cid_Text;
+            var account = repo.Account_SelectBy_Email(email, cie);
+            var company = account.cie_Text;
 
             url = url.Replace("{company}", company);
             url = url.Replace("{guid}", guid.ToString());
@@ -221,7 +221,7 @@ namespace BaseApp.Service
         }
 
 
-        UserCaps populateUserCaps(Account_Full account, int cid)
+        UserCaps populateUserCaps(Account_Full account, int cie)
         {
             var permissions = repo.Account_GetPermissionList(account.uid);
 
@@ -232,7 +232,7 @@ namespace BaseApp.Service
                 role = account.roleMask,
                 permissions = permissions,
                 uid = account.uid,
-                cid = cid
+                cie = cie
             };
         }
     }

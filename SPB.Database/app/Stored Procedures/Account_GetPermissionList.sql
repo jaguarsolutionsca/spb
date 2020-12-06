@@ -7,10 +7,10 @@ BEGIN
 SET NOCOUNT ON
 ;
 
-	declare @cid int;
+	declare @cie int;
 	declare @roleMask int;
 	select
-		@cid = up.CID,
+		@cie = up.CIE,
 		@roleMask = lut.Code
 	from app.Account up
 	inner join app.PermMeta lut on lut.ID = up.RoleLUID
@@ -23,7 +23,7 @@ SET NOCOUNT ON
 			PermValue,
 			CAST(CASE WHEN (PermValue & @RoleMask) <> 0 THEN 1 ELSE 0 END as bit) [valid]
 		FROM app.Perm
-		WHERE CID = @cid
+		WHERE [CIE] = @cie
 	)
 	select
 		PermID

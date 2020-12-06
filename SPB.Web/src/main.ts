@@ -10,7 +10,7 @@ import * as Perm from "./permission"
 import * as Layout from "./layout"
 import * as Home from "./home"
 //
-//import * as AdminMain from "./admin/main"
+import * as AdminMain from "./admin/main"
 //import * as FireMain from "./fire/main"
 //import * as WeatherMain from "./weather/main"
 //import * as AircraftMain from "./aircraft/main"
@@ -62,7 +62,7 @@ export const startup = (hasPublicHomePage = false) => {
         }
     });
 
-    //AdminMain.startup();
+    AdminMain.startup();
     //FireMain.startup();
     //WeatherMain.startup();
     //AircraftMain.startup();
