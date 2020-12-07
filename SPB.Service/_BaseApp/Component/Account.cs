@@ -9,6 +9,31 @@ namespace BaseApp.DAL
     using System.Data.SqlClient;
     using System.Linq;
 
+    public class Account_Insert : UTO.Account_Insert
+    {
+        public Guid? resetGuid { get; set; }
+        public DateTime? resetExpiry { get; set; }
+        public int updatedBy { get; set; }
+
+        internal Account_Insert ToLocalTime()
+        {
+            return this;
+        }
+    }
+
+    public class Account_Update : UTO.Account_Update
+    {
+        public Guid? resetGuid { get; set; }
+        public DateTime? resetExpiry { get; set; }
+
+        public Account_Update ToLocalTime()
+        {
+            resetExpiry = resetExpiry?.ToLocalTime();
+            updated = updated.ToLocalTime();
+            return this;
+        }
+    }
+
     internal partial class Repo
     {
         public DTO.PagedList<DTO.Account_Search, DTO.Account_Search_Filter> spAccount_List(DTO.Pager<DTO.Account_Search_Filter> pagerData)
@@ -115,78 +140,33 @@ namespace BaseApp.DAL
             return queryEntity<DTO.Account_Full>("app.Account_New", "@cie", cie);
         }
 
-        public void spAccount_Insert(UTO.Account_Update uto)
+        public int spAccount_Insert(Account_Insert entity)
         {
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_Insert";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@Email", crypto.Encrypt(uto.email));
-                command.Parameters.AddWithValue("@RoleMask", uto.roleMask);
-                command.Parameters.AddWithValue("@ResetGuid", (object)uto.resetGuid ?? DBNull.Value);
-                command.Parameters.AddWithValue("@ResetExpiry", uto.resetExpiryUtc == null ? DBNull.Value : (object)uto.resetExpiryUtc?.ToLocalTime());
-                command.Parameters.AddWithValue("@LastActivity", uto.lastActivityUtc == null ? DBNull.Value : (object)uto.lastActivityUtc?.ToLocalTime());
-                command.Parameters.AddWithValue("@Archive", uto.archive);
-                command.Parameters.AddWithValue("@UpdatedBy", uto.updatedBy);
-                command.Parameters.AddWithValue("@FirstName", crypto.Encrypt(uto.firstName));
-                command.Parameters.AddWithValue("@LastName", crypto.Encrypt(uto.lastName));
-                command.Parameters.AddWithValue("@AutoArchive", uto.autoArchive);
-                command.Parameters.AddWithValue("@AutoLock", uto.autoLock);
-                command.Parameters.AddWithValue("@Address", string.IsNullOrEmpty(uto.address) ? DBNull.Value : (object)crypto.Encrypt(uto.address));
-                command.Parameters.AddWithValue("@Town", string.IsNullOrEmpty(uto.town) ? DBNull.Value : (object)crypto.Encrypt(uto.town));
-                command.Parameters.AddWithValue("@PostalCode", string.IsNullOrEmpty(uto.postalCode) ? DBNull.Value : (object)crypto.Encrypt(uto.postalCode));
-
-                var id = new SqlParameter("@ID", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                command.Parameters.Add(id);
-                command.ExecuteNonQuery();
-
-                uto.uid = (int)id.Value;
-            }
+            entity.Encrypt(crypto);
+            entity.ToLocalTime();
+            return queryScalar<int>("app.Account_Insert", Service.KVList.Build<Account_Insert>(entity));
         }
 
-        public void spAccount_Update(UTO.Account_Update uto)
+        public void spAccount_Update(Account_Update entity)
         {
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_Update";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@ID", uto.uid);
-                command.Parameters.AddWithValue("@Email", crypto.Encrypt(uto.email));
-                command.Parameters.AddWithValue("@RoleMask", uto.roleMask);
-                command.Parameters.AddWithValue("@ResetGuid", (object)uto.resetGuid ?? DBNull.Value);
-                command.Parameters.AddWithValue("@ResetExpiry", uto.resetExpiryUtc == null ? DBNull.Value : (object)uto.resetExpiryUtc?.ToLocalTime());
-                command.Parameters.AddWithValue("@LastActivity", uto.lastActivityUtc == null ? DBNull.Value : (object)uto.lastActivityUtc?.ToLocalTime());
-                command.Parameters.AddWithValue("@Archive", uto.archive);
-                command.Parameters.AddWithValue("@Updated", uto.updatedUtc.ToLocalTime());
-                command.Parameters.AddWithValue("@UpdatedBy", uto.updatedBy);
-                command.Parameters.AddWithValue("@FirstName", crypto.Encrypt(uto.firstName));
-                command.Parameters.AddWithValue("@LastName", crypto.Encrypt(uto.lastName));
-                command.Parameters.AddWithValue("@AutoArchive", uto.autoArchive);
-                command.Parameters.AddWithValue("@AutoLock", uto.autoLock);
-                command.Parameters.AddWithValue("@Address", string.IsNullOrEmpty(uto.address) ? DBNull.Value : (object)crypto.Encrypt(uto.address));
-                command.Parameters.AddWithValue("@Town", string.IsNullOrEmpty(uto.town) ? DBNull.Value : (object)crypto.Encrypt(uto.town));
-                command.Parameters.AddWithValue("@PostalCode", string.IsNullOrEmpty(uto.postalCode) ? DBNull.Value : (object)crypto.Encrypt(uto.postalCode));
-                command.ExecuteNonQuery();
-
-            }
+            entity.Encrypt(crypto);
+            entity.ToLocalTime();
+            queryNonQuery("app.Account_Update", Service.KVList.Build<Account_Update>(entity));
         }
 
-        public void spAccount_Delete(int id, DateTime updatedUtc)
+        public void spAccount_Delete(int uid, DateTime updated)
         {
-            using (var command = connex.CreateCommand())
-            {
-                command.CommandText = "dbo.Account_Delete";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@ID", id);
-                command.Parameters.AddWithValue("@Updated", updatedUtc.ToLocalTime());
-                command.ExecuteNonQuery();
-
-            }
+            queryNonQuery("app.Account_Delete", Service.KVList.Build()
+                .Add("@uid", uid)
+                .Add("@updated", updated.ToLocalTime())
+                );
         }
 
         public DTO.Account_Summary spAccount_Summary(int uid)
         {
-            return queryEntity<DTO.Account_Summary>("app.Account_Summary", "@uid", uid);
+            var summary = queryEntity<DTO.Account_Summary>("app.Account_Summary", "@uid", uid);
+            summary.title = crypto.Decrypt(summary.title);
+            return summary;
         }
     }
 }
@@ -283,30 +263,19 @@ namespace BaseApp.DTO
 
 namespace BaseApp.UTO
 {
-    public class Account_UK : DTO.Account_PK
-    {
-        public DateTime updatedUtc { get; set; }
-    }
-
-    public class Account_Update : Account_UK
+    public class Account_Insert
     {
         public int cie { get; set; }
         public string email { get; set; }
         public string password { get; set; }
-        public int roleMask { get; set; }
-        public Guid? resetGuid { get; set; }
-        public DateTime? resetExpiryUtc { get; set; }
-        public DateTime? lastActivityUtc { get; set; }
-        public bool archive { get; set; }
-        public int updatedBy { get; set; }
+        public int roleLUID { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public bool useRealEmail { get; set; }
-        public bool autoArchive { get; set; }
-        public bool autoLock { get; set; }
-        public string address { get; set; }
-        public string town { get; set; }
-        public string postalCode { get; set; }
+        public int? archiveDays { get; set; }
+        public int currentYear { get; set; }
+        public string comment { get; set; }
+        public bool archive { get; set; }
 
         internal void Validate()
         {
@@ -322,6 +291,33 @@ namespace BaseApp.UTO
             if (lastName.Length > 50)
                 throw new Common.ValidationException("LastName is too long (max length = 50)");
         }
+
+        internal Account_Insert Encrypt(Common.Crypto crypto)
+        {
+            email = crypto.Encrypt(email);
+            firstName = crypto.Encrypt(firstName);
+            lastName = crypto.Encrypt(lastName);
+            return this;
+        }
+    }
+
+    internal interface IAccount_UpdateLock
+    {
+        public int uid { get; set; }
+        public DateTime updated { get; set; }
+    }
+
+    public class Account_UpdateLock : IAccount_UpdateLock
+    {
+        public int uid { get; set; }
+        public DateTime updated { get; set; }
+    }
+
+    public class Account_Update : Account_Insert, IAccount_UpdateLock
+    {
+        public int uid { get; set; }
+        public DateTime updated { get; set; }
+        public int updatedBy { get; set; }
     }
 }
 
@@ -338,7 +334,7 @@ namespace BaseApp.Service
         PagedList<Account_Search, Account_Search_Filter> Account_Search(Pager<Account_Search_Filter> pagerData);
         Account_Full Account_Select(int uid, string url);
         Account_Full Account_New(int cie);
-        Account_PK Account_Insert(UTO.Account_Update uto, string url);
+        Account_PK Account_Insert(UTO.Account_Insert uto, string url);
         void Account_Update(UTO.Account_Update uto);
         void Account_Delete(int id, DateTime concurrencyUtc);
         void Auto_Archive(int cie);
@@ -370,77 +366,84 @@ namespace BaseApp.Service
             return item;
         }
 
-        public Account_PK Account_Insert(UTO.Account_Update uto, string url)
+        public Account_PK Account_Insert(UTO.Account_Insert uto, string url)
         {
-            uto.email = sanitizeEmail(uto.email);
-            uto.Validate();
+            int uid;
+            var entity = mapTo<UTO.Account_Insert, DAL.Account_Insert>(uto);
 
-            if (uto.useRealEmail)
+            var email = sanitizeEmail(entity.email);
+            entity.email = email;
+            entity.Validate();
+
+            if (entity.useRealEmail)
             {
-                uto.resetGuid = Guid.NewGuid();
-                uto.updatedBy = user.Get_UID();
-                repo.spAccount_Insert(uto);
+                entity.resetGuid = Guid.NewGuid();
+                entity.resetExpiry = DateTime.Now.AddDays(14);
+                entity.updatedBy = user.Get_UID();
+                uid = repo.spAccount_Insert(entity);
 
-                var account = repo.Account_SelectBy_Email(uto.email, uto.cie);
+                var account = repo.Account_SelectBy_Email(email, entity.cie);
                 var company = account.cie_Text;
 
                 url = url.Replace("{company}", company);
-                url = url.Replace("{guid}", uto.resetGuid.ToString());
+                url = url.Replace("{guid}", entity.resetGuid.ToString());
 
                 var emailFields = EmailFields.Build_Invitation(url);
-                SendEmail(uto.email, emailFields.subject, emailFields.bodyText);
+                SendEmail(email, emailFields.subject, emailFields.bodyText);
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(uto.password))
-                    uto.password = get_PasswordHash(uto.password);
+                if (!string.IsNullOrWhiteSpace(entity.password))
+                    entity.password = get_PasswordHash(entity.password);
                 else
                     throw new ValidationException("The password cannot be empty");
 
-                validate_PasswordHash(uto.password);
+                validate_PasswordHash(entity.password);
 
-                uto.updatedBy = user.Get_UID();
-                repo.spAccount_Insert(uto);
+                entity.updatedBy = user.Get_UID();
+                uid = repo.spAccount_Insert(entity);
             }
 
-            return new Account_PK { uid = uto.uid };
+            return new Account_PK { uid = uid };
         }
 
         public void Account_Update(UTO.Account_Update uto)
         {
-            if (uto.uid == 1 && user.Get_UID() != 1)
+            var entity = mapTo<UTO.Account_Update, DAL.Account_Update>(uto);
+
+            if (entity.uid == 1 && user.Get_UID() != 1)
                 throw new ValidationException("Only the administrator can update this account!");
 
-            if (uto.uid == user.Get_UID() && uto.archive)
+            if (entity.uid == user.Get_UID() && entity.archive)
                 throw new ValidationException("You cannot archive your own account!");
 
-            uto.email = sanitizeEmail(uto.email);
-            uto.Validate();
-            if (!uto.useRealEmail)
+            entity.email = sanitizeEmail(entity.email);
+            entity.Validate();
+            if (!entity.useRealEmail)
             {
-                if (!string.IsNullOrWhiteSpace(uto.password))
-                    uto.password = get_PasswordHash(uto.password);
+                if (!string.IsNullOrWhiteSpace(entity.password))
+                    entity.password = get_PasswordHash(entity.password);
                 else
                     throw new ValidationException("The password cannot be empty");
 
-                validate_PasswordHash(uto.password);
+                validate_PasswordHash(entity.password);
 
-                uto.resetGuid = null;
-                uto.resetExpiryUtc = null;
+                entity.resetGuid = null;
+                entity.resetExpiry = null;
             }
-            uto.updatedBy = user.Get_UID();
-            repo.spAccount_Update(uto);
+            entity.updatedBy = user.Get_UID();
+            repo.spAccount_Update(entity);
         }
 
-        public void Account_Delete(int id, DateTime concurrencyUtc)
+        public void Account_Delete(int uid, DateTime concurrencyUtc)
         {
-            if (id == 1 && user.Get_UID() != 1)
-                throw new ValidationException("You cannot delete the administrator account!");
+            if (uid == SupportUID && user.Get_UID() != SupportUID)
+                throw new ValidationException("You cannot delete the support account!");
 
-            if (id == user.Get_UID())
+            if (uid == user.Get_UID())
                 throw new ValidationException("You cannot delete your own account!");
 
-            repo.spAccount_Delete(id, concurrencyUtc);
+            repo.spAccount_Delete(uid, concurrencyUtc);
         }
 
         public void Auto_Archive(int cie)

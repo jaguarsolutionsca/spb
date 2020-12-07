@@ -485,7 +485,7 @@ System.register("_BaseApp/src/core/router", [], function (exports_2, context_2) 
 });
 System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) {
     "use strict";
-    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectString, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision;
+    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectString, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createUto;
     var __moduleName = context_3 && context_3.id;
     return {
         setters: [],
@@ -1169,6 +1169,12 @@ System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) 
                 // It's not necessary anymore because I'm using a tolerance when comparing before and after lat/lng values.
                 // This change in methodology became necessary when adding support for DDMMCC.
                 return latlon;
+            });
+            exports_3("createUto", createUto = function (formState, props) {
+                return props.reduce(function (acc, key) { {
+                    acc[key] = formState[key];
+                    return acc;
+                } ; }, {});
             });
         }
     };
@@ -4126,7 +4132,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
 // File: account.ts
 System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/auth", "src/admin/lookupdata", "src/admin/layout"], function (exports_38, context_38) {
     "use strict";
-    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, key, state, fetchedState, isNew, isDirty, emailSubject, emailBody, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
+    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, UTO, key, state, fetchedState, isNew, isDirty, emailSubject, emailBody, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
     var __moduleName = context_38 && context_38.id;
     return {
         setters: [
@@ -4154,6 +4160,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         ],
         execute: function () {
             exports_38("NS", NS = "App_account");
+            UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "comment", "archive", "updated"];
             state = {};
             fetchedState = {};
             isNew = false;
@@ -4188,7 +4195,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     return "";
             };
             canUpdate = function () {
-                return (isNew || key.id != 1 || Auth.getRoles().indexOf(1) != -1);
+                return (isNew || key.uid != 1 || Auth.getRoles().indexOf(1) != -1);
             };
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var readonly = !canUpdate();
@@ -4201,17 +4208,17 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             clearState = function () {
                 state = {};
             };
-            exports_38("fetchState", fetchState = function (id) {
-                isNew = isNaN(id);
+            exports_38("fetchState", fetchState = function (uid) {
+                isNew = isNaN(uid);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
                 clearState();
-                var url = "/account/" + (isNew ? "new" : id);
+                var url = "/account/" + (isNew ? "new" : uid);
                 return App.GET(url)
                     .then(function (payload) {
                     state = payload;
                     fetchedState = Misc.clone(state);
-                    key = { id: id };
+                    key = { uid: uid };
                 })
                     .then(Lookup.fetch_authrole());
             });
@@ -4248,12 +4255,14 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             });
             getFormState = function () {
                 var clone = Misc.clone(state);
+                clone.useRealEmail = Misc.fromInputCheckbox(NS + "_useRealEmail", state.useRealEmail);
                 clone.email = Misc.fromInputText(NS + "_email", state.email);
+                clone.password = Misc.fromInputText(NS + "_password", state.password);
                 clone.firstName = Misc.fromInputText(NS + "_firstName", state.firstName);
                 clone.lastName = Misc.fromInputText(NS + "_lastName", state.lastName);
                 clone.currentYear = Misc.fromInputNumber(NS + "_currentYear", state.currentYear);
                 clone.roleLUID = Misc.fromRadioNumber(NS + "_roleLUID", state.roleLUID);
-                clone.archiveDays = Misc.fromInputNumber(NS + "_archiveDays", state.archiveDays);
+                clone.archiveDays = Misc.fromInputNumberNullable(NS + "_archiveDays", state.archiveDays);
                 clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
                 return clone;
             };
@@ -4281,13 +4290,13 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.POST("/account", formState)
+                App.POST("/account", Misc.createUto(formState, UTO))
                     .then(function (payload) {
                     var newkey = payload;
                     emailSubject = payload.emailSubject;
                     emailBody = payload.emailBody;
                     Misc.toastSuccessSave();
-                    Router.goto("#/admin/account/" + newkey.id, 10);
+                    Router.goto("#/admin/account/" + newkey.uid, 10);
                 })
                     .catch(App.render);
             });
@@ -4299,13 +4308,13 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.PUT("/account", formState)
+                App.PUT("/account", Misc.createUto(formState, UTO))
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
                         Router.goto("#/admin/accounts/", 100);
                     else
-                        Router.goto("#/admin/account/" + key.id, 10);
+                        Router.goto("#/admin/account/" + key.uid, 10);
                 })
                     .catch(App.render);
             });
@@ -4323,7 +4332,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 App.POST("/account/reset-password", key)
                     .then(function (_) {
                     Misc.toastSuccess(i18n("Password reset sent"));
-                    Router.goto("#/admin/account/" + key.id, 10);
+                    Router.goto("#/admin/account/" + key.uid, 10);
                 })
                     .catch(App.render);
             });
@@ -4331,7 +4340,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 App.POST("/account/create-invitation", key)
                     .then(function (_) {
                     Misc.toastSuccess(i18n("Invitation sent"));
-                    Router.goto("#/admin/account/" + key.id, 10);
+                    Router.goto("#/admin/account/" + key.uid, 10);
                 })
                     .catch(App.render);
             });

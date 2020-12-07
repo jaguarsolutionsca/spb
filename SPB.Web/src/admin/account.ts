@@ -19,7 +19,7 @@ declare const i18n: any;
 export const NS = "App_account";
 
 interface IKey {
-    id: number
+    uid: number
 }
 
 interface IState {
@@ -55,6 +55,7 @@ interface IState {
     canCreateInvitation: boolean
 }
 
+const UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "comment", "archive", "updated"];
 
 
 let key: IKey;
@@ -146,7 +147,7 @@ let resetPasswordButton = (item: IState) => {
 };
 
 const canUpdate = () => {
-    return (isNew || key.id != 1 || Auth.getRoles().indexOf(1) != -1);
+    return (isNew || key.uid != 1 || Auth.getRoles().indexOf(1) != -1);
 }
 
 const pageTemplate = (item: IState, form: string, tab: string, warning: string, dirty: string) => {
@@ -193,17 +194,17 @@ const clearState = () => {
     state = <IState>{};
 };
 
-export const fetchState = (id: number) => {
-    isNew = isNaN(id);
+export const fetchState = (uid: number) => {
+    isNew = isNaN(uid);
     isDirty = false;
     Router.registerDirtyExit(dirtyExit);
     clearState();
-    let url = `/account/${isNew ? "new" : id}`;
+    let url = `/account/${isNew ? "new" : uid}`;
     return App.GET(url)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IState;
-            key = <IKey>{ id };
+            key = <IKey>{ uid };
         })
         .then(Lookup.fetch_authrole())
 };
@@ -246,12 +247,14 @@ export const inContext = () => {
 
 const getFormState = () => {
     let clone = Misc.clone(state) as IState;
+    clone.useRealEmail = Misc.fromInputCheckbox(`${NS}_useRealEmail`, state.useRealEmail);
     clone.email = Misc.fromInputText(`${NS}_email`, state.email);
+    clone.password = Misc.fromInputText(`${NS}_password`, state.password);
     clone.firstName = Misc.fromInputText(`${NS}_firstName`, state.firstName);
     clone.lastName = Misc.fromInputText(`${NS}_lastName`, state.lastName);
     clone.currentYear = Misc.fromInputNumber(`${NS}_currentYear`, state.currentYear);
     clone.roleLUID = Misc.fromRadioNumber(`${NS}_roleLUID`, state.roleLUID);
-    clone.archiveDays = Misc.fromInputNumber(`${NS}_archiveDays`, state.archiveDays);
+    clone.archiveDays = Misc.fromInputNumberNullable(`${NS}_archiveDays`, state.archiveDays);
     clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
     return clone;
 };
@@ -282,13 +285,13 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.POST("/account", formState)
+    App.POST("/account", Misc.createUto(formState, UTO))
         .then(payload => {
             let newkey = <IKey>payload;
             emailSubject = payload.emailSubject;
             emailBody = payload.emailBody;
             Misc.toastSuccessSave();
-            Router.goto(`#/admin/account/${newkey.id}`, 10);
+            Router.goto(`#/admin/account/${newkey.uid}`, 10);
         })
         .catch(App.render);
 }
@@ -298,13 +301,13 @@ export const save = (done = false) => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.PUT("/account", formState)
+    App.PUT("/account", Misc.createUto(formState, UTO))
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
                 Router.goto(`#/admin/accounts/`, 100);
             else
-                Router.goto(`#/admin/account/${key.id}`, 10);
+                Router.goto(`#/admin/account/${key.uid}`, 10);
         })
         .catch(App.render);
 }
@@ -324,7 +327,7 @@ export const resetPassword = () => {
     App.POST("/account/reset-password", key)
         .then(_ => {
             Misc.toastSuccess(i18n("Password reset sent"));
-            Router.goto(`#/admin/account/${key.id}`, 10);
+            Router.goto(`#/admin/account/${key.uid}`, 10);
         })
         .catch(App.render);
 }
@@ -333,7 +336,7 @@ export const createInvitation = () => {
     App.POST("/account/create-invitation", key)
         .then(_ => {
             Misc.toastSuccess(i18n("Invitation sent"));
-            Router.goto(`#/admin/account/${key.id}`, 10);
+            Router.goto(`#/admin/account/${key.uid}`, 10);
         })
         .catch(App.render);
 }

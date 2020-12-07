@@ -109,5 +109,10 @@ namespace BaseApp.Service
         {
             get { return fullPathOf(config.GetValue<string>("AppSettings:folders:datafiles")); }
         }
+
+        public int SupportUID
+        {
+            get { return config.GetValue<int>("AppSettings:support.uid"); }
+        }
     }
 }

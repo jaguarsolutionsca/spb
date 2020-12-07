@@ -34,15 +34,16 @@ namespace BaseApp.Web.Controllers
             return app.Account_Select(uid, buildUIRouterUrl("accept-invitation/{guid}"));
         }
 
-        [HttpGet("new/{cie}")]
-        public Account_Full New(int cie)
+        [HttpGet("new")]
+        public Account_Full New()
         {
             app.RequirePermission(Perm.Accounts_Edit);
+            var cie = User.Get_CIE();
             return app.Account_New(cie);
         }
 
         [HttpPost]
-        public Account_PK Insert([FromBody] Account_Update uto)
+        public Account_PK Insert([FromBody] Account_Insert uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.Account_Insert(uto, buildUIRouterUrl("accept-invitation/{guid}"));
@@ -57,10 +58,10 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete([FromBody] Account_UK key)
+        public ActionResult Delete([FromBody] Account_UpdateLock key)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            app.Account_Delete(key.uid, key.updatedUtc);
+            app.Account_Delete(key.uid, key.updated);
             return NoContent();
         }
 

@@ -37,7 +37,7 @@ namespace BaseApp.DAL
             }
             return scalar;
         }
-        
+
         public T queryScalar<T>(string command_text, string parameter_name, object parameter_value)
         {
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
@@ -47,7 +47,7 @@ namespace BaseApp.DAL
 
         public List<T> queryList<T>(string command_text, Service.KVList parameters = null)
         {
-            var properties = typeof(T).GetProperties();
+            var properties = typeof(T).GetProperties(); //note: not dealing with Fields
 
             var list = new List<T>();
             using (var command = connex.CreateCommand())
@@ -101,7 +101,7 @@ namespace BaseApp.DAL
 
         public T queryEntity<T>(string command_text, Service.KVList parameters = null)
         {
-            var properties = typeof(T).GetProperties();
+            var properties = typeof(T).GetProperties(); //note: not dealing with Fields
             var instance = Activator.CreateInstance<T>();
 
             T entity = default;
@@ -191,6 +191,42 @@ namespace BaseApp.Service
         public static KVList Build()
         {
             return new KVList();
+        }
+
+        public static KVList Build<T>(T entity)
+        {
+            var properties = typeof(T).GetProperties(); //note: not dealing with Fields
+            var kvlist = Build();
+
+            foreach (var property in properties)
+            {
+                var propName = property.Name.ToLower();
+                kvlist.Add($"@{propName}", property.GetValue(entity) ?? DBNull.Value);
+            }
+
+            return kvlist;
+        }
+    }
+
+    public partial class AppService
+    {
+        public static Tdestin mapTo<Tsource, Tdestin>(Tsource source) where Tdestin : new()
+        {
+            var sourceType = typeof(Tsource);
+            var destinType = typeof(Tdestin);
+            var sourceProps = sourceType.GetProperties(); //note: not dealing with Fields
+            var destinProps = destinType.GetProperties(); //note: not dealing with Fields
+
+            Tdestin destin = new Tdestin();
+            foreach (var sourceProp in sourceProps)
+            {
+                var destinProp = destinType.GetProperty(sourceProp.Name);
+                if (destinProp != null)
+                {
+                    destinProp.SetValue(destin, sourceProp.GetValue(source));
+                }
+            }
+            return destin;
         }
     }
 }

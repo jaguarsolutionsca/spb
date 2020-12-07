@@ -1,0 +1,6 @@
+﻿CREATE FUNCTION [app].[CurrentYear] ()
+RETURNS int
+AS
+BEGIN
+RETURN 2020;
+END

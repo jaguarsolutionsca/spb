@@ -761,3 +761,7 @@ export const getLatLongFullPrecision = (latlon: number) => {
     // This change in methodology became necessary when adding support for DDMMCC.
     return latlon;
 }
+
+export const createUto = (formState, props: string[]) => {
+    return props.reduce((acc, key) => { { acc[key] = formState[key]; return acc; }; }, {})
+}

@@ -96,6 +96,12 @@
     <Build Include="app\Stored Procedures\Account_Select.sql" />
     <Build Include="app\Stored Procedures\Account_Summary.sql" />
     <Build Include="app\Stored Procedures\Account_GetRoleLookup.sql" />
+    <Build Include="app\Functions\Role_Default.sql" />
+    <Build Include="app\Functions\CurrentYear.sql" />
+    <Build Include="app\Stored Procedures\Account_Update.sql" />
+    <Build Include="app\Stored Procedures\Account_New.sql" />
+    <Build Include="app\Stored Procedures\Account_Insert.sql" />
+    <Build Include="app\Stored Procedures\Account_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />

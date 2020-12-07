@@ -5,12 +5,15 @@
     [Description] NVARCHAR (50) NOT NULL,
     [ParentID]    INT           NULL,
     [SortOrder]   INT           NULL,
+    [Key]         NVARCHAR (8)  NULL,
     [Archive]     BIT           CONSTRAINT [DF_PermMeta_Archive] DEFAULT ((0)) NOT NULL,
     [Created]     DATETIME      CONSTRAINT [DF_PermMeta_Created] DEFAULT (getdate()) NOT NULL,
     [Updated]     DATETIME      NULL,
     [UpdatedBy]   INT           CONSTRAINT [DF_PermMeta_UpdatedBy] DEFAULT ((0)) NOT NULL,
     CONSTRAINT [PK_PermMeta] PRIMARY KEY CLUSTERED ([ID] ASC)
 );
+
+
 
 
 
