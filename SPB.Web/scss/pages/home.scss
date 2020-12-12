@@ -3,6 +3,31 @@
 ////////////////////////////////////////////////
 
 #app-home {
+    .js-home-menu {
+        h1 {
+            margin-top: 0;
+        }
+
+        &.columns:last-child {
+            margin-bottom: auto;
+        }
+    }
+
+    .js-links {
+        ul {
+            display: inline-block;
+            vertical-align: top;
+
+            &:not(:last-child) {
+                margin-right: 20px;
+            }
+
+            li::first-letter {
+                font-weight: bold;
+            }
+        }
+    }
+
     .js-security {
         background-color: $primary-lightest;
         padding: 0.75rem;
@@ -10,8 +35,7 @@
     }
 
     .js-widget {
-        white-space: nowrap;
-
+        //white-space: nowrap;
         .tile {
             flex-wrap: wrap;
             justify-content: center;
@@ -39,9 +63,17 @@
         a:not(.js-disabled) {
             text-decoration: underline;
         }
+
+        h3:not(:first-child) {
+            padding-top: 1rem;
+        }
     }
 
     .box {
         height: 100%;
+    }
+
+    .js-nowrap {
+        white-space: nowrap;
     }
 }

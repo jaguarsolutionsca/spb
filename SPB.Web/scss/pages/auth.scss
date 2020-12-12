@@ -1,0 +1,40 @@
+﻿////////////////////////////////////////////////
+// Auth
+////////////////////////////////////////////////
+
+#app-auth {
+    .box {
+        margin-top: 6rem;
+    }
+
+    h1 {
+        font-weight: 400;
+    }
+
+    h1.subtitle {
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+
+    .js-user {
+        padding: 25px 0;
+
+        div {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    .js-help {
+        margin-bottom: 20px;
+    }
+
+    .section {
+        padding: 1.75rem 0 1rem;
+    }
+
+    .js-submenu {
+        margin-top: 24px;
+    }
+}

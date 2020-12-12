@@ -6,11 +6,9 @@
 
 /*Components, Pages and User controls*/
 @import "./pages/pages.scss";
+@import "./pages/auth.scss";
 @import "./pages/layout.scss";
 @import "./pages/home.scss";
-@import "./pages/ticket.scss";
-@import "./pages/wfr.scss";
-@import "./pages/opsmap.scss";
 
 @import "./usercontrols/usercontrols.scss";
 @import "./usercontrols/calendar.scss";
