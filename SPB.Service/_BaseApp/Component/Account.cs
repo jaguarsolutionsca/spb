@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace BaseApp.DAL
 {
@@ -228,6 +230,7 @@ namespace BaseApp.DTO
         public int? archiveDays { get; set; }
         public bool readyToArchive { get; set; }
         public int currentYear { get; set; }
+        public object profile { get; set; }
         public string comment { get; set; }
         public bool archive { get; set; }
         public DateTime created { get; set; }
@@ -239,8 +242,46 @@ namespace BaseApp.DTO
         public bool canResetPassword { get; set; }
         public bool canCreateInvitation { get; set; }
 
+        public class Profile
+        {
+            public string key { get; set; }
+            public object value { get; set; }
+
+            public static Dictionary<string, object> AsDictionary(object json)
+            {
+                if (json == null)
+                    return null;
+
+                var profiles = JsonSerializer.Deserialize<Profile[]>(json.ToString());
+                return profiles.ToDictionary(
+                    one =>
+                    {
+                        var clean = one.key.Replace(" ", "");
+                        return char.ToLower(clean[0]) + clean.Substring(1);
+                    },
+                    one =>
+                    {
+                        if (one.value == null)
+                            return (object)null;
+
+                        var clean = one.value.ToString().Trim();
+                        
+                        if (bool.TryParse(clean, out bool boolValue))
+                            return boolValue;
+
+                        if (double.TryParse(clean, out double doubleValue))
+                            return doubleValue;
+
+                        return (!string.IsNullOrEmpty(clean) ? clean : null);
+                    }
+                );
+            }
+        }
+
         internal Account_Full Decrypt(Common.Crypto crypto)
         {
+            profile = Profile.AsDictionary(profile);
+
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
             lastName = crypto.Decrypt(lastName);

@@ -17,4 +17,6 @@ IF EXISTS(
 
 DELETE app.Account WHERE UID = @UID
 ;
+EXEC app.AccountProfile_Delete @uid=@uid, @updated=@updated
+;
 END

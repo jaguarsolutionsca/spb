@@ -12,6 +12,7 @@
 	@UseRealEmail bit,
 	@ArchiveDays int NULL,
 	@CurrentYear int NULL,
+	@Profile nvarchar(MAX), -- '[{"key":"AcrobatPath","value":"cheval"},{"key":"ExcelLanguage","value":"Français"}]'
 	@Comment nvarchar(1024),
     @Archive bit,
     @Updated datetime,
@@ -59,4 +60,7 @@ SET
 	[UpdatedBy] = @UpdatedBy
 WHERE UID = @uid
 ;
+
+EXEC app.AccountProfile_Update @uid = @uid, @json = @Profile;
+
 END

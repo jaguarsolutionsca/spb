@@ -11,6 +11,7 @@
 	@UseRealEmail bit,
 	@ArchiveDays int NULL,
 	@CurrentYear int NULL,
+	@Profile nvarchar(MAX), -- '[{"key":"AcrobatPath","value":"cheval"},{"key":"ExcelLanguage","value":"Français"}]'
 	@Comment nvarchar(1024),
     @Archive bit,
     @UpdatedBy int
@@ -50,6 +51,9 @@ VALUES (
 	GETDATE(),
 	@UpdatedBy
 );
+DECLARE @uid int = (SELECT CAST(SCOPE_IDENTITY() as int));
 
-SELECT CAST(SCOPE_IDENTITY() as int);
+EXEC app.AccountProfile_Insert @uid = @uid, @json = @Profile;
+
+SELECT @uid;
 END

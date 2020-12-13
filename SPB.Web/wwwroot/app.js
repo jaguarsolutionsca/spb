@@ -3598,6 +3598,47 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                     return menuData;
                 menuData = [
                     {
+                        name: "Application",
+                        icon: "fad fa-cogs",
+                        columnClass: "is-half-tablet is-one-third-fullhd",
+                        listColumnClass: "",
+                        canView: true,
+                        sections: [
+                            {
+                                name: "Gestion", icon: "fas fa-unlock-alt",
+                                links: [
+                                    { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
+                                    { name: "Matrice de sécurité", },
+                                    { name: "Gestion des tables", },
+                                    { name: "Gestion des périodes", },
+                                ],
+                                merge: "start"
+                            },
+                            {
+                                merge: "end",
+                                name: "Jaguar", icon: "fas fa-tools",
+                                links: [
+                                    { name: "Compagnies", },
+                                    { name: "Metadata des permissions", },
+                                    { name: "Audit", },
+                                ]
+                            },
+                            {
+                                name: "Configuration", icon: "fas fa-tools",
+                                links: [
+                                    { name: "Paramètres du système", },
+                                    { name: "Personnalisation", },
+                                    { name: "Acomba", },
+                                    { name: "Comptes/Fournisseurs", },
+                                    { name: "Numéro de taxes", },
+                                    { name: "Permis", },
+                                    { name: "Paramètres d'impression", },
+                                    { name: "Backup", },
+                                ]
+                            },
+                        ]
+                    },
+                    {
                         name: "Territoires",
                         icon: "fad fa-map-marker-alt",
                         columnClass: "is-half-tablet is-one-third-fullhd",
@@ -3843,47 +3884,6 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                                     { name: "Indexations", },
                                     { name: "Erreurs: Mauvaises factures", },
                                     { name: "Erreurs: Mauvais paiements", },
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        name: "Application",
-                        icon: "fad fa-cogs",
-                        columnClass: "is-half-tablet is-one-third-fullhd",
-                        listColumnClass: "",
-                        canView: true,
-                        sections: [
-                            {
-                                name: "Gestion", icon: "fas fa-unlock-alt",
-                                links: [
-                                    { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
-                                    { name: "Matrice de sécurité", },
-                                    { name: "Gestion des tables", },
-                                    { name: "Gestion des périodes", },
-                                ],
-                                merge: "start"
-                            },
-                            {
-                                merge: "end",
-                                name: "Jaguar", icon: "fas fa-tools",
-                                links: [
-                                    { name: "Compagnies", },
-                                    { name: "Metadata des permissions", },
-                                    { name: "Audit", },
-                                ]
-                            },
-                            {
-                                name: "Configuration", icon: "fas fa-tools",
-                                links: [
-                                    { name: "Paramètres du système", },
-                                    { name: "Personnalisation", },
-                                    { name: "Acomba", },
-                                    { name: "Comptes/Fournisseurs", },
-                                    { name: "Numéro de taxes", },
-                                    { name: "Permis", },
-                                    { name: "Paramètres d'impression", },
-                                    { name: "Backup", },
                                 ]
                             },
                         ]

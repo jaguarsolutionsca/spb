@@ -37,4 +37,7 @@ SELECT
 	CAST(0 as int) [UpdatedBy], 
 	'' [By]
 ;
+
+EXEC app.AccountProfile_New @cie = @cie;
+
 END
