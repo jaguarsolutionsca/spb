@@ -139,7 +139,7 @@ namespace BaseApp.DAL
 
         public DTO.Account_Full spAccount_New(int cie)
         {
-            return queryEntity<DTO.Account_Full>("app.Account_New", "@cie", cie);
+            return queryEntity<DTO.Account_Full>("app.Account_New", "@cie", cie).Decrypt(crypto);
         }
 
         public int spAccount_Insert(Account_Insert entity)
@@ -230,7 +230,8 @@ namespace BaseApp.DTO
         public int? archiveDays { get; set; }
         public bool readyToArchive { get; set; }
         public int currentYear { get; set; }
-        public object profile { get; set; }
+        public Dictionary<string, object> profile { get; set; }
+        public string profileJson { get; set; }
         public string comment { get; set; }
         public bool archive { get; set; }
         public DateTime created { get; set; }
@@ -242,45 +243,42 @@ namespace BaseApp.DTO
         public bool canResetPassword { get; set; }
         public bool canCreateInvitation { get; set; }
 
-        public class Profile
+        internal static Dictionary<string, object> Deserialize(string json)
         {
-            public string key { get; set; }
-            public object value { get; set; }
+            if (json == null)
+                return null;
 
-            public static Dictionary<string, object> AsDictionary(object json)
+            var profiles = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+            var dict = new Dictionary<string, object>();
+            foreach (var one in profiles)
             {
-                if (json == null)
-                    return null;
+                object value = null;
 
-                var profiles = JsonSerializer.Deserialize<Profile[]>(json.ToString());
-                return profiles.ToDictionary(
-                    one =>
-                    {
-                        var clean = one.key.Replace(" ", "");
-                        return char.ToLower(clean[0]) + clean.Substring(1);
-                    },
-                    one =>
-                    {
-                        if (one.value == null)
-                            return (object)null;
+                if (one.Value == null)
+                {
+                    value = (object)null;
+                }
+                else
+                {
+                    var clean = one.Value.ToString().Trim();
 
-                        var clean = one.value.ToString().Trim();
-                        
-                        if (bool.TryParse(clean, out bool boolValue))
-                            return boolValue;
+                    if (bool.TryParse(clean, out bool boolValue))
+                        value = boolValue;
 
-                        if (double.TryParse(clean, out double doubleValue))
-                            return doubleValue;
+                    if (double.TryParse(clean, out double doubleValue))
+                        value = doubleValue;
 
-                        return (!string.IsNullOrEmpty(clean) ? clean : null);
-                    }
-                );
+                    value = (!string.IsNullOrEmpty(clean) ? clean : null);
+                }
+                dict.Add(one.Key, value);
             }
+            return dict;
         }
 
         internal Account_Full Decrypt(Common.Crypto crypto)
         {
-            profile = Profile.AsDictionary(profile);
+            profile = Deserialize(profileJson);
+            profileJson = null;
 
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
@@ -315,8 +313,18 @@ namespace BaseApp.UTO
         public bool useRealEmail { get; set; }
         public int? archiveDays { get; set; }
         public int currentYear { get; set; }
+        public Dictionary<string, object> profile { get; set; }
+        public string profileJson { get; set; }
         public string comment { get; set; }
         public bool archive { get; set; }
+
+        public static string Serialize(Dictionary<string, object> profile)
+        {
+            if (profile == null)
+                return null;
+
+            return JsonSerializer.Serialize(profile);
+        }
 
         internal void Validate()
         {
@@ -335,6 +343,9 @@ namespace BaseApp.UTO
 
         internal Account_Insert Encrypt(Common.Crypto crypto)
         {
+            profileJson = Serialize(profile);
+            profile = null;
+
             email = crypto.Encrypt(email);
             firstName = crypto.Encrypt(firstName);
             lastName = crypto.Encrypt(lastName);

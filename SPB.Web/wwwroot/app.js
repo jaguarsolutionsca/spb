@@ -4399,7 +4399,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         ],
         execute: function () {
             exports_38("NS", NS = "App_account");
-            UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "comment", "archive", "updated"];
+            UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "profile", "comment", "archive", "updated"];
             state = {};
             fetchedState = {};
             isNew = false;
@@ -4503,6 +4503,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 clone.roleLUID = Misc.fromRadioNumber(NS + "_roleLUID", state.roleLUID);
                 clone.archiveDays = Misc.fromInputNumberNullable(NS + "_archiveDays", state.archiveDays);
                 clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
+                clone.profile = Misc.clone(state.profile);
                 return clone;
             };
             valid = function (formState) {

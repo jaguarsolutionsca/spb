@@ -43,6 +43,7 @@ interface IState {
     archiveDays: number
     readyToArchive: boolean
     currentYear: number
+    profile: any
     comment: string
     archive: boolean
     created: Date
@@ -55,7 +56,7 @@ interface IState {
     canCreateInvitation: boolean
 }
 
-const UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "comment", "archive", "updated"];
+const UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "profile", "comment", "archive", "updated"];
 
 
 let key: IKey;
@@ -256,6 +257,7 @@ const getFormState = () => {
     clone.roleLUID = Misc.fromRadioNumber(`${NS}_roleLUID`, state.roleLUID);
     clone.archiveDays = Misc.fromInputNumberNullable(`${NS}_archiveDays`, state.archiveDays);
     clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
+    clone.profile = Misc.clone(state.profile);
     return clone;
 };
 

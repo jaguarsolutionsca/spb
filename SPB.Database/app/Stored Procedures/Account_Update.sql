@@ -12,7 +12,8 @@
 	@UseRealEmail bit,
 	@ArchiveDays int NULL,
 	@CurrentYear int NULL,
-	@Profile nvarchar(MAX), -- '[{"key":"AcrobatPath","value":"cheval"},{"key":"ExcelLanguage","value":"Français"}]'
+	@Profile char(1) NULL, -- not used, but required!
+	@ProfileJson nvarchar(MAX), -- '[{"key":"AcrobatPath","value":"cheval"},{"key":"ExcelLanguage","value":"Français"}]'
 	@Comment nvarchar(1024),
     @Archive bit,
     @Updated datetime,
@@ -61,6 +62,6 @@ SET
 WHERE UID = @uid
 ;
 
-EXEC app.AccountProfile_Update @uid = @uid, @json = @Profile;
+EXEC app.AccountProfile_Update @uid = @uid, @json = @ProfileJson;
 
 END

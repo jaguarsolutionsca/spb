@@ -25,7 +25,7 @@ namespace SPB.Web
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; protected set; }
 
         public Startup(IConfiguration configuration)
         {
@@ -34,6 +34,10 @@ namespace SPB.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCompression(options => {
+                options.EnableForHttps = true;
+            });
+
             services.AddSingleton(Configuration);
             services.AddTransient<IAppConfigValues, AppConfigValues>();
             services.AddTransient<IAppService, AppService>();
@@ -89,6 +93,8 @@ namespace SPB.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
+
             app.Use_EnableRequestBodyRewind();
             app.Use_AppExceptionMiddleware();
 
@@ -103,6 +109,7 @@ namespace SPB.Web
                 await next();
 
                 // See https://github.com/dotnet/aspnetcore/issues/4398
+                // Still required with .net 5 ??
                 if (context.Response.StatusCode == 204)
                     context.Response.ContentLength = 0;
             });
