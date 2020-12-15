@@ -134,16 +134,21 @@ namespace BaseApp.DAL
 
         public DTO.Account_Full spAccount_Select(int uid)
         {
-            return queryEntity<DTO.Account_Full>("app.Account_Select", "@uid", uid)?.Decrypt(crypto);
+            return queryEntity<DTO.Account_Full>("app.Account_Select", "@uid", uid)?
+                .Decrypt(crypto)
+                .Deserialize();
         }
 
         public DTO.Account_Full spAccount_New(int cie)
         {
-            return queryEntity<DTO.Account_Full>("app.Account_New", "@cie", cie).Decrypt(crypto);
+            return queryEntity<DTO.Account_Full>("app.Account_New", "@cie", cie)
+                .Decrypt(crypto)
+                .Deserialize();
         }
 
         public int spAccount_Insert(Account_Insert entity)
         {
+            entity.Serialize();
             entity.Encrypt(crypto);
             entity.ToLocalTime();
             return queryScalar<int>("app.Account_Insert", Service.KVList.Build<Account_Insert>(entity));
@@ -151,6 +156,7 @@ namespace BaseApp.DAL
 
         public void spAccount_Update(Account_Update entity)
         {
+            entity.Serialize();
             entity.Encrypt(crypto);
             entity.ToLocalTime();
             queryNonQuery("app.Account_Update", Service.KVList.Build<Account_Update>(entity));
@@ -243,43 +249,43 @@ namespace BaseApp.DTO
         public bool canResetPassword { get; set; }
         public bool canCreateInvitation { get; set; }
 
-        internal static Dictionary<string, object> Deserialize(string json)
+        internal Account_Full Deserialize()
         {
-            if (json == null)
-                return null;
-
-            var profiles = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-            var dict = new Dictionary<string, object>();
-            foreach (var one in profiles)
+            profile = null;
+            if (profileJson != null)
             {
-                object value = null;
-
-                if (one.Value == null)
+                profile = new Dictionary<string, object>();
+                var profiles = JsonSerializer.Deserialize<Dictionary<string, object>>(profileJson);
+                foreach (var one in profiles)
                 {
-                    value = (object)null;
+                    object value = null;
+
+                    if (one.Value == null)
+                    {
+                        value = (object)null;
+                    }
+                    else
+                    {
+                        var clean = one.Value.ToString().Trim();
+
+                        if (bool.TryParse(clean, out bool boolValue))
+                            value = boolValue;
+
+                        if (double.TryParse(clean, out double doubleValue))
+                            value = doubleValue;
+
+                        value = (!string.IsNullOrEmpty(clean) ? clean : null);
+                    }
+                    profile.Add(one.Key, value);
                 }
-                else
-                {
-                    var clean = one.Value.ToString().Trim();
-
-                    if (bool.TryParse(clean, out bool boolValue))
-                        value = boolValue;
-
-                    if (double.TryParse(clean, out double doubleValue))
-                        value = doubleValue;
-
-                    value = (!string.IsNullOrEmpty(clean) ? clean : null);
-                }
-                dict.Add(one.Key, value);
             }
-            return dict;
+
+            profileJson = null;
+            return this;
         }
 
         internal Account_Full Decrypt(Common.Crypto crypto)
         {
-            profile = Deserialize(profileJson);
-            profileJson = null;
-
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
             lastName = crypto.Decrypt(lastName);
@@ -318,14 +324,6 @@ namespace BaseApp.UTO
         public string comment { get; set; }
         public bool archive { get; set; }
 
-        public static string Serialize(Dictionary<string, object> profile)
-        {
-            if (profile == null)
-                return null;
-
-            return JsonSerializer.Serialize(profile);
-        }
-
         internal void Validate()
         {
             if (!email.Contains("@"))
@@ -341,11 +339,18 @@ namespace BaseApp.UTO
                 throw new Common.ValidationException("LastName is too long (max length = 50)");
         }
 
+        internal Account_Insert Serialize()
+        {
+            profileJson = null;
+            if (profile != null)
+                profileJson = JsonSerializer.Serialize(profile);
+
+            profile = null;
+            return this;
+        }
+
         internal Account_Insert Encrypt(Common.Crypto crypto)
         {
-            profileJson = Serialize(profile);
-            profile = null;
-
             email = crypto.Encrypt(email);
             firstName = crypto.Encrypt(firstName);
             lastName = crypto.Encrypt(lastName);

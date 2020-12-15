@@ -11,7 +11,8 @@
 	@UseRealEmail bit,
 	@ArchiveDays int NULL,
 	@CurrentYear int NULL,
-	@Profile nvarchar(MAX), -- '[{"key":"AcrobatPath","value":"cheval"},{"key":"ExcelLanguage","value":"Français"}]'
+	@Profile char(1) NULL, -- not used, but required!
+	@ProfileJson nvarchar(MAX), -- '{"AcrobatPath":"123","AutresRapportsPrinterMarginBottom":"3","AutresRapportsPrinterMarginLeft":"40"}'
 	@Comment nvarchar(1024),
     @Archive bit,
     @UpdatedBy int
