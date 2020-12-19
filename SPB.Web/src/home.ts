@@ -641,7 +641,7 @@ const fetchState = () => {
 
 export const fetch = () => {
     App.setRenderDomain(Layout);
-    App.prepareRender(NS, "Home");
+    App.prepareRender(NS, "HOME");
     Router.registerDirtyExit(null);
     fetchState()
         .then(App.render)

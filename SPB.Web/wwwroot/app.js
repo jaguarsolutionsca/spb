@@ -1845,7 +1845,7 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                 return params;
             });
             exports_12("searchTemplate", searchTemplate = function (pager, ns, xtra) {
-                return "\n    <div class=\"field\">\n        <label class=\"label\">" + i18n("Search") + "</label>\n        <div class=\"control has-icons-left\" style=\"width:125px;\">\n            <input class=\"input\" type=\"text\" placeholder=\"" + i18n("Search") + "\" value=\"" + Misc.toInputText(pager.searchText) + "\" xonchange=\"" + ns + ".search(this)\" onkeydown=\"if (event.keyCode == 13) " + ns + ".search(event.target)\" " + (xtra || "") + ">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fas fa-search\"></i>\n            </span>\n        </div>\n    </div>";
+                return "\n    <div class=\"field\">\n        <label class=\"label\">" + i18n("SEARCH") + "</label>\n        <div class=\"control has-icons-left\" style=\"width:125px;\">\n            <input class=\"input\" type=\"text\" placeholder=\"" + i18n("SEARCH") + "\" value=\"" + Misc.toInputText(pager.searchText) + "\" xonchange=\"" + ns + ".search(this)\" onkeydown=\"if (event.keyCode == 13) " + ns + ".search(event.target)\" " + (xtra || "") + ">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fas fa-search\"></i>\n            </span>\n        </div>\n    </div>";
             });
         }
     };
@@ -3480,6 +3480,8 @@ System.register("src/fr-CA", [], function (exports_32, context_32) {
         execute: function () {
             exports_32("fr_CA", fr_CA = {
                 values: {
+                    "HOME": "Accueil",
+                    "Sign out": "Déconnexion",
                     "CANCEL": "Annuler",
                     "EMAIL": "Courriel",
                     "PASSWORD": "Mot de passe",
@@ -3499,6 +3501,9 @@ System.register("src/fr-CA", [], function (exports_32, context_32) {
                     "Done": "Complété",
                     "Now, let's set your password": "Il est temps d'entrer votre mot de passe",
                     "You need to enter your password twice below": "Vous devez entrer votre mot de passe deux fois ici",
+                    "Go To First Page": "Aller à la première page",
+                    "Go To Last Page": "Aller à la dernière page",
+                    "SEARCH": "Recherche",
                 }
             });
         }
@@ -4126,7 +4131,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
             };
             exports_35("fetch", fetch = function () {
                 App.setRenderDomain(Layout);
-                App.prepareRender(NS, "Home");
+                App.prepareRender(NS, "HOME");
                 Router.registerDirtyExit(null);
                 fetchState()
                     .then(App.render)
@@ -4695,7 +4700,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 Admin.postRender();
             });
             renderHeader = function () {
-                return "\n<header class=\"js-uc-header\">\n\n    <div class=\"js-logo\">\n        <div class=\"js-bars\">\n            <button class=\"button is-primary\" onclick=\"" + NS + ".menuClick()\">\n                <div class=\"icon\"><i class=\"fas fa-bars\"></i></div>\n            </button>\n        </div>\n        <a href=\"#\" onclick=\"" + NS + ".toggle('opsfms')\">\n            <span>Gestion/Paye</span>\n        </a>\n        <div style=\"width:20px;margin-right:1rem;\">&nbsp;</div>\n    </div>\n\n    <div class=\"js-navbar\">\n        <div class=\"js-navbar-items\">\n            <div class=\"js-items\">\n            </div>\n            <div class=\"js-items\">\n                <button class=\"button is-primary\" onclick=\"" + NS + ".help()\" style=\"font-size:125%\">\n                    <span class=\"icon\"><i class=\"fas fa-question-circle\"></i></span>\n                </button>\n                <div class=\"navbar-item has-dropdown\" onclick=\"" + NS + ".toggleProfileMenu(this)\">\n                    <a class=\"navbar-link\">\n                        " + Perm.getEmail() + "\n                    </a>\n                    <div class=\"navbar-dropdown\">\n                        <div class=\"navbar-item\">\n                            <div><b>" + Perm.getName() + "</b></div>\n                        </div>\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-primary\" onclick=\"" + NS + ".toggleProfileMenu();" + NS + ".editProfile()\">\n                                <i class=\"far fa-user\"></i>&nbsp;&nbsp;Edit Profile\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-outlined\" onclick=\"" + NS + ".toggleProfileMenu();App_Auth.signout();\">\n                                <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <a href=\"#\" class=\"navbar-item\">\n                            <div>Terms of Service</div>\n                        </a>\n                    </div>\n                </div>\n                <button class=\"button is-primary\" onclick=\"App_Auth.signout();\">\n                    <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                </button>\n            </div>\n        </div>\n    </div>\n\n</header>";
+                return "\n<header class=\"js-uc-header\">\n\n    <div class=\"js-logo\">\n        <div class=\"js-bars\">\n            <button class=\"button is-primary\" onclick=\"" + NS + ".menuClick()\">\n                <div class=\"icon\"><i class=\"fas fa-bars\"></i></div>\n            </button>\n        </div>\n        <a href=\"#\" onclick=\"" + NS + ".toggle('opsfms')\">\n            <span>Gestion/Paye</span>\n        </a>\n        <div style=\"width:20px;margin-right:1rem;\">&nbsp;</div>\n    </div>\n\n    <div class=\"js-navbar\">\n        <div class=\"js-navbar-items\">\n            <div class=\"js-items\">\n                <div>\n                    <span class=\"has-text-grey-light\">Ann\u00E9e courante:</span> <span class=\"has-text-white\">2020</span>\n                </div>\n            </div>\n            <div class=\"js-items\">\n                <button class=\"button is-primary\" onclick=\"" + NS + ".help()\" style=\"font-size:125%\">\n                    <span class=\"icon\"><i class=\"fas fa-question-circle\"></i></span>\n                </button>\n                <div class=\"navbar-item has-dropdown\" onclick=\"" + NS + ".toggleProfileMenu(this)\">\n                    <a class=\"navbar-link\">\n                        " + Perm.getEmail() + "\n                    </a>\n                    <div class=\"navbar-dropdown\">\n                        <div class=\"navbar-item\">\n                            <div><b>" + Perm.getName() + "</b></div>\n                        </div>\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-primary\" onclick=\"" + NS + ".toggleProfileMenu();" + NS + ".editProfile()\">\n                                <i class=\"far fa-user\"></i>&nbsp;&nbsp;Edit Profile\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-outlined\" onclick=\"" + NS + ".toggleProfileMenu();App_Auth.signout();\">\n                                <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <a href=\"#\" class=\"navbar-item\">\n                            <div>Terms of Service</div>\n                        </a>\n                    </div>\n                </div>\n                <button class=\"button is-primary\" onclick=\"App_Auth.signout();\">\n                    <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                </button>\n            </div>\n        </div>\n    </div>\n\n</header>";
             };
             menuTemplate = function (menuItems) {
                 var linkTemplate = function (link) {
@@ -4729,7 +4734,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 return menuItems.filter(function (one) { return one.canView; }).reduce(function (html, item) { return html + menuItemTemplate(item); }, "");
             };
             renderAsideMenu = function (menu) {
-                return "\n<aside class=\"menu has-background-black-ter js-uc-aside\">\n    <div class=\"js-wrapper\">\n        <ul class=\"menu-list\">\n            <li><a href=\"#\" class=\"" + isActive(Home.NS) + "\" onclick=\"" + NS + ".toggle('home')\"><i class=\"far fa-home\"></i> Home</a></li>\n        </ul>\n        " + menu + "\n    </div>\n</aside>\n";
+                return "\n<aside class=\"menu has-background-black-ter js-uc-aside\">\n    <div class=\"js-wrapper\">\n        <ul class=\"menu-list\">\n            <li><a href=\"#\" class=\"" + isActive(Home.NS) + "\" onclick=\"" + NS + ".toggle('home')\"><i class=\"far fa-home\"></i> " + i18n("HOME") + "</a></li>\n        </ul>\n        " + menu + "\n    </div>\n</aside>\n";
             };
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";

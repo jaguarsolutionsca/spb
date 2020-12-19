@@ -2,6 +2,8 @@
 
 export const fr_CA = {
     values: {
+        "HOME": "Accueil",
+        "Sign out": "Déconnexion",
         "CANCEL": "Annuler",
         "EMAIL": "Courriel",
         "PASSWORD": "Mot de passe",
@@ -21,6 +23,9 @@ export const fr_CA = {
         "Done": "Complété",
         "Now, let's set your password": "Il est temps d'entrer votre mot de passe",
         "You need to enter your password twice below": "Vous devez entrer votre mot de passe deux fois ici",
+        "Go To First Page": "Aller à la première page",
+        "Go To Last Page": "Aller à la dernière page",
+        "SEARCH": "Recherche",
     }
 };
 /*

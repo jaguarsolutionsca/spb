@@ -73,6 +73,9 @@ const renderHeader = () => {
     <div class="js-navbar">
         <div class="js-navbar-items">
             <div class="js-items">
+                <div>
+                    <span class="has-text-grey-light">Année courante:</span> <span class="has-text-white">2020</span>
+                </div>
             </div>
             <div class="js-items">
                 <button class="button is-primary" onclick="${NS}.help()" style="font-size:125%">
@@ -170,7 +173,7 @@ const renderAsideMenu = (menu: string) => {
 <aside class="menu has-background-black-ter js-uc-aside">
     <div class="js-wrapper">
         <ul class="menu-list">
-            <li><a href="#" class="${isActive(Home.NS)}" onclick="${NS}.toggle('home')"><i class="far fa-home"></i> Home</a></li>
+            <li><a href="#" class="${isActive(Home.NS)}" onclick="${NS}.toggle('home')"><i class="far fa-home"></i> ${i18n("HOME")}</a></li>
         </ul>
         ${menu}
     </div>

@@ -152,9 +152,9 @@ export const asParams = (pager: IPager<any>) => {
 export const searchTemplate = (pager: IPager<any>, ns: string, xtra?: string) => {
     return `
     <div class="field">
-        <label class="label">${i18n("Search")}</label>
+        <label class="label">${i18n("SEARCH")}</label>
         <div class="control has-icons-left" style="width:125px;">
-            <input class="input" type="text" placeholder="${i18n("Search")}" value="${Misc.toInputText(pager.searchText)}" xonchange="${ns}.search(this)" onkeydown="if (event.keyCode == 13) ${ns}.search(event.target)" ${xtra || ""}>
+            <input class="input" type="text" placeholder="${i18n("SEARCH")}" value="${Misc.toInputText(pager.searchText)}" xonchange="${ns}.search(this)" onkeydown="if (event.keyCode == 13) ${ns}.search(event.target)" ${xtra || ""}>
             <span class="icon is-small is-left">
                 <i class="fas fa-search"></i>
             </span>
