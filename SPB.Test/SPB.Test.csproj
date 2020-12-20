@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <None Update="templates\ListeSommaireMontantsPayesProducteurs.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="templates\test.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -17,7 +17,8 @@ namespace SPB.Test
             var dt = ExcelReport.ToDataTable<Something>(list);
             ds.Tables.Add(dt);
 
-            ExcelReport.InsertDataSet(ds, "./templates/test.xlsx");
+            //ExcelReport.InsertDataSet("./templates/test.xlsx", ds);
+            ExcelReport.InsertIntoTemplate("./templates/test.xlsx", ds, 4);
         }
     }
 
