@@ -14,7 +14,22 @@ namespace SPB.Test
 {
     public class ExcelReport
     {
-        public static void InsertDataSet(string destination, DataSet ds)
+        internal static void TestPrototype()
+        {
+            var list = new List<Something>();
+            list.Add(new Something { Code = 1111, Nom = "VAL QUIRI", Montant = 9141.11M });
+            list.Add(new Something { Code = 2222, Nom = "Cheval", Montant = 9142.22M });
+            list.Add(new Something { Code = 3333, Nom = "Camion", Montant = 9143.33M });
+
+            var ds = new DataSet("Bonjour");
+            var dt = toDataTable<Something>(list);
+            ds.Tables.Add(dt);
+
+            //ExcelReport.InsertDataSet("./templates/test.xlsx", ds);
+            insertIntoTemplate("./templates/test.xlsx", ds, 4);
+        }
+
+        static void insertDataSet(string destination, DataSet ds)
         {
             using (var workbook = SpreadsheetDocument.Create(destination, SpreadsheetDocumentType.Workbook))
             {
@@ -66,7 +81,7 @@ namespace SPB.Test
             }
         }
 
-        public static void InsertIntoTemplate(string templateFilename, DataSet ds, uint rowIndex)
+        static void insertIntoTemplate(string templateFilename, DataSet ds, uint rowIndex)
         {
             var byteArray = File.ReadAllBytes(templateFilename);
             using (var ms = new MemoryStream())
@@ -123,7 +138,7 @@ namespace SPB.Test
             }
         }
 
-        public static void fixme_InsertIntoTemplate(string templateFilename, DataSet ds, uint rowIndex)
+        static void fixme_InsertIntoTemplate(string templateFilename, DataSet ds, uint rowIndex)
         {
             using (var ms = new MemoryStream())
             {
@@ -185,7 +200,7 @@ namespace SPB.Test
             }
         }
 
-        public static DataTable ToDataTable<T>(IList<T> data)
+        static DataTable toDataTable<T>(IList<T> data)
         {
             var properties = TypeDescriptor.GetProperties(typeof(T));
             var table = new DataTable();
@@ -207,5 +222,12 @@ namespace SPB.Test
 
             return table;
         }
+    }
+
+    public class Something
+    {
+        public int Code { get; set; }
+        public string Nom { get; set; }
+        public decimal Montant { get; set; }
     }
 }
