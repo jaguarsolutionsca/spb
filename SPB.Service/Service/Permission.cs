@@ -23,6 +23,8 @@ namespace BaseApp.Service
     public enum Perm
     {
         Accounts_Edit = 100,
+        Fournisseur_Edit = 100,
+        //
         Aircraft_CanEditHired = 100201,
         Aircraft_CanUseDataEntry = 100200,
         Cost_CanUseDataEntry = 100900,

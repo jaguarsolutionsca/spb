@@ -175,6 +175,46 @@ namespace BaseApp.DAL
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             queryNonQuery(command_text, parameters);
         }
+
+        public Service.Dico queryDico(string command_text, Service.KVList parameters = null)
+        {
+            var entity = new Service.Dico();
+            using (var command = connex.CreateCommand())
+            {
+                command.CommandText = command_text;
+                command.CommandType = (command_text.Contains(" ") ? CommandType.Text : CommandType.StoredProcedure);
+
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                        command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select((one, ix) => { return reader.GetName(ix).ToLower(); }).ToList();
+
+                    if (reader.Read())
+                    {
+                        for (var ix = 0; ix < reader.FieldCount; ix++)
+                        {
+                            var value = reader[ix];
+                            if (value != null && value != DBNull.Value)
+                                entity.Add(columns[ix], value);
+                            else
+                                entity.Add(columns[ix], null);
+                        }
+                    }
+                }
+            }
+            return entity;
+        }
+
+        public Service.Dico queryDico(string command_text, string parameter_name, object parameter_value)
+        {
+            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
+            return queryDico(command_text, parameters);
+        }
     }
 }
 
@@ -207,6 +247,8 @@ namespace BaseApp.Service
             return kvlist;
         }
     }
+
+    public class Dico : Dictionary<string, object> { }
 
     public partial class AppService
     {

@@ -38,20 +38,15 @@ namespace BaseApp.DAL
 
     internal partial class Repo
     {
-        public DTO.PagedList<DTO.Fournisseur_Search, DTO.Fournisseur_Search_Filter> spFournisseur_List(DTO.Pager<DTO.Fournisseur_Search_Filter> pagerData)
+        public DTO.PagedList<DTO.Fournisseur_Search, DTO.Fournisseur_Search_Filter> spFournisseur_Search(DTO.Pager<DTO.Fournisseur_Search_Filter> pagerData)
         {
             var pagedList = new DTO.PagedList<DTO.Fournisseur_Search, DTO.Fournisseur_Search_Filter>();
             pagedList.pager = pagerData;
-            pagedList.list = queryList<DTO.Fournisseur_Search>("app.Fournisseur_List", Service.KVList.Build()
+            pagedList.list = queryList<DTO.Fournisseur_Search>("app.Fournisseur_Search", Service.KVList.Build()
                 .Add("@archive", pagerData.filter.archive)
                 .Add("@readyToArchive", pagerData.filter.readyToArchive)
                 );
             return pagedList;
-        }
-
-        public DTO.Fournisseur_Full spFournisseur_Select(int uid)
-        {
-            return queryEntity<DTO.Fournisseur_Full>("app.Fournisseur_Select", "@uid", uid);
         }
 
         public DTO.Fournisseur_Full spFournisseur_New(int cie)
@@ -223,7 +218,7 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         PagedList<Fournisseur_Search, Fournisseur_Search_Filter> Fournisseur_Search(Pager<Fournisseur_Search_Filter> pagerData);
-        Fournisseur_Full Fournisseur_Select(string id);
+        object Fournisseur_Select(string id);
         Fournisseur_Full Fournisseur_New(int cie);
         Fournisseur_PK Fournisseur_Insert(UTO.Fournisseur_Insert uto, string url);
         void Fournisseur_Update(UTO.Fournisseur_Update uto);
@@ -232,33 +227,19 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        private string ZoneDD = "ZoneDD";
-
         public PagedList<Fournisseur_Search, Fournisseur_Search_Filter> Fournisseur_Search(Pager<Fournisseur_Search_Filter> pagerData)
         {
-            return repo.spFournisseur_List(pagerData);
+            return repo.spFournisseur_Search(pagerData);
         }
 
-        public Fournisseur_Full Fournisseur_Select(string id)
+        public object Fournisseur_Select(string id)
         {
-            //var record = new Gestion_Paie.BusinessComponents.Fournisseur_Record(gpConnString, id);
-            //record.Refresh();
-            //return null;
-
-            var Param = new Gestion_Paie.DataClasses.Parameters.spS_Fournisseur_Full();
-            Param.SetUpConnection(gpConnString);
-            Param.Param_ID = id;
-
-            var SP = new Gestion_Paie.DataClasses.StoredProcedures.spS_Fournisseur_Full(true);
-            SP.Execute(ref Param, out SqlDataReader reader);
-            reader.Close();
-
-            return null;
-
             //var item = repo.spFournisseur_Select(id);
             //var xtra = repo.spFournisseur_Summary(id);
             //item.xtra = xtra;
             //return item;
+
+            return repo.queryDico("Gestion_Paie.dbo.spS_Fournisseur_Full", "@id", id);
         }
 
         public Fournisseur_Full Fournisseur_New(int cie)

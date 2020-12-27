@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace SPB.Test
 {
     using BaseApp.Service;
+    using System.Data.SqlClient;
 
     public class DBA
     {
@@ -15,13 +16,25 @@ namespace SPB.Test
             var configValues = new AppConfigValues();
             using (var test = new TestService(configValues))
             {
-                testMap(test);
+                testQuery(test, configValues.gpConnString);
             }
         }
 
-        static void testMap(TestService test)
+        static void testQuery(TestService test, string gpConnString)
         {
-            test.app.Fournisseur_Select("T100");
+            var id = "T100";
+
+            //var record = new Gestion_Paie.BusinessComponents.Fournisseur_Record(gpConnString, id);
+            //record.Refresh();
+
+            //var Param = new Gestion_Paie.DataClasses.Parameters.spS_Fournisseur_Full();
+            //Param.SetUpConnection(gpConnString);
+            //Param.Param_ID = id;
+            //var SP = new Gestion_Paie.DataClasses.StoredProcedures.spS_Fournisseur_Full(true);
+            //SP.Execute(ref Param, out SqlDataReader reader);
+            //reader.Close();
+
+            var oFou = test.app.Fournisseur_Select(id);
         }
     }
 }

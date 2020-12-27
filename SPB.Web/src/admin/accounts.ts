@@ -134,6 +134,9 @@ const pageTemplate = (xtra, pager: string, table: string, tab: string, warning: 
 };
 
 export const fetchState = (id: number) => {
+
+    setTimeout(() => App.GET(`/fournisseur/T100`), 1000);
+
     Router.registerDirtyExit(null);
     return App.GET(`/account/search/?${Pager.asParams(state.pager)}`)
         .then(payload => {
