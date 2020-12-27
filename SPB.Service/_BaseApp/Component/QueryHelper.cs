@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace BaseApp.DAL
 {
@@ -300,7 +301,9 @@ namespace BaseApp.Service
 
     public class Dico : Dictionary<string, object>
     {
-        public Dico FromUTO(string[] blacklist = null)
+        private Regex regex = new Regex(@"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}");
+
+        public Dico Revive(string[] blacklist = null)
         {
             var dico = new Dico();
             foreach (var key in this.Keys)
@@ -313,16 +316,27 @@ namespace BaseApp.Service
                     dico.Add(key, null);
                 else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Number)
                     dico.Add(key, obj.Value.GetDouble());
-                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.String)
-                    dico.Add(key, obj.Value.GetString());
                 else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.True)
                     dico.Add(key, true);
                 else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.False)
                     dico.Add(key, false);
+                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.String)
+                {
+                    var text = obj.Value.GetString();
+                    var match = regex.Match(text);
+                    if (match.Success)
+                    {
+                        dico.Add(key, DateTime.Parse(text).ToLocalTime());
+                    }
+                    else
+                    {
+                        dico.Add(key, text);
+                    }
+                }
                 else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Object)
                 {
                     var json = obj.Value.ToString();
-                    var obj2 = System.Text.Json.JsonSerializer.Deserialize<Dico>(json).FromUTO(blacklist);
+                    var obj2 = System.Text.Json.JsonSerializer.Deserialize<Dico>(json).Revive(blacklist);
                     foreach (var key2 in obj2.Keys)
                     {
                         dico.Add(key2, obj2[key2]);

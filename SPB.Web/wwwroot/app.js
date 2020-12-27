@@ -4274,7 +4274,6 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_2.icon + "\"></i> " + i18n("All accounts") + "</div>\n            <div class=\"subtitle\">" + i18n("List of accounts") + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderListActionButtons2(NS, i18n("Add New"), buttons)) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
             exports_37("fetchState", fetchState = function (id) {
-                setTimeout(function () { return App.POST("/fournisseur/search", state.pager); }, 1000);
                 Router.registerDirtyExit(null);
                 return App.GET("/account/search/?" + Pager.asParams(state.pager))
                     .then(function (payload) {
