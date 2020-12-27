@@ -215,6 +215,52 @@ namespace BaseApp.DAL
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             return queryDico(command_text, parameters);
         }
+
+        public Service.Dico queryDico(string command_text, Service.Dico parameters)
+        {
+            return queryDico(command_text, Service.KVList.Build(parameters));
+        }
+
+        public List<Service.Dico> queryDicoList(string command_text, Service.KVList parameters = null)
+        {
+            var list = new List<Service.Dico>();
+            using (var command = connex.CreateCommand())
+            {
+                command.CommandText = command_text;
+                command.CommandType = (command_text.Contains(" ") ? CommandType.Text : CommandType.StoredProcedure);
+
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                        command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select((one, ix) => { return reader.GetName(ix).ToLower(); }).ToList();
+
+                    while (reader.Read())
+                    {
+                        var entity = new Service.Dico();
+                        for (var ix = 0; ix < reader.FieldCount; ix++)
+                        {
+                            var value = reader[ix];
+                            if (value != null && value != DBNull.Value)
+                                entity.Add(columns[ix], value);
+                            else
+                                entity.Add(columns[ix], null);
+                        }
+                        list.Add(entity);
+                    }
+                }
+            }
+            return list;
+        }
+
+        public List<Service.Dico> queryDicoList(string command_text, Service.Dico parameters)
+        {
+            return queryDicoList(command_text, Service.KVList.Build(parameters));
+        }
     }
 }
 
@@ -241,14 +287,61 @@ namespace BaseApp.Service
             foreach (var property in properties)
             {
                 var propName = property.Name.ToLower();
-                kvlist.Add($"@{propName}", property.GetValue(entity) ?? DBNull.Value);
+                kvlist.Add(propName, property.GetValue(entity) ?? DBNull.Value);
             }
 
             return kvlist;
         }
+
+        public static KVList Build(Dico dico)
+        {
+            var kvlist = Build();
+            foreach (var key in dico.Keys)
+            {
+                var obj = dico[key];
+                if (obj == null)
+                    kvlist.Add(key, DBNull.Value);
+                else
+                    kvlist.Add(key, dico[key]);
+            }
+            return kvlist;
+        }
     }
 
-    public class Dico : Dictionary<string, object> { }
+    public class Dico : Dictionary<string, object>
+    {
+        public Dico FlattenUTO(string[] blacklist = null)
+        {
+            var dico = new Dico();
+            foreach (var key in this.Keys)
+            {
+                if (blacklist != null && blacklist.Contains(key))
+                    continue;
+
+                var obj = (System.Text.Json.JsonElement?)this[key];
+                if (!obj.HasValue)
+                    dico.Add(key, null);
+                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Number)
+                    dico.Add(key, obj.Value.GetDouble());
+                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.String)
+                    dico.Add(key, obj.Value.GetString());
+                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.True)
+                    dico.Add(key, true);
+                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.False)
+                    dico.Add(key, false);
+                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Object)
+                {
+                    var json = obj.Value.ToString();
+                    var obj2 = System.Text.Json.JsonSerializer.Deserialize<Dico>(json).FlattenUTO(blacklist);
+                    foreach (var key2 in obj2.Keys)
+                    {
+                        dico.Add(key2, obj2[key2]);
+                    }
+                }
+            }
+            return dico;
+        }
+    }
 
     public partial class AppService
     {

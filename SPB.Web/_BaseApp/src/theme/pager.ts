@@ -149,6 +149,24 @@ export const asParams = (pager: IPager<any>) => {
     return params;
 }
 
+export const asDico = (pager: IPager<any>) => {
+    let dico = <IPager<any>>{
+        pageNo: pager.pageNo,
+        pageSize: pager.pageSize,
+        sortColumn: pager.sortColumn,
+        sortDirection: pager.sortDirection,
+        searchText: pager.searchText
+    };
+    if (pager.filter != undefined) {
+        Object.keys(pager.filter).forEach(key => {
+            if (pager.filter[key] != undefined) {
+                dico[key] = pager.filter[key];
+            }
+        });
+    }
+    return dico;
+}
+
 export const searchTemplate = (pager: IPager<any>, ns: string, xtra?: string) => {
     return `
     <div class="field">

@@ -1768,7 +1768,7 @@ System.register("_BaseApp/src/lang/en-CA", [], function (exports_11, context_11)
 });
 System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], function (exports_12, context_12) {
     "use strict";
-    var Misc, NullPager, render, renderStatic, sortableHeaderLink, headerLink, rowNumber, asParams, searchTemplate;
+    var Misc, NullPager, render, renderStatic, sortableHeaderLink, headerLink, rowNumber, asParams, asDico, searchTemplate;
     var __moduleName = context_12 && context_12.id;
     return {
         setters: [
@@ -1843,6 +1843,23 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                     });
                 }
                 return params;
+            });
+            exports_12("asDico", asDico = function (pager) {
+                var dico = {
+                    pageNo: pager.pageNo,
+                    pageSize: pager.pageSize,
+                    sortColumn: pager.sortColumn,
+                    sortDirection: pager.sortDirection,
+                    searchText: pager.searchText
+                };
+                if (pager.filter != undefined) {
+                    Object.keys(pager.filter).forEach(function (key) {
+                        if (pager.filter[key] != undefined) {
+                            dico[key] = pager.filter[key];
+                        }
+                    });
+                }
+                return dico;
             });
             exports_12("searchTemplate", searchTemplate = function (pager, ns, xtra) {
                 return "\n    <div class=\"field\">\n        <label class=\"label\">" + i18n("SEARCH") + "</label>\n        <div class=\"control has-icons-left\" style=\"width:125px;\">\n            <input class=\"input\" type=\"text\" placeholder=\"" + i18n("SEARCH") + "\" value=\"" + Misc.toInputText(pager.searchText) + "\" xonchange=\"" + ns + ".search(this)\" onkeydown=\"if (event.keyCode == 13) " + ns + ".search(event.target)\" " + (xtra || "") + ">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fas fa-search\"></i>\n            </span>\n        </div>\n    </div>";
@@ -4257,7 +4274,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_2.icon + "\"></i> " + i18n("All accounts") + "</div>\n            <div class=\"subtitle\">" + i18n("List of accounts") + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderListActionButtons2(NS, i18n("Add New"), buttons)) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
             exports_37("fetchState", fetchState = function (id) {
-                setTimeout(function () { return App.GET("/fournisseur/T100"); }, 1000);
+                setTimeout(function () { return App.POST("/fournisseur/search", state.pager); }, 1000);
                 Router.registerDirtyExit(null);
                 return App.GET("/account/search/?" + Pager.asParams(state.pager))
                     .then(function (payload) {

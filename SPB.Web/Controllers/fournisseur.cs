@@ -18,14 +18,11 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public class FournisseurController : _CoreController
     {
-        [HttpGet("search")]
-        public PagedList<Account_Search, Account_Search_Filter> Search(bool? archive, bool? readyToArchive, int pn, int ps, string sc, string sd, string st)
+        [HttpPost("search")]
+        public object Search([FromBody] Dico pagerDico)
         {
             app.RequirePermission(Perm.Fournisseur_Edit);
-            var pager = new Pager<Account_Search_Filter>(pn, ps, sc, sd, st);
-            pager.filter.archive = archive;
-            pager.filter.readyToArchive = readyToArchive;
-            return app.Account_Search(pager);
+            return app.Fournisseur_Search(pagerDico);
         }
 
         [HttpGet("{id}")]

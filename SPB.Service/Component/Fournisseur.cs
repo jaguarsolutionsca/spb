@@ -217,7 +217,7 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        PagedList<Fournisseur_Search, Fournisseur_Search_Filter> Fournisseur_Search(Pager<Fournisseur_Search_Filter> pagerData);
+        object Fournisseur_Search(Dico pagerDico);
         object Fournisseur_Select(string id);
         Fournisseur_Full Fournisseur_New(int cie);
         Fournisseur_PK Fournisseur_Insert(UTO.Fournisseur_Insert uto, string url);
@@ -227,19 +227,21 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        public PagedList<Fournisseur_Search, Fournisseur_Search_Filter> Fournisseur_Search(Pager<Fournisseur_Search_Filter> pagerData)
+        public object Fournisseur_Search(Dico pagerDico)
         {
-            return repo.spFournisseur_Search(pagerData);
+            return new {
+                list = repo.queryDicoList("Fournisseur_Search", pagerDico.FlattenUTO(new string[] { "rowCount" })),
+                pager = pagerDico
+            };
         }
 
         public object Fournisseur_Select(string id)
         {
-            //var item = repo.spFournisseur_Select(id);
-            //var xtra = repo.spFournisseur_Summary(id);
-            //item.xtra = xtra;
-            //return item;
-
-            return repo.queryDico("Gestion_Paie.dbo.spS_Fournisseur_Full", "@id", id);
+            return new
+            {
+                item = repo.queryDico("Gestion_Paie.dbo.spS_Fournisseur_Full", "@id", id),
+                xtra = "repo.spFournisseur_Summary(id)"
+            };
         }
 
         public Fournisseur_Full Fournisseur_New(int cie)
