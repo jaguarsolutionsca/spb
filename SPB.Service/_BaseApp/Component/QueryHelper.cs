@@ -216,11 +216,6 @@ namespace BaseApp.DAL
             return queryDico(command_text, parameters);
         }
 
-        public Service.Dico queryDico(string command_text, Service.Dico parameters)
-        {
-            return queryDico(command_text, Service.KVList.Build(parameters));
-        }
-
         public List<Service.Dico> queryDicoList(string command_text, Service.KVList parameters = null)
         {
             var list = new List<Service.Dico>();
@@ -255,11 +250,6 @@ namespace BaseApp.DAL
                 }
             }
             return list;
-        }
-
-        public List<Service.Dico> queryDicoList(string command_text, Service.Dico parameters)
-        {
-            return queryDicoList(command_text, Service.KVList.Build(parameters));
         }
     }
 }
@@ -310,7 +300,7 @@ namespace BaseApp.Service
 
     public class Dico : Dictionary<string, object>
     {
-        public Dico FlattenUTO(string[] blacklist = null)
+        public Dico FromUTO(string[] blacklist = null)
         {
             var dico = new Dico();
             foreach (var key in this.Keys)
@@ -332,11 +322,15 @@ namespace BaseApp.Service
                 else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Object)
                 {
                     var json = obj.Value.ToString();
-                    var obj2 = System.Text.Json.JsonSerializer.Deserialize<Dico>(json).FlattenUTO(blacklist);
+                    var obj2 = System.Text.Json.JsonSerializer.Deserialize<Dico>(json).FromUTO(blacklist);
                     foreach (var key2 in obj2.Keys)
                     {
                         dico.Add(key2, obj2[key2]);
                     }
+                }
+                else
+                {
+                    dico.Add(key, this[key]);
                 }
             }
             return dico;

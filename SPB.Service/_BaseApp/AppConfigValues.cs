@@ -13,7 +13,6 @@ namespace BaseApp.Service
     public interface IAppConfigValues
     {
         string connString { get; }
-        string gpConnString { get; }
         string cryptoKey { get; }
         string wwwroot { get; }
         string reportRoot { get; }
@@ -22,7 +21,6 @@ namespace BaseApp.Service
     public class AppConfigValues : IAppConfigValues
     {
         public string connString { get; }
-        public string gpConnString { get; }
         public string cryptoKey { get; }
         public string wwwroot { get; }
         public string reportRoot { get; }
@@ -35,9 +33,6 @@ namespace BaseApp.Service
             if (json.ConnectionStrings?.DefaultConnection != null)
                 connString = json.ConnectionStrings.DefaultConnection;
 
-            if (json.ConnectionStrings?.GestionPaieConnection != null)
-                connString = json.ConnectionStrings.GestionPaieConnection;
-
             if (json.AppSettings?.cryptoKey != null)
                 cryptoKey = json.AppSettings.cryptoKey;
 
@@ -48,7 +43,6 @@ namespace BaseApp.Service
                 json = deserialize<Appsettings_Json>(appsettings_json);
 
                 connString = json.ConnectionStrings.DefaultConnection;
-                gpConnString = json.ConnectionStrings.GestionPaieConnection;
                 cryptoKey = json.AppSettings.cryptoKey;
             }
         }

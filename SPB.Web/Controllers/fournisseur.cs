@@ -19,10 +19,10 @@ namespace BaseApp.Web.Controllers
     public class FournisseurController : _CoreController
     {
         [HttpPost("search")]
-        public object Search([FromBody] Dico pagerDico)
+        public object Search([FromBody] Dico pager)
         {
             app.RequirePermission(Perm.Fournisseur_Edit);
-            return app.Fournisseur_Search(pagerDico);
+            return app.Fournisseur_Search(pager);
         }
 
         [HttpGet("{id}")]
@@ -33,33 +33,32 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpGet("new")]
-        public Account_Full New()
+        public object New()
         {
             app.RequirePermission(Perm.Fournisseur_Edit);
-            var cie = User.Get_CIE();
-            return app.Account_New(cie);
+            return app.Fournisseur_New();
         }
 
         [HttpPost]
-        public Account_PK Insert([FromBody] Account_Insert uto)
+        public object Insert([FromBody] Dico uto)
         {
             app.RequirePermission(Perm.Fournisseur_Edit);
-            return app.Account_Insert(uto, buildUIRouterUrl("accept-invitation/{guid}"));
+            return app.Fournisseur_Insert(uto);
         }
 
         [HttpPut]
-        public ActionResult Update([FromBody] Account_Update uto)
+        public ActionResult Update([FromBody] Dico uto)
         {
             app.RequirePermission(Perm.Fournisseur_Edit);
-            app.Account_Update(uto);
+            app.Fournisseur_Update(uto);
             return NoContent();
         }
 
         [HttpDelete]
-        public ActionResult Delete([FromBody] Account_UpdateLock key)
+        public ActionResult Delete([FromBody] Dico key)
         {
             app.RequirePermission(Perm.Fournisseur_Edit);
-            app.Account_Delete(key.uid, key.updated);
+            app.Fournisseur_Delete(key);
             return NoContent();
         }
     }

@@ -16,11 +16,11 @@ namespace SPB.Test
             var configValues = new AppConfigValues();
             using (var test = new TestService(configValues))
             {
-                testQuery(test, configValues.gpConnString);
+                testQuery(test);
             }
         }
 
-        static void testQuery(TestService test, string gpConnString)
+        static void testQuery(TestService test)
         {
             var id = "T100";
 

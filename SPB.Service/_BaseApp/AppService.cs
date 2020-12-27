@@ -19,7 +19,6 @@ namespace BaseApp.Service
     public partial class AppService : IAppService
     {
         internal DAL.Repo repo;
-        internal string gpConnString;
         internal ILogger log;
         internal IConfiguration config;
         internal ClaimsPrincipal user;
@@ -32,7 +31,6 @@ namespace BaseApp.Service
 
             var connString = config.GetConnectionString("DefaultConnection");
             repo = new DAL.Repo(logger, connString, CryptoKey);
-            gpConnString = config.GetConnectionString("GestionPaieConnection");
         }
 
         public AppService()
@@ -42,9 +40,13 @@ namespace BaseApp.Service
         public IAppService SetConfigValues(IAppConfigValues configValues)
         {
             repo = new DAL.Repo(null, configValues.connString, configValues.cryptoKey);
-            gpConnString = configValues.gpConnString;
 
             return this;
+        }
+
+        public string GP(string sproc)
+        {
+            return $"Gestion_Paie.dbo.{sproc}";
         }
 
         #region IDisposable Support
