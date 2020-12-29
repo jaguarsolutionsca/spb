@@ -12,12 +12,7 @@ import * as Main from "./main"
 //
 import * as Home from "./home"
 import * as Admin from "./admin/main"
-//import * as Profile from "./admin/profile"
-//import * as Fire from "./fire/main"
-//import * as Weather from "./weather/main"
-//import * as Aircraft from "./aircraft/main"
-//import * as Cost from "./cost/main"
-//import * as Config from "./config/main"
+import * as Fournisseur from "./fournisseur/main"
 
 
 declare const i18n: any;
@@ -34,6 +29,7 @@ export const render = () => {
     let ucMain = `
 ${Home.render()}
 ${Admin.render()}
+${Fournisseur.render()}
 `;
 
     let menu = menuTemplate(Home.getMenuData());
@@ -52,6 +48,7 @@ ${ucMain}
 export const postRender = () => {
     Home.postRender();
     Admin.postRender()
+    Fournisseur.postRender()
 }
 
 const renderHeader = () => {

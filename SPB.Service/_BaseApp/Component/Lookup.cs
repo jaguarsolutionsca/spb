@@ -315,6 +315,21 @@ namespace BaseApp.DTO
 
         }
     }
+
+    public class Lookup
+    {
+        public int id { get; set; }
+        public int cie { get; set; }
+        public string code { get; set; }
+        public string description { get; set; }
+        public string value1 { get; set; }
+        public string value2 { get; set; }
+        public string value3 { get; set; }
+        public int started { get; set; }
+        public int? ended { get; set; }
+        public int? sortOrder { get; set; }
+        public bool? disabled { get; set; }
+    }
 }
 
 namespace BaseApp.Mapper
@@ -429,6 +444,7 @@ namespace BaseApp.Service
         void Update_Lookup(Lookup_Model model);
         void Delete_Lookup(int id, DateTime concurrencyUtc);
         */
+        List<Lookup> Lookup_By(string groupe, int? year = null);
     }
 
     public partial class AppService
@@ -509,5 +525,13 @@ namespace BaseApp.Service
             repo.spLookup_Delete(id, concurrencyUtc);
         }
         */
+
+        public List<Lookup> Lookup_By(string groupe, int? year = null)
+        {
+            return repo.queryList<Lookup>("app.Lookup_ListBy_Groupe", KVList.Build()
+                .Add("@groupe", groupe)
+                .Add("@year", year)
+                );
+        }
     }
 }

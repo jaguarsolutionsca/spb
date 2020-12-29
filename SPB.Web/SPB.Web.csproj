@@ -14,6 +14,10 @@
     <None Remove="src\admin\accounts.ts" />
     <None Remove="src\admin\layout.ts" />
     <None Remove="src\admin\main.ts" />
+    <None Remove="src\fournisseur\layout.ts" />
+    <None Remove="src\fournisseur\main.ts" />
+    <None Remove="src\fournisseur\proprietaire.ts" />
+    <None Remove="src\fournisseur\proprietaires.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +50,10 @@
     <TypeScriptCompile Include="src\admin\accounts.ts" />
     <TypeScriptCompile Include="src\admin\layout.ts" />
     <TypeScriptCompile Include="src\admin\main.ts" />
+    <TypeScriptCompile Include="src\fournisseur\layout.ts" />
+    <TypeScriptCompile Include="src\fournisseur\main.ts" />
+    <TypeScriptCompile Include="src\fournisseur\proprietaire.ts" />
+    <TypeScriptCompile Include="src\fournisseur\proprietaires.ts" />
   </ItemGroup>
 
 

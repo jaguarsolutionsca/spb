@@ -11,11 +11,7 @@ import * as Layout from "./layout"
 import * as Home from "./home"
 //
 import * as AdminMain from "./admin/main"
-//import * as FireMain from "./fire/main"
-//import * as WeatherMain from "./weather/main"
-//import * as AircraftMain from "./aircraft/main"
-//import * as CostMain from "./cost/main"
-//import * as ConfigMain from "./config/main"
+import * as FournisseurMain from "./fournisseur/main"
 //
 //import "time-input-polyfill/auto"
 
@@ -63,11 +59,7 @@ export const startup = (hasPublicHomePage = false) => {
     });
 
     AdminMain.startup();
-    //FireMain.startup();
-    //WeatherMain.startup();
-    //AircraftMain.startup();
-    //CostMain.startup();
-    //ConfigMain.startup();
+    FournisseurMain.startup();
 
     loadUIState();
 }

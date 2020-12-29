@@ -46,6 +46,7 @@ namespace BaseApp.DAL
 
         }
 
+
         public List<T> queryList<T>(string command_text, Service.KVList parameters = null)
         {
             var properties = typeof(T).GetProperties(); //note: not dealing with Fields
@@ -99,6 +100,7 @@ namespace BaseApp.DAL
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             return queryList<T>(command_text, parameters);
         }
+
 
         public T queryEntity<T>(string command_text, Service.KVList parameters = null)
         {
@@ -154,6 +156,7 @@ namespace BaseApp.DAL
             return queryEntity<T>(command_text, parameters);
         }
 
+
         public void queryNonQuery(string command_text, Service.KVList parameters = null)
         {
             using (var command = connex.CreateCommand())
@@ -176,6 +179,7 @@ namespace BaseApp.DAL
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             queryNonQuery(command_text, parameters);
         }
+
 
         public Service.Dico queryDico(string command_text, Service.KVList parameters = null)
         {
@@ -216,6 +220,7 @@ namespace BaseApp.DAL
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
             return queryDico(command_text, parameters);
         }
+
 
         public List<Service.Dico> queryDicoList(string command_text, Service.KVList parameters = null)
         {
@@ -348,6 +353,22 @@ namespace BaseApp.Service
                 }
             }
             return dico;
+        }
+
+        public Dico TrimRowCount()
+        {
+            this.Remove("rowCount");
+            return this;
+        }
+
+        internal Dico ReviveRowCount(List<Dico> list)
+        {
+            var rowCount = 0;
+            if (list != null && list.Count > 0)
+                rowCount = int.Parse(list[0]["totalcount"].ToString());
+
+            this.Add("rowCount", rowCount);
+            return this;
         }
     }
 

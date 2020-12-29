@@ -28,23 +28,11 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        List<Lookup> Lookup_By(string groupe);
-        List<Lookup> Lookup_By(string groupe, int year);
         List<Lookup> Lookup_LutGroup();
     }
 
     public partial class AppService
     {
-        public List<Lookup> Lookup_By(string groupe)
-        {
-            return repo.Lookup_ListBy_Groupe(groupe);
-        }
-
-        public List<Lookup> Lookup_By(string groupe, int year)
-        {
-            return repo.Lookup_ListBy_Groupe(groupe, year);
-        }
-
         public List<Lookup> Lookup_LutGroup()
         {
             return repo.Lookup_ListDistinct_Groupe();

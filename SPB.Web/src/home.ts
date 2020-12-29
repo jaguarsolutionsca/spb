@@ -179,7 +179,7 @@ export const getMenuData = () => {
                 {
                     name: "Saisie", icon: "fal fa-table",
                     links: [
-                        { name: "Propriétaires", },
+                        { name: "Propriétaires", href: "#/proprietaires", ns: ["App_proprietaires", "App_proprietaire"] },
                         { name: "Transporteurs", },
                         { name: "Chargeurs", },
                         { name: "Autres", },

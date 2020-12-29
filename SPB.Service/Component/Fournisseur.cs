@@ -16,11 +16,12 @@ namespace BaseApp.Service
     {
         public object Fournisseur_Search(Dico pager)
         {
-            var parameters = KVList.Build(pager.Revive(blacklist: new string[] { "rowCount" }));
+            var parameters = KVList.Build(pager.TrimRowCount().Revive());
+            var list = repo.queryDicoList(GP("Fournisseur_Search"), parameters);
             return new
             {
-                list = repo.queryDicoList("Fournisseur_Search", parameters),
-                pager = pager
+                list = list,
+                pager = pager.ReviveRowCount(list)
             };
         }
 
@@ -28,14 +29,18 @@ namespace BaseApp.Service
         {
             return new
             {
-                item = repo.queryDico(GP("spS_Fournisseur_Full"), "@id", id),
-                xtra = "repo.spFournisseur_Summary(id)"
+                item = repo.queryDico(GP("Fournisseur_Select"), "@id", id),
+                xtra = repo.queryDico(GP("Fournisseur_Summary"), "@id", id)
             };
         }
 
         public object Fournisseur_New()
         {
-            return repo.queryDico(GP("spS_Fournisseur_Full"), "@id", "----");
+            return new
+            {
+                item = repo.queryDico(GP("spS_Fournisseur_Full"), "@id", "---"),
+                xtra = repo.queryDico(GP("Fournisseur_Summary"))
+            };
         }
 
         public object Fournisseur_Insert(Dico uto)

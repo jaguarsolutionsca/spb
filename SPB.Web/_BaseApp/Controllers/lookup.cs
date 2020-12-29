@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BaseApp.Web.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize, ApiController]
     public partial class LookupController : _CoreController
     {
         /*
@@ -54,5 +54,18 @@ namespace BaseApp.Web.Controllers
             return NoContent();
         }
         */
+
+
+        //
+        // FIXME: Issue with the AuthorizeAttribute and the signout process.
+        // The "Not authenticated" message shows up in the Signin form after a signout.
+        // This will have to be fixed in the ts files but for the time being we accept non authenticated api calls.
+        //
+        [AllowAnonymous]
+        [HttpGet("by/{groupe}")]
+        public List<Lookup> Lookup_By(string groupe)
+        {
+            return app.Lookup_By(groupe);
+        }
     }
 }

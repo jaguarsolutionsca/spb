@@ -3578,12 +3578,15 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
         }
     };
 });
-System.register("src/admin/lookupdata", ["_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
+System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
     "use strict";
-    var yearFilter, dateFilter;
+    var App, yearFilter, dateFilter, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire;
     var __moduleName = context_34 && context_34.id;
     return {
         setters: [
+            function (App_7) {
+                App = App_7;
+            },
             function (lookupdata_1_1) {
                 exports_34({
                     "fetch_authrole": lookupdata_1_1["fetch_authrole"],
@@ -3594,6 +3597,22 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/admin/lookupdata"], funct
         execute: function () {
             yearFilter = function (one, year) { return year >= one.started && (one.ended == undefined || year <= one.ended); };
             dateFilter = function (one, date) { return date >= one.started && (one.ended == undefined || date <= one.ended); };
+            exports_34("fetch_pays", fetch_pays = function () {
+                return function (data) {
+                    if (pays != undefined && pays.length > 0)
+                        return;
+                    return App.GET("/lookup/by/pays").then(function (json) { pays = json; });
+                };
+            });
+            exports_34("get_pays", get_pays = function (year) { return pays; });
+            exports_34("fetch_institutionBanquaire", fetch_institutionBanquaire = function () {
+                return function (data) {
+                    if (institutionBanquaire != undefined && institutionBanquaire.length > 0)
+                        return;
+                    return App.GET("/lookup/by/institutionBanquaire").then(function (json) { institutionBanquaire = json; });
+                };
+            });
+            exports_34("get_institutionBanquaire", get_institutionBanquaire = function (year) { return institutionBanquaire; });
         }
     };
 });
@@ -3603,8 +3622,8 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
     var __moduleName = context_35 && context_35.id;
     return {
         setters: [
-            function (App_7) {
-                App = App_7;
+            function (App_8) {
+                App = App_8;
             },
             function (Router_4) {
                 Router = Router_4;
@@ -3736,7 +3755,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                             {
                                 name: "Saisie", icon: "fal fa-table",
                                 links: [
-                                    { name: "Propriétaires", },
+                                    { name: "Propriétaires", href: "#/proprietaires", ns: ["App_proprietaires", "App_proprietaire"] },
                                     { name: "Transporteurs", },
                                     { name: "Chargeurs", },
                                     { name: "Autres", },
@@ -4188,8 +4207,8 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], fun
     var __moduleName = context_36 && context_36.id;
     return {
         setters: [
-            function (App_8) {
-                App = App_8;
+            function (App_9) {
+                App = App_9;
             },
             function (layout_1_1) {
                 layout_1 = layout_1_1;
@@ -4221,8 +4240,8 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
     var __moduleName = context_37 && context_37.id;
     return {
         setters: [
-            function (App_9) {
-                App = App_9;
+            function (App_10) {
+                App = App_10;
             },
             function (Router_5) {
                 Router = Router_5;
@@ -4397,8 +4416,8 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
     var __moduleName = context_38 && context_38.id;
     return {
         setters: [
-            function (App_10) {
-                App = App_10;
+            function (App_11) {
+                App = App_11;
             },
             function (Router_6) {
                 Router = Router_6;
@@ -4680,17 +4699,521 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main"], function (exports_40, context_40) {
+System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "_BaseApp/src/lib-ts/misc", "src/layout"], function (exports_40, context_40) {
     "use strict";
-    var App, Perm, Main, Home, Admin, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
+    var App, Misc, layout_4, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_40 && context_40.id;
     return {
         setters: [
-            function (App_11) {
-                App = App_11;
+            function (App_12) {
+                App = App_12;
+            },
+            function (Misc_15) {
+                Misc = Misc_15;
+            },
+            function (layout_4_1) {
+                layout_4 = layout_4_1;
+            }
+        ],
+        execute: function () {
+            exports_40("icon", icon = "far fa-user");
+            exports_40("prepareMenu", prepareMenu = function () {
+                layout_4.setOpenedMenu("Fournisseur-Propriétaires");
+            });
+            exports_40("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+                if (isNew === void 0) { isNew = false; }
+                var isProprietaires = App.inContext("App_proprietaires");
+                var isProprietaire = App.inContext("App_proprietaire");
+                var isFiles = window.location.hash.startsWith("#/files/proprietaire");
+                var isFile = window.location.hash.startsWith("#/file/proprietaire");
+                var showDetail = !isProprietaires;
+                var showFiles = showDetail && xtra;
+                var showFile = isFile;
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/fournisseur/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/fournisseur/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            });
+            exports_40("buildTitle", buildTitle = function (xtra, defaultText, isNew, defaulTextNew) {
+                if (isNew === void 0) { isNew = false; }
+                if (defaulTextNew === void 0) { defaulTextNew = null; }
+                if (isNew) {
+                    return defaulTextNew;
+                }
+                var title = defaultText;
+                if (xtra && xtra.title) {
+                    var json = JSON.parse(xtra.json);
+                    title = xtra.title + ", " + json.date + ", " + json.from;
+                }
+                return title;
+            });
+            exports_40("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+                var subtitle = defaultText;
+                if (xtra && xtra.json) {
+                    var json = JSON.parse(xtra.json);
+                    subtitle = "Started: <b>" + json.started + "</b> Last Day: <b>" + json.lastDay + "</b> Status: <b>" + json.status + "</b> Hectares: <b>" + json.hectares + "</b> Action: <b>" + json.action + "</b> Zone: <b>" + json.zone + "</b> Total Cost: <b>" + Misc.toStaticMoney(json.totalCost) + "</b>";
+                }
+                return subtitle;
+            });
+        }
+    };
+});
+// File: fournisseurs.ts
+System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_41, context_41) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_5, NS, key, state, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
+    var __moduleName = context_41 && context_41.id;
+    return {
+        setters: [
+            function (App_13) {
+                App = App_13;
+            },
+            function (Router_8) {
+                Router = Router_8;
             },
             function (Perm_2) {
                 Perm = Perm_2;
+            },
+            function (Misc_16) {
+                Misc = Misc_16;
+            },
+            function (Theme_3) {
+                Theme = Theme_3;
+            },
+            function (Pager_2) {
+                Pager = Pager_2;
+            },
+            function (Lookup_2) {
+                Lookup = Lookup_2;
+            },
+            function (layout_5_1) {
+                layout_5 = layout_5_1;
+            }
+        ],
+        execute: function () {
+            exports_41("NS", NS = "App_proprietaires");
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
+            };
+            filterTemplate = function () {
+                var filters = [];
+                // TODO (filters textbox)
+                return filters.join("");
+            };
+            trTemplate = function (item, rowNumber) {
+                var summary = JSON.parse(item.json || "{}");
+                return "\n<tr class=\"" + (isSelectedRow(item.id) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail('" + item.id + "');\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.id) + "</td>\n    <td>" + Misc.toStaticText(item.cleTri) + "</td>\n    <td>" + Misc.toStaticText(item.nom) + "</td>\n    <td>" + Misc.toStaticText(item.ausoinsde) + "</td>\n    <td>" + Misc.toStaticText(item.rue) + "</td>\n    <td>" + Misc.toStaticText(item.ville) + "</td>\n    <td>" + Misc.toStaticText(item.paysID_Text) + "</td>\n    <td>" + Misc.toStaticText(item.code_postal) + "</td>\n    <td>" + Misc.toStaticText(item.telephone) + "</td>\n    <td>" + Misc.toStaticText(item.telephone_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.telecopieur) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2_Desc) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3_Desc) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.no_membre) + "</td>\n    <td>" + Misc.toStaticText(item.resident) + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.www) + "</td>\n    <td>" + Misc.toStaticText(item.commentaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherCommentaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.depotDirect) + "</td>\n    <td>" + Misc.toStaticText(item.institutionBanquaireID_Text) + "</td>\n    <td>" + Misc.toStaticText(item.banque_transit) + "</td>\n    <td>" + Misc.toStaticText(item.banque_folio) + "</td>\n    <td>" + Misc.toStaticText(item.no_TPS) + "</td>\n    <td>" + Misc.toStaticText(item.no_TVQ) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.payerA) + "</td>\n    <td>" + Misc.toStaticText(item.payerAID) + "</td>\n    <td>" + Misc.toStaticText(item.statut) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Nom) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Telephone) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Telephone_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Email) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.enAnglais) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.actif) + "</td>\n    <td>" + Misc.toStaticText(item.mRCProducteurID) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.paiementManuel) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.journal) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.recoitTPS) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.recoitTVQ) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.modifierTrigger) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isProducteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isTransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isChargeur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isAutre) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherCommentairesSurPermit) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.pasEmissionPermis) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.generique) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.membre_OGC) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.inscritTPS) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.inscritTVQ) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isOGC) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Nom) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Telephone) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Telephone_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Email) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Commentaires) + "</td>\n    <td>" + Misc.toStaticText(summary.todo) + "</td>\n</tr>";
+            };
+            tableTemplate = function (tbody, pager) {
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CLETRI"), "cleTri", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NOM"), "nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUSOINSDE"), "ausoinsde", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RUE"), "rue", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VILLE"), "ville", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYSID_TEXT"), "paysID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE_POSTAL"), "code_postal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE"), "telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE_POSTE"), "telephone_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELECOPIEUR"), "telecopieur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2"), "telephone2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_DESC"), "telephone2_Desc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_POSTE"), "telephone2_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3"), "telephone3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_DESC"), "telephone3_Desc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_POSTE"), "telephone3_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_MEMBRE"), "no_membre", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RESIDENT"), "resident", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("WWW"), "www", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMMENTAIRES"), "commentaires", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRES"), "afficherCommentaires", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DEPOTDIRECT"), "depotDirect", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSTITUTIONBANQUAIREID_TEXT"), "institutionBanquaireID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_TRANSIT"), "banque_transit", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_FOLIO"), "banque_folio", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_TPS"), "no_TPS", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_TVQ"), "no_TVQ", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYERA"), "payerA", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYERAID"), "payerAID", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STATUT"), "statut", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_NOM"), "rep_Nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE"), "rep_Telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE_POSTE"), "rep_Telephone_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_EMAIL"), "rep_Email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENANGLAIS"), "enAnglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACTIF"), "actif", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MRCPRODUCTEURID"), "mRCProducteurID", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAIEMENTMANUEL"), "paiementManuel", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("JOURNAL"), "journal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RECOITTPS"), "recoitTPS", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RECOITTVQ"), "recoitTVQ", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MODIFIERTRIGGER"), "modifierTrigger", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISPRODUCTEUR"), "isProducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISTRANSPORTEUR"), "isTransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISCHARGEUR"), "isChargeur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISAUTRE"), "isAutre", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRESSURPERMIT"), "afficherCommentairesSurPermit", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PASEMISSIONPERMIS"), "pasEmissionPermis", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GENERIQUE"), "generique", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MEMBRE_OGC"), "membre_OGC", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTPS"), "inscritTPS", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTVQ"), "inscritTVQ", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISOGC"), "isOGC", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_NOM"), "rep2_Nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE"), "rep2_Telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE_POSTE"), "rep2_Telephone_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_EMAIL"), "rep2_Email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_COMMENTAIRES"), "rep2_Commentaires", "ASC") + "\n            " + Pager.headerLink(i18n("TODO")) + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (xtra, pager, table, tab, warning, dirty) {
+                var readonly = false;
+                var buttons = [];
+                buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new", i18n("Add New")));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout_5.buildTitle(state.xtra, i18n("fournisseurs title"));
+                var subtitle = layout_5.buildSubtitle(state.xtra, i18n("fournisseurs subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_5.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+            };
+            exports_41("fetchState", fetchState = function (id) {
+                Router.registerDirtyExit(null);
+                return App.POST("/fournisseur/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                    key = {};
+                })
+                    .then(Lookup.fetch_pays())
+                    .then(Lookup.fetch_institutionBanquaire());
+            });
+            exports_41("fetch", fetch = function (params) {
+                var id = params[0];
+                App.prepareRender(NS, i18n("fournisseurs"));
+                fetchState(id)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            refresh = function () {
+                App.prepareRender(NS, i18n("fournisseurs"));
+                App.POST("/fournisseur/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            };
+            exports_41("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var warning = App.warningTemplate();
+                var dirty = "";
+                var tbody = state.list.reduce(function (html, item, index) {
+                    var rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, rowNumber);
+                }, "");
+                var year = Perm.getCurrentYear(); //state.pager.filter.year;
+                var filter = filterTemplate();
+                var search = Pager.searchTemplate(state.pager, NS);
+                var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
+                var table = tableTemplate(tbody, state.pager);
+                var tab = layout_5.tabTemplate(null, null);
+                return pageTemplate(state.xtra, pager, table, tab, dirty, warning);
+            });
+            exports_41("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+            });
+            exports_41("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            setSelectedRow = function (id) {
+                if (uiSelectedRow == undefined)
+                    uiSelectedRow = { id: id };
+                uiSelectedRow.id = id;
+            };
+            isSelectedRow = function (id) {
+                if (uiSelectedRow == undefined)
+                    return false;
+                return (uiSelectedRow.id == id);
+            };
+            exports_41("goto", goto = function (pageNo, pageSize) {
+                state.pager.pageNo = pageNo;
+                state.pager.pageSize = pageSize;
+                refresh();
+            });
+            exports_41("sortBy", sortBy = function (columnName, direction) {
+                state.pager.pageNo = 1;
+                state.pager.sortColumn = columnName;
+                state.pager.sortDirection = direction;
+                refresh();
+            });
+            exports_41("search", search = function (element) {
+                state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_41("filter_nom", filter_nom = function (element) {
+                // TODO (filterDef)
+            });
+            exports_41("gotoDetail", gotoDetail = function (id) {
+                setSelectedRow(id);
+                Router.goto("#/proprietaire/" + id);
+            });
+        }
+    };
+});
+// File: fournisseur.ts
+System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/fournisseur/layout"], function (exports_42, context_42) {
+    "use strict";
+    var App, Router, Misc, Theme, Lookup, Perm, layout_6, NS, key, state, fetchedState, isNew, isDirty, isAudit, formTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, fetchAudit, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_42 && context_42.id;
+    return {
+        setters: [
+            function (App_14) {
+                App = App_14;
+            },
+            function (Router_9) {
+                Router = Router_9;
+            },
+            function (Misc_17) {
+                Misc = Misc_17;
+            },
+            function (Theme_4) {
+                Theme = Theme_4;
+            },
+            function (Lookup_3) {
+                Lookup = Lookup_3;
+            },
+            function (Perm_3) {
+                Perm = Perm_3;
+            },
+            function (layout_6_1) {
+                layout_6 = layout_6_1;
+            }
+        ],
+        execute: function () {
+            exports_42("NS", NS = "App_proprietaire");
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            isAudit = false;
+            formTemplate = function (item, paysID, institutionBanquaireID) {
+                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true) + "\n    " + Theme.renderTextField(NS, "cleTri", item.cleTri, i18n("CLETRI"), 15) + "\n    " + Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40) + "\n    " + Theme.renderTextField(NS, "auSoinsDe", item.auSoinsDe, i18n("AUSOINSDE"), 30) + "\n    " + Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30) + "\n    " + Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30) + "\n    " + Theme.renderDropdownField(NS, "paysID", paysID, i18n("PAYSID")) + "\n    " + Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7) + "\n    " + Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "telephone_Poste", item.telephone_Poste, i18n("TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2_Desc", item.telephone2_Desc, i18n("TELEPHONE2_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone2_Poste", item.telephone2_Poste, i18n("TELEPHONE2_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12) + "\n    " + Theme.renderTextField(NS, "telephone3_Desc", item.telephone3_Desc, i18n("TELEPHONE3_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone3_Poste", item.telephone3_Poste, i18n("TELEPHONE3_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10) + "\n    " + Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1) + "\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80) + "\n    " + Theme.renderTextField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "afficherCommentaires", item.afficherCommentaires, i18n("AFFICHERCOMMENTAIRES")) + "\n    " + Theme.renderCheckboxField(NS, "depotDirect", item.depotDirect, i18n("DEPOTDIRECT")) + "\n    " + Theme.renderDropdownField(NS, "institutionBanquaireID", institutionBanquaireID, i18n("INSTITUTIONBANQUAIREID")) + "\n    " + Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5) + "\n    " + Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12) + "\n    " + Theme.renderTextField(NS, "no_TPS", item.no_TPS, i18n("NO_TPS"), 25) + "\n    " + Theme.renderTextField(NS, "no_TVQ", item.no_TVQ, i18n("NO_TVQ"), 25) + "\n    " + Theme.renderCheckboxField(NS, "payerA", item.payerA, i18n("PAYERA")) + "\n    " + Theme.renderTextField(NS, "payerAID", item.payerAID, i18n("PAYERAID"), 15) + "\n    " + Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50) + "\n    " + Theme.renderTextField(NS, "rep_Nom", item.rep_Nom, i18n("REP_NOM"), 30) + "\n    " + Theme.renderTextField(NS, "rep_Telephone", item.rep_Telephone, i18n("REP_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep_Telephone_Poste", item.rep_Telephone_Poste, i18n("REP_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep_Email", item.rep_Email, i18n("REP_EMAIL"), 80) + "\n    " + Theme.renderCheckboxField(NS, "enAnglais", item.enAnglais, i18n("ENANGLAIS")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderNumberField(NS, "mRCProducteurID", item.mRCProducteurID, i18n("MRCPRODUCTEURID")) + "\n    " + Theme.renderCheckboxField(NS, "paiementManuel", item.paiementManuel, i18n("PAIEMENTMANUEL")) + "\n    " + Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL")) + "\n    " + Theme.renderCheckboxField(NS, "recoitTPS", item.recoitTPS, i18n("RECOITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "recoitTVQ", item.recoitTVQ, i18n("RECOITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "modifierTrigger", item.modifierTrigger, i18n("MODIFIERTRIGGER")) + "\n    " + Theme.renderCheckboxField(NS, "isProducteur", item.isProducteur, i18n("ISPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isTransporteur", item.isTransporteur, i18n("ISTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isChargeur", item.isChargeur, i18n("ISCHARGEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isAutre", item.isAutre, i18n("ISAUTRE")) + "\n    " + Theme.renderCheckboxField(NS, "afficherCommentairesSurPermit", item.afficherCommentairesSurPermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT")) + "\n    " + Theme.renderCheckboxField(NS, "pasEmissionPermis", item.pasEmissionPermis, i18n("PASEMISSIONPERMIS")) + "\n    " + Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE")) + "\n    " + Theme.renderCheckboxField(NS, "membre_OGC", item.membre_OGC, i18n("MEMBRE_OGC")) + "\n    " + Theme.renderCheckboxField(NS, "inscritTPS", item.inscritTPS, i18n("INSCRITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "inscritTVQ", item.inscritTVQ, i18n("INSCRITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "isOGC", item.isOGC, i18n("ISOGC")) + "\n    " + Theme.renderTextField(NS, "rep2_Nom", item.rep2_Nom, i18n("REP2_NOM"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_Telephone", item.rep2_Telephone, i18n("REP2_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep2_Telephone_Poste", item.rep2_Telephone_Poste, i18n("REP2_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep2_Email", item.rep2_Email, i18n("REP2_EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_Commentaires", item.rep2_Commentaires, i18n("REP2_COMMENTAIRES"), 255) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+            };
+            pageTemplate = function (item, form, tab, warning, dirty) {
+                var canEdit = true;
+                var readonly = !canEdit || isAudit;
+                var canInsert = canEdit && isNew; // && Perm.hasFournisseur_CanAddFournisseur;
+                var canDelete = canEdit && !canInsert; // && Perm.hasFournisseur_CanDeleteFournisseur;
+                var canAdd = canEdit && !canInsert; // && Perm.hasFournisseur_CanAddFournisseur;
+                var canUpdate = canEdit && !isNew;
+                var buttons = [];
+                buttons.push(Theme.buttonCancel(NS));
+                if (canInsert)
+                    buttons.push(Theme.buttonInsert(NS));
+                if (canDelete)
+                    buttons.push(Theme.buttonDelete(NS));
+                if (canAdd)
+                    buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new"));
+                if (canUpdate)
+                    buttons.push(Theme.buttonUpdate(NS));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout_6.buildTitle(item.xtra, i18n("fournisseur Details"), isNew, i18n("New fournisseur"));
+                var subtitle = layout_6.buildSubtitle(item.xtra, i18n("fournisseur subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_6.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+            };
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            clearState = function () {
+                state = {};
+                return Promise.resolve();
+            };
+            exports_42("fetchState", fetchState = function (id, auditid) {
+                isNew = (id == "new");
+                isDirty = false;
+                isAudit = (auditid != undefined);
+                Router.registerDirtyExit(dirtyExit);
+                clearState();
+                var url = (!isAudit ? "/fournisseur/" + (isNew ? "new" : id) : "/fournisseur/audit/" + id + "/" + auditid);
+                return App.GET(url)
+                    .then(function (payload) {
+                    state = payload;
+                    fetchedState = Misc.clone(state);
+                    key = { id: id };
+                })
+                    .then(Lookup.fetch_pays())
+                    .then(Lookup.fetch_institutionBanquaire());
+            });
+            exports_42("fetch", fetch = function (params) {
+                var id = params[0];
+                App.prepareRender(NS, i18n("fournisseur"));
+                fetchState(id)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_42("fetchAudit", fetchAudit = function (id, auditid) {
+                App.prepareRender(NS, i18n("fournisseur_select"));
+                fetchState(id, auditid)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_42("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var year = Perm.getCurrentYear(); //or something better
+                var lookup_pays = Lookup.get_pays(year);
+                var lookup_institutionBanquaire = Lookup.get_institutionBanquaire(year);
+                var paysID = Theme.renderOptions(lookup_pays, state.paysID, true);
+                var institutionBanquaireID = Theme.renderOptions(lookup_institutionBanquaire, state.institutionBanquaireID, true);
+                var form = formTemplate(state, paysID, institutionBanquaireID);
+                var tab = layout_6.tabTemplate(state.id, state.xtra, isNew);
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_42("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+                App.setPageTitle(isNew ? i18n("New fournisseur") : state.xtra.title);
+            });
+            exports_42("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.cleTri = Misc.fromInputTextNullable(NS + "_cleTri", state.cleTri);
+                clone.nom = Misc.fromInputTextNullable(NS + "_nom", state.nom);
+                clone.auSoinsDe = Misc.fromInputTextNullable(NS + "_auSoinsDe", state.auSoinsDe);
+                clone.rue = Misc.fromInputTextNullable(NS + "_rue", state.rue);
+                clone.ville = Misc.fromInputTextNullable(NS + "_ville", state.ville);
+                clone.paysID = Misc.fromSelectString(NS + "_paysID", state.paysID);
+                clone.code_postal = Misc.fromInputTextNullable(NS + "_code_postal", state.code_postal);
+                clone.telephone = Misc.fromInputTextNullable(NS + "_telephone", state.telephone);
+                clone.telephone_Poste = Misc.fromInputTextNullable(NS + "_telephone_Poste", state.telephone_Poste);
+                clone.telecopieur = Misc.fromInputTextNullable(NS + "_telecopieur", state.telecopieur);
+                clone.telephone2 = Misc.fromInputTextNullable(NS + "_telephone2", state.telephone2);
+                clone.telephone2_Desc = Misc.fromInputTextNullable(NS + "_telephone2_Desc", state.telephone2_Desc);
+                clone.telephone2_Poste = Misc.fromInputTextNullable(NS + "_telephone2_Poste", state.telephone2_Poste);
+                clone.telephone3 = Misc.fromInputTextNullable(NS + "_telephone3", state.telephone3);
+                clone.telephone3_Desc = Misc.fromInputTextNullable(NS + "_telephone3_Desc", state.telephone3_Desc);
+                clone.telephone3_Poste = Misc.fromInputTextNullable(NS + "_telephone3_Poste", state.telephone3_Poste);
+                clone.no_membre = Misc.fromInputTextNullable(NS + "_no_membre", state.no_membre);
+                clone.resident = Misc.fromInputTextNullable(NS + "_resident", state.resident);
+                clone.email = Misc.fromInputTextNullable(NS + "_email", state.email);
+                clone.www = Misc.fromInputTextNullable(NS + "_www", state.www);
+                clone.commentaires = Misc.fromInputTextNullable(NS + "_commentaires", state.commentaires);
+                clone.afficherCommentaires = Misc.fromInputCheckbox(NS + "_afficherCommentaires", state.afficherCommentaires);
+                clone.depotDirect = Misc.fromInputCheckbox(NS + "_depotDirect", state.depotDirect);
+                clone.institutionBanquaireID = Misc.fromSelectString(NS + "_institutionBanquaireID", state.institutionBanquaireID);
+                clone.banque_transit = Misc.fromInputTextNullable(NS + "_banque_transit", state.banque_transit);
+                clone.banque_folio = Misc.fromInputTextNullable(NS + "_banque_folio", state.banque_folio);
+                clone.no_TPS = Misc.fromInputTextNullable(NS + "_no_TPS", state.no_TPS);
+                clone.no_TVQ = Misc.fromInputTextNullable(NS + "_no_TVQ", state.no_TVQ);
+                clone.payerA = Misc.fromInputCheckbox(NS + "_payerA", state.payerA);
+                clone.payerAID = Misc.fromInputTextNullable(NS + "_payerAID", state.payerAID);
+                clone.statut = Misc.fromInputTextNullable(NS + "_statut", state.statut);
+                clone.rep_Nom = Misc.fromInputTextNullable(NS + "_rep_Nom", state.rep_Nom);
+                clone.rep_Telephone = Misc.fromInputTextNullable(NS + "_rep_Telephone", state.rep_Telephone);
+                clone.rep_Telephone_Poste = Misc.fromInputTextNullable(NS + "_rep_Telephone_Poste", state.rep_Telephone_Poste);
+                clone.rep_Email = Misc.fromInputTextNullable(NS + "_rep_Email", state.rep_Email);
+                clone.enAnglais = Misc.fromInputCheckbox(NS + "_enAnglais", state.enAnglais);
+                clone.actif = Misc.fromInputCheckbox(NS + "_actif", state.actif);
+                clone.mRCProducteurID = Misc.fromInputNumberNullable(NS + "_mRCProducteurID", state.mRCProducteurID);
+                clone.paiementManuel = Misc.fromInputCheckbox(NS + "_paiementManuel", state.paiementManuel);
+                clone.journal = Misc.fromInputCheckbox(NS + "_journal", state.journal);
+                clone.recoitTPS = Misc.fromInputCheckbox(NS + "_recoitTPS", state.recoitTPS);
+                clone.recoitTVQ = Misc.fromInputCheckbox(NS + "_recoitTVQ", state.recoitTVQ);
+                clone.modifierTrigger = Misc.fromInputCheckbox(NS + "_modifierTrigger", state.modifierTrigger);
+                clone.isProducteur = Misc.fromInputCheckbox(NS + "_isProducteur", state.isProducteur);
+                clone.isTransporteur = Misc.fromInputCheckbox(NS + "_isTransporteur", state.isTransporteur);
+                clone.isChargeur = Misc.fromInputCheckbox(NS + "_isChargeur", state.isChargeur);
+                clone.isAutre = Misc.fromInputCheckbox(NS + "_isAutre", state.isAutre);
+                clone.afficherCommentairesSurPermit = Misc.fromInputCheckbox(NS + "_afficherCommentairesSurPermit", state.afficherCommentairesSurPermit);
+                clone.pasEmissionPermis = Misc.fromInputCheckbox(NS + "_pasEmissionPermis", state.pasEmissionPermis);
+                clone.generique = Misc.fromInputCheckbox(NS + "_generique", state.generique);
+                clone.membre_OGC = Misc.fromInputCheckbox(NS + "_membre_OGC", state.membre_OGC);
+                clone.inscritTPS = Misc.fromInputCheckbox(NS + "_inscritTPS", state.inscritTPS);
+                clone.inscritTVQ = Misc.fromInputCheckbox(NS + "_inscritTVQ", state.inscritTVQ);
+                clone.isOGC = Misc.fromInputCheckbox(NS + "_isOGC", state.isOGC);
+                clone.rep2_Nom = Misc.fromInputTextNullable(NS + "_rep2_Nom", state.rep2_Nom);
+                clone.rep2_Telephone = Misc.fromInputTextNullable(NS + "_rep2_Telephone", state.rep2_Telephone);
+                clone.rep2_Telephone_Poste = Misc.fromInputTextNullable(NS + "_rep2_Telephone_Poste", state.rep2_Telephone_Poste);
+                clone.rep2_Email = Misc.fromInputTextNullable(NS + "_rep2_Email", state.rep2_Email);
+                clone.rep2_Commentaires = Misc.fromInputTextNullable(NS + "_rep2_Commentaires", state.rep2_Commentaires);
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById(NS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_42("onchange", onchange = function (input) {
+                state = getFormState();
+                App.render();
+            });
+            exports_42("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_42("create", create = function () {
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/fournisseur", formState)
+                    .then(function (payload) {
+                    var newkey = payload;
+                    Misc.toastSuccessSave();
+                    Router.goto("#/fournisseur/" + newkey.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_42("save", save = function (done) {
+                if (done === void 0) { done = false; }
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/fournisseur", formState)
+                    .then(function (_) {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto("#/fournisseurs/", 100);
+                    else
+                        Router.goto("#/fournisseur/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_42("drop", drop = function () {
+                //(<any>key).updatedUtc = state.updatedUtc;
+                App.prepareRender();
+                App.DELETE("/fournisseur", key)
+                    .then(function (_) {
+                    clearState();
+                    Router.goto("#/fournisseurs/", 250);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = function () {
+                if (isAudit)
+                    return false;
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
+System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire"], function (exports_43, context_43) {
+    "use strict";
+    var Router, proprietaires, proprietaire, startup, render, postRender;
+    var __moduleName = context_43 && context_43.id;
+    return {
+        setters: [
+            function (Router_10) {
+                Router = Router_10;
+            },
+            function (proprietaires_1) {
+                proprietaires = proprietaires_1;
+            },
+            function (proprietaire_1) {
+                proprietaire = proprietaire_1;
+            }
+        ],
+        execute: function () {
+            //
+            // Global references to application objects
+            // These must match the "NS" values defined in modules
+            // Mainly used for event handlers
+            //
+            window[proprietaires.NS] = proprietaires;
+            window[proprietaire.NS] = proprietaire;
+            exports_43("startup", startup = function () {
+                Router.addRoute("^#/proprietaires/?(.*)?$", proprietaires.fetch);
+                Router.addRoute("^#/proprietaire/?(.*)?$", proprietaire.fetch);
+            });
+            exports_43("render", render = function () {
+                return "\n<div>\n    " + proprietaires.render() + "\n    " + proprietaire.render() + "\n</div>\n";
+            });
+            exports_43("postRender", postRender = function () {
+                proprietaires.postRender();
+                proprietaire.postRender();
+            });
+        }
+    };
+});
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_44, context_44) {
+    "use strict";
+    var App, Perm, Main, Home, Admin, Fournisseur, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
+    var __moduleName = context_44 && context_44.id;
+    return {
+        setters: [
+            function (App_15) {
+                App = App_15;
+            },
+            function (Perm_4) {
+                Perm = Perm_4;
             },
             function (Main_1) {
                 Main = Main_1;
@@ -4700,21 +5223,25 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             },
             function (Admin_1) {
                 Admin = Admin_1;
+            },
+            function (Fournisseur_1) {
+                Fournisseur = Fournisseur_1;
             }
         ],
         execute: function () {
-            exports_40("NS", NS = "App_Layout");
-            exports_40("render", render = function () {
+            exports_44("NS", NS = "App_Layout");
+            exports_44("render", render = function () {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
-                var ucMain = "\n" + Home.render() + "\n" + Admin.render() + "\n";
+                var ucMain = "\n" + Home.render() + "\n" + Admin.render() + "\n" + Fournisseur.render() + "\n";
                 var menu = menuTemplate(Home.getMenuData());
                 return "\n<div class=\"js-layout " + (Main.state.menuOpened ? "" : "js-close") + "\">\n" + renderHeader() + "\n" + renderAsideMenu(menu) + "\n<section class=\"js-uc-main js-waitable\">\n" + ucMain + "\n</section>\n</div>\n";
             });
-            exports_40("postRender", postRender = function () {
+            exports_44("postRender", postRender = function () {
                 Home.postRender();
                 Admin.postRender();
+                Fournisseur.postRender();
             });
             renderHeader = function () {
                 return "\n<header class=\"js-uc-header\">\n\n    <div class=\"js-logo\">\n        <div class=\"js-bars\">\n            <button class=\"button is-primary\" onclick=\"" + NS + ".menuClick()\">\n                <div class=\"icon\"><i class=\"fas fa-bars\"></i></div>\n            </button>\n        </div>\n        <a href=\"#\" onclick=\"" + NS + ".toggle('opsfms')\">\n            <span>Gestion/Paye</span>\n        </a>\n        <div style=\"width:20px;margin-right:1rem;\">&nbsp;</div>\n    </div>\n\n    <div class=\"js-navbar\">\n        <div class=\"js-navbar-items\">\n            <div class=\"js-items\">\n                <div>\n                    <span class=\"has-text-grey-light\">Ann\u00E9e courante:</span> <span class=\"has-text-white\">2020</span>\n                </div>\n            </div>\n            <div class=\"js-items\">\n                <button class=\"button is-primary\" onclick=\"" + NS + ".help()\" style=\"font-size:125%\">\n                    <span class=\"icon\"><i class=\"fas fa-question-circle\"></i></span>\n                </button>\n                <div class=\"navbar-item has-dropdown\" onclick=\"" + NS + ".toggleProfileMenu(this)\">\n                    <a class=\"navbar-link\">\n                        " + Perm.getEmail() + "\n                    </a>\n                    <div class=\"navbar-dropdown\">\n                        <div class=\"navbar-item\">\n                            <div><b>" + Perm.getName() + "</b></div>\n                        </div>\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-primary\" onclick=\"" + NS + ".toggleProfileMenu();" + NS + ".editProfile()\">\n                                <i class=\"far fa-user\"></i>&nbsp;&nbsp;Edit Profile\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <div class=\"navbar-item\">\n                            <button class=\"button is-fullwidth is-outlined\" onclick=\"" + NS + ".toggleProfileMenu();App_Auth.signout();\">\n                                <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                            </button>\n                        </div>\n                        <hr class=\"navbar-divider\">\n                        <a href=\"#\" class=\"navbar-item\">\n                            <div>Terms of Service</div>\n                        </a>\n                    </div>\n                </div>\n                <button class=\"button is-primary\" onclick=\"App_Auth.signout();\">\n                    <span class=\"icon\"><i class=\"fas fa-sign-out-alt\"></i></span>&nbsp;" + i18n("Sign out") + "\n                </button>\n            </div>\n        </div>\n    </div>\n\n</header>";
@@ -4756,43 +5283,43 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_40("menuClick", menuClick = function () {
+            exports_44("menuClick", menuClick = function () {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_40("toggle", toggle = function (entry) {
+            exports_44("toggle", toggle = function (entry) {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_40("setOpenedMenu", setOpenedMenu = function (entry) {
+            exports_44("setOpenedMenu", setOpenedMenu = function (entry) {
                 Main.state.subMenu = entry;
             });
-            exports_40("editProfile", editProfile = function () {
+            exports_44("editProfile", editProfile = function () {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_40("toggleProfileMenu", toggleProfileMenu = function (element) {
+            exports_44("toggleProfileMenu", toggleProfileMenu = function (element) {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main"], function (exports_41, context_41) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_45, context_45) {
     "use strict";
-    var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_41 && context_41.id;
+    var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, FournisseurMain, state, html_lang, startup, loadUIState, saveUIState;
+    var __moduleName = context_45 && context_45.id;
     return {
         setters: [
-            function (App_12) {
-                App = App_12;
+            function (App_16) {
+                App = App_16;
             },
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
             },
-            function (Theme_3) {
-                Theme = Theme_3;
+            function (Theme_5) {
+                Theme = Theme_5;
             },
             function (LatLong_1) {
                 LatLong = LatLong_1;
@@ -4800,8 +5327,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_3) {
-                Perm = Perm_3;
+            function (Perm_5) {
+                Perm = Perm_5;
             },
             function (Layout_2) {
                 Layout = Layout_2;
@@ -4811,6 +5338,9 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             },
             function (AdminMain_1) {
                 AdminMain = AdminMain_1;
+            },
+            function (FournisseurMain_1) {
+                FournisseurMain = FournisseurMain_1;
             }
         ],
         execute: function () {
@@ -4829,7 +5359,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_41("startup", startup = function (hasPublicHomePage) {
+            exports_45("startup", startup = function (hasPublicHomePage) {
                 if (hasPublicHomePage === void 0) { hasPublicHomePage = false; }
                 var main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 var router = main.router;
@@ -4841,25 +5371,21 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                     }
                 });
                 AdminMain.startup();
-                //FireMain.startup();
-                //WeatherMain.startup();
-                //AircraftMain.startup();
-                //CostMain.startup();
-                //ConfigMain.startup();
+                FournisseurMain.startup();
                 loadUIState();
             });
-            exports_41("loadUIState", loadUIState = function () {
+            exports_45("loadUIState", loadUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
-                exports_41("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_45("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_41("state", state = {
+                    exports_45("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_41("saveUIState", saveUIState = function () {
+            exports_45("saveUIState", saveUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -4867,10 +5393,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_42, context_42) {
+System.register("src/app", ["src/main"], function (exports_46, context_46) {
     "use strict";
     var main;
-    var __moduleName = context_42 && context_42.id;
+    var __moduleName = context_46 && context_46.id;
     return {
         setters: [
             function (main_1) {
