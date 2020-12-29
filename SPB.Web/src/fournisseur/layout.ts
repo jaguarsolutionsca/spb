@@ -8,7 +8,7 @@ import { setOpenedMenu } from "../layout"
 declare const i18n: any;
 
 
-interface ISummary {
+export interface ISummary {
     title: string
     filecount: number
 }
@@ -33,14 +33,14 @@ export const tabTemplate = (id: string, xtra: ISummary, isNew: boolean = false) 
 <div class="tabs is-boxed">
     <ul>
         <li ${isProprietaires ? "class='is-active'" : ""}>
-            <a href="#/fournisseur/proprietaires">
+            <a href="#/proprietaires">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
                 <span>${i18n("List")}</span>
             </a>
         </li>
 ${showDetail ? `
         <li ${isProprietaire ? "class='is-active'" : ""}>
-            <a href="#/fournisseur/proprietaire/${id}">
+            <a href="#/proprietaire/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
                 <span>${i18n("Proprietaire Details")}</span>
             </a>
@@ -68,23 +68,10 @@ ${showFile ? `
 `;
 };
 
-export const buildTitle = (xtra: any, defaultText: string, isNew = false, defaulTextNew: string = null) => {
-    if (isNew) {
-        return defaulTextNew;
-    }
-    let title = defaultText;
-    if (xtra && xtra.title) {
-        let json = JSON.parse(xtra.json);
-        title = `${xtra.title}, ${json.date}, ${json.from}`;
-    }
-    return title;
+export const buildTitle = (xtra: ISummary, defaultText: string) => {
+    return xtra?.title ?? defaultText;
 }
 
 export const buildSubtitle = (xtra: any, defaultText: string) => {
-    let subtitle = defaultText;
-    if (xtra && xtra.json) {
-        let json = JSON.parse(xtra.json);
-        subtitle = `Started: <b>${json.started}</b> Last Day: <b>${json.lastDay}</b> Status: <b>${json.status}</b> Hectares: <b>${json.hectares}</b> Action: <b>${json.action}</b> Zone: <b>${json.zone}</b> Total Cost: <b>${Misc.toStaticMoney(json.totalCost)}</b>`;
-    }
-    return subtitle;
+    return xtra?.subtitle ?? defaultText;
 }

@@ -12,19 +12,23 @@ import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
-import { tabTemplate, icon, buildTitle, buildSubtitle } from "./layout"
+import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout"
 
 declare const i18n: any;
 
 
 export const NS = "App_proprietaire";
 
+interface IPayload {
+    item: IState
+    xtra: ISummary
+}
+
 interface IKey {
     id: string
 }
 
 interface IState {
-    xtra: any
     id: string
     cletri: string
     nom: string
@@ -93,6 +97,7 @@ interface IState {
 
 let key: IKey;
 let state = <IState>{};
+let xtra: ISummary;
 let fetchedState = <IState>{};
 let isNew = false;
 let isDirty = false;
@@ -187,8 +192,8 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
     let actions = Theme.renderButtons(buttons);
 
-    let title = buildTitle(item.xtra, i18n("fournisseur Details"), isNew, i18n("New fournisseur"));
-    let subtitle = buildSubtitle(item.xtra, i18n("fournisseur subtitle"));
+    let title = buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
+    let subtitle = buildSubtitle(xtra, i18n("fournisseur subtitle"));
 
     return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
@@ -225,19 +230,14 @@ const dirtyTemplate = () => {
     return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
 }
 
-const clearState = () => {
-    state = <IState>{};
-    return Promise.resolve();
-};
-
 export const fetchState = (id: string) => {
     isNew = (id == "new");
     isDirty = false;
     Router.registerDirtyExit(dirtyExit);
-    clearState();
     return App.GET(`/fournisseur/${isNew ? "new" : id}`)
-        .then(payload => {
-            state = payload;
+        .then((payload: IPayload) => {
+            state = payload.item;
+            xtra = payload.xtra;
             fetchedState = Misc.clone(state) as IState;
             key = <IKey>{ id };
 
@@ -262,7 +262,7 @@ export const render = () => {
     if (state == undefined || Object.keys(state).length == 0)
         return App.warningTemplate() || App.unexpectedTemplate();
 
-    let year = Perm.getCurrentYear(); //or something better
+    let year = 2020;// Perm.getCurrentYear(); //or something better
     let lookup_pays = Lookup.get_pays(year);
     let lookup_institutionBanquaire = Lookup.get_institutionBanquaire(year);
 
@@ -272,7 +272,7 @@ export const render = () => {
 
     const form = formTemplate(state, paysid, institutionbanquaireid);
 
-    const tab = tabTemplate(state.id, state.xtra, isNew);
+    const tab = tabTemplate(state.id, xtra, isNew);
     const dirty = dirtyTemplate();
     const warning = App.warningTemplate();
     return pageTemplate(state, form, tab, warning, dirty);
@@ -283,7 +283,7 @@ export const postRender = () => {
 
 
 
-    App.setPageTitle(isNew ? i18n("New proprietaire") : state.xtra.title);
+    App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
 };
 
 export const inContext = () => {
@@ -410,7 +410,6 @@ export const drop = () => {
     App.prepareRender();
     App.DELETE("/proprietaire", key)
         .then(_ => {
-            clearState();
             Router.goto(`#/proprietaires/`, 250);
         })
         .catch(App.render);

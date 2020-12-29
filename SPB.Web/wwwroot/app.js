@@ -4699,17 +4699,14 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
         }
     };
 });
-System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "_BaseApp/src/lib-ts/misc", "src/layout"], function (exports_40, context_40) {
+System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_40, context_40) {
     "use strict";
-    var App, Misc, layout_4, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var App, layout_4, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_40 && context_40.id;
     return {
         setters: [
             function (App_12) {
                 App = App_12;
-            },
-            function (Misc_15) {
-                Misc = Misc_15;
             },
             function (layout_4_1) {
                 layout_4 = layout_4_1;
@@ -4729,28 +4726,15 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "_BaseApp/sr
                 var showDetail = !isProprietaires;
                 var showFiles = showDetail && xtra;
                 var showFile = isFile;
-                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/fournisseur/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/fournisseur/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
             });
-            exports_40("buildTitle", buildTitle = function (xtra, defaultText, isNew, defaulTextNew) {
-                if (isNew === void 0) { isNew = false; }
-                if (defaulTextNew === void 0) { defaulTextNew = null; }
-                if (isNew) {
-                    return defaulTextNew;
-                }
-                var title = defaultText;
-                if (xtra && xtra.title) {
-                    var json = JSON.parse(xtra.json);
-                    title = xtra.title + ", " + json.date + ", " + json.from;
-                }
-                return title;
+            exports_40("buildTitle", buildTitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
             exports_40("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
-                var subtitle = defaultText;
-                if (xtra && xtra.json) {
-                    var json = JSON.parse(xtra.json);
-                    subtitle = "Started: <b>" + json.started + "</b> Last Day: <b>" + json.lastDay + "</b> Status: <b>" + json.status + "</b> Hectares: <b>" + json.hectares + "</b> Action: <b>" + json.action + "</b> Zone: <b>" + json.zone + "</b> Total Cost: <b>" + Misc.toStaticMoney(json.totalCost) + "</b>";
-                }
-                return subtitle;
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
         }
     };
@@ -4771,8 +4755,8 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             function (Perm_2) {
                 Perm = Perm_2;
             },
-            function (Misc_16) {
-                Misc = Misc_16;
+            function (Misc_15) {
+                Misc = Misc_15;
             },
             function (Theme_3) {
                 Theme = Theme_3;
@@ -4905,9 +4889,9 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
     };
 });
 // File: proprietaire.ts
-System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/fournisseur/layout"], function (exports_42, context_42) {
+System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_42, context_42) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_6, NS, key, state, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, layout_6, NS, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_42 && context_42.id;
     return {
         setters: [
@@ -4917,17 +4901,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             function (Router_9) {
                 Router = Router_9;
             },
-            function (Misc_17) {
-                Misc = Misc_17;
+            function (Misc_16) {
+                Misc = Misc_16;
             },
             function (Theme_4) {
                 Theme = Theme_4;
             },
             function (Lookup_3) {
                 Lookup = Lookup_3;
-            },
-            function (Perm_3) {
-                Perm = Perm_3;
             },
             function (layout_6_1) {
                 layout_6 = layout_6_1;
@@ -4960,25 +4941,21 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_6.buildTitle(item.xtra, i18n("fournisseur Details"), isNew, i18n("New fournisseur"));
-                var subtitle = layout_6.buildSubtitle(item.xtra, i18n("fournisseur subtitle"));
+                var title = layout_6.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
+                var subtitle = layout_6.buildSubtitle(xtra, i18n("fournisseur subtitle"));
                 return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_6.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            clearState = function () {
-                state = {};
-                return Promise.resolve();
-            };
             exports_42("fetchState", fetchState = function (id) {
                 isNew = (id == "new");
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
-                clearState();
                 return App.GET("/fournisseur/" + (isNew ? "new" : id))
                     .then(function (payload) {
-                    state = payload;
+                    state = payload.item;
+                    xtra = payload.xtra;
                     fetchedState = Misc.clone(state);
                     key = { id: id };
                 })
@@ -4999,13 +4976,13 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                     return App.fatalErrorTemplate();
                 if (state == undefined || Object.keys(state).length == 0)
                     return App.warningTemplate() || App.unexpectedTemplate();
-                var year = Perm.getCurrentYear(); //or something better
+                var year = 2020; // Perm.getCurrentYear(); //or something better
                 var lookup_pays = Lookup.get_pays(year);
                 var lookup_institutionBanquaire = Lookup.get_institutionBanquaire(year);
                 var paysid = Theme.renderOptions(lookup_pays, state.paysid, true);
                 var institutionbanquaireid = Theme.renderOptions(lookup_institutionBanquaire, state.institutionbanquaireid, true);
                 var form = formTemplate(state, paysid, institutionbanquaireid);
-                var tab = layout_6.tabTemplate(state.id, state.xtra, isNew);
+                var tab = layout_6.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -5013,7 +4990,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             exports_42("postRender", postRender = function () {
                 if (!inContext())
                     return;
-                App.setPageTitle(isNew ? i18n("New proprietaire") : state.xtra.title);
+                App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
             });
             exports_42("inContext", inContext = function () {
                 return App.inContext(NS);
@@ -5136,7 +5113,6 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 App.prepareRender();
                 App.DELETE("/proprietaire", key)
                     .then(function (_) {
-                    clearState();
                     Router.goto("#/proprietaires/", 250);
                 })
                     .catch(App.render);
@@ -5201,8 +5177,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             function (App_15) {
                 App = App_15;
             },
-            function (Perm_4) {
-                Perm = Perm_4;
+            function (Perm_3) {
+                Perm = Perm_3;
             },
             function (Main_1) {
                 Main = Main_1;
@@ -5316,8 +5292,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_5) {
-                Perm = Perm_5;
+            function (Perm_4) {
+                Perm = Perm_4;
             },
             function (Layout_2) {
                 Layout = Layout_2;
