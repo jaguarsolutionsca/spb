@@ -4739,7 +4739,7 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"
         }
     };
 });
-// File: proprietaires.ts
+// File: fournisseurs.ts
 System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_41, context_41) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_5, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
@@ -4772,7 +4772,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             }
         ],
         execute: function () {
-            exports_41("NS", NS = "App_proprietaires");
+            exports_41("NS", NS = "App_fournisseurs");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
@@ -4883,7 +4883,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             });
             exports_41("gotoDetail", gotoDetail = function (id) {
                 setSelectedRow(id);
-                Router.goto("#/proprietaire/" + id);
+                Router.goto("#/fournisseur/" + id);
             });
         }
     };
