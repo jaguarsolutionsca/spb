@@ -378,7 +378,7 @@ export const fromSelectNumber = (id: string, defValue: number = null) => {
     return (value.length > 0 ? +value : null);
 };
 
-export const fromSelectString = (id: string, defValue: string = null) => {
+export const fromSelectText = (id: string, defValue: string = null) => {
     let select = <HTMLSelectElement>document.getElementById(id);
     if (select == undefined || select.selectedIndex == -1)
         return defValue;

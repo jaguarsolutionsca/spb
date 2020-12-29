@@ -1,4 +1,4 @@
-﻿// File: fournisseur.ts
+﻿// File: proprietaire.ts
 
 "use strict"
 
@@ -26,67 +26,67 @@ interface IKey {
 interface IState {
     xtra: any
     id: string
-    cleTri: string
+    cletri: string
     nom: string
-    auSoinsDe: string
+    ausoinsde: string
     rue: string
     ville: string
-    paysID: string
-    paysID_Text: string
+    paysid: string
+    paysid_text: string
     code_postal: string
     telephone: string
-    telephone_Poste: string
+    telephone_poste: string
     telecopieur: string
     telephone2: string
-    telephone2_Desc: string
-    telephone2_Poste: string
+    telephone2_desc: string
+    telephone2_poste: string
     telephone3: string
-    telephone3_Desc: string
-    telephone3_Poste: string
+    telephone3_desc: string
+    telephone3_poste: string
     no_membre: string
     resident: string
     email: string
     www: string
     commentaires: string
-    afficherCommentaires: boolean
-    depotDirect: boolean
-    institutionBanquaireID: string
-    institutionBanquaireID_Text: string
+    affichercommentaires: boolean
+    depotdirect: boolean
+    institutionbanquaireid: string
+    institutionbanquaireid_text: string
     banque_transit: string
     banque_folio: string
-    no_TPS: string
-    no_TVQ: string
-    payerA: boolean
-    payerAID: string
+    no_tps: string
+    no_tvq: string
+    payera: boolean
+    payeraid: string
     statut: string
-    rep_Nom: string
-    rep_Telephone: string
-    rep_Telephone_Poste: string
-    rep_Email: string
-    enAnglais: boolean
+    rep_nom: string
+    rep_telephone: string
+    rep_telephone_poste: string
+    rep_email: string
+    enanglais: boolean
     actif: boolean
-    mRCProducteurID: number
-    paiementManuel: boolean
+    mrcproducteurid: number
+    paiementmanuel: boolean
     journal: boolean
-    recoitTPS: boolean
-    recoitTVQ: boolean
-    modifierTrigger: boolean
-    isProducteur: boolean
-    isTransporteur: boolean
-    isChargeur: boolean
-    isAutre: boolean
-    afficherCommentairesSurPermit: boolean
-    pasEmissionPermis: boolean
+    recoittps: boolean
+    recoittvq: boolean
+    modifiertrigger: boolean
+    isproducteur: boolean
+    istransporteur: boolean
+    ischargeur: boolean
+    isautre: boolean
+    affichercommentairessurpermit: boolean
+    pasemissionpermis: boolean
     generique: boolean
-    membre_OGC: boolean
-    inscritTPS: boolean
-    inscritTVQ: boolean
-    isOGC: boolean
-    rep2_Nom: string
-    rep2_Telephone: string
-    rep2_Telephone_Poste: string
-    rep2_Email: string
-    rep2_Commentaires: string
+    membre_ogc: boolean
+    inscrittps: boolean
+    inscrittvq: boolean
+    isogc: boolean
+    rep2_nom: string
+    rep2_telephone: string
+    rep2_telephone_poste: string
+    rep2_email: string
+    rep2_commentaires: string
 }
 
 
@@ -96,11 +96,10 @@ let state = <IState>{};
 let fetchedState = <IState>{};
 let isNew = false;
 let isDirty = false;
-let isAudit = false;
 
 
 
-const formTemplate = (item: IState, paysID: string, institutionBanquaireID: string) => {
+const formTemplate = (item: IState, paysid: string, institutionbanquaireid: string) => {
     return `
 
 ${isNew ? `
@@ -108,72 +107,72 @@ ${isNew ? `
     ${Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID"))}
 `}
     ${Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true)}
-    ${Theme.renderTextField(NS, "cleTri", item.cleTri, i18n("CLETRI"), 15)}
+    ${Theme.renderTextField(NS, "cletri", item.cletri, i18n("CLETRI"), 15)}
     ${Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40)}
-    ${Theme.renderTextField(NS, "auSoinsDe", item.auSoinsDe, i18n("AUSOINSDE"), 30)}
+    ${Theme.renderTextField(NS, "ausoinsde", item.ausoinsde, i18n("AUSOINSDE"), 30)}
     ${Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30)}
     ${Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30)}
-    ${Theme.renderDropdownField(NS, "paysID", paysID, i18n("PAYSID"))}
+    ${Theme.renderDropdownField(NS, "paysid", paysid, i18n("PAYSID"))}
     ${Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7)}
     ${Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12)}
-    ${Theme.renderTextField(NS, "telephone_Poste", item.telephone_Poste, i18n("TELEPHONE_POSTE"), 4)}
+    ${Theme.renderTextField(NS, "telephone_poste", item.telephone_poste, i18n("TELEPHONE_POSTE"), 4)}
     ${Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12)}
     ${Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12)}
-    ${Theme.renderTextField(NS, "telephone2_Desc", item.telephone2_Desc, i18n("TELEPHONE2_DESC"), 20)}
-    ${Theme.renderTextField(NS, "telephone2_Poste", item.telephone2_Poste, i18n("TELEPHONE2_POSTE"), 4)}
+    ${Theme.renderTextField(NS, "telephone2_desc", item.telephone2_desc, i18n("TELEPHONE2_DESC"), 20)}
+    ${Theme.renderTextField(NS, "telephone2_poste", item.telephone2_poste, i18n("TELEPHONE2_POSTE"), 4)}
     ${Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12)}
-    ${Theme.renderTextField(NS, "telephone3_Desc", item.telephone3_Desc, i18n("TELEPHONE3_DESC"), 20)}
-    ${Theme.renderTextField(NS, "telephone3_Poste", item.telephone3_Poste, i18n("TELEPHONE3_POSTE"), 4)}
+    ${Theme.renderTextField(NS, "telephone3_desc", item.telephone3_desc, i18n("TELEPHONE3_DESC"), 20)}
+    ${Theme.renderTextField(NS, "telephone3_poste", item.telephone3_poste, i18n("TELEPHONE3_POSTE"), 4)}
     ${Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10)}
     ${Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1)}
     ${Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80)}
     ${Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80)}
     ${Theme.renderTextField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255)}
-    ${Theme.renderCheckboxField(NS, "afficherCommentaires", item.afficherCommentaires, i18n("AFFICHERCOMMENTAIRES"))}
-    ${Theme.renderCheckboxField(NS, "depotDirect", item.depotDirect, i18n("DEPOTDIRECT"))}
-    ${Theme.renderDropdownField(NS, "institutionBanquaireID", institutionBanquaireID, i18n("INSTITUTIONBANQUAIREID"))}
+    ${Theme.renderCheckboxField(NS, "affichercommentaires", item.affichercommentaires, i18n("AFFICHERCOMMENTAIRES"))}
+    ${Theme.renderCheckboxField(NS, "depotdirect", item.depotdirect, i18n("DEPOTDIRECT"))}
+    ${Theme.renderDropdownField(NS, "institutionbanquaireid", institutionbanquaireid, i18n("INSTITUTIONBANQUAIREID"))}
     ${Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5)}
     ${Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12)}
-    ${Theme.renderTextField(NS, "no_TPS", item.no_TPS, i18n("NO_TPS"), 25)}
-    ${Theme.renderTextField(NS, "no_TVQ", item.no_TVQ, i18n("NO_TVQ"), 25)}
-    ${Theme.renderCheckboxField(NS, "payerA", item.payerA, i18n("PAYERA"))}
-    ${Theme.renderTextField(NS, "payerAID", item.payerAID, i18n("PAYERAID"), 15)}
+    ${Theme.renderTextField(NS, "no_tps", item.no_tps, i18n("NO_TPS"), 25)}
+    ${Theme.renderTextField(NS, "no_tvq", item.no_tvq, i18n("NO_TVQ"), 25)}
+    ${Theme.renderCheckboxField(NS, "payera", item.payera, i18n("PAYERA"))}
+    ${Theme.renderTextField(NS, "payeraid", item.payeraid, i18n("PAYERAID"), 15)}
     ${Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50)}
-    ${Theme.renderTextField(NS, "rep_Nom", item.rep_Nom, i18n("REP_NOM"), 30)}
-    ${Theme.renderTextField(NS, "rep_Telephone", item.rep_Telephone, i18n("REP_TELEPHONE"), 12)}
-    ${Theme.renderTextField(NS, "rep_Telephone_Poste", item.rep_Telephone_Poste, i18n("REP_TELEPHONE_POSTE"), 4)}
-    ${Theme.renderTextField(NS, "rep_Email", item.rep_Email, i18n("REP_EMAIL"), 80)}
-    ${Theme.renderCheckboxField(NS, "enAnglais", item.enAnglais, i18n("ENANGLAIS"))}
+    ${Theme.renderTextField(NS, "rep_nom", item.rep_nom, i18n("REP_NOM"), 30)}
+    ${Theme.renderTextField(NS, "rep_telephone", item.rep_telephone, i18n("REP_TELEPHONE"), 12)}
+    ${Theme.renderTextField(NS, "rep_telephone_poste", item.rep_telephone_poste, i18n("REP_TELEPHONE_POSTE"), 4)}
+    ${Theme.renderTextField(NS, "rep_email", item.rep_email, i18n("REP_EMAIL"), 80)}
+    ${Theme.renderCheckboxField(NS, "enanglais", item.enanglais, i18n("ENANGLAIS"))}
     ${Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF"))}
-    ${Theme.renderNumberField(NS, "mRCProducteurID", item.mRCProducteurID, i18n("MRCPRODUCTEURID"))}
-    ${Theme.renderCheckboxField(NS, "paiementManuel", item.paiementManuel, i18n("PAIEMENTMANUEL"))}
+    ${Theme.renderNumberField(NS, "mrcproducteurid", item.mrcproducteurid, i18n("MRCPRODUCTEURID"))}
+    ${Theme.renderCheckboxField(NS, "paiementmanuel", item.paiementmanuel, i18n("PAIEMENTMANUEL"))}
     ${Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL"))}
-    ${Theme.renderCheckboxField(NS, "recoitTPS", item.recoitTPS, i18n("RECOITTPS"))}
-    ${Theme.renderCheckboxField(NS, "recoitTVQ", item.recoitTVQ, i18n("RECOITTVQ"))}
-    ${Theme.renderCheckboxField(NS, "modifierTrigger", item.modifierTrigger, i18n("MODIFIERTRIGGER"))}
-    ${Theme.renderCheckboxField(NS, "isProducteur", item.isProducteur, i18n("ISPRODUCTEUR"))}
-    ${Theme.renderCheckboxField(NS, "isTransporteur", item.isTransporteur, i18n("ISTRANSPORTEUR"))}
-    ${Theme.renderCheckboxField(NS, "isChargeur", item.isChargeur, i18n("ISCHARGEUR"))}
-    ${Theme.renderCheckboxField(NS, "isAutre", item.isAutre, i18n("ISAUTRE"))}
-    ${Theme.renderCheckboxField(NS, "afficherCommentairesSurPermit", item.afficherCommentairesSurPermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT"))}
-    ${Theme.renderCheckboxField(NS, "pasEmissionPermis", item.pasEmissionPermis, i18n("PASEMISSIONPERMIS"))}
+    ${Theme.renderCheckboxField(NS, "recoittps", item.recoittps, i18n("RECOITTPS"))}
+    ${Theme.renderCheckboxField(NS, "recoittvq", item.recoittvq, i18n("RECOITTVQ"))}
+    ${Theme.renderCheckboxField(NS, "modifiertrigger", item.modifiertrigger, i18n("MODIFIERTRIGGER"))}
+    ${Theme.renderCheckboxField(NS, "isproducteur", item.isproducteur, i18n("ISPRODUCTEUR"))}
+    ${Theme.renderCheckboxField(NS, "istransporteur", item.istransporteur, i18n("ISTRANSPORTEUR"))}
+    ${Theme.renderCheckboxField(NS, "ischargeur", item.ischargeur, i18n("ISCHARGEUR"))}
+    ${Theme.renderCheckboxField(NS, "isautre", item.isautre, i18n("ISAUTRE"))}
+    ${Theme.renderCheckboxField(NS, "affichercommentairessurpermit", item.affichercommentairessurpermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT"))}
+    ${Theme.renderCheckboxField(NS, "pasemissionpermis", item.pasemissionpermis, i18n("PASEMISSIONPERMIS"))}
     ${Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE"))}
-    ${Theme.renderCheckboxField(NS, "membre_OGC", item.membre_OGC, i18n("MEMBRE_OGC"))}
-    ${Theme.renderCheckboxField(NS, "inscritTPS", item.inscritTPS, i18n("INSCRITTPS"))}
-    ${Theme.renderCheckboxField(NS, "inscritTVQ", item.inscritTVQ, i18n("INSCRITTVQ"))}
-    ${Theme.renderCheckboxField(NS, "isOGC", item.isOGC, i18n("ISOGC"))}
-    ${Theme.renderTextField(NS, "rep2_Nom", item.rep2_Nom, i18n("REP2_NOM"), 80)}
-    ${Theme.renderTextField(NS, "rep2_Telephone", item.rep2_Telephone, i18n("REP2_TELEPHONE"), 12)}
-    ${Theme.renderTextField(NS, "rep2_Telephone_Poste", item.rep2_Telephone_Poste, i18n("REP2_TELEPHONE_POSTE"), 4)}
-    ${Theme.renderTextField(NS, "rep2_Email", item.rep2_Email, i18n("REP2_EMAIL"), 80)}
-    ${Theme.renderTextField(NS, "rep2_Commentaires", item.rep2_Commentaires, i18n("REP2_COMMENTAIRES"), 255)}
+    ${Theme.renderCheckboxField(NS, "membre_ogc", item.membre_ogc, i18n("MEMBRE_OGC"))}
+    ${Theme.renderCheckboxField(NS, "inscrittps", item.inscrittps, i18n("INSCRITTPS"))}
+    ${Theme.renderCheckboxField(NS, "inscrittvq", item.inscrittvq, i18n("INSCRITTVQ"))}
+    ${Theme.renderCheckboxField(NS, "isogc", item.isogc, i18n("ISOGC"))}
+    ${Theme.renderTextField(NS, "rep2_nom", item.rep2_nom, i18n("REP2_NOM"), 80)}
+    ${Theme.renderTextField(NS, "rep2_telephone", item.rep2_telephone, i18n("REP2_TELEPHONE"), 12)}
+    ${Theme.renderTextField(NS, "rep2_telephone_poste", item.rep2_telephone_poste, i18n("REP2_TELEPHONE_POSTE"), 4)}
+    ${Theme.renderTextField(NS, "rep2_email", item.rep2_email, i18n("REP2_EMAIL"), 80)}
+    ${Theme.renderTextField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255)}
     ${Theme.renderBlame(item, isNew)}
 `;
 };
 
 const pageTemplate = (item: IState, form: string, tab: string, warning: string, dirty: string) => {
     let canEdit = true;
-    let readonly = !canEdit || isAudit;
+    let readonly = !canEdit;
 
     let canInsert = canEdit && isNew; // && Perm.hasFournisseur_CanAddFournisseur;
     let canDelete = canEdit && !canInsert; // && Perm.hasFournisseur_CanDeleteFournisseur;
@@ -231,14 +230,12 @@ const clearState = () => {
     return Promise.resolve();
 };
 
-export const fetchState = (id: string, auditid?: number) => {
+export const fetchState = (id: string) => {
     isNew = (id == "new");
     isDirty = false;
-    isAudit = (auditid != undefined);
     Router.registerDirtyExit(dirtyExit);
     clearState();
-    let url = (!isAudit ? `/fournisseur/${isNew ? "new" : id}` : `/fournisseur/audit/${id}/${auditid}`);
-    return App.GET(url)
+    return App.GET(`/fournisseur/${isNew ? "new" : id}`)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IState;
@@ -253,15 +250,8 @@ export const fetchState = (id: string, auditid?: number) => {
 
 export const fetch = (params: string[]) => {
     let id = params[0];
-    App.prepareRender(NS, i18n("fournisseur"));
+    App.prepareRender(NS, i18n("proprietaire"));
     fetchState(id)
-        .then(App.render)
-        .catch(App.render);
-};
-
-export const fetchAudit = (id: string, auditid: number) => {
-    App.prepareRender(NS, i18n("fournisseur_select"));
-    fetchState(id, auditid)
         .then(App.render)
         .catch(App.render);
 };
@@ -276,11 +266,11 @@ export const render = () => {
     let lookup_pays = Lookup.get_pays(year);
     let lookup_institutionBanquaire = Lookup.get_institutionBanquaire(year);
 
-    let paysID = Theme.renderOptions(lookup_pays, state.paysID, true);
-    let institutionBanquaireID = Theme.renderOptions(lookup_institutionBanquaire, state.institutionBanquaireID, true);
+    let paysid = Theme.renderOptions(lookup_pays, state.paysid, true);
+    let institutionbanquaireid = Theme.renderOptions(lookup_institutionBanquaire, state.institutionbanquaireid, true);
 
 
-    const form = formTemplate(state, paysID, institutionBanquaireID);
+    const form = formTemplate(state, paysid, institutionbanquaireid);
 
     const tab = tabTemplate(state.id, state.xtra, isNew);
     const dirty = dirtyTemplate();
@@ -293,7 +283,7 @@ export const postRender = () => {
 
 
 
-    App.setPageTitle(isNew ? i18n("New fournisseur") : state.xtra.title);
+    App.setPageTitle(isNew ? i18n("New proprietaire") : state.xtra.title);
 };
 
 export const inContext = () => {
@@ -302,65 +292,65 @@ export const inContext = () => {
 
 const getFormState = () => {
     let clone = Misc.clone(state) as IState;
-    clone.cleTri = Misc.fromInputTextNullable(`${NS}_cleTri`, state.cleTri);
+    clone.cletri = Misc.fromInputTextNullable(`${NS}_cletri`, state.cletri);
     clone.nom = Misc.fromInputTextNullable(`${NS}_nom`, state.nom);
-    clone.auSoinsDe = Misc.fromInputTextNullable(`${NS}_auSoinsDe`, state.auSoinsDe);
+    clone.ausoinsde = Misc.fromInputTextNullable(`${NS}_ausoinsde`, state.ausoinsde);
     clone.rue = Misc.fromInputTextNullable(`${NS}_rue`, state.rue);
     clone.ville = Misc.fromInputTextNullable(`${NS}_ville`, state.ville);
-    clone.paysID = Misc.fromSelectString(`${NS}_paysID`, state.paysID);
+    clone.paysid = Misc.fromSelectText(`${NS}_paysid`, state.paysid);
     clone.code_postal = Misc.fromInputTextNullable(`${NS}_code_postal`, state.code_postal);
     clone.telephone = Misc.fromInputTextNullable(`${NS}_telephone`, state.telephone);
-    clone.telephone_Poste = Misc.fromInputTextNullable(`${NS}_telephone_Poste`, state.telephone_Poste);
+    clone.telephone_poste = Misc.fromInputTextNullable(`${NS}_telephone_poste`, state.telephone_poste);
     clone.telecopieur = Misc.fromInputTextNullable(`${NS}_telecopieur`, state.telecopieur);
     clone.telephone2 = Misc.fromInputTextNullable(`${NS}_telephone2`, state.telephone2);
-    clone.telephone2_Desc = Misc.fromInputTextNullable(`${NS}_telephone2_Desc`, state.telephone2_Desc);
-    clone.telephone2_Poste = Misc.fromInputTextNullable(`${NS}_telephone2_Poste`, state.telephone2_Poste);
+    clone.telephone2_desc = Misc.fromInputTextNullable(`${NS}_telephone2_desc`, state.telephone2_desc);
+    clone.telephone2_poste = Misc.fromInputTextNullable(`${NS}_telephone2_poste`, state.telephone2_poste);
     clone.telephone3 = Misc.fromInputTextNullable(`${NS}_telephone3`, state.telephone3);
-    clone.telephone3_Desc = Misc.fromInputTextNullable(`${NS}_telephone3_Desc`, state.telephone3_Desc);
-    clone.telephone3_Poste = Misc.fromInputTextNullable(`${NS}_telephone3_Poste`, state.telephone3_Poste);
+    clone.telephone3_desc = Misc.fromInputTextNullable(`${NS}_telephone3_desc`, state.telephone3_desc);
+    clone.telephone3_poste = Misc.fromInputTextNullable(`${NS}_telephone3_poste`, state.telephone3_poste);
     clone.no_membre = Misc.fromInputTextNullable(`${NS}_no_membre`, state.no_membre);
     clone.resident = Misc.fromInputTextNullable(`${NS}_resident`, state.resident);
     clone.email = Misc.fromInputTextNullable(`${NS}_email`, state.email);
     clone.www = Misc.fromInputTextNullable(`${NS}_www`, state.www);
     clone.commentaires = Misc.fromInputTextNullable(`${NS}_commentaires`, state.commentaires);
-    clone.afficherCommentaires = Misc.fromInputCheckbox(`${NS}_afficherCommentaires`, state.afficherCommentaires);
-    clone.depotDirect = Misc.fromInputCheckbox(`${NS}_depotDirect`, state.depotDirect);
-    clone.institutionBanquaireID = Misc.fromSelectString(`${NS}_institutionBanquaireID`, state.institutionBanquaireID);
+    clone.affichercommentaires = Misc.fromInputCheckbox(`${NS}_affichercommentaires`, state.affichercommentaires);
+    clone.depotdirect = Misc.fromInputCheckbox(`${NS}_depotdirect`, state.depotdirect);
+    clone.institutionbanquaireid = Misc.fromSelectText(`${NS}_institutionbanquaireid`, state.institutionbanquaireid);
     clone.banque_transit = Misc.fromInputTextNullable(`${NS}_banque_transit`, state.banque_transit);
     clone.banque_folio = Misc.fromInputTextNullable(`${NS}_banque_folio`, state.banque_folio);
-    clone.no_TPS = Misc.fromInputTextNullable(`${NS}_no_TPS`, state.no_TPS);
-    clone.no_TVQ = Misc.fromInputTextNullable(`${NS}_no_TVQ`, state.no_TVQ);
-    clone.payerA = Misc.fromInputCheckbox(`${NS}_payerA`, state.payerA);
-    clone.payerAID = Misc.fromInputTextNullable(`${NS}_payerAID`, state.payerAID);
+    clone.no_tps = Misc.fromInputTextNullable(`${NS}_no_tps`, state.no_tps);
+    clone.no_tvq = Misc.fromInputTextNullable(`${NS}_no_tvq`, state.no_tvq);
+    clone.payera = Misc.fromInputCheckbox(`${NS}_payera`, state.payera);
+    clone.payeraid = Misc.fromInputTextNullable(`${NS}_payeraid`, state.payeraid);
     clone.statut = Misc.fromInputTextNullable(`${NS}_statut`, state.statut);
-    clone.rep_Nom = Misc.fromInputTextNullable(`${NS}_rep_Nom`, state.rep_Nom);
-    clone.rep_Telephone = Misc.fromInputTextNullable(`${NS}_rep_Telephone`, state.rep_Telephone);
-    clone.rep_Telephone_Poste = Misc.fromInputTextNullable(`${NS}_rep_Telephone_Poste`, state.rep_Telephone_Poste);
-    clone.rep_Email = Misc.fromInputTextNullable(`${NS}_rep_Email`, state.rep_Email);
-    clone.enAnglais = Misc.fromInputCheckbox(`${NS}_enAnglais`, state.enAnglais);
+    clone.rep_nom = Misc.fromInputTextNullable(`${NS}_rep_nom`, state.rep_nom);
+    clone.rep_telephone = Misc.fromInputTextNullable(`${NS}_rep_telephone`, state.rep_telephone);
+    clone.rep_telephone_poste = Misc.fromInputTextNullable(`${NS}_rep_telephone_poste`, state.rep_telephone_poste);
+    clone.rep_email = Misc.fromInputTextNullable(`${NS}_rep_email`, state.rep_email);
+    clone.enanglais = Misc.fromInputCheckbox(`${NS}_enanglais`, state.enanglais);
     clone.actif = Misc.fromInputCheckbox(`${NS}_actif`, state.actif);
-    clone.mRCProducteurID = Misc.fromInputNumberNullable(`${NS}_mRCProducteurID`, state.mRCProducteurID);
-    clone.paiementManuel = Misc.fromInputCheckbox(`${NS}_paiementManuel`, state.paiementManuel);
+    clone.mrcproducteurid = Misc.fromInputNumberNullable(`${NS}_mrcproducteurid`, state.mrcproducteurid);
+    clone.paiementmanuel = Misc.fromInputCheckbox(`${NS}_paiementmanuel`, state.paiementmanuel);
     clone.journal = Misc.fromInputCheckbox(`${NS}_journal`, state.journal);
-    clone.recoitTPS = Misc.fromInputCheckbox(`${NS}_recoitTPS`, state.recoitTPS);
-    clone.recoitTVQ = Misc.fromInputCheckbox(`${NS}_recoitTVQ`, state.recoitTVQ);
-    clone.modifierTrigger = Misc.fromInputCheckbox(`${NS}_modifierTrigger`, state.modifierTrigger);
-    clone.isProducteur = Misc.fromInputCheckbox(`${NS}_isProducteur`, state.isProducteur);
-    clone.isTransporteur = Misc.fromInputCheckbox(`${NS}_isTransporteur`, state.isTransporteur);
-    clone.isChargeur = Misc.fromInputCheckbox(`${NS}_isChargeur`, state.isChargeur);
-    clone.isAutre = Misc.fromInputCheckbox(`${NS}_isAutre`, state.isAutre);
-    clone.afficherCommentairesSurPermit = Misc.fromInputCheckbox(`${NS}_afficherCommentairesSurPermit`, state.afficherCommentairesSurPermit);
-    clone.pasEmissionPermis = Misc.fromInputCheckbox(`${NS}_pasEmissionPermis`, state.pasEmissionPermis);
+    clone.recoittps = Misc.fromInputCheckbox(`${NS}_recoittps`, state.recoittps);
+    clone.recoittvq = Misc.fromInputCheckbox(`${NS}_recoittvq`, state.recoittvq);
+    clone.modifiertrigger = Misc.fromInputCheckbox(`${NS}_modifiertrigger`, state.modifiertrigger);
+    clone.isproducteur = Misc.fromInputCheckbox(`${NS}_isproducteur`, state.isproducteur);
+    clone.istransporteur = Misc.fromInputCheckbox(`${NS}_istransporteur`, state.istransporteur);
+    clone.ischargeur = Misc.fromInputCheckbox(`${NS}_ischargeur`, state.ischargeur);
+    clone.isautre = Misc.fromInputCheckbox(`${NS}_isautre`, state.isautre);
+    clone.affichercommentairessurpermit = Misc.fromInputCheckbox(`${NS}_affichercommentairessurpermit`, state.affichercommentairessurpermit);
+    clone.pasemissionpermis = Misc.fromInputCheckbox(`${NS}_pasemissionpermis`, state.pasemissionpermis);
     clone.generique = Misc.fromInputCheckbox(`${NS}_generique`, state.generique);
-    clone.membre_OGC = Misc.fromInputCheckbox(`${NS}_membre_OGC`, state.membre_OGC);
-    clone.inscritTPS = Misc.fromInputCheckbox(`${NS}_inscritTPS`, state.inscritTPS);
-    clone.inscritTVQ = Misc.fromInputCheckbox(`${NS}_inscritTVQ`, state.inscritTVQ);
-    clone.isOGC = Misc.fromInputCheckbox(`${NS}_isOGC`, state.isOGC);
-    clone.rep2_Nom = Misc.fromInputTextNullable(`${NS}_rep2_Nom`, state.rep2_Nom);
-    clone.rep2_Telephone = Misc.fromInputTextNullable(`${NS}_rep2_Telephone`, state.rep2_Telephone);
-    clone.rep2_Telephone_Poste = Misc.fromInputTextNullable(`${NS}_rep2_Telephone_Poste`, state.rep2_Telephone_Poste);
-    clone.rep2_Email = Misc.fromInputTextNullable(`${NS}_rep2_Email`, state.rep2_Email);
-    clone.rep2_Commentaires = Misc.fromInputTextNullable(`${NS}_rep2_Commentaires`, state.rep2_Commentaires);
+    clone.membre_ogc = Misc.fromInputCheckbox(`${NS}_membre_ogc`, state.membre_ogc);
+    clone.inscrittps = Misc.fromInputCheckbox(`${NS}_inscrittps`, state.inscrittps);
+    clone.inscrittvq = Misc.fromInputCheckbox(`${NS}_inscrittvq`, state.inscrittvq);
+    clone.isogc = Misc.fromInputCheckbox(`${NS}_isogc`, state.isogc);
+    clone.rep2_nom = Misc.fromInputTextNullable(`${NS}_rep2_nom`, state.rep2_nom);
+    clone.rep2_telephone = Misc.fromInputTextNullable(`${NS}_rep2_telephone`, state.rep2_telephone);
+    clone.rep2_telephone_poste = Misc.fromInputTextNullable(`${NS}_rep2_telephone_poste`, state.rep2_telephone_poste);
+    clone.rep2_email = Misc.fromInputTextNullable(`${NS}_rep2_email`, state.rep2_email);
+    clone.rep2_commentaires = Misc.fromInputTextNullable(`${NS}_rep2_commentaires`, state.rep2_commentaires);
     return clone;
 };
 
@@ -390,11 +380,11 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.POST("/fournisseur", formState)
+    App.POST("/proprietaire", formState)
         .then(payload => {
             let newkey = <IKey>payload;
             Misc.toastSuccessSave();
-            Router.goto(`#/fournisseur/${newkey.id}`, 10);
+            Router.goto(`#/proprietaire/${newkey.id}`, 10);
         })
         .catch(App.render);
 }
@@ -404,13 +394,13 @@ export const save = (done = false) => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.PUT("/fournisseur", formState)
+    App.PUT("/proprietaire", formState)
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
-                Router.goto(`#/fournisseurs/`, 100);
+                Router.goto(`#/proprietaires/`, 100);
             else
-                Router.goto(`#/fournisseur/${key.id}`, 10);
+                Router.goto(`#/proprietaire/${key.id}`, 10);
         })
         .catch(App.render);
 }
@@ -418,16 +408,15 @@ export const save = (done = false) => {
 export const drop = () => {
     //(<any>key).updatedUtc = state.updatedUtc;
     App.prepareRender();
-    App.DELETE("/fournisseur", key)
+    App.DELETE("/proprietaire", key)
         .then(_ => {
             clearState();
-            Router.goto(`#/fournisseurs/`, 250);
+            Router.goto(`#/proprietaires/`, 250);
         })
         .catch(App.render);
 }
 
 const dirtyExit = () => {
-    if (isAudit) return false;
     isDirty = !Misc.same(fetchedState, getFormState());
     if (isDirty) {
         setTimeout(() => {

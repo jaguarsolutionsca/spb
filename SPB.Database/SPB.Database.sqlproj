@@ -65,6 +65,7 @@
     <Folder Include="app\Stored Procedures\" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cryptor.cs" />
@@ -110,6 +111,8 @@
     <Build Include="app\Stored Procedures\AccountProfile_New_1.sql" />
     <Build Include="app\Stored Procedures\AccountProfile_Insert_1.sql" />
     <Build Include="app\Stored Procedures\AccountProfile_Delete_1.sql" />
+    <Build Include="dbo\Stored Procedures\Lookup_ListBy_Groupe.sql" />
+    <Build Include="app\Stored Procedures\Lookup_ListBy_Groupe.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />

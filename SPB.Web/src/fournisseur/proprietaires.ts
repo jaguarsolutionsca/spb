@@ -1,4 +1,4 @@
-﻿// File: fournisseurs.ts
+﻿// File: proprietaires.ts
 
 "use strict"
 
@@ -18,69 +18,69 @@ declare const i18n: any;
 export const NS = "App_proprietaires";
 
 interface IState {
-    totalCount: number
+    totalcount: number
     id: string
-    cleTri: string
+    cletri: string
     nom: string
     ausoinsde: string
     rue: string
     ville: string
-    paysID: string
-    paysID_Text: string
+    paysid: string
+    paysid_text: string
     code_postal: string
     telephone: string
-    telephone_Poste: string
+    telephone_poste: string
     telecopieur: string
     telephone2: string
-    telephone2_Desc: string
-    telephone2_Poste: string
+    telephone2_desc: string
+    telephone2_poste: string
     telephone3: string
-    telephone3_Desc: string
-    telephone3_Poste: string
+    telephone3_desc: string
+    telephone3_poste: string
     no_membre: string
     resident: string
     email: string
     www: string
     commentaires: string
-    afficherCommentaires: boolean
-    depotDirect: boolean
-    institutionBanquaireID: string
-    institutionBanquaireID_Text: string
+    affichercommentaires: boolean
+    depotdirect: boolean
+    institutionbanquaireid: string
+    institutionbanquaireid_text: string
     banque_transit: string
     banque_folio: string
-    no_TPS: string
-    no_TVQ: string
-    payerA: boolean
-    payerAID: string
+    no_tps: string
+    no_tvq: string
+    payera: boolean
+    payeraid: string
     statut: string
-    rep_Nom: string
-    rep_Telephone: string
-    rep_Telephone_Poste: string
-    rep_Email: string
-    enAnglais: boolean
+    rep_nom: string
+    rep_telephone: string
+    rep_telephone_poste: string
+    rep_email: string
+    enanglais: boolean
     actif: boolean
-    mRCProducteurID: number
-    paiementManuel: boolean
+    mrcproducteurid: number
+    paiementmanuel: boolean
     journal: boolean
-    recoitTPS: boolean
-    recoitTVQ: boolean
-    modifierTrigger: boolean
-    isProducteur: boolean
-    isTransporteur: boolean
-    isChargeur: boolean
-    isAutre: boolean
-    afficherCommentairesSurPermit: boolean
-    pasEmissionPermis: boolean
+    recoittps: boolean
+    recoittvq: boolean
+    modifiertrigger: boolean
+    isproducteur: boolean
+    istransporteur: boolean
+    ischargeur: boolean
+    isautre: boolean
+    affichercommentairessurpermit: boolean
+    pasemissionpermis: boolean
     generique: boolean
-    membre_OGC: boolean
-    inscritTPS: boolean
-    inscritTVQ: boolean
-    isOGC: boolean
-    rep2_Nom: string
-    rep2_Telephone: string
-    rep2_Telephone_Poste: string
-    rep2_Email: string
-    rep2_Commentaires: string
+    membre_ogc: boolean
+    inscrittps: boolean
+    inscrittvq: boolean
+    isogc: boolean
+    rep2_nom: string
+    rep2_telephone: string
+    rep2_telephone_poste: string
+    rep2_email: string
+    rep2_commentaires: string
     json: string
 }
 
@@ -116,65 +116,65 @@ const trTemplate = (item: IState, rowNumber: number) => {
 <tr class="${isSelectedRow(item.id) ? "is-selected" : ""}" onclick="${NS}.gotoDetail('${item.id}');">
     <td class="js-index">${rowNumber}</td>
     <td>${Misc.toStaticText(item.id)}</td>
-    <td>${Misc.toStaticText(item.cleTri)}</td>
+    <td>${Misc.toStaticText(item.cletri)}</td>
     <td>${Misc.toStaticText(item.nom)}</td>
     <td>${Misc.toStaticText(item.ausoinsde)}</td>
     <td>${Misc.toStaticText(item.rue)}</td>
     <td>${Misc.toStaticText(item.ville)}</td>
-    <td>${Misc.toStaticText(item.paysID_Text)}</td>
+    <td>${Misc.toStaticText(item.paysid_text)}</td>
     <td>${Misc.toStaticText(item.code_postal)}</td>
     <td>${Misc.toStaticText(item.telephone)}</td>
-    <td>${Misc.toStaticText(item.telephone_Poste)}</td>
+    <td>${Misc.toStaticText(item.telephone_poste)}</td>
     <td>${Misc.toStaticText(item.telecopieur)}</td>
     <td>${Misc.toStaticText(item.telephone2)}</td>
-    <td>${Misc.toStaticText(item.telephone2_Desc)}</td>
-    <td>${Misc.toStaticText(item.telephone2_Poste)}</td>
+    <td>${Misc.toStaticText(item.telephone2_desc)}</td>
+    <td>${Misc.toStaticText(item.telephone2_poste)}</td>
     <td>${Misc.toStaticText(item.telephone3)}</td>
-    <td>${Misc.toStaticText(item.telephone3_Desc)}</td>
-    <td>${Misc.toStaticText(item.telephone3_Poste)}</td>
+    <td>${Misc.toStaticText(item.telephone3_desc)}</td>
+    <td>${Misc.toStaticText(item.telephone3_poste)}</td>
     <td>${Misc.toStaticText(item.no_membre)}</td>
     <td>${Misc.toStaticText(item.resident)}</td>
     <td>${Misc.toStaticText(item.email)}</td>
     <td>${Misc.toStaticText(item.www)}</td>
     <td>${Misc.toStaticText(item.commentaires)}</td>
-    <td>${Misc.toStaticCheckbox(item.afficherCommentaires)}</td>
-    <td>${Misc.toStaticCheckbox(item.depotDirect)}</td>
-    <td>${Misc.toStaticText(item.institutionBanquaireID_Text)}</td>
+    <td>${Misc.toStaticCheckbox(item.affichercommentaires)}</td>
+    <td>${Misc.toStaticCheckbox(item.depotdirect)}</td>
+    <td>${Misc.toStaticText(item.institutionbanquaireid_text)}</td>
     <td>${Misc.toStaticText(item.banque_transit)}</td>
     <td>${Misc.toStaticText(item.banque_folio)}</td>
-    <td>${Misc.toStaticText(item.no_TPS)}</td>
-    <td>${Misc.toStaticText(item.no_TVQ)}</td>
-    <td>${Misc.toStaticCheckbox(item.payerA)}</td>
-    <td>${Misc.toStaticText(item.payerAID)}</td>
+    <td>${Misc.toStaticText(item.no_tps)}</td>
+    <td>${Misc.toStaticText(item.no_tvq)}</td>
+    <td>${Misc.toStaticCheckbox(item.payera)}</td>
+    <td>${Misc.toStaticText(item.payeraid)}</td>
     <td>${Misc.toStaticText(item.statut)}</td>
-    <td>${Misc.toStaticText(item.rep_Nom)}</td>
-    <td>${Misc.toStaticText(item.rep_Telephone)}</td>
-    <td>${Misc.toStaticText(item.rep_Telephone_Poste)}</td>
-    <td>${Misc.toStaticText(item.rep_Email)}</td>
-    <td>${Misc.toStaticCheckbox(item.enAnglais)}</td>
+    <td>${Misc.toStaticText(item.rep_nom)}</td>
+    <td>${Misc.toStaticText(item.rep_telephone)}</td>
+    <td>${Misc.toStaticText(item.rep_telephone_poste)}</td>
+    <td>${Misc.toStaticText(item.rep_email)}</td>
+    <td>${Misc.toStaticCheckbox(item.enanglais)}</td>
     <td>${Misc.toStaticCheckbox(item.actif)}</td>
-    <td>${Misc.toStaticText(item.mRCProducteurID)}</td>
-    <td>${Misc.toStaticCheckbox(item.paiementManuel)}</td>
+    <td>${Misc.toStaticText(item.mrcproducteurid)}</td>
+    <td>${Misc.toStaticCheckbox(item.paiementmanuel)}</td>
     <td>${Misc.toStaticCheckbox(item.journal)}</td>
-    <td>${Misc.toStaticCheckbox(item.recoitTPS)}</td>
-    <td>${Misc.toStaticCheckbox(item.recoitTVQ)}</td>
-    <td>${Misc.toStaticCheckbox(item.modifierTrigger)}</td>
-    <td>${Misc.toStaticCheckbox(item.isProducteur)}</td>
-    <td>${Misc.toStaticCheckbox(item.isTransporteur)}</td>
-    <td>${Misc.toStaticCheckbox(item.isChargeur)}</td>
-    <td>${Misc.toStaticCheckbox(item.isAutre)}</td>
-    <td>${Misc.toStaticCheckbox(item.afficherCommentairesSurPermit)}</td>
-    <td>${Misc.toStaticCheckbox(item.pasEmissionPermis)}</td>
+    <td>${Misc.toStaticCheckbox(item.recoittps)}</td>
+    <td>${Misc.toStaticCheckbox(item.recoittvq)}</td>
+    <td>${Misc.toStaticCheckbox(item.modifiertrigger)}</td>
+    <td>${Misc.toStaticCheckbox(item.isproducteur)}</td>
+    <td>${Misc.toStaticCheckbox(item.istransporteur)}</td>
+    <td>${Misc.toStaticCheckbox(item.ischargeur)}</td>
+    <td>${Misc.toStaticCheckbox(item.isautre)}</td>
+    <td>${Misc.toStaticCheckbox(item.affichercommentairessurpermit)}</td>
+    <td>${Misc.toStaticCheckbox(item.pasemissionpermis)}</td>
     <td>${Misc.toStaticCheckbox(item.generique)}</td>
-    <td>${Misc.toStaticCheckbox(item.membre_OGC)}</td>
-    <td>${Misc.toStaticCheckbox(item.inscritTPS)}</td>
-    <td>${Misc.toStaticCheckbox(item.inscritTVQ)}</td>
-    <td>${Misc.toStaticCheckbox(item.isOGC)}</td>
-    <td>${Misc.toStaticText(item.rep2_Nom)}</td>
-    <td>${Misc.toStaticText(item.rep2_Telephone)}</td>
-    <td>${Misc.toStaticText(item.rep2_Telephone_Poste)}</td>
-    <td>${Misc.toStaticText(item.rep2_Email)}</td>
-    <td>${Misc.toStaticText(item.rep2_Commentaires)}</td>
+    <td>${Misc.toStaticCheckbox(item.membre_ogc)}</td>
+    <td>${Misc.toStaticCheckbox(item.inscrittps)}</td>
+    <td>${Misc.toStaticCheckbox(item.inscrittvq)}</td>
+    <td>${Misc.toStaticCheckbox(item.isogc)}</td>
+    <td>${Misc.toStaticText(item.rep2_nom)}</td>
+    <td>${Misc.toStaticText(item.rep2_telephone)}</td>
+    <td>${Misc.toStaticText(item.rep2_telephone_poste)}</td>
+    <td>${Misc.toStaticText(item.rep2_email)}</td>
+    <td>${Misc.toStaticText(item.rep2_commentaires)}</td>
     <td>${Misc.toStaticText(summary.todo)}</td>
 </tr>`;
 };
@@ -187,65 +187,65 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
         <tr>
             <th></th>
             ${Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("CLETRI"), "cleTri", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("CLETRI"), "cletri", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("NOM"), "nom", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("AUSOINSDE"), "ausoinsde", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("RUE"), "rue", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VILLE"), "ville", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PAYSID_TEXT"), "paysID_Text", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PAYSID_TEXT"), "paysid_text", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("CODE_POSTAL"), "code_postal", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE"), "telephone", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE_POSTE"), "telephone_Poste", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE_POSTE"), "telephone_poste", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("TELECOPIEUR"), "telecopieur", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2"), "telephone2", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_DESC"), "telephone2_Desc", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_POSTE"), "telephone2_Poste", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_DESC"), "telephone2_desc", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_POSTE"), "telephone2_poste", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3"), "telephone3", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_DESC"), "telephone3_Desc", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_POSTE"), "telephone3_Poste", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_DESC"), "telephone3_desc", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_POSTE"), "telephone3_poste", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("NO_MEMBRE"), "no_membre", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("RESIDENT"), "resident", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("WWW"), "www", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("COMMENTAIRES"), "commentaires", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRES"), "afficherCommentaires", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("DEPOTDIRECT"), "depotDirect", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("INSTITUTIONBANQUAIREID_TEXT"), "institutionBanquaireID_Text", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRES"), "affichercommentaires", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("DEPOTDIRECT"), "depotdirect", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("INSTITUTIONBANQUAIREID_TEXT"), "institutionbanquaireid_text", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_TRANSIT"), "banque_transit", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_FOLIO"), "banque_folio", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("NO_TPS"), "no_TPS", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("NO_TVQ"), "no_TVQ", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PAYERA"), "payerA", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PAYERAID"), "payerAID", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("NO_TPS"), "no_tps", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("NO_TVQ"), "no_tvq", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PAYERA"), "payera", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PAYERAID"), "payeraid", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("STATUT"), "statut", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_NOM"), "rep_Nom", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE"), "rep_Telephone", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE_POSTE"), "rep_Telephone_Poste", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_EMAIL"), "rep_Email", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ENANGLAIS"), "enAnglais", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_NOM"), "rep_nom", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE"), "rep_telephone", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE_POSTE"), "rep_telephone_poste", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP_EMAIL"), "rep_email", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ENANGLAIS"), "enanglais", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("ACTIF"), "actif", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("MRCPRODUCTEURID"), "mRCProducteurID", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PAIEMENTMANUEL"), "paiementManuel", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("MRCPRODUCTEURID"), "mrcproducteurid", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PAIEMENTMANUEL"), "paiementmanuel", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("JOURNAL"), "journal", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("RECOITTPS"), "recoitTPS", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("RECOITTVQ"), "recoitTVQ", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("MODIFIERTRIGGER"), "modifierTrigger", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ISPRODUCTEUR"), "isProducteur", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ISTRANSPORTEUR"), "isTransporteur", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ISCHARGEUR"), "isChargeur", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ISAUTRE"), "isAutre", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRESSURPERMIT"), "afficherCommentairesSurPermit", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PASEMISSIONPERMIS"), "pasEmissionPermis", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("RECOITTPS"), "recoittps", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("RECOITTVQ"), "recoittvq", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("MODIFIERTRIGGER"), "modifiertrigger", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ISPRODUCTEUR"), "isproducteur", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ISTRANSPORTEUR"), "istransporteur", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ISCHARGEUR"), "ischargeur", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ISAUTRE"), "isautre", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRESSURPERMIT"), "affichercommentairessurpermit", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PASEMISSIONPERMIS"), "pasemissionpermis", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("GENERIQUE"), "generique", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("MEMBRE_OGC"), "membre_OGC", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTPS"), "inscritTPS", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTVQ"), "inscritTVQ", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ISOGC"), "isOGC", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_NOM"), "rep2_Nom", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE"), "rep2_Telephone", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE_POSTE"), "rep2_Telephone_Poste", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_EMAIL"), "rep2_Email", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_COMMENTAIRES"), "rep2_Commentaires", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("MEMBRE_OGC"), "membre_ogc", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTPS"), "inscrittps", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTVQ"), "inscrittvq", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ISOGC"), "isogc", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_NOM"), "rep2_nom", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE"), "rep2_telephone", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE_POSTE"), "rep2_telephone_poste", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_EMAIL"), "rep2_email", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("REP2_COMMENTAIRES"), "rep2_commentaires", "ASC")}
             ${Pager.headerLink(i18n("TODO"))}
         </tr>
     </thead>

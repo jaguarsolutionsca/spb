@@ -485,7 +485,7 @@ System.register("_BaseApp/src/core/router", [], function (exports_2, context_2) 
 });
 System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) {
     "use strict";
-    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectString, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createUto;
+    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectText, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createUto;
     var __moduleName = context_3 && context_3.id;
     return {
         setters: [],
@@ -828,7 +828,7 @@ System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) 
                 var value = select.options[select.selectedIndex].value;
                 return (value.length > 0 ? +value : null);
             });
-            exports_3("fromSelectString", fromSelectString = function (id, defValue) {
+            exports_3("fromSelectText", fromSelectText = function (id, defValue) {
                 if (defValue === void 0) { defValue = null; }
                 var select = document.getElementById(id);
                 if (select == undefined || select.selectedIndex == -1)
@@ -4755,7 +4755,7 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "_BaseApp/sr
         }
     };
 });
-// File: fournisseurs.ts
+// File: proprietaires.ts
 System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_41, context_41) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_5, NS, key, state, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
@@ -4800,10 +4800,10 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             };
             trTemplate = function (item, rowNumber) {
                 var summary = JSON.parse(item.json || "{}");
-                return "\n<tr class=\"" + (isSelectedRow(item.id) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail('" + item.id + "');\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.id) + "</td>\n    <td>" + Misc.toStaticText(item.cleTri) + "</td>\n    <td>" + Misc.toStaticText(item.nom) + "</td>\n    <td>" + Misc.toStaticText(item.ausoinsde) + "</td>\n    <td>" + Misc.toStaticText(item.rue) + "</td>\n    <td>" + Misc.toStaticText(item.ville) + "</td>\n    <td>" + Misc.toStaticText(item.paysID_Text) + "</td>\n    <td>" + Misc.toStaticText(item.code_postal) + "</td>\n    <td>" + Misc.toStaticText(item.telephone) + "</td>\n    <td>" + Misc.toStaticText(item.telephone_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.telecopieur) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2_Desc) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3_Desc) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.no_membre) + "</td>\n    <td>" + Misc.toStaticText(item.resident) + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.www) + "</td>\n    <td>" + Misc.toStaticText(item.commentaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherCommentaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.depotDirect) + "</td>\n    <td>" + Misc.toStaticText(item.institutionBanquaireID_Text) + "</td>\n    <td>" + Misc.toStaticText(item.banque_transit) + "</td>\n    <td>" + Misc.toStaticText(item.banque_folio) + "</td>\n    <td>" + Misc.toStaticText(item.no_TPS) + "</td>\n    <td>" + Misc.toStaticText(item.no_TVQ) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.payerA) + "</td>\n    <td>" + Misc.toStaticText(item.payerAID) + "</td>\n    <td>" + Misc.toStaticText(item.statut) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Nom) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Telephone) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Telephone_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.rep_Email) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.enAnglais) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.actif) + "</td>\n    <td>" + Misc.toStaticText(item.mRCProducteurID) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.paiementManuel) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.journal) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.recoitTPS) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.recoitTVQ) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.modifierTrigger) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isProducteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isTransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isChargeur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isAutre) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherCommentairesSurPermit) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.pasEmissionPermis) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.generique) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.membre_OGC) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.inscritTPS) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.inscritTVQ) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isOGC) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Nom) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Telephone) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Telephone_Poste) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Email) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_Commentaires) + "</td>\n    <td>" + Misc.toStaticText(summary.todo) + "</td>\n</tr>";
+                return "\n<tr class=\"" + (isSelectedRow(item.id) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail('" + item.id + "');\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.id) + "</td>\n    <td>" + Misc.toStaticText(item.cletri) + "</td>\n    <td>" + Misc.toStaticText(item.nom) + "</td>\n    <td>" + Misc.toStaticText(item.ausoinsde) + "</td>\n    <td>" + Misc.toStaticText(item.rue) + "</td>\n    <td>" + Misc.toStaticText(item.ville) + "</td>\n    <td>" + Misc.toStaticText(item.paysid_text) + "</td>\n    <td>" + Misc.toStaticText(item.code_postal) + "</td>\n    <td>" + Misc.toStaticText(item.telephone) + "</td>\n    <td>" + Misc.toStaticText(item.telephone_poste) + "</td>\n    <td>" + Misc.toStaticText(item.telecopieur) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2_desc) + "</td>\n    <td>" + Misc.toStaticText(item.telephone2_poste) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3_desc) + "</td>\n    <td>" + Misc.toStaticText(item.telephone3_poste) + "</td>\n    <td>" + Misc.toStaticText(item.no_membre) + "</td>\n    <td>" + Misc.toStaticText(item.resident) + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.www) + "</td>\n    <td>" + Misc.toStaticText(item.commentaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.affichercommentaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.depotdirect) + "</td>\n    <td>" + Misc.toStaticText(item.institutionbanquaireid_text) + "</td>\n    <td>" + Misc.toStaticText(item.banque_transit) + "</td>\n    <td>" + Misc.toStaticText(item.banque_folio) + "</td>\n    <td>" + Misc.toStaticText(item.no_tps) + "</td>\n    <td>" + Misc.toStaticText(item.no_tvq) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.payera) + "</td>\n    <td>" + Misc.toStaticText(item.payeraid) + "</td>\n    <td>" + Misc.toStaticText(item.statut) + "</td>\n    <td>" + Misc.toStaticText(item.rep_nom) + "</td>\n    <td>" + Misc.toStaticText(item.rep_telephone) + "</td>\n    <td>" + Misc.toStaticText(item.rep_telephone_poste) + "</td>\n    <td>" + Misc.toStaticText(item.rep_email) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.enanglais) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.actif) + "</td>\n    <td>" + Misc.toStaticText(item.mrcproducteurid) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.paiementmanuel) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.journal) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.recoittps) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.recoittvq) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.modifiertrigger) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isproducteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.istransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.ischargeur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isautre) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.affichercommentairessurpermit) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.pasemissionpermis) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.generique) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.membre_ogc) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.inscrittps) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.inscrittvq) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.isogc) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_nom) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_telephone) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_telephone_poste) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_email) + "</td>\n    <td>" + Misc.toStaticText(item.rep2_commentaires) + "</td>\n    <td>" + Misc.toStaticText(summary.todo) + "</td>\n</tr>";
             };
             tableTemplate = function (tbody, pager) {
-                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CLETRI"), "cleTri", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NOM"), "nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUSOINSDE"), "ausoinsde", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RUE"), "rue", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VILLE"), "ville", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYSID_TEXT"), "paysID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE_POSTAL"), "code_postal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE"), "telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE_POSTE"), "telephone_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELECOPIEUR"), "telecopieur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2"), "telephone2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_DESC"), "telephone2_Desc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_POSTE"), "telephone2_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3"), "telephone3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_DESC"), "telephone3_Desc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_POSTE"), "telephone3_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_MEMBRE"), "no_membre", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RESIDENT"), "resident", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("WWW"), "www", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMMENTAIRES"), "commentaires", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRES"), "afficherCommentaires", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DEPOTDIRECT"), "depotDirect", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSTITUTIONBANQUAIREID_TEXT"), "institutionBanquaireID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_TRANSIT"), "banque_transit", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_FOLIO"), "banque_folio", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_TPS"), "no_TPS", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_TVQ"), "no_TVQ", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYERA"), "payerA", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYERAID"), "payerAID", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STATUT"), "statut", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_NOM"), "rep_Nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE"), "rep_Telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE_POSTE"), "rep_Telephone_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_EMAIL"), "rep_Email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENANGLAIS"), "enAnglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACTIF"), "actif", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MRCPRODUCTEURID"), "mRCProducteurID", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAIEMENTMANUEL"), "paiementManuel", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("JOURNAL"), "journal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RECOITTPS"), "recoitTPS", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RECOITTVQ"), "recoitTVQ", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MODIFIERTRIGGER"), "modifierTrigger", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISPRODUCTEUR"), "isProducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISTRANSPORTEUR"), "isTransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISCHARGEUR"), "isChargeur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISAUTRE"), "isAutre", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRESSURPERMIT"), "afficherCommentairesSurPermit", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PASEMISSIONPERMIS"), "pasEmissionPermis", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GENERIQUE"), "generique", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MEMBRE_OGC"), "membre_OGC", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTPS"), "inscritTPS", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTVQ"), "inscritTVQ", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISOGC"), "isOGC", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_NOM"), "rep2_Nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE"), "rep2_Telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE_POSTE"), "rep2_Telephone_Poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_EMAIL"), "rep2_Email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_COMMENTAIRES"), "rep2_Commentaires", "ASC") + "\n            " + Pager.headerLink(i18n("TODO")) + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CLETRI"), "cletri", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NOM"), "nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUSOINSDE"), "ausoinsde", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RUE"), "rue", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VILLE"), "ville", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYSID_TEXT"), "paysid_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE_POSTAL"), "code_postal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE"), "telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE_POSTE"), "telephone_poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELECOPIEUR"), "telecopieur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2"), "telephone2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_DESC"), "telephone2_desc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE2_POSTE"), "telephone2_poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3"), "telephone3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_DESC"), "telephone3_desc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TELEPHONE3_POSTE"), "telephone3_poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_MEMBRE"), "no_membre", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RESIDENT"), "resident", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("WWW"), "www", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMMENTAIRES"), "commentaires", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRES"), "affichercommentaires", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DEPOTDIRECT"), "depotdirect", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSTITUTIONBANQUAIREID_TEXT"), "institutionbanquaireid_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_TRANSIT"), "banque_transit", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("BANQUE_FOLIO"), "banque_folio", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_TPS"), "no_tps", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NO_TVQ"), "no_tvq", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYERA"), "payera", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAYERAID"), "payeraid", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STATUT"), "statut", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_NOM"), "rep_nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE"), "rep_telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_TELEPHONE_POSTE"), "rep_telephone_poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP_EMAIL"), "rep_email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENANGLAIS"), "enanglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACTIF"), "actif", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MRCPRODUCTEURID"), "mrcproducteurid", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PAIEMENTMANUEL"), "paiementmanuel", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("JOURNAL"), "journal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RECOITTPS"), "recoittps", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("RECOITTVQ"), "recoittvq", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MODIFIERTRIGGER"), "modifiertrigger", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISPRODUCTEUR"), "isproducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISTRANSPORTEUR"), "istransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISCHARGEUR"), "ischargeur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISAUTRE"), "isautre", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERCOMMENTAIRESSURPERMIT"), "affichercommentairessurpermit", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PASEMISSIONPERMIS"), "pasemissionpermis", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GENERIQUE"), "generique", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MEMBRE_OGC"), "membre_ogc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTPS"), "inscrittps", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("INSCRITTVQ"), "inscrittvq", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ISOGC"), "isogc", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_NOM"), "rep2_nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE"), "rep2_telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_TELEPHONE_POSTE"), "rep2_telephone_poste", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_EMAIL"), "rep2_email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("REP2_COMMENTAIRES"), "rep2_commentaires", "ASC") + "\n            " + Pager.headerLink(i18n("TODO")) + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
             };
             pageTemplate = function (xtra, pager, table, tab, warning, dirty) {
                 var readonly = false;
@@ -4904,10 +4904,10 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
         }
     };
 });
-// File: fournisseur.ts
+// File: proprietaire.ts
 System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/fournisseur/layout"], function (exports_42, context_42) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_6, NS, key, state, fetchedState, isNew, isDirty, isAudit, formTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, fetchAudit, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, Perm, layout_6, NS, key, state, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_42 && context_42.id;
     return {
         setters: [
@@ -4939,13 +4939,12 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             fetchedState = {};
             isNew = false;
             isDirty = false;
-            isAudit = false;
-            formTemplate = function (item, paysID, institutionBanquaireID) {
-                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true) + "\n    " + Theme.renderTextField(NS, "cleTri", item.cleTri, i18n("CLETRI"), 15) + "\n    " + Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40) + "\n    " + Theme.renderTextField(NS, "auSoinsDe", item.auSoinsDe, i18n("AUSOINSDE"), 30) + "\n    " + Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30) + "\n    " + Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30) + "\n    " + Theme.renderDropdownField(NS, "paysID", paysID, i18n("PAYSID")) + "\n    " + Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7) + "\n    " + Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "telephone_Poste", item.telephone_Poste, i18n("TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2_Desc", item.telephone2_Desc, i18n("TELEPHONE2_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone2_Poste", item.telephone2_Poste, i18n("TELEPHONE2_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12) + "\n    " + Theme.renderTextField(NS, "telephone3_Desc", item.telephone3_Desc, i18n("TELEPHONE3_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone3_Poste", item.telephone3_Poste, i18n("TELEPHONE3_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10) + "\n    " + Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1) + "\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80) + "\n    " + Theme.renderTextField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "afficherCommentaires", item.afficherCommentaires, i18n("AFFICHERCOMMENTAIRES")) + "\n    " + Theme.renderCheckboxField(NS, "depotDirect", item.depotDirect, i18n("DEPOTDIRECT")) + "\n    " + Theme.renderDropdownField(NS, "institutionBanquaireID", institutionBanquaireID, i18n("INSTITUTIONBANQUAIREID")) + "\n    " + Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5) + "\n    " + Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12) + "\n    " + Theme.renderTextField(NS, "no_TPS", item.no_TPS, i18n("NO_TPS"), 25) + "\n    " + Theme.renderTextField(NS, "no_TVQ", item.no_TVQ, i18n("NO_TVQ"), 25) + "\n    " + Theme.renderCheckboxField(NS, "payerA", item.payerA, i18n("PAYERA")) + "\n    " + Theme.renderTextField(NS, "payerAID", item.payerAID, i18n("PAYERAID"), 15) + "\n    " + Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50) + "\n    " + Theme.renderTextField(NS, "rep_Nom", item.rep_Nom, i18n("REP_NOM"), 30) + "\n    " + Theme.renderTextField(NS, "rep_Telephone", item.rep_Telephone, i18n("REP_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep_Telephone_Poste", item.rep_Telephone_Poste, i18n("REP_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep_Email", item.rep_Email, i18n("REP_EMAIL"), 80) + "\n    " + Theme.renderCheckboxField(NS, "enAnglais", item.enAnglais, i18n("ENANGLAIS")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderNumberField(NS, "mRCProducteurID", item.mRCProducteurID, i18n("MRCPRODUCTEURID")) + "\n    " + Theme.renderCheckboxField(NS, "paiementManuel", item.paiementManuel, i18n("PAIEMENTMANUEL")) + "\n    " + Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL")) + "\n    " + Theme.renderCheckboxField(NS, "recoitTPS", item.recoitTPS, i18n("RECOITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "recoitTVQ", item.recoitTVQ, i18n("RECOITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "modifierTrigger", item.modifierTrigger, i18n("MODIFIERTRIGGER")) + "\n    " + Theme.renderCheckboxField(NS, "isProducteur", item.isProducteur, i18n("ISPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isTransporteur", item.isTransporteur, i18n("ISTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isChargeur", item.isChargeur, i18n("ISCHARGEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isAutre", item.isAutre, i18n("ISAUTRE")) + "\n    " + Theme.renderCheckboxField(NS, "afficherCommentairesSurPermit", item.afficherCommentairesSurPermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT")) + "\n    " + Theme.renderCheckboxField(NS, "pasEmissionPermis", item.pasEmissionPermis, i18n("PASEMISSIONPERMIS")) + "\n    " + Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE")) + "\n    " + Theme.renderCheckboxField(NS, "membre_OGC", item.membre_OGC, i18n("MEMBRE_OGC")) + "\n    " + Theme.renderCheckboxField(NS, "inscritTPS", item.inscritTPS, i18n("INSCRITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "inscritTVQ", item.inscritTVQ, i18n("INSCRITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "isOGC", item.isOGC, i18n("ISOGC")) + "\n    " + Theme.renderTextField(NS, "rep2_Nom", item.rep2_Nom, i18n("REP2_NOM"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_Telephone", item.rep2_Telephone, i18n("REP2_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep2_Telephone_Poste", item.rep2_Telephone_Poste, i18n("REP2_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep2_Email", item.rep2_Email, i18n("REP2_EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_Commentaires", item.rep2_Commentaires, i18n("REP2_COMMENTAIRES"), 255) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+            formTemplate = function (item, paysid, institutionbanquaireid) {
+                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true) + "\n    " + Theme.renderTextField(NS, "cletri", item.cletri, i18n("CLETRI"), 15) + "\n    " + Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40) + "\n    " + Theme.renderTextField(NS, "ausoinsde", item.ausoinsde, i18n("AUSOINSDE"), 30) + "\n    " + Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30) + "\n    " + Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30) + "\n    " + Theme.renderDropdownField(NS, "paysid", paysid, i18n("PAYSID")) + "\n    " + Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7) + "\n    " + Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "telephone_poste", item.telephone_poste, i18n("TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2_desc", item.telephone2_desc, i18n("TELEPHONE2_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone2_poste", item.telephone2_poste, i18n("TELEPHONE2_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12) + "\n    " + Theme.renderTextField(NS, "telephone3_desc", item.telephone3_desc, i18n("TELEPHONE3_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone3_poste", item.telephone3_poste, i18n("TELEPHONE3_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10) + "\n    " + Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1) + "\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80) + "\n    " + Theme.renderTextField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "affichercommentaires", item.affichercommentaires, i18n("AFFICHERCOMMENTAIRES")) + "\n    " + Theme.renderCheckboxField(NS, "depotdirect", item.depotdirect, i18n("DEPOTDIRECT")) + "\n    " + Theme.renderDropdownField(NS, "institutionbanquaireid", institutionbanquaireid, i18n("INSTITUTIONBANQUAIREID")) + "\n    " + Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5) + "\n    " + Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12) + "\n    " + Theme.renderTextField(NS, "no_tps", item.no_tps, i18n("NO_TPS"), 25) + "\n    " + Theme.renderTextField(NS, "no_tvq", item.no_tvq, i18n("NO_TVQ"), 25) + "\n    " + Theme.renderCheckboxField(NS, "payera", item.payera, i18n("PAYERA")) + "\n    " + Theme.renderTextField(NS, "payeraid", item.payeraid, i18n("PAYERAID"), 15) + "\n    " + Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50) + "\n    " + Theme.renderTextField(NS, "rep_nom", item.rep_nom, i18n("REP_NOM"), 30) + "\n    " + Theme.renderTextField(NS, "rep_telephone", item.rep_telephone, i18n("REP_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep_telephone_poste", item.rep_telephone_poste, i18n("REP_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep_email", item.rep_email, i18n("REP_EMAIL"), 80) + "\n    " + Theme.renderCheckboxField(NS, "enanglais", item.enanglais, i18n("ENANGLAIS")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderNumberField(NS, "mrcproducteurid", item.mrcproducteurid, i18n("MRCPRODUCTEURID")) + "\n    " + Theme.renderCheckboxField(NS, "paiementmanuel", item.paiementmanuel, i18n("PAIEMENTMANUEL")) + "\n    " + Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL")) + "\n    " + Theme.renderCheckboxField(NS, "recoittps", item.recoittps, i18n("RECOITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "recoittvq", item.recoittvq, i18n("RECOITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "modifiertrigger", item.modifiertrigger, i18n("MODIFIERTRIGGER")) + "\n    " + Theme.renderCheckboxField(NS, "isproducteur", item.isproducteur, i18n("ISPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "istransporteur", item.istransporteur, i18n("ISTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "ischargeur", item.ischargeur, i18n("ISCHARGEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isautre", item.isautre, i18n("ISAUTRE")) + "\n    " + Theme.renderCheckboxField(NS, "affichercommentairessurpermit", item.affichercommentairessurpermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT")) + "\n    " + Theme.renderCheckboxField(NS, "pasemissionpermis", item.pasemissionpermis, i18n("PASEMISSIONPERMIS")) + "\n    " + Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE")) + "\n    " + Theme.renderCheckboxField(NS, "membre_ogc", item.membre_ogc, i18n("MEMBRE_OGC")) + "\n    " + Theme.renderCheckboxField(NS, "inscrittps", item.inscrittps, i18n("INSCRITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "inscrittvq", item.inscrittvq, i18n("INSCRITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "isogc", item.isogc, i18n("ISOGC")) + "\n    " + Theme.renderTextField(NS, "rep2_nom", item.rep2_nom, i18n("REP2_NOM"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_telephone", item.rep2_telephone, i18n("REP2_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep2_telephone_poste", item.rep2_telephone_poste, i18n("REP2_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep2_email", item.rep2_email, i18n("REP2_EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var canEdit = true;
-                var readonly = !canEdit || isAudit;
+                var readonly = !canEdit;
                 var canInsert = canEdit && isNew; // && Perm.hasFournisseur_CanAddFournisseur;
                 var canDelete = canEdit && !canInsert; // && Perm.hasFournisseur_CanDeleteFournisseur;
                 var canAdd = canEdit && !canInsert; // && Perm.hasFournisseur_CanAddFournisseur;
@@ -4972,14 +4971,12 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 state = {};
                 return Promise.resolve();
             };
-            exports_42("fetchState", fetchState = function (id, auditid) {
+            exports_42("fetchState", fetchState = function (id) {
                 isNew = (id == "new");
                 isDirty = false;
-                isAudit = (auditid != undefined);
                 Router.registerDirtyExit(dirtyExit);
                 clearState();
-                var url = (!isAudit ? "/fournisseur/" + (isNew ? "new" : id) : "/fournisseur/audit/" + id + "/" + auditid);
-                return App.GET(url)
+                return App.GET("/fournisseur/" + (isNew ? "new" : id))
                     .then(function (payload) {
                     state = payload;
                     fetchedState = Misc.clone(state);
@@ -4990,14 +4987,8 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             });
             exports_42("fetch", fetch = function (params) {
                 var id = params[0];
-                App.prepareRender(NS, i18n("fournisseur"));
+                App.prepareRender(NS, i18n("proprietaire"));
                 fetchState(id)
-                    .then(App.render)
-                    .catch(App.render);
-            });
-            exports_42("fetchAudit", fetchAudit = function (id, auditid) {
-                App.prepareRender(NS, i18n("fournisseur_select"));
-                fetchState(id, auditid)
                     .then(App.render)
                     .catch(App.render);
             });
@@ -5011,9 +5002,9 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 var year = Perm.getCurrentYear(); //or something better
                 var lookup_pays = Lookup.get_pays(year);
                 var lookup_institutionBanquaire = Lookup.get_institutionBanquaire(year);
-                var paysID = Theme.renderOptions(lookup_pays, state.paysID, true);
-                var institutionBanquaireID = Theme.renderOptions(lookup_institutionBanquaire, state.institutionBanquaireID, true);
-                var form = formTemplate(state, paysID, institutionBanquaireID);
+                var paysid = Theme.renderOptions(lookup_pays, state.paysid, true);
+                var institutionbanquaireid = Theme.renderOptions(lookup_institutionBanquaire, state.institutionbanquaireid, true);
+                var form = formTemplate(state, paysid, institutionbanquaireid);
                 var tab = layout_6.tabTemplate(state.id, state.xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
@@ -5022,72 +5013,72 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             exports_42("postRender", postRender = function () {
                 if (!inContext())
                     return;
-                App.setPageTitle(isNew ? i18n("New fournisseur") : state.xtra.title);
+                App.setPageTitle(isNew ? i18n("New proprietaire") : state.xtra.title);
             });
             exports_42("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
                 var clone = Misc.clone(state);
-                clone.cleTri = Misc.fromInputTextNullable(NS + "_cleTri", state.cleTri);
+                clone.cletri = Misc.fromInputTextNullable(NS + "_cletri", state.cletri);
                 clone.nom = Misc.fromInputTextNullable(NS + "_nom", state.nom);
-                clone.auSoinsDe = Misc.fromInputTextNullable(NS + "_auSoinsDe", state.auSoinsDe);
+                clone.ausoinsde = Misc.fromInputTextNullable(NS + "_ausoinsde", state.ausoinsde);
                 clone.rue = Misc.fromInputTextNullable(NS + "_rue", state.rue);
                 clone.ville = Misc.fromInputTextNullable(NS + "_ville", state.ville);
-                clone.paysID = Misc.fromSelectString(NS + "_paysID", state.paysID);
+                clone.paysid = Misc.fromSelectText(NS + "_paysid", state.paysid);
                 clone.code_postal = Misc.fromInputTextNullable(NS + "_code_postal", state.code_postal);
                 clone.telephone = Misc.fromInputTextNullable(NS + "_telephone", state.telephone);
-                clone.telephone_Poste = Misc.fromInputTextNullable(NS + "_telephone_Poste", state.telephone_Poste);
+                clone.telephone_poste = Misc.fromInputTextNullable(NS + "_telephone_poste", state.telephone_poste);
                 clone.telecopieur = Misc.fromInputTextNullable(NS + "_telecopieur", state.telecopieur);
                 clone.telephone2 = Misc.fromInputTextNullable(NS + "_telephone2", state.telephone2);
-                clone.telephone2_Desc = Misc.fromInputTextNullable(NS + "_telephone2_Desc", state.telephone2_Desc);
-                clone.telephone2_Poste = Misc.fromInputTextNullable(NS + "_telephone2_Poste", state.telephone2_Poste);
+                clone.telephone2_desc = Misc.fromInputTextNullable(NS + "_telephone2_desc", state.telephone2_desc);
+                clone.telephone2_poste = Misc.fromInputTextNullable(NS + "_telephone2_poste", state.telephone2_poste);
                 clone.telephone3 = Misc.fromInputTextNullable(NS + "_telephone3", state.telephone3);
-                clone.telephone3_Desc = Misc.fromInputTextNullable(NS + "_telephone3_Desc", state.telephone3_Desc);
-                clone.telephone3_Poste = Misc.fromInputTextNullable(NS + "_telephone3_Poste", state.telephone3_Poste);
+                clone.telephone3_desc = Misc.fromInputTextNullable(NS + "_telephone3_desc", state.telephone3_desc);
+                clone.telephone3_poste = Misc.fromInputTextNullable(NS + "_telephone3_poste", state.telephone3_poste);
                 clone.no_membre = Misc.fromInputTextNullable(NS + "_no_membre", state.no_membre);
                 clone.resident = Misc.fromInputTextNullable(NS + "_resident", state.resident);
                 clone.email = Misc.fromInputTextNullable(NS + "_email", state.email);
                 clone.www = Misc.fromInputTextNullable(NS + "_www", state.www);
                 clone.commentaires = Misc.fromInputTextNullable(NS + "_commentaires", state.commentaires);
-                clone.afficherCommentaires = Misc.fromInputCheckbox(NS + "_afficherCommentaires", state.afficherCommentaires);
-                clone.depotDirect = Misc.fromInputCheckbox(NS + "_depotDirect", state.depotDirect);
-                clone.institutionBanquaireID = Misc.fromSelectString(NS + "_institutionBanquaireID", state.institutionBanquaireID);
+                clone.affichercommentaires = Misc.fromInputCheckbox(NS + "_affichercommentaires", state.affichercommentaires);
+                clone.depotdirect = Misc.fromInputCheckbox(NS + "_depotdirect", state.depotdirect);
+                clone.institutionbanquaireid = Misc.fromSelectText(NS + "_institutionbanquaireid", state.institutionbanquaireid);
                 clone.banque_transit = Misc.fromInputTextNullable(NS + "_banque_transit", state.banque_transit);
                 clone.banque_folio = Misc.fromInputTextNullable(NS + "_banque_folio", state.banque_folio);
-                clone.no_TPS = Misc.fromInputTextNullable(NS + "_no_TPS", state.no_TPS);
-                clone.no_TVQ = Misc.fromInputTextNullable(NS + "_no_TVQ", state.no_TVQ);
-                clone.payerA = Misc.fromInputCheckbox(NS + "_payerA", state.payerA);
-                clone.payerAID = Misc.fromInputTextNullable(NS + "_payerAID", state.payerAID);
+                clone.no_tps = Misc.fromInputTextNullable(NS + "_no_tps", state.no_tps);
+                clone.no_tvq = Misc.fromInputTextNullable(NS + "_no_tvq", state.no_tvq);
+                clone.payera = Misc.fromInputCheckbox(NS + "_payera", state.payera);
+                clone.payeraid = Misc.fromInputTextNullable(NS + "_payeraid", state.payeraid);
                 clone.statut = Misc.fromInputTextNullable(NS + "_statut", state.statut);
-                clone.rep_Nom = Misc.fromInputTextNullable(NS + "_rep_Nom", state.rep_Nom);
-                clone.rep_Telephone = Misc.fromInputTextNullable(NS + "_rep_Telephone", state.rep_Telephone);
-                clone.rep_Telephone_Poste = Misc.fromInputTextNullable(NS + "_rep_Telephone_Poste", state.rep_Telephone_Poste);
-                clone.rep_Email = Misc.fromInputTextNullable(NS + "_rep_Email", state.rep_Email);
-                clone.enAnglais = Misc.fromInputCheckbox(NS + "_enAnglais", state.enAnglais);
+                clone.rep_nom = Misc.fromInputTextNullable(NS + "_rep_nom", state.rep_nom);
+                clone.rep_telephone = Misc.fromInputTextNullable(NS + "_rep_telephone", state.rep_telephone);
+                clone.rep_telephone_poste = Misc.fromInputTextNullable(NS + "_rep_telephone_poste", state.rep_telephone_poste);
+                clone.rep_email = Misc.fromInputTextNullable(NS + "_rep_email", state.rep_email);
+                clone.enanglais = Misc.fromInputCheckbox(NS + "_enanglais", state.enanglais);
                 clone.actif = Misc.fromInputCheckbox(NS + "_actif", state.actif);
-                clone.mRCProducteurID = Misc.fromInputNumberNullable(NS + "_mRCProducteurID", state.mRCProducteurID);
-                clone.paiementManuel = Misc.fromInputCheckbox(NS + "_paiementManuel", state.paiementManuel);
+                clone.mrcproducteurid = Misc.fromInputNumberNullable(NS + "_mrcproducteurid", state.mrcproducteurid);
+                clone.paiementmanuel = Misc.fromInputCheckbox(NS + "_paiementmanuel", state.paiementmanuel);
                 clone.journal = Misc.fromInputCheckbox(NS + "_journal", state.journal);
-                clone.recoitTPS = Misc.fromInputCheckbox(NS + "_recoitTPS", state.recoitTPS);
-                clone.recoitTVQ = Misc.fromInputCheckbox(NS + "_recoitTVQ", state.recoitTVQ);
-                clone.modifierTrigger = Misc.fromInputCheckbox(NS + "_modifierTrigger", state.modifierTrigger);
-                clone.isProducteur = Misc.fromInputCheckbox(NS + "_isProducteur", state.isProducteur);
-                clone.isTransporteur = Misc.fromInputCheckbox(NS + "_isTransporteur", state.isTransporteur);
-                clone.isChargeur = Misc.fromInputCheckbox(NS + "_isChargeur", state.isChargeur);
-                clone.isAutre = Misc.fromInputCheckbox(NS + "_isAutre", state.isAutre);
-                clone.afficherCommentairesSurPermit = Misc.fromInputCheckbox(NS + "_afficherCommentairesSurPermit", state.afficherCommentairesSurPermit);
-                clone.pasEmissionPermis = Misc.fromInputCheckbox(NS + "_pasEmissionPermis", state.pasEmissionPermis);
+                clone.recoittps = Misc.fromInputCheckbox(NS + "_recoittps", state.recoittps);
+                clone.recoittvq = Misc.fromInputCheckbox(NS + "_recoittvq", state.recoittvq);
+                clone.modifiertrigger = Misc.fromInputCheckbox(NS + "_modifiertrigger", state.modifiertrigger);
+                clone.isproducteur = Misc.fromInputCheckbox(NS + "_isproducteur", state.isproducteur);
+                clone.istransporteur = Misc.fromInputCheckbox(NS + "_istransporteur", state.istransporteur);
+                clone.ischargeur = Misc.fromInputCheckbox(NS + "_ischargeur", state.ischargeur);
+                clone.isautre = Misc.fromInputCheckbox(NS + "_isautre", state.isautre);
+                clone.affichercommentairessurpermit = Misc.fromInputCheckbox(NS + "_affichercommentairessurpermit", state.affichercommentairessurpermit);
+                clone.pasemissionpermis = Misc.fromInputCheckbox(NS + "_pasemissionpermis", state.pasemissionpermis);
                 clone.generique = Misc.fromInputCheckbox(NS + "_generique", state.generique);
-                clone.membre_OGC = Misc.fromInputCheckbox(NS + "_membre_OGC", state.membre_OGC);
-                clone.inscritTPS = Misc.fromInputCheckbox(NS + "_inscritTPS", state.inscritTPS);
-                clone.inscritTVQ = Misc.fromInputCheckbox(NS + "_inscritTVQ", state.inscritTVQ);
-                clone.isOGC = Misc.fromInputCheckbox(NS + "_isOGC", state.isOGC);
-                clone.rep2_Nom = Misc.fromInputTextNullable(NS + "_rep2_Nom", state.rep2_Nom);
-                clone.rep2_Telephone = Misc.fromInputTextNullable(NS + "_rep2_Telephone", state.rep2_Telephone);
-                clone.rep2_Telephone_Poste = Misc.fromInputTextNullable(NS + "_rep2_Telephone_Poste", state.rep2_Telephone_Poste);
-                clone.rep2_Email = Misc.fromInputTextNullable(NS + "_rep2_Email", state.rep2_Email);
-                clone.rep2_Commentaires = Misc.fromInputTextNullable(NS + "_rep2_Commentaires", state.rep2_Commentaires);
+                clone.membre_ogc = Misc.fromInputCheckbox(NS + "_membre_ogc", state.membre_ogc);
+                clone.inscrittps = Misc.fromInputCheckbox(NS + "_inscrittps", state.inscrittps);
+                clone.inscrittvq = Misc.fromInputCheckbox(NS + "_inscrittvq", state.inscrittvq);
+                clone.isogc = Misc.fromInputCheckbox(NS + "_isogc", state.isogc);
+                clone.rep2_nom = Misc.fromInputTextNullable(NS + "_rep2_nom", state.rep2_nom);
+                clone.rep2_telephone = Misc.fromInputTextNullable(NS + "_rep2_telephone", state.rep2_telephone);
+                clone.rep2_telephone_poste = Misc.fromInputTextNullable(NS + "_rep2_telephone_poste", state.rep2_telephone_poste);
+                clone.rep2_email = Misc.fromInputTextNullable(NS + "_rep2_email", state.rep2_email);
+                clone.rep2_commentaires = Misc.fromInputTextNullable(NS + "_rep2_commentaires", state.rep2_commentaires);
                 return clone;
             };
             valid = function (formState) {
@@ -5114,11 +5105,11 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.POST("/fournisseur", formState)
+                App.POST("/proprietaire", formState)
                     .then(function (payload) {
                     var newkey = payload;
                     Misc.toastSuccessSave();
-                    Router.goto("#/fournisseur/" + newkey.id, 10);
+                    Router.goto("#/proprietaire/" + newkey.id, 10);
                 })
                     .catch(App.render);
             });
@@ -5130,29 +5121,27 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.PUT("/fournisseur", formState)
+                App.PUT("/proprietaire", formState)
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
-                        Router.goto("#/fournisseurs/", 100);
+                        Router.goto("#/proprietaires/", 100);
                     else
-                        Router.goto("#/fournisseur/" + key.id, 10);
+                        Router.goto("#/proprietaire/" + key.id, 10);
                 })
                     .catch(App.render);
             });
             exports_42("drop", drop = function () {
                 //(<any>key).updatedUtc = state.updatedUtc;
                 App.prepareRender();
-                App.DELETE("/fournisseur", key)
+                App.DELETE("/proprietaire", key)
                     .then(function (_) {
                     clearState();
-                    Router.goto("#/fournisseurs/", 250);
+                    Router.goto("#/proprietaires/", 250);
                 })
                     .catch(App.render);
             });
             dirtyExit = function () {
-                if (isAudit)
-                    return false;
                 isDirty = !Misc.same(fetchedState, getFormState());
                 if (isDirty) {
                     setTimeout(function () {
