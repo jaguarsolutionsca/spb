@@ -98,7 +98,7 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
 `;
 };
 
-const pageTemplate = (xtra, pager: string, table: string, tab: string, warning: string, dirty: string) => {
+const pageTemplate = (pager: string, table: string, tab: string, warning: string, dirty: string) => {
     let readonly = false;
 
     let buttons: string[] = [];
@@ -185,7 +185,7 @@ export const render = () => {
     const table = tableTemplate(tbody, state.pager);
 
     const tab = tabTemplate(null, null);
-    return pageTemplate(state.xtra, pager, table, tab, dirty, warning);
+    return pageTemplate(pager, table, tab, dirty, warning);
 };
 
 export const postRender = () => {

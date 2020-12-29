@@ -16,10 +16,8 @@ export interface IPager<IF> {
 }
 
 export interface IPagedList<T, IF> {
-    xtra: any
     pager: IPager<IF>
     list: Array<T>
-    perm: any
 }
 
 export const NullPager: IPager<any> = { pageNo: 1, pageSize: 1000, rowCount: 0, searchText: "", sortColumn: "", sortDirection: "", filter: {} };

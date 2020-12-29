@@ -84,10 +84,6 @@ interface IState {
     json: string
 }
 
-interface ISummary {
-    todo: string
-}
-
 interface IKey {
 
 }
@@ -96,12 +92,17 @@ interface IFilter {
     nom: string
 }
 
+
+
 let key: IKey;
 let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
     pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
 };
+let xtra: any;
 let uiSelectedRow: { id: string };
+
+
 
 const filterTemplate = () => {
     let filters: string[] = [];
@@ -110,8 +111,6 @@ const filterTemplate = () => {
 }
 
 const trTemplate = (item: IState, rowNumber: number) => {
-    let summary = <ISummary>JSON.parse(item.json || "{}");
-
     return `
 <tr class="${isSelectedRow(item.id) ? "is-selected" : ""}" onclick="${NS}.gotoDetail('${item.id}');">
     <td class="js-index">${rowNumber}</td>
@@ -175,7 +174,6 @@ const trTemplate = (item: IState, rowNumber: number) => {
     <td>${Misc.toStaticText(item.rep2_telephone_poste)}</td>
     <td>${Misc.toStaticText(item.rep2_email)}</td>
     <td>${Misc.toStaticText(item.rep2_commentaires)}</td>
-    <td>${Misc.toStaticText(summary.todo)}</td>
 </tr>`;
 };
 
@@ -257,15 +255,15 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
 `;
 };
 
-const pageTemplate = (xtra, pager: string, table: string, tab: string, warning: string, dirty: string) => {
+const pageTemplate = (pager: string, table: string, tab: string, warning: string, dirty: string) => {
     let readonly = false;
 
     let buttons: string[] = [];
     buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new", i18n("Add New")));
     let actions = Theme.renderButtons(buttons);
 
-    let title = buildTitle(state.xtra, i18n("fournisseurs title"));
-    let subtitle = buildSubtitle(state.xtra, i18n("fournisseurs subtitle"));
+    let title = buildTitle(xtra, i18n("fournisseurs title"));
+    let subtitle = buildSubtitle(xtra, i18n("fournisseurs subtitle"));
 
     return `
 <form onsubmit="return false;">
@@ -301,6 +299,7 @@ export const fetchState = (id: string) => {
     return App.POST("/fournisseur/search", state.pager)
         .then(payload => {
             state = payload;
+            xtra = payload.xtra;
             key = {};
         })
         .then(Lookup.fetch_pays())
@@ -348,7 +347,7 @@ export const render = () => {
     const table = tableTemplate(tbody, state.pager);
 
     const tab = tabTemplate(null, null);
-    return pageTemplate(state.xtra, pager, table, tab, dirty, warning);
+    return pageTemplate(pager, table, tab, dirty, warning);
 };
 
 export const postRender = () => {

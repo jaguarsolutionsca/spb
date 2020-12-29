@@ -21,7 +21,8 @@ namespace BaseApp.Service
             return new
             {
                 list = list,
-                pager = pager.ReviveRowCount(list)
+                pager = pager.ReviveRowCount(list),
+                xtra = (object)null //repo.queryDico(GP("Fournisseur_Summary"))
             };
         }
 
