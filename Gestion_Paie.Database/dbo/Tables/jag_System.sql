@@ -1,0 +1,28 @@
+﻿CREATE TABLE [dbo].[jag_System] (
+    [Fournisseur_PlanConjoint]   VARCHAR (15) NULL,
+    [Fournisseur_Surcharge]      VARCHAR (15) NULL,
+    [Compte_Paiements]           INT          NULL,
+    [Compte_ARecevoir]           INT          NULL,
+    [Compte_APayer]              INT          NULL,
+    [Compte_DuAuxProducteurs]    INT          NULL,
+    [Compte_TPSpercues]          INT          NULL,
+    [Compte_TPSpayees]           INT          NULL,
+    [Compte_TVQpercues]          INT          NULL,
+    [Compte_TVQpayees]           INT          NULL,
+    [Taux_TPS]                   FLOAT (53)   NULL,
+    [Taux_TVQ]                   FLOAT (53)   NULL,
+    [Fournisseur_Fond_Roulement] VARCHAR (15) NULL,
+    [Fournisseur_Fond_Forestier] VARCHAR (15) NULL,
+    [Fournisseur_Preleve_Divers] VARCHAR (15) NULL,
+    CONSTRAINT [FK_jag_System_Compte] FOREIGN KEY ([Compte_DuAuxProducteurs]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte1] FOREIGN KEY ([Compte_TPSpercues]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte2] FOREIGN KEY ([Compte_TPSpayees]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte3] FOREIGN KEY ([Compte_TVQpercues]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte4] FOREIGN KEY ([Compte_TVQpayees]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte5] FOREIGN KEY ([Compte_ARecevoir]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte6] FOREIGN KEY ([Compte_APayer]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Compte7] FOREIGN KEY ([Compte_Paiements]) REFERENCES [dbo].[Compte] ([ID]),
+    CONSTRAINT [FK_jag_System_Fournisseur] FOREIGN KEY ([Fournisseur_PlanConjoint]) REFERENCES [dbo].[Fournisseur] ([ID]),
+    CONSTRAINT [FK_jag_System_Fournisseur1] FOREIGN KEY ([Fournisseur_Surcharge]) REFERENCES [dbo].[Fournisseur] ([ID])
+);
+

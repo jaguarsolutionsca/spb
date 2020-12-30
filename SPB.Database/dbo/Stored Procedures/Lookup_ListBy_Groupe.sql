@@ -10,7 +10,7 @@ SET NOCOUNT ON
 
 IF @groupe = 'pays'
 	SELECT
-		CAST(ROW_NUMBER() OVER(order by ID) as int) [id],
+		ID [id],
 		0 [cie],
 		ID [code],
 		Nom [description],
@@ -26,7 +26,7 @@ IF @groupe = 'pays'
 
 ELSE IF @groupe = 'institutionBanquaire'
 	SELECT
-		CAST(ID as int) [id],
+		ID [id],
 		0 [cie],
 		ID [code],
 		Description,

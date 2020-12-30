@@ -1,0 +1,1310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Gestion_Paie.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{bcfb5ae2-6134-4939-b2fa-932eb1b7530f}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Gestion_Paie.Database</RootNamespace>
+    <AssemblyName>Gestion_Paie.Database</AssemblyName>
+    <ModelCollation>1036,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>French_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\AjustementCalcule_Transporteur.sql" />
+    <Build Include="dbo\Tables\Cert_Proprietaire.sql" />
+    <Build Include="dbo\Tables\AjustementCalcule_Usine.sql" />
+    <Build Include="dbo\Tables\Cert_Lot_lot.sql" />
+    <Build Include="dbo\Tables\Canton.sql" />
+    <Build Include="dbo\Tables\Cert_Municipalite.sql" />
+    <Build Include="dbo\Tables\Cert_Canton.sql" />
+    <Build Include="dbo\Tables\Compte.sql" />
+    <Build Include="dbo\Tables\FactureUsine_Detail.sql" />
+    <Build Include="dbo\Tables\CompteCategory.sql" />
+    <Build Include="dbo\Tables\Contingentement.sql" />
+    <Build Include="dbo\Tables\Contingentement_Producteur.sql" />
+    <Build Include="dbo\Tables\Contingentement_Unite.sql" />
+    <Build Include="dbo\Tables\Contrat.sql" />
+    <Build Include="dbo\Tables\Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Tables\Contrat_Transporteur.sql" />
+    <Build Include="dbo\Tables\Essence.sql" />
+    <Build Include="dbo\Tables\FactureUsine.sql" />
+    <Build Include="dbo\Tables\EssenceContingent.sql" />
+    <Build Include="dbo\Tables\EssenceRegroupement.sql" />
+    <Build Include="dbo\Tables\Contingentement_Demande.sql" />
+    <Build Include="dbo\Tables\EssenceRepartition.sql" />
+    <Build Include="dbo\Tables\EssenceSciage.sql" />
+    <Build Include="dbo\Tables\FactureClient.sql" />
+    <Build Include="dbo\Tables\FactureClient_Details.sql" />
+    <Build Include="dbo\Tables\FactureClient_Sommaire.sql" />
+    <Build Include="dbo\Tables\FactureFournisseur.sql" />
+    <Build Include="dbo\Tables\Cert_Lot.sql" />
+    <Build Include="dbo\Tables\UsineUtilisation.sql" />
+    <Build Include="dbo\Tables\FactureFournisseur_Details.sql" />
+    <Build Include="dbo\Tables\FactureFournisseur_Sommaire.sql" />
+    <Build Include="dbo\Tables\FactureStatus.sql" />
+    <Build Include="dbo\Tables\Fournisseur.sql" />
+    <Build Include="dbo\Tables\Essence_Unite.sql" />
+    <Build Include="dbo\Tables\Fournisseur_Camion.sql" />
+    <Build Include="dbo\Tables\GestionVolume.sql" />
+    <Build Include="dbo\Tables\GestionVolume_Detail.sql" />
+    <Build Include="dbo\Tables\Indexation.sql" />
+    <Build Include="dbo\Tables\Indexation_EssenceUnite.sql" />
+    <Build Include="dbo\Tables\Livraison.sql" />
+    <Build Include="dbo\Tables\Indexation_Livraison.sql" />
+    <Build Include="dbo\Tables\Indexation_Municipalite.sql" />
+    <Build Include="dbo\Tables\IndexationCalcule_Producteur.sql" />
+    <Build Include="dbo\Tables\IndexationCalcule_Transporteur.sql" />
+    <Build Include="dbo\Tables\InstitutionBanquaire.sql" />
+    <Build Include="dbo\Tables\FeuilletDomtar.sql" />
+    <Build Include="dbo\Tables\jag_Profile.sql" />
+    <Build Include="dbo\Tables\jag_ProfileSettings.sql" />
+    <Build Include="dbo\Tables\jag_System.sql" />
+    <Build Include="dbo\Tables\jag_SystemEx.sql" />
+    <Build Include="dbo\Tables\Livraison_Archive.sql" />
+    <Build Include="dbo\Tables\Livraison_Detail.sql" />
+    <Build Include="dbo\Tables\Livraison_Detail_Archive.sql" />
+    <Build Include="dbo\Tables\Livraison_Permis_Archive.sql" />
+    <Build Include="dbo\Tables\Livraison_Permis.sql" />
+    <Build Include="dbo\Tables\AjustementCalcule_Producteur_Archive.sql" />
+    <Build Include="dbo\Tables\AjustementCalcule_Transporteur_Archive.sql" />
+    <Build Include="dbo\Tables\Lot.sql" />
+    <Build Include="dbo\Tables\AjustementCalcule_Usine_Archive.sql" />
+    <Build Include="dbo\Tables\RESIDENT_TEMP.sql" />
+    <Build Include="dbo\Tables\IndexationCalcule_Transporteur_Archive.sql" />
+    <Build Include="dbo\Tables\Lot_Proprietaire.sql" />
+    <Build Include="dbo\Tables\Lot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Tables\LotContingente.sql" />
+    <Build Include="dbo\Tables\LotImportation.sql" />
+    <Build Include="dbo\Tables\MRC.sql" />
+    <Build Include="dbo\Tables\MRCCorrection.sql" />
+    <Build Include="dbo\Tables\Municipalite.sql" />
+    <Build Include="dbo\Tables\Contingentement_VolumeFixe.sql" />
+    <Build Include="dbo\Tables\Ajustement_EssenceUnite.sql" />
+    <Build Include="dbo\Tables\Municipalite_Secteur.sql" />
+    <Build Include="dbo\Tables\AjustementCalcule_TransporteurEssence.sql" />
+    <Build Include="dbo\Tables\Municipalite_Zone.sql" />
+    <Build Include="dbo\Tables\Pays.sql" />
+    <Build Include="dbo\Tables\Periode.sql" />
+    <Build Include="dbo\Tables\Permit.sql" />
+    <Build Include="dbo\Tables\TypeFacture.sql" />
+    <Build Include="dbo\Tables\TypeFactureFournisseur.sql" />
+    <Build Include="dbo\Tables\TypeIndexation.sql" />
+    <Build Include="dbo\Tables\TypeInvoiceAcomba.sql" />
+    <Build Include="dbo\Tables\FournisseurSearch.sql" />
+    <Build Include="dbo\Tables\TypeInvoiceClientAcomba.sql" />
+    <Build Include="dbo\Tables\UniteMesure.sql" />
+    <Build Include="dbo\Tables\Agence.sql" />
+    <Build Include="dbo\Tables\Usine.sql" />
+    <Build Include="dbo\Tables\Ajustement.sql" />
+    <Build Include="dbo\Tables\Ajustement_Transporteur.sql" />
+    <Build Include="dbo\Tables\AjustementCalcule_Producteur.sql" />
+    <Build Include="dbo\Functions\jag_GetVolumeAccordeContingentement.sql" />
+    <Build Include="dbo\Functions\jag_GetVolumeLivreParUnite.sql" />
+    <Build Include="dbo\Functions\jag_GetVolumeLivrePourContingentementParProducteur.sql" />
+    <Build Include="dbo\Functions\jag_GetVolumePrevueContrat.sql" />
+    <Build Include="dbo\Functions\jag_HTMLEncode.sql" />
+    <Build Include="dbo\Functions\jag_StripAccents.sql" />
+    <Build Include="dbo\Functions\jag_GetContingentementUniteFacteur.sql" />
+    <Build Include="dbo\Functions\jag_GetLotSuperficieContingentee.sql" />
+    <Build Include="dbo\Functions\jag_CalculateMontantChargeurNet.sql" />
+    <Build Include="dbo\Functions\jag_CalculateMontantProducteurNet.sql" />
+    <Build Include="dbo\Functions\jag_CalculateMontantSurchargeAuProducteur.sql" />
+    <Build Include="dbo\Functions\jag_CalculateMontantSurchargeAuTransporteur.sql" />
+    <Build Include="dbo\Functions\jag_GetDateDebutContingentement.sql" />
+    <Build Include="dbo\Functions\jag_CalculateMontantTransporteurNet.sql" />
+    <Build Include="dbo\Functions\jag_GetVolumeLivrePourContingentementParProducteurPeriode.sql" />
+    <Build Include="dbo\Functions\jag_CalculateMontantUsineNet.sql" />
+    <Build Include="dbo\Functions\jag_IsBonneProvenance.sql" />
+    <Build Include="dbo\Functions\jag_CalculateSuperficieContingente.sql" />
+    <Build Include="dbo\Functions\jag_Convert_Date.sql" />
+    <Build Include="dbo\Functions\jag_Convert_Phone.sql" />
+    <Build Include="dbo\Functions\jag_GetAjustementsListForFournisseur.sql" />
+    <Build Include="dbo\Functions\jag_GetAjustementsListForTransporteur.sql" />
+    <Build Include="dbo\Functions\jag_GetAjustementsListForUsine.sql" />
+    <Build Include="dbo\Functions\jag_GetCompteIndexation.sql" />
+    <Build Include="dbo\Functions\jag_GetCompteMEC.sql" />
+    <Build Include="dbo\Functions\jag_GetCountDroitCoupeLot.sql" />
+    <Build Include="dbo\Functions\jag_GetIndexationsListForTransporteur.sql" />
+    <Build Include="dbo\Functions\jag_GetLivraisonsListForFournisseur.sql" />
+    <Build Include="dbo\Functions\jag_RemoveComma.sql" />
+    <Build Include="dbo\Functions\jag_GetLivraisonsListForTransporteur.sql" />
+    <Build Include="dbo\Functions\jag_GetLivraisonsListForUsine.sql" />
+    <Build Include="dbo\Functions\jag_GetSuperficieBoisee.sql" />
+    <Build Include="dbo\Functions\jag_GetSuperficieContingente.sql" />
+    <Build Include="dbo\Functions\Split.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="dbo\Functions\fnjag_System_Display.sql" />
+    <Build Include="dbo\Functions\fnjag_System_Full.sql" />
+    <Build Include="dbo\Functions\fnjag_SystemEx.sql" />
+    <Build Include="dbo\Functions\fnjag_SystemEx_Display.sql" />
+    <Build Include="dbo\Functions\fnLivraison.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Detail.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Detail_Display.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Detail_Full.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Display.sql" />
+    <Build Include="dbo\Functions\jag_GetLotsForContingentID.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Full.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Permis.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Livraison.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Permis_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Livraison_Display.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Permis_Full.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine.sql" />
+    <Build Include="dbo\Functions\fnLot.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_Display.sql" />
+    <Build Include="dbo\Functions\fnLot_Display.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_Full.sql" />
+    <Build Include="dbo\Functions\fnLot_Full.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnLot_Proprietaire.sql" />
+    <Build Include="dbo\Functions\fnLot_Proprietaire_Display.sql" />
+    <Build Include="dbo\Functions\fnLot_Proprietaire_Full.sql" />
+    <Build Include="dbo\Functions\fnLot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Functions\fnLot_SuperficieBoisee_Display.sql" />
+    <Build Include="dbo\Functions\fnAgence.sql" />
+    <Build Include="dbo\Functions\fnFeuilletDomtar.sql" />
+    <Build Include="dbo\Functions\fnLot_SuperficieBoisee_Full.sql" />
+    <Build Include="dbo\Functions\fnAgence_Display.sql" />
+    <Build Include="dbo\Functions\GetFragmentation.sql" />
+    <Build Include="dbo\Functions\fnFeuilletDomtar_Display.sql" />
+    <Build Include="dbo\Functions\fnLotContingente.sql" />
+    <Build Include="dbo\Functions\fnAjustement.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Demande.sql" />
+    <Build Include="dbo\Functions\fnLotContingente_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustement_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Demande_Display.sql" />
+    <Build Include="dbo\Functions\fnLotContingente_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustement_EssenceUnite.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Demande_Full.sql" />
+    <Build Include="dbo\Functions\fnLotImportation.sql" />
+    <Build Include="dbo\Functions\fnAjustement_EssenceUnite_Display.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_Detail.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Demande_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnLotImportation_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustement_EssenceUnite_Full.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_Detail_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_VolumeFixe.sql" />
+    <Build Include="dbo\Functions\fnMRC.sql" />
+    <Build Include="dbo\Functions\fnAjustement_Full.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_Detail_Full.sql" />
+    <Build Include="dbo\Functions\fnContingentement_VolumeFixe_Display.sql" />
+    <Build Include="dbo\Functions\fnMRC_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustement_Transporteur.sql" />
+    <Build Include="dbo\Functions\fnFactureUsine_Detail_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnContingentement_VolumeFixe_Full.sql" />
+    <Build Include="dbo\Functions\fnMRCCorrection.sql" />
+    <Build Include="dbo\Functions\fnAjustement_Transporteur_Display.sql" />
+    <Build Include="dbo\Functions\fnCert_Proprietaire.sql" />
+    <Build Include="dbo\Functions\fnContingentement_VolumeFixe_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnMRCCorrection_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustement_Transporteur_Full.sql" />
+    <Build Include="dbo\Functions\fnCert_Proprietaire_Display.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Producteur.sql" />
+    <Build Include="dbo\Functions\fnCert_Proprietaire_Full.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Producteur_Display.sql" />
+    <Build Include="dbo\Functions\fnCert_Proprietaire_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Producteur_Full.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Secteur.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Transporteur.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Secteur_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Transporteur_Display.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Secteur_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Transporteur_Full.sql" />
+    <Build Include="dbo\Functions\jag_GetLivraisonsNonFacturees.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Zone.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Usine.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Zone_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Usine_Display.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Zone_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Usine_Full.sql" />
+    <Build Include="dbo\Functions\fnPays.sql" />
+    <Build Include="dbo\Functions\fnCanton.sql" />
+    <Build Include="dbo\Functions\fnPays_Display.sql" />
+    <Build Include="dbo\Functions\fnCanton_Display.sql" />
+    <Build Include="dbo\Functions\fnPeriode.sql" />
+    <Build Include="dbo\Functions\fnCompte.sql" />
+    <Build Include="dbo\Functions\fnPeriode_Display.sql" />
+    <Build Include="dbo\Functions\fnCompte_Display.sql" />
+    <Build Include="dbo\Functions\fnPermit.sql" />
+    <Build Include="dbo\Functions\fnCompte_Full.sql" />
+    <Build Include="dbo\Functions\fnPermit_Display.sql" />
+    <Build Include="dbo\Functions\fnCompteCategory.sql" />
+    <Build Include="dbo\Functions\fnPermit_Full.sql" />
+    <Build Include="dbo\Functions\fnCompteCategory_Display.sql" />
+    <Build Include="dbo\Functions\fnTypeFacture.sql" />
+    <Build Include="dbo\Functions\fnContingentement.sql" />
+    <Build Include="dbo\Functions\fnTypeFacture_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Display.sql" />
+    <Build Include="dbo\Functions\fnTypeFactureFournisseur.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Full.sql" />
+    <Build Include="dbo\Functions\fnTypeFactureFournisseur_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Producteur.sql" />
+    <Build Include="dbo\Functions\fnTypeIndexation.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Producteur_Display.sql" />
+    <Build Include="dbo\Functions\fnTypeIndexation_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Producteur_Full.sql" />
+    <Build Include="dbo\Functions\fnTypeInvoiceAcomba.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Unite.sql" />
+    <Build Include="dbo\Functions\fnTypeInvoiceAcomba_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Unite_Display.sql" />
+    <Build Include="dbo\Functions\fnTypeInvoiceClientAcomba.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Unite_Full.sql" />
+    <Build Include="dbo\Functions\fnTypeInvoiceClientAcomba_Display.sql" />
+    <Build Include="dbo\Functions\fnContrat.sql" />
+    <Build Include="dbo\Functions\fnUniteMesure.sql" />
+    <Build Include="dbo\Functions\fnContrat_Display.sql" />
+    <Build Include="dbo\Functions\fnUniteMesure_Display.sql" />
+    <Build Include="dbo\Functions\fnContrat_EssenceUnite.sql" />
+    <Build Include="dbo\Functions\fnUsine.sql" />
+    <Build Include="dbo\Functions\fnContrat_EssenceUnite_Display.sql" />
+    <Build Include="dbo\Functions\fnUsine_Display.sql" />
+    <Build Include="dbo\Functions\fnContrat_EssenceUnite_Full.sql" />
+    <Build Include="dbo\Functions\fnUsine_Full.sql" />
+    <Build Include="dbo\Functions\fnContrat_Full.sql" />
+    <Build Include="dbo\Functions\fnUsineUtilisation.sql" />
+    <Build Include="dbo\Functions\fnContrat_Transporteur.sql" />
+    <Build Include="dbo\Functions\fnUsineUtilisation_Display.sql" />
+    <Build Include="dbo\Functions\fnContrat_Transporteur_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustement_EssenceUnite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnContrat_Transporteur_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustement_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssence.sql" />
+    <Build Include="dbo\Functions\fnAjustement_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssence_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Producteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssence_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fun_Fournisseur_Select.sql" />
+    <Build Include="dbo\Functions\fnEssence_Unite.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_Usine_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssence_Unite_Display.sql" />
+    <Build Include="dbo\Functions\fnCompte_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssence_Unite_Full.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Producteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceContingent.sql" />
+    <Build Include="dbo\Functions\fnContingentement_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceContingent_Display.sql" />
+    <Build Include="dbo\Functions\fnContingentement_Unite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceRegroupement.sql" />
+    <Build Include="dbo\Functions\fnContrat_EssenceUnite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceRegroupement_Display.sql" />
+    <Build Include="dbo\Functions\fnContrat_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceRepartition.sql" />
+    <Build Include="dbo\Functions\fnContrat_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceRepartition_Display.sql" />
+    <Build Include="dbo\Functions\fnEssence_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceSciage.sql" />
+    <Build Include="dbo\Functions\fnEssence_Unite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnEssenceSciage_Display.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Details_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Details.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Sommaire_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Details_Display.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Details_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Details_Full.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Display.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Sommaire_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Full.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_Camion_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Sommaire.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Sommaire_Display.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_Detail_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureClient_Sommaire_Full.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur.sql" />
+    <Build Include="dbo\Functions\fnIndexation_EssenceUnite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Details.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Municipalite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Details_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexation_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Details_Full.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Producteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Full.sql" />
+    <Build Include="dbo\Functions\fnjag_ProfileSettings_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Sommaire.sql" />
+    <Build Include="dbo\Functions\fnjag_System_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Sommaire_Display.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Detail_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureFournisseur_Sommaire_Full.sql" />
+    <Build Include="dbo\Functions\fnLivraison_Permis_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureStatus.sql" />
+    <Build Include="dbo\Functions\fnLivraison_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFactureStatus_Display.sql" />
+    <Build Include="dbo\Functions\fnLot_Proprietaire_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFournisseur.sql" />
+    <Build Include="dbo\Functions\fnLot_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_Camion.sql" />
+    <Build Include="dbo\Functions\fnLot_SuperficieBoisee_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_Camion_Display.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Secteur_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_Camion_Full.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_Display.sql" />
+    <Build Include="dbo\Functions\fnMunicipalite_Zone_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnFournisseur_Full.sql" />
+    <Build Include="dbo\Functions\fnPermit_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume.sql" />
+    <Build Include="dbo\Functions\fnUsine_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_Detail.sql" />
+    <Build Include="dbo\Functions\fnLotContingente_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_Detail_Display.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_Detail_Full.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_Display.sql" />
+    <Build Include="dbo\Functions\fnGestionVolume_Full.sql" />
+    <Build Include="dbo\Functions\fnIndexation.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexation_EssenceUnite.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_TransporteurEssence.sql" />
+    <Build Include="dbo\Functions\fnIndexation_EssenceUnite_Display.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_TransporteurEssence_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexation_EssenceUnite_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_TransporteurEssence_Full.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Full.sql" />
+    <Build Include="dbo\Functions\fnAjustementCalcule_TransporteurEssence_SelectDisplay.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Municipalite.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Municipalite_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexation_Municipalite_Full.sql" />
+    <Build Include="dbo\Functions\jag_GetAjustementsNonFactures.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Producteur.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Producteur_Display.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Producteur_Full.sql" />
+    <Build Include="dbo\Functions\jag_GetContingentementProducteurList.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Transporteur.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Transporteur_Display.sql" />
+    <Build Include="dbo\Functions\jag_GetDroitCoupeLot.sql" />
+    <Build Include="dbo\Functions\fnIndexationCalcule_Transporteur_Full.sql" />
+    <Build Include="dbo\Functions\jag_GetFactureList.sql" />
+    <Build Include="dbo\Functions\fnInstitutionBanquaire.sql" />
+    <Build Include="dbo\Functions\fnInstitutionBanquaire_Display.sql" />
+    <Build Include="dbo\Functions\jag_GetIndexationsNonFactures.sql" />
+    <Build Include="dbo\Functions\fnjag_Profile.sql" />
+    <Build Include="dbo\Functions\fnjag_Profile_Display.sql" />
+    <Build Include="dbo\Functions\fnjag_ProfileSettings.sql" />
+    <Build Include="dbo\Functions\fnjag_ProfileSettings_Display.sql" />
+    <Build Include="dbo\Functions\fnjag_ProfileSettings_Full.sql" />
+    <Build Include="dbo\Functions\fnjag_System.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_EssenceID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Essence_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_InstitutionBanquaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_MRC.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_FournisseurID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_EssenceContingent.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Envoi_Courriel_Rappel.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_jag_Profile.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_GestionVolumeID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_EssenceRegroupement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_jag_ProfileSettings.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_StatistiquesParEssence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_IndexationID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_EssenceRepartition.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume.sql" />
+    <Build Include="dbo\Stored Procedures\spI_jag_System.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Transporteur_DetailLivraisonsTransporteurs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_LivraisonID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_EssenceSciage.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spI_jag_SystemEx.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Transporteur_ListeIdentificationTransporteurs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_LotID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureClient.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_Detail_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Transporteur_ListeTransporteurs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_MunicipaliteID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureClient_Details.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_Detail_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Livraison_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Transporteur_SommaireDesMontantsPayes.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_PermitID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureClient_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_Detail_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Livraison_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_ProfileID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_FactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Lot.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Usine_ListeUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_UniteMesureID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureFournisseur_Details.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Lot_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Usine_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_UsineID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureFournisseur_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\spS_GestionVolume_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Lot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Search_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetMunicipalite_Zone.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\spI_LotContingente.sql" />
+    <Build Include="dbo\Stored Procedures\jag_spI_Permit.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_AjustementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Fournisseur_Camion.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_LotImportation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_spI_Permit_Maniwaki.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_ContingentementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_GestionVolume.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spI_MRC.sql" />
+    <Build Include="dbo\Stored Procedures\jag_System_GetValue.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_ContratID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_GestionVolume_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_EssenceUnite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_MRCCorrection.sql" />
+    <Build Include="dbo\Stored Procedures\jag_System_SetValue.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_EssenceID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_EssenceUnite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_SystemEx_GetValue.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_FournisseurID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Indexation_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_EssenceUnite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Municipalite_Secteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_SystemEx_SetValue.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_GestionVolumeID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Indexation_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Municipalite_Zone.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_Acomba_Client.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_IndexationID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_IndexationCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Cert_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Pays.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_Acomba_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_LivraisonID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_IndexationCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Municipalite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Cert_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Periode.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_Contrat_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_LotID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_InstitutionBanquaire.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Municipalite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Cert_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Permit.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_FournisseurEnPaiementManuel.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_MunicipaliteID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_jag_Profile.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Municipalite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Cert_Proprietaire_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_TypeFacture.sql" />
+    <Build Include="dbo\Stored Procedures\jag_UpdateStatus_FactureClient.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_PeriodeContingentementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_jag_ProfileSettings.sql" />
+    <Build Include="dbo\Stored Procedures\DatabaseReIndex.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Cert_Proprietaire_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_TypeFactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_UpdateStatus_FactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_PermitID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_jag_SystemEx.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Cert_Proprietaire_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_TypeIndexation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_NumeroFactureUsineExiste.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_ProfileID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Producteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Cert_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spI_TypeInvoiceAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ParFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_UniteMesureID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Livraison_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Producteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_TypeInvoiceClientAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Search_Livraisons.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_UsineID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Livraison_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Producteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Fournisseurs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_AjustementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Lot.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_FreeFouID.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_ContingentementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Lot_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Transporteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_UsineUtilisation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ClearIndexationLivraison.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_ContratID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Lot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Transporteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Agence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_PossibleLivraisonsForIndexation.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_EssenceID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_LotContingente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_IndexationCalcule_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Agence_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Indexation_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\ForXMLAuto.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_FournisseurID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_MRC.sql" />
+    <Build Include="dbo\Stored Procedures\spS_InstitutionBanquaire.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Indexation_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Agence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_GestionVolumeID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_InstitutionBanquaire_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_IndexationID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Municipalite_Secteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_Profile.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Indexation_Livraison_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Ajustement_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_LivraisonID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Municipalite_Zone.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_Profile_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_ProducteurParMRC.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_EssenceUnite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_MunicipaliteCode.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Ajustement_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_LotID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Pays.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_ProfileSettings.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Statistique_AgenceMrcMunicipaliteSecteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_EssenceUnite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_DistinctPermitYears.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_AjustementCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_MunicipaliteID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Periode.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_ProfileSettings_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_EssenceUnite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLivraisonsSansContingentementIDs.sql" />
+    <Build Include="dbo\Stored Procedures\spD_AjustementCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_PeriodeContingentementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Permit.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_ProfileSettings_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ListeFacturesDuMois_DateFactureAcomba.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_AjustementCalcule_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_PermitID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_TypeFacture.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_ProfileSettings_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_NoProducteurAyantLivrer.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Canton.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_ProfileID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_TypeFactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_System.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_SciageDeroullage.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Compte.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_UniteMesureID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_TypeIndexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_System_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_DemandeDeContingentementEstrie.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_Transporteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetVolumesLivres.sql" />
+    <Build Include="dbo\Stored Procedures\spD_CompteCategory.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_UsineID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_TypeInvoiceAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_FactureFournisseur_for_NumeroCheque.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_System_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_DemandeDeContingentementEstrieList.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_Transporteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_PermisNonConformes.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contingentement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetProducteurAvecDroitCoupeList.sql" />
+    <Build Include="dbo\Stored Procedures\spU_TypeInvoiceClientAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_System_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Ajustement_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FactureUsine.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contingentement_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetProducteurContingenteList.sql" />
+    <Build Include="dbo\Stored Procedures\spU_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_SystemEx.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureUsine.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contingentement_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetProfileIDByName.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\spS_jag_SystemEx_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Producteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetSurface_Municipalite.sql">
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_UsineUtilisation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Producteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_InsertNew_Lot_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spX_xRebuildIndexes.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Producteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contrat_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_IsLivraisonDetailInContingentement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ClearImportErrorLogs.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Detail_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_NombreProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Essence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_IsUsed_Secteur.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_WriteToImportErrorLog.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Detail_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_Producteur_Statistique.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Transporteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureUsine.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Essence_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_IsUsed_Zone.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_Preleves.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Detail_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_ValeurDesLivraisons.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Transporteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_spI_FactureUsine.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_EssenceContingent.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Agence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_EffacerCalculs.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FactureUsine_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spD_EssenceRegroupement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_EffacerCalculs_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureUsine_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spD_EssenceRepartition.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Canton.sql" />
+    <Build Include="dbo\Stored Procedures\jag_EffacerCalculs_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Usine_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spD_EssenceSciage.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Contingentement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_AutorisationDesLivraisons.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Permis_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Usine_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_Detail_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FactureClient.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Calculate_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Permis_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_Usine_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_Detail_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FactureClient_Details.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Essence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Calculate_AjustementsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_Permis_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Canton.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureUsine_Detail_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FactureClient_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_EssenceContingent.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Calculate_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Livraison_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Canton_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FactureUsine_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_EssenceRegroupement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Calculate_IndexationsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Compte.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_FactureUsineID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_FactureFournisseur_Details.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_EssenceRepartition.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Calculate_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Statistique_AgenceMrcMunicipaliteSecteur_ANNEE.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Compte_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_FactureUsineID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_FactureFournisseur_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Calculate_LivraisonsNonFacturees.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Update_Contrat_Transporteur_Pourcent.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Compte_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_FactureUsineID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_FactureStatus.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_GestionVolume.sql" />
+    <Build Include="dbo\Stored Procedures\jag_CheckFactures_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Compte_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_FactureUsineID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spD_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_CheckFactures_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_VentillationDesMontants_Excel.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_Proprietaire_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_CompteCategory.sql" />
+    <Build Include="dbo\Stored Procedures\jag_spI_Livraison_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Fournisseur_Camion.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_InstitutionBanquaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_CheckFactures_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_UsineUniteMesure_From_Livraisons_Excel.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_Proprietaire_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_CompteCategory_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_spI_Permit_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spD_GestionVolume.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Clear_FactureEnAttente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_Proprietaire_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Creer_Permis_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spD_GestionVolume_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Lot.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Copy_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_FeuilletDomtar.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Lot_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_CreerFactures_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FeuilletDomtar.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Indexation_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Lot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Stored Procedures\jag_CreerFactures_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_SuperficieBoisee_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FeuilletDomtar.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Indexation_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_MRC.sql" />
+    <Build Include="dbo\Stored Procedures\Fournisseur_Search.sql" />
+    <Build Include="dbo\Stored Procedures\jag_CreerFactures_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_SuperficieBoisee_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Producteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FeuilletDomtar_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_IndexationCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Delete_Acomba_Client.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Lot_SuperficieBoisee_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Producteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spU_FeuilletDomtar.sql" />
+    <Build Include="dbo\Stored Procedures\spD_IndexationCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Pays.sql" />
+    <Build Include="dbo\Stored Procedures\Fournisseur_Select.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Delete_Acomba_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_LotContingente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Producteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_FeuilletDomtar_Validation.sql" />
+    <Build Include="dbo\Stored Procedures\spD_InstitutionBanquaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Permit.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Delete_Contingentement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_LotContingente_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_FeuilletDomtar_Importation.sql" />
+    <Build Include="dbo\Stored Procedures\spD_jag_Profile.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Listview_Profile.sql" />
+    <Build Include="dbo\Stored Procedures\jag_DemandeDeContingentement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_LotContingente_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_FeuilletDomtar_Creer_PermitLivraison.sql" />
+    <Build Include="dbo\Stored Procedures\spD_jag_ProfileSettings.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\Fournisseur_Update.sql" />
+    <Build Include="dbo\Stored Procedures\jag_DemandeDeContingentementList.sql" />
+    <Build Include="dbo\Stored Procedures\spS_LotContingente_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Unite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_LotsCertifies.sql" />
+    <Build Include="dbo\Stored Procedures\spD_jag_SystemEx.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Facture.sql" />
+    <Build Include="dbo\Stored Procedures\spS_LotImportation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Unite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contingentement_Demande.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\jag_LotExists.sql" />
+    <Build Include="dbo\Stored Procedures\Fournisseur_New.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Facture_LongueuilTotaux.sql" />
+    <Build Include="dbo\Stored Procedures\spS_LotImportation_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Unite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contingentement_Demande.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Livraison_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Municipalite_Secteur_Exists.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\Fournisseur_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Facture_LongueuilUsine.sql" />
+    <Build Include="dbo\Stored Procedures\spS_MRC.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Demande.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Livraison_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Municipalite_Zone_Exists.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_FactureList.sql" />
+    <Build Include="dbo\Stored Procedures\spS_MRC_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Demande_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Lot.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\Fournisseur_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\jag_FactureUsinesList.sql" />
+    <Build Include="dbo\Stored Procedures\spS_MRCCorrection.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Demande_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Lot_Proprietaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ProfileSettings_GetValue.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_Get_AjustementsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\spS_MRCCorrection_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_EssenceUnite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_Demande_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Lot_SuperficieBoisee.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ProfileSettings_SetValue.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_Get_AutresFournisseurs.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_EssenceUnite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contingentement_Demande.sql" />
+    <Build Include="dbo\Stored Procedures\spD_LotContingente.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Ajustement_ListeDesCalculsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_ClientsFromFacturesEnAttente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_EssenceUnite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_ContingentementDemandeID.sql" />
+    <Build Include="dbo\Stored Procedures\spD_MRC.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Ajustement_RapportProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Comptes.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_ContingentementDemandeID.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Ajustement_RapportTransporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_ComptesFromFacturesEnAttente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Secteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetNext_ContingentementDemandeID.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Municipalite_Secteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Ajustement_RapportUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_ContingentementIDForLivraisonDetail.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Secteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetPrev_ContingentementDemandeID.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Municipalite_Zone.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Chargeur_DetailLivraisonsChargeurs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Essence_From_Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Secteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_Transporteur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_ListView_ContingentementDemande.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Pays.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Chargeur_ListeChargeurs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Essence_From_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Secteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_Transporteur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Contingentement_Annee.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Periode.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Chargeur_SommaireDesMontantsPayes.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_EssenceSciage.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contrat_Transporteur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_ContingentementProducteur_AnneePeriode.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Permit.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contingentement_ParRegroupement.sql" />
+    <Build Include="dbo\Stored Procedures\Fournisseur_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_FournisseurEnPaiementManuel.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Zone.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contingentement_Demande.sql" />
+    <Build Include="dbo\Stored Procedures\spD_TypeFacture.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contingentement_ParUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_FournisseursFromFacturesEnAttente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Zone_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Contingentement_VolumeFixe.sql" />
+    <Build Include="dbo\Stored Procedures\spD_TypeFactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_ListeContrats.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_IndexationsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Zone_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contingentement_VolumeFixe.sql" />
+    <Build Include="dbo\Stored Procedures\spD_TypeIndexation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_PrixUsineEtProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_ListeProducteursAvecLivraisonNonConforme.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Municipalite_Zone_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_VolumeFixe.sql" />
+    <Build Include="dbo\Stored Procedures\spD_TypeInvoiceAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_SommaireContratsParUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_LivraisonsNonFacturees.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Pays.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_VolumeFixe_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spD_TypeInvoiceClientAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_TablePrixTransporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Lots_ForContingentID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Pays_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_Unite_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contingentement_VolumeFixe.sql" />
+    <Build Include="dbo\Stored Procedures\spD_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contrat_VentillationDesMontants.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Lots_ForDroit_coupeID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Periode.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_Unite_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_VolumeFixe_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spD_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Essence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Lots_ForEntente_paiementID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Periode_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Essence_Unite_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Contingentement_VolumeFixe_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spD_UsineUtilisation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ControleBoisParRegroupementContrat.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Lots_ForProprietaireID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Permit.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceContingent.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_VolumeFixe.sql" />
+    <Build Include="dbo\Stored Procedures\spD_xDeleteDatabase.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ControleBoisParUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_LotsContingentes.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Permit_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceContingent_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_LastLivraison.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Agence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ControleBoisParUsineContrat.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_LotsNonContingentes.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Permit_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceRegroupement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_AutorisationDesLivraisonsSommaireTransporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ControleBoisParUsineEssencesCombinees.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_NoMembreProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Permit_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceRegroupement_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_AutorisationDesLivraisonsTransporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Ajustement_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_EcrituresMiseEnCommun.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_PeriodeContingentement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeFacture.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceRepartition.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_TransporteurContingenteList.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Ajustement_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_FournisseursPaiementManuel.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Permis.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeFacture_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceRepartition_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ControleBoisParUsineEssencesCodeCombinees.sql" />
+    <Build Include="dbo\Stored Procedures\spI_AjustementCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ListeFacturesDuMois.sql">
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_Get_Secteurs.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeFactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceSciage.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Manuel_Estrie.sql" />
+    <Build Include="dbo\Stored Procedures\spI_AjustementCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_ListeFacturesParUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_SurfaceContingente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeFactureFournisseur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_EssenceSciage_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Statistique_AgenceMrcSecteur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_AjustementCalcule_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Facture_RepartitionDesVolumes.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Unite_From_Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeIndexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Canton.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Fournisseur_ListeIdentification.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Unite_From_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeIndexation_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Details.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Compte.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Fournisseur_RapportAnnuel.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_Usine_From_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeInvoiceAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Details_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_CompteCategory.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_GestionVolume_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_UsineUniteMesure_From_Factures.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeInvoiceAcomba_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Details_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contingentement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_GestionVolume_ParUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_UsineUniteMesure_From_Livraisons.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeInvoiceClientAcomba.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Details_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contingentement_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Indexation_ListeDesCalculsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_VolumeLivreNonContingente.sql" />
+    <Build Include="dbo\Stored Procedures\spS_TypeInvoiceClientAcomba_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contingentement_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Indexations.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_VolumeLivreParUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_UniteMesure.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_IndexationsAvantCalculs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_VolumeLivrePourContingentementParProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_UniteMesure_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Contingentement_Irregularites.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_ListeDesCalculs.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Get_VolumeLivrePourContrat.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Contrat_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_ListeDesCalculsNonFactures.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetCalculs_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Usine_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Sommaire_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Essence.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_ListeDesLivraison_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetCalculs_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Usine_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Sommaire_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Essence_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_ListeDesLivraison_Master.sql">
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_GetCalculs_Livraison.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Usine_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureClient_Sommaire_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_EssenceContingent.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_NombreProducteurLivraisonUsine.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFactureClient.sql" />
+    <Build Include="dbo\Stored Procedures\spS_UsineUtilisation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Bulletin_Courriel.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_EssenceRegroupement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_RepartitionDesLivraisons.sql">
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\jag_GetFactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_UsineUtilisation_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Details.sql" />
+    <Build Include="dbo\Stored Procedures\spI_EssenceRepartition.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_SommaireLivraison.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_AjustementID.sql" />
+    <Build Include="dbo\Stored Procedures\spD_AjustementCalcule_TransporteurEssence.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Agence.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Details_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_EssenceSciage.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Livraison_SommaireLivraisonAvecDeductions.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_ContingentementID.sql" />
+    <Build Include="dbo\Stored Procedures\spI_AjustementCalcule_TransporteurEssence.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Ajustement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Details_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureClient.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_LivraisonNonConforme.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_ContratID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_TransporteurEssence.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Ajustement_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Details_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureClient_Details.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_PermisAnnule.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_EssenceID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_TransporteurEssence_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Ajustement_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Display.sql" />
+    <Build Include="dbo\Stored Procedures\jag_FournisseurSearch.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureClient_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_PermisEnCirculation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_FournisseurID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_TransporteurEssence_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spU_AjustementCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Full.sql" />
+    <Build Include="dbo\Stored Procedures\jag_FournisseurSearch_Import.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureFournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_Etiquettes.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_GestionVolumeID.sql" />
+    <Build Include="dbo\Stored Procedures\spS_AjustementCalcule_TransporteurEssence_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spU_AjustementCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Bulletin_Information.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureFournisseur_Details.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_IdentificationProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_IndexationID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_AjustementCalcule_TransporteurEssence.sql" />
+    <Build Include="dbo\Stored Procedures\spU_AjustementCalcule_Usine.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureFournisseur_Sommaire.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeDetailleLivraison.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_LivraisonID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Canton.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Sommaire_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_FactureStatus.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeEtiquettes.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_LotID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Compte.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Sommaire_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeFondsRoulement.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_MunicipaliteID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_CompteCategory.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureFournisseur_Sommaire_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Fournisseur_Camion.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeIdentificationDroitCoupe.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_PermitID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contingentement.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureStatus.sql" />
+    <Build Include="dbo\Stored Procedures\spI_GestionVolume.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeSommaireMontantsPayesProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_ProfileID.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\spU_Contingentement_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_FactureStatus_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_GestionVolume_Detail.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeSuperficies.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_UniteMesureID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contingentement_Unite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Indexation.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_ListeSuperficiesLot.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetFirst_UsineID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contrat.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_Camion.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Indexation_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Proprietaire_LivraisonParProducteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_AjustementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contrat_EssenceUnite.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_Camion_Display.sql" />
+    <Build Include="dbo\Stored Procedures\spI_Indexation_Municipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_Cantons.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_ContingentementID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Contrat_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_Camion_Full.sql" />
+    <Build Include="dbo\Stored Procedures\spI_IndexationCalcule_Producteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_LotsParMunicipalite.sql" />
+    <Build Include="dbo\Stored Procedures\jag_GetLast_ContratID.sql" />
+    <Build Include="dbo\Stored Procedures\spU_Essence.sql" />
+    <Build Include="dbo\Stored Procedures\spS_Fournisseur_Camion_SelectDisplay.sql" />
+    <Build Include="dbo\Stored Procedures\spI_IndexationCalcule_Transporteur.sql" />
+    <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_LotsParSecteur.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="01.schema.dev_to_project.scmp" />
+  </ItemGroup>
+</Project>
