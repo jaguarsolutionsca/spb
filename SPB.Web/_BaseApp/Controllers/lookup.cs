@@ -1,4 +1,5 @@
 ﻿using BaseApp.DTO;
+using BaseApp.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -63,7 +64,7 @@ namespace BaseApp.Web.Controllers
         //
         [AllowAnonymous]
         [HttpGet("by/{groupe}")]
-        public List<Lookup> Lookup_By(string groupe)
+        public List<Dico> Lookup_By(string groupe)
         {
             return app.Lookup_By(groupe);
         }

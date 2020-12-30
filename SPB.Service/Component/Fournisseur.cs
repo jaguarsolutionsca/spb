@@ -17,12 +17,12 @@ namespace BaseApp.Service
         public object Fournisseur_Search(Dico pager)
         {
             var parameters = KVList.Build(pager.TrimRowCount().Revive());
-            var list = repo.queryDicoList(GP("Fournisseur_Search"), parameters);
+            var list = repo.queryDicoList(GP("Fournisseur_Search"), parameters, uid: true);
             return new
             {
                 list = list,
                 pager = pager.ReviveRowCount(list),
-                xtra = (object)null //repo.queryDico(GP("Fournisseur_Summary"))
+                xtra = (object)null
             };
         }
 
@@ -30,8 +30,8 @@ namespace BaseApp.Service
         {
             return new
             {
-                item = repo.queryDico(GP("Fournisseur_Select"), "@id", id),
-                xtra = repo.queryDico(GP("Fournisseur_Summary"), "@id", id)
+                item = repo.queryDico(GP("Fournisseur_Select"), "@id", id, uid: true),
+                xtra = repo.queryDico(GP("Fournisseur_Summary"), "@id", id, uid: true)
             };
         }
 
@@ -39,15 +39,15 @@ namespace BaseApp.Service
         {
             return new
             {
-                item = repo.queryDico(GP("spS_Fournisseur_Full"), "@id", "---"),
-                xtra = repo.queryDico(GP("Fournisseur_Summary"))
+                item = repo.queryDico(GP("Fournisseur_New"), uid: true),
+                xtra = (object)null
             };
         }
 
         public object Fournisseur_Insert(Dico uto)
         {
             var parameters = KVList.Build(uto.Revive());
-            var id = repo.queryScalar<string>(GP("spI_Fournisseur"), parameters);
+            var id = repo.queryScalar<string>(GP("Fournisseur_Insert"), parameters, uid: true);
             return new
             {
                 id = id
@@ -56,13 +56,12 @@ namespace BaseApp.Service
 
         public void Fournisseur_Update(Dico uto)
         {
-            repo.queryNonQuery(GP("spU_Fournisseur"), KVList.Build(uto.Revive()));
+            repo.queryNonQuery(GP("Fournisseur_Update"), KVList.Build(uto.Revive()), uid: true);
         }
 
         public void Fournisseur_Delete(Dico key)
         {
-            repo.queryNonQuery(GP("spD_Fournisseur"), KVList.Build(key.Revive()));
-            //.Add("@updated", concurrencyUtc.ToLocalTime())
+            repo.queryNonQuery(GP("Fournisseur_Delete"), KVList.Build(key.Revive()), uid: true);
         }
     }
 }

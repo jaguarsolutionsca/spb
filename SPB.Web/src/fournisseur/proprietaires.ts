@@ -259,7 +259,7 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
     let readonly = false;
 
     let buttons: string[] = [];
-    buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new", i18n("Add New")));
+    buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new", i18n("Add New")));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, i18n("fournisseurs title"));

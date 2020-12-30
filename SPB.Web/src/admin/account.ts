@@ -287,7 +287,7 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.POST("/account", Misc.createUto(formState, UTO))
+    App.POST("/account", Misc.createWhite(formState, UTO))
         .then(payload => {
             let newkey = <IKey>payload;
             emailSubject = payload.emailSubject;
@@ -303,7 +303,7 @@ export const save = (done = false) => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.PUT("/account", Misc.createUto(formState, UTO))
+    App.PUT("/account", Misc.createWhite(formState, UTO))
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)

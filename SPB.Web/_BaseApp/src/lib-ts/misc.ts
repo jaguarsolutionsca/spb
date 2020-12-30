@@ -762,6 +762,12 @@ export const getLatLongFullPrecision = (latlon: number) => {
     return latlon;
 }
 
-export const createUto = (formState, props: string[]) => {
+export const createWhite = (formState, props: string[]) => {
     return props.reduce((acc, key) => { { acc[key] = formState[key]; return acc; }; }, {})
+}
+
+export const createBlack = (formState, props: string[]) => {
+    var cloned = clone(formState)
+    props.forEach(prop => delete cloned[prop])
+    return cloned;
 }

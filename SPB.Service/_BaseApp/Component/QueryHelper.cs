@@ -7,13 +7,14 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace BaseApp.DAL
 {
     internal partial class Repo : IDisposable
     {
-        public T queryScalar<T>(string command_text, Service.KVList parameters = null)
+        public T queryScalar<T>(string command_text, Service.KVList parameters = null, bool uid = false)
         {
             T scalar = default(T);
             using (var command = connex.CreateCommand())
@@ -27,6 +28,9 @@ namespace BaseApp.DAL
                         command.Parameters.AddWithValue(parameter.Key, parameter.Value);
                 }
 
+                if (uid)
+                    command.Parameters.AddWithValue("@_uid", user?.Get_UID());
+
                 using (var reader = command.ExecuteReader())
                 {
                     if (reader.Read())
@@ -39,15 +43,15 @@ namespace BaseApp.DAL
             return scalar;
         }
 
-        public T queryScalar<T>(string command_text, string parameter_name, object parameter_value)
+        public T queryScalar<T>(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
-            return queryScalar<T>(command_text, parameters);
+            return queryScalar<T>(command_text, parameters, uid);
 
         }
 
 
-        public List<T> queryList<T>(string command_text, Service.KVList parameters = null)
+        public List<T> queryList<T>(string command_text, Service.KVList parameters = null, bool uid = false)
         {
             var properties = typeof(T).GetProperties(); //note: not dealing with Fields
 
@@ -62,6 +66,9 @@ namespace BaseApp.DAL
                     foreach (var parameter in parameters)
                         command.Parameters.AddWithValue(parameter.Key, parameter.Value);
                 }
+
+                if (uid)
+                    command.Parameters.AddWithValue("@_uid", user?.Get_UID());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -95,14 +102,14 @@ namespace BaseApp.DAL
             return list;
         }
 
-        public List<T> queryList<T>(string command_text, string parameter_name, object parameter_value)
+        public List<T> queryList<T>(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
-            return queryList<T>(command_text, parameters);
+            return queryList<T>(command_text, parameters, uid);
         }
 
 
-        public T queryEntity<T>(string command_text, Service.KVList parameters = null)
+        public T queryEntity<T>(string command_text, Service.KVList parameters = null, bool uid = false)
         {
             var properties = typeof(T).GetProperties(); //note: not dealing with Fields
             var instance = Activator.CreateInstance<T>();
@@ -118,6 +125,9 @@ namespace BaseApp.DAL
                     foreach (var parameter in parameters)
                         command.Parameters.AddWithValue(parameter.Key, parameter.Value);
                 }
+
+                if (uid)
+                    command.Parameters.AddWithValue("@_uid", user?.Get_UID());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -150,14 +160,14 @@ namespace BaseApp.DAL
             return entity;
         }
 
-        public T queryEntity<T>(string command_text, string parameter_name, object parameter_value)
+        public T queryEntity<T>(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
-            return queryEntity<T>(command_text, parameters);
+            return queryEntity<T>(command_text, parameters, uid);
         }
 
 
-        public void queryNonQuery(string command_text, Service.KVList parameters = null)
+        public void queryNonQuery(string command_text, Service.KVList parameters = null, bool uid = false)
         {
             using (var command = connex.CreateCommand())
             {
@@ -170,18 +180,21 @@ namespace BaseApp.DAL
                         command.Parameters.AddWithValue(parameter.Key, parameter.Value);
                 }
 
+                if (uid)
+                    command.Parameters.AddWithValue("@_uid", user?.Get_UID());
+
                 command.ExecuteNonQuery();
             }
         }
 
-        public void queryNonQuery(string command_text, string parameter_name, object parameter_value)
+        public void queryNonQuery(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
-            queryNonQuery(command_text, parameters);
+            queryNonQuery(command_text, parameters, uid);
         }
 
 
-        public Service.Dico queryDico(string command_text, Service.KVList parameters = null)
+        public Service.Dico queryDico(string command_text, Service.KVList parameters = null, bool uid = false)
         {
             var entity = new Service.Dico();
             using (var command = connex.CreateCommand())
@@ -194,6 +207,9 @@ namespace BaseApp.DAL
                     foreach (var parameter in parameters)
                         command.Parameters.AddWithValue(parameter.Key, parameter.Value);
                 }
+
+                if (uid)
+                    command.Parameters.AddWithValue("@_uid", user?.Get_UID());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -215,14 +231,14 @@ namespace BaseApp.DAL
             return entity;
         }
 
-        public Service.Dico queryDico(string command_text, string parameter_name, object parameter_value)
+        public Service.Dico queryDico(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
             var parameters = new Service.KVList().Add(parameter_name, parameter_value);
-            return queryDico(command_text, parameters);
+            return queryDico(command_text, parameters, uid);
         }
 
 
-        public List<Service.Dico> queryDicoList(string command_text, Service.KVList parameters = null)
+        public List<Service.Dico> queryDicoList(string command_text, Service.KVList parameters = null, bool uid = false)
         {
             var list = new List<Service.Dico>();
             using (var command = connex.CreateCommand())
@@ -235,6 +251,9 @@ namespace BaseApp.DAL
                     foreach (var parameter in parameters)
                         command.Parameters.AddWithValue(parameter.Key, parameter.Value);
                 }
+
+                if (uid)
+                    command.Parameters.AddWithValue("@_uid", user?.Get_UID());
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -367,7 +386,7 @@ namespace BaseApp.Service
             if (list != null && list.Count > 0)
                 rowCount = int.Parse(list[0]["totalcount"].ToString());
 
-            this.Add("rowCount", rowCount);
+            Add("rowCount", rowCount);
             return this;
         }
     }

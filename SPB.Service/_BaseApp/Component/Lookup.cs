@@ -444,7 +444,7 @@ namespace BaseApp.Service
         void Update_Lookup(Lookup_Model model);
         void Delete_Lookup(int id, DateTime concurrencyUtc);
         */
-        List<Lookup> Lookup_By(string groupe, int? year = null);
+        List<Dico> Lookup_By(string groupe, int? year = null);
     }
 
     public partial class AppService
@@ -526,9 +526,9 @@ namespace BaseApp.Service
         }
         */
 
-        public List<Lookup> Lookup_By(string groupe, int? year = null)
+        public List<Dico> Lookup_By(string groupe, int? year = null)
         {
-            return repo.queryList<Lookup>("app.Lookup_ListBy_Groupe", KVList.Build()
+            return repo.queryDicoList("app.Lookup_ListBy_Groupe", KVList.Build()
                 .Add("@groupe", groupe)
                 .Add("@year", year)
                 );

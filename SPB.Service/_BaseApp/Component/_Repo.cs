@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace BaseApp.DAL
 {
@@ -12,13 +14,15 @@ namespace BaseApp.DAL
         public readonly SqlConnection connex;
         ILogger log;
         public Crypto crypto;
+        internal ClaimsPrincipal user;
 
-        public Repo(ILogger<object> logger, string connString, string cryptoKey)
+        public Repo(ILogger<object> logger, string connString, string cryptoKey, IPrincipal user = null)
         {
             log = logger;
             connex = new SqlConnection(connString);
             connex.Open();
             crypto = new Crypto(cryptoKey);
+            this.user = user as ClaimsPrincipal;
         }
 
         public void ReOpen()

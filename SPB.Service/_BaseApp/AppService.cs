@@ -30,7 +30,7 @@ namespace BaseApp.Service
             this.user = user as ClaimsPrincipal;
 
             var connString = config.GetConnectionString("DefaultConnection");
-            repo = new DAL.Repo(logger, connString, CryptoKey);
+            repo = new DAL.Repo(logger, connString, CryptoKey, user);
         }
 
         public AppService()

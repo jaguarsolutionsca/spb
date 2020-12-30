@@ -93,6 +93,7 @@ interface IState {
     rep2_commentaires: string
 }
 
+const blackList = ["paysid_text", "institutionbanquaireid_text"];
 
 
 let key: IKey;
@@ -132,7 +133,7 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1)}
     ${Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80)}
     ${Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80)}
-    ${Theme.renderTextField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255)}
+    ${Theme.renderTextareaField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255, false, null, 5)}
     ${Theme.renderCheckboxField(NS, "affichercommentaires", item.affichercommentaires, i18n("AFFICHERCOMMENTAIRES"))}
     ${Theme.renderCheckboxField(NS, "depotdirect", item.depotdirect, i18n("DEPOTDIRECT"))}
     ${Theme.renderDropdownField(NS, "institutionbanquaireid", institutionbanquaireid, i18n("INSTITUTIONBANQUAIREID"))}
@@ -170,7 +171,7 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "rep2_telephone", item.rep2_telephone, i18n("REP2_TELEPHONE"), 12)}
     ${Theme.renderTextField(NS, "rep2_telephone_poste", item.rep2_telephone_poste, i18n("REP2_TELEPHONE_POSTE"), 4)}
     ${Theme.renderTextField(NS, "rep2_email", item.rep2_email, i18n("REP2_EMAIL"), 80)}
-    ${Theme.renderTextField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255)}
+    ${Theme.renderTextareaField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255, false, null, 3)}
     ${Theme.renderBlame(item, isNew)}
 `;
 };
@@ -188,7 +189,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
-    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new"));
+    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new"));
     if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
     let actions = Theme.renderButtons(buttons);
 
@@ -380,7 +381,7 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.POST("/proprietaire", formState)
+    App.POST("/fournisseur", Misc.createBlack(formState, blackList))
         .then(payload => {
             let newkey = <IKey>payload;
             Misc.toastSuccessSave();
@@ -394,7 +395,7 @@ export const save = (done = false) => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.PUT("/proprietaire", formState)
+    App.PUT("/fournisseur", Misc.createBlack(formState, blackList))
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
@@ -408,7 +409,7 @@ export const save = (done = false) => {
 export const drop = () => {
     //(<any>key).updatedUtc = state.updatedUtc;
     App.prepareRender();
-    App.DELETE("/proprietaire", key)
+    App.DELETE("/fournisseur", key)
         .then(_ => {
             Router.goto(`#/proprietaires/`, 250);
         })

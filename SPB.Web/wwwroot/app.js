@@ -485,7 +485,7 @@ System.register("_BaseApp/src/core/router", [], function (exports_2, context_2) 
 });
 System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) {
     "use strict";
-    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectText, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createUto;
+    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectText, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createWhite, createBlack;
     var __moduleName = context_3 && context_3.id;
     return {
         setters: [],
@@ -1170,11 +1170,16 @@ System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) 
                 // This change in methodology became necessary when adding support for DDMMCC.
                 return latlon;
             });
-            exports_3("createUto", createUto = function (formState, props) {
+            exports_3("createWhite", createWhite = function (formState, props) {
                 return props.reduce(function (acc, key) { {
                     acc[key] = formState[key];
                     return acc;
                 } ; }, {});
+            });
+            exports_3("createBlack", createBlack = function (formState, props) {
+                var cloned = clone(formState);
+                props.forEach(function (prop) { return delete cloned[prop]; });
+                return cloned;
             });
         }
     };
@@ -4571,7 +4576,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.POST("/account", Misc.createUto(formState, UTO))
+                App.POST("/account", Misc.createWhite(formState, UTO))
                     .then(function (payload) {
                     var newkey = payload;
                     emailSubject = payload.emailSubject;
@@ -4589,7 +4594,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.PUT("/account", Misc.createUto(formState, UTO))
+                App.PUT("/account", Misc.createWhite(formState, UTO))
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
@@ -4739,7 +4744,7 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"
         }
     };
 });
-// File: fournisseurs.ts
+// File: proprietaires.ts
 System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_41, context_41) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_5, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
@@ -4772,7 +4777,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             }
         ],
         execute: function () {
-            exports_41("NS", NS = "App_fournisseurs");
+            exports_41("NS", NS = "App_proprietaires");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
@@ -4791,7 +4796,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             pageTemplate = function (pager, table, tab, warning, dirty) {
                 var readonly = false;
                 var buttons = [];
-                buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new", i18n("Add New")));
+                buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new", i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
                 var title = layout_5.buildTitle(xtra, i18n("fournisseurs title"));
                 var subtitle = layout_5.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
@@ -4883,7 +4888,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             });
             exports_41("gotoDetail", gotoDetail = function (id) {
                 setSelectedRow(id);
-                Router.goto("#/fournisseur/" + id);
+                Router.goto("#/proprietaire/" + id);
             });
         }
     };
@@ -4891,7 +4896,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
 // File: proprietaire.ts
 System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_42, context_42) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, layout_6, NS, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, layout_6, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_42 && context_42.id;
     return {
         setters: [
@@ -4916,12 +4921,13 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
         ],
         execute: function () {
             exports_42("NS", NS = "App_proprietaire");
+            blackList = ["paysid_text", "institutionbanquaireid_text"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
             formTemplate = function (item, paysid, institutionbanquaireid) {
-                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true) + "\n    " + Theme.renderTextField(NS, "cletri", item.cletri, i18n("CLETRI"), 15) + "\n    " + Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40) + "\n    " + Theme.renderTextField(NS, "ausoinsde", item.ausoinsde, i18n("AUSOINSDE"), 30) + "\n    " + Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30) + "\n    " + Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30) + "\n    " + Theme.renderDropdownField(NS, "paysid", paysid, i18n("PAYSID")) + "\n    " + Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7) + "\n    " + Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "telephone_poste", item.telephone_poste, i18n("TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2_desc", item.telephone2_desc, i18n("TELEPHONE2_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone2_poste", item.telephone2_poste, i18n("TELEPHONE2_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12) + "\n    " + Theme.renderTextField(NS, "telephone3_desc", item.telephone3_desc, i18n("TELEPHONE3_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone3_poste", item.telephone3_poste, i18n("TELEPHONE3_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10) + "\n    " + Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1) + "\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80) + "\n    " + Theme.renderTextField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "affichercommentaires", item.affichercommentaires, i18n("AFFICHERCOMMENTAIRES")) + "\n    " + Theme.renderCheckboxField(NS, "depotdirect", item.depotdirect, i18n("DEPOTDIRECT")) + "\n    " + Theme.renderDropdownField(NS, "institutionbanquaireid", institutionbanquaireid, i18n("INSTITUTIONBANQUAIREID")) + "\n    " + Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5) + "\n    " + Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12) + "\n    " + Theme.renderTextField(NS, "no_tps", item.no_tps, i18n("NO_TPS"), 25) + "\n    " + Theme.renderTextField(NS, "no_tvq", item.no_tvq, i18n("NO_TVQ"), 25) + "\n    " + Theme.renderCheckboxField(NS, "payera", item.payera, i18n("PAYERA")) + "\n    " + Theme.renderTextField(NS, "payeraid", item.payeraid, i18n("PAYERAID"), 15) + "\n    " + Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50) + "\n    " + Theme.renderTextField(NS, "rep_nom", item.rep_nom, i18n("REP_NOM"), 30) + "\n    " + Theme.renderTextField(NS, "rep_telephone", item.rep_telephone, i18n("REP_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep_telephone_poste", item.rep_telephone_poste, i18n("REP_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep_email", item.rep_email, i18n("REP_EMAIL"), 80) + "\n    " + Theme.renderCheckboxField(NS, "enanglais", item.enanglais, i18n("ENANGLAIS")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderNumberField(NS, "mrcproducteurid", item.mrcproducteurid, i18n("MRCPRODUCTEURID")) + "\n    " + Theme.renderCheckboxField(NS, "paiementmanuel", item.paiementmanuel, i18n("PAIEMENTMANUEL")) + "\n    " + Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL")) + "\n    " + Theme.renderCheckboxField(NS, "recoittps", item.recoittps, i18n("RECOITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "recoittvq", item.recoittvq, i18n("RECOITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "modifiertrigger", item.modifiertrigger, i18n("MODIFIERTRIGGER")) + "\n    " + Theme.renderCheckboxField(NS, "isproducteur", item.isproducteur, i18n("ISPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "istransporteur", item.istransporteur, i18n("ISTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "ischargeur", item.ischargeur, i18n("ISCHARGEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isautre", item.isautre, i18n("ISAUTRE")) + "\n    " + Theme.renderCheckboxField(NS, "affichercommentairessurpermit", item.affichercommentairessurpermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT")) + "\n    " + Theme.renderCheckboxField(NS, "pasemissionpermis", item.pasemissionpermis, i18n("PASEMISSIONPERMIS")) + "\n    " + Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE")) + "\n    " + Theme.renderCheckboxField(NS, "membre_ogc", item.membre_ogc, i18n("MEMBRE_OGC")) + "\n    " + Theme.renderCheckboxField(NS, "inscrittps", item.inscrittps, i18n("INSCRITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "inscrittvq", item.inscrittvq, i18n("INSCRITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "isogc", item.isogc, i18n("ISOGC")) + "\n    " + Theme.renderTextField(NS, "rep2_nom", item.rep2_nom, i18n("REP2_NOM"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_telephone", item.rep2_telephone, i18n("REP2_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep2_telephone_poste", item.rep2_telephone_poste, i18n("REP2_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep2_email", item.rep2_email, i18n("REP2_EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true) + "\n    " + Theme.renderTextField(NS, "cletri", item.cletri, i18n("CLETRI"), 15) + "\n    " + Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40) + "\n    " + Theme.renderTextField(NS, "ausoinsde", item.ausoinsde, i18n("AUSOINSDE"), 30) + "\n    " + Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30) + "\n    " + Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30) + "\n    " + Theme.renderDropdownField(NS, "paysid", paysid, i18n("PAYSID")) + "\n    " + Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7) + "\n    " + Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "telephone_poste", item.telephone_poste, i18n("TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12) + "\n    " + Theme.renderTextField(NS, "telephone2_desc", item.telephone2_desc, i18n("TELEPHONE2_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone2_poste", item.telephone2_poste, i18n("TELEPHONE2_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12) + "\n    " + Theme.renderTextField(NS, "telephone3_desc", item.telephone3_desc, i18n("TELEPHONE3_DESC"), 20) + "\n    " + Theme.renderTextField(NS, "telephone3_poste", item.telephone3_poste, i18n("TELEPHONE3_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10) + "\n    " + Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1) + "\n    " + Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80) + "\n    " + Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80) + "\n    " + Theme.renderTextareaField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255, false, null, 5) + "\n    " + Theme.renderCheckboxField(NS, "affichercommentaires", item.affichercommentaires, i18n("AFFICHERCOMMENTAIRES")) + "\n    " + Theme.renderCheckboxField(NS, "depotdirect", item.depotdirect, i18n("DEPOTDIRECT")) + "\n    " + Theme.renderDropdownField(NS, "institutionbanquaireid", institutionbanquaireid, i18n("INSTITUTIONBANQUAIREID")) + "\n    " + Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5) + "\n    " + Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12) + "\n    " + Theme.renderTextField(NS, "no_tps", item.no_tps, i18n("NO_TPS"), 25) + "\n    " + Theme.renderTextField(NS, "no_tvq", item.no_tvq, i18n("NO_TVQ"), 25) + "\n    " + Theme.renderCheckboxField(NS, "payera", item.payera, i18n("PAYERA")) + "\n    " + Theme.renderTextField(NS, "payeraid", item.payeraid, i18n("PAYERAID"), 15) + "\n    " + Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50) + "\n    " + Theme.renderTextField(NS, "rep_nom", item.rep_nom, i18n("REP_NOM"), 30) + "\n    " + Theme.renderTextField(NS, "rep_telephone", item.rep_telephone, i18n("REP_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep_telephone_poste", item.rep_telephone_poste, i18n("REP_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep_email", item.rep_email, i18n("REP_EMAIL"), 80) + "\n    " + Theme.renderCheckboxField(NS, "enanglais", item.enanglais, i18n("ENANGLAIS")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderNumberField(NS, "mrcproducteurid", item.mrcproducteurid, i18n("MRCPRODUCTEURID")) + "\n    " + Theme.renderCheckboxField(NS, "paiementmanuel", item.paiementmanuel, i18n("PAIEMENTMANUEL")) + "\n    " + Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL")) + "\n    " + Theme.renderCheckboxField(NS, "recoittps", item.recoittps, i18n("RECOITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "recoittvq", item.recoittvq, i18n("RECOITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "modifiertrigger", item.modifiertrigger, i18n("MODIFIERTRIGGER")) + "\n    " + Theme.renderCheckboxField(NS, "isproducteur", item.isproducteur, i18n("ISPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "istransporteur", item.istransporteur, i18n("ISTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "ischargeur", item.ischargeur, i18n("ISCHARGEUR")) + "\n    " + Theme.renderCheckboxField(NS, "isautre", item.isautre, i18n("ISAUTRE")) + "\n    " + Theme.renderCheckboxField(NS, "affichercommentairessurpermit", item.affichercommentairessurpermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT")) + "\n    " + Theme.renderCheckboxField(NS, "pasemissionpermis", item.pasemissionpermis, i18n("PASEMISSIONPERMIS")) + "\n    " + Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE")) + "\n    " + Theme.renderCheckboxField(NS, "membre_ogc", item.membre_ogc, i18n("MEMBRE_OGC")) + "\n    " + Theme.renderCheckboxField(NS, "inscrittps", item.inscrittps, i18n("INSCRITTPS")) + "\n    " + Theme.renderCheckboxField(NS, "inscrittvq", item.inscrittvq, i18n("INSCRITTVQ")) + "\n    " + Theme.renderCheckboxField(NS, "isogc", item.isogc, i18n("ISOGC")) + "\n    " + Theme.renderTextField(NS, "rep2_nom", item.rep2_nom, i18n("REP2_NOM"), 80) + "\n    " + Theme.renderTextField(NS, "rep2_telephone", item.rep2_telephone, i18n("REP2_TELEPHONE"), 12) + "\n    " + Theme.renderTextField(NS, "rep2_telephone_poste", item.rep2_telephone_poste, i18n("REP2_TELEPHONE_POSTE"), 4) + "\n    " + Theme.renderTextField(NS, "rep2_email", item.rep2_email, i18n("REP2_EMAIL"), 80) + "\n    " + Theme.renderTextareaField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255, false, null, 3) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var canEdit = true;
@@ -4937,7 +4943,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (canDelete)
                     buttons.push(Theme.buttonDelete(NS));
                 if (canAdd)
-                    buttons.push(Theme.buttonAddNew(NS, "#/fournisseur/new"));
+                    buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new"));
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
@@ -5082,7 +5088,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.POST("/proprietaire", formState)
+                App.POST("/fournisseur", Misc.createBlack(formState, blackList))
                     .then(function (payload) {
                     var newkey = payload;
                     Misc.toastSuccessSave();
@@ -5098,7 +5104,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.PUT("/proprietaire", formState)
+                App.PUT("/fournisseur", Misc.createBlack(formState, blackList))
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
@@ -5111,7 +5117,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             exports_42("drop", drop = function () {
                 //(<any>key).updatedUtc = state.updatedUtc;
                 App.prepareRender();
-                App.DELETE("/proprietaire", key)
+                App.DELETE("/fournisseur", key)
                     .then(function (_) {
                     Router.goto("#/proprietaires/", 250);
                 })
