@@ -20,7 +20,7 @@
     "SPB.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "spb.web/?mont-laurier",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

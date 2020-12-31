@@ -93,6 +93,8 @@ namespace SPB.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UsePathBase(new PathString("/spb.web"));
+
             app.UseResponseCompression();
 
             app.Use_EnableRequestBodyRewind();
