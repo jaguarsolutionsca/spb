@@ -19,15 +19,15 @@ FROM openjson(@json)
 ;
 
 UPDATE
-	dbo.jag_ProfileSettings
+	Gestion_Paie.dbo.jag_ProfileSettings
 SET
-	dbo.jag_ProfileSettings.Value = cte.[value]
+	Gestion_Paie.dbo.jag_ProfileSettings.Value = cte.[value]
 FROM
-	dbo.jag_ProfileSettings ps
+	Gestion_Paie.dbo.jag_ProfileSettings ps
 INNER JOIN
 	@table cte on cte.uid = ps.ProfileID
 WHERE
-	cte.[key] = ps.Name
+	cte.[key] COLLATE DATABASE_DEFAULT = ps.Name COLLATE DATABASE_DEFAULT
 ;
 
 END

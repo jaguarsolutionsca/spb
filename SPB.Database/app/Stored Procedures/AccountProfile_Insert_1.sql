@@ -18,7 +18,7 @@ SELECT
 FROM openjson(@json)
 ;
 
-INSERT dbo.jag_ProfileSettings
+INSERT Gestion_Paie.dbo.jag_ProfileSettings
 SELECT
 	@UID [uid],
 	Description [key],

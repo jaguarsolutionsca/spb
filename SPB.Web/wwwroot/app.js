@@ -3406,9 +3406,9 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 target.classList.toggle("is-active");
             });
             exports_30("renderBlame", renderBlame = function (obj, isNew) {
-                if (isNew || obj == undefined || obj.updatedUtc == undefined || obj.by == undefined)
+                if (isNew || obj == undefined || obj.updated == undefined || obj.by == undefined)
                     return "";
-                return "\n    <div class=\"has-text-right js-blame\">\n        <span>Last updated on " + Misc.toStaticDateTime(obj.updatedUtc) + (obj.by ? " by " + obj.by : "") + "</span>\n    </div>\n";
+                return "\n    <div class=\"has-text-right js-blame\">\n        <span>Last updated on " + Misc.toStaticDateTime(obj.updated) + (obj.by ? " by " + obj.by : "") + "</span>\n    </div>\n";
             });
             exports_30("renderFileUpload", renderFileUpload = function (ns, propName, label, accept, isBusy) {
                 if (accept === void 0) { accept = "image/*"; }
@@ -3585,7 +3585,7 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
 });
 System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
     "use strict";
-    var App, yearFilter, dateFilter, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire;
+    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire;
     var __moduleName = context_34 && context_34.id;
     return {
         setters: [
@@ -3602,6 +3602,23 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
         execute: function () {
             yearFilter = function (one, year) { return year >= one.started && (one.ended == undefined || year <= one.ended); };
             dateFilter = function (one, date) { return date >= one.started && (one.ended == undefined || date <= one.ended); };
+            exports_34("fetch_sortOrderKeys", fetch_sortOrderKeys = function () {
+                return function (data) {
+                    var fill = function (id, description) {
+                        return {
+                            id: id,
+                            description: description
+                        };
+                    };
+                    sortOrderKeys = [
+                        fill(1, "Nom fournisseur"),
+                        fill(2, "No chèque/paiement, Type de facture, Nom fournisseur"),
+                        fill(3, "No fournisseur"),
+                        fill(4, "No facture")
+                    ];
+                };
+            });
+            exports_34("get_sortOrderKeys", get_sortOrderKeys = function (year) { return sortOrderKeys; });
             exports_34("fetch_pays", fetch_pays = function () {
                 return function (data) {
                     if (pays != undefined && pays.length > 0)
@@ -4417,7 +4434,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
 // File: account.ts
 System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/auth", "src/admin/lookupdata", "src/admin/layout"], function (exports_38, context_38) {
     "use strict";
-    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, UTO, key, state, fetchedState, isNew, isDirty, emailSubject, emailBody, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
+    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, blackList, key, state, fetchedState, isNew, isDirty, emailSubject, emailBody, block_account, block_profile, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
     var __moduleName = context_38 && context_38.id;
     return {
         setters: [
@@ -4445,15 +4462,21 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         ],
         execute: function () {
             exports_38("NS", NS = "App_account");
-            UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "profile", "comment", "archive", "updated"];
+            blackList = ["cie_Text", "roleLUID_Text", "resetGuid", "created", "updatedBy", "by", "profileJson", "xtra"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
-            formTemplate = function (item, roleList) {
+            block_account = function (item, roleList) {
                 var roleLUID = Theme.renderRadios(NS, "roleLUID", Lookup.authrole, state.roleLUID, false);
                 var canCreateFullAccount = true; //Perm.canCreateFullAccount();
-                return "\n    <!-- edit -->\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + (canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n("USEREALEMAIL_HELP_" + item.useRealEmail)) : "") + "\n\n" + (item.useRealEmail ? "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, { required: true, size: "js-width-50" }) + "\n    " + (!isNew ? "\n        <div class=\"field is-horizontal\">\n            <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n            <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n        </div>\n    " : "") + "\n" : "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("USERNAME"), 50, { required: true, size: "js-width-50" }) + "\n    " + Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, { required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true }) + "\n") + "\n\n    " + Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true) + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiry), i18n("RESETEXPIRY")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivity), i18n("LASTACTIVITY")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    " + Theme.renderRadioField(roleLUID, i18n("ROLELUID")) + "\n    " + Theme.renderNumberField(NS, "archiveDays", item.archiveDays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n    " + Theme.renderBlame(item, isNew) + "\n";
+                return "\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + (canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n("USEREALEMAIL_HELP_" + item.useRealEmail)) : "") + "\n\n" + (item.useRealEmail ? "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, { required: true, size: "js-width-50" }) + "\n    " + (!isNew ? "\n        <div class=\"field is-horizontal\">\n            <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n            <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n        </div>\n    " : "") + "\n" : "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("USERNAME"), 50, { required: true, size: "js-width-50" }) + "\n    " + Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, { required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true }) + "\n") + "\n\n    " + Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true) + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiry), i18n("RESETEXPIRY")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivity), i18n("LASTACTIVITY")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    " + Theme.renderRadioField(roleLUID, i18n("ROLELUID")) + "\n    " + Theme.renderNumberField(NS, "archiveDays", item.archiveDays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n";
+            };
+            block_profile = function (profile, sortOrderKeysID) {
+                return "\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + Theme.renderTextField(NS, "profile.AcrobatPath", profile.AcrobatPath, "Chemin d'accès à Acrobat Reader", 100, false) + "\n    " + Theme.renderDropdownField(NS, "profile.FactureSortType", sortOrderKeysID, "Ordre de tri des factures (croissant)") + "\n    </div>\n    </div>\n";
+            };
+            formTemplate = function (item, roleList, sortOrderKeysID) {
+                return "\n<div class=\"columns\">\n    <div class=\"column is-8 is-offset-2\">\n        " + Theme.wrapFieldset("Compte", block_account(item, roleList)) + "\n        " + Theme.wrapFieldset("Profile", block_profile(item.profile, sortOrderKeysID)) + "\n    </div>\n</div>\n\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             resetPasswordButton = function (item) {
                 var title;
@@ -4505,7 +4528,8 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     fetchedState = Misc.clone(state);
                     key = { uid: uid };
                 })
-                    .then(Lookup.fetch_authrole());
+                    .then(Lookup.fetch_authrole())
+                    .then(Lookup.fetch_sortOrderKeys());
             });
             exports_38("fetch", fetch = function (params) {
                 var id = +params[0];
@@ -4523,7 +4547,9 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (state == undefined || Object.keys(state).length == 0)
                     return App.warningTemplate() || App.unexpectedTemplate();
                 var year = state.currentYear;
-                var form = formTemplate(state, Lookup.authrole);
+                var lookup_sortOrderKeys = Lookup.get_sortOrderKeys(year);
+                var sortOrderKeysID = Theme.renderOptions(lookup_sortOrderKeys, state.profile.FactureSortType, false);
+                var form = formTemplate(state, Lookup.authrole, sortOrderKeysID);
                 emailBody = undefined;
                 var tab = layout_3.tabTemplate(state.uid, state.xtra);
                 var dirty = dirtyTemplate();
@@ -4549,7 +4575,9 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 clone.roleLUID = Misc.fromRadioNumber(NS + "_roleLUID", state.roleLUID);
                 clone.archiveDays = Misc.fromInputNumberNullable(NS + "_archiveDays", state.archiveDays);
                 clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
-                clone.profile = Misc.clone(state.profile);
+                //
+                clone.profile.AcrobatPath = Misc.fromInputText(NS + "_profile.AcrobatPath", state.profile.AcrobatPath);
+                clone.profile.FactureSortType = Misc.fromSelectNumber(NS + "_profile.FactureSortType", state.profile.FactureSortType);
                 return clone;
             };
             valid = function (formState) {
@@ -4576,7 +4604,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.POST("/account", Misc.createWhite(formState, UTO))
+                App.POST("/account", Misc.createBlack(formState, blackList))
                     .then(function (payload) {
                     var newkey = payload;
                     emailSubject = payload.emailSubject;
@@ -4594,7 +4622,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (!valid(formState))
                     return App.render();
                 App.prepareRender();
-                App.PUT("/account", Misc.createWhite(formState, UTO))
+                App.PUT("/account", Misc.createBlack(formState, blackList))
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
@@ -4631,6 +4659,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .catch(App.render);
             });
             dirtyExit = function () {
+                //console.log(fetchedState); console.log(getFormState())
                 isDirty = !Misc.same(fetchedState, getFormState());
                 if (isDirty) {
                     setTimeout(function () {

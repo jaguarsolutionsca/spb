@@ -11,6 +11,25 @@ const yearFilter = (one: Lookup.LookupData, year: number) => year >= one.started
 const dateFilter = (one: Lookup.LookupData, date: Date) => date >= one.started && (one.ended == undefined || date <= one.ended);
 
 
+let sortOrderKeys: Lookup.LookupData[];
+export const fetch_sortOrderKeys = () => {
+    return function (data: any) {
+        const fill = (id: number, description: string) => {
+            return <Lookup.LookupData>{
+                id: id,
+                description: description
+            }
+        }
+        sortOrderKeys = [
+            fill(1, "Nom fournisseur"),
+            fill(2, "No chèque/paiement, Type de facture, Nom fournisseur"),
+            fill(3, "No fournisseur"),
+            fill(4, "No facture")
+        ]
+    }
+}
+export const get_sortOrderKeys = (year: number) => sortOrderKeys;
+
 let pays: Lookup.LookupData[];
 export const fetch_pays = () => {
     return function (data: any) {

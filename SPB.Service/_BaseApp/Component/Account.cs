@@ -267,14 +267,13 @@ namespace BaseApp.DTO
                     else
                     {
                         var clean = one.Value.ToString().Trim();
+                        value = (!string.IsNullOrEmpty(clean) ? clean : null);
 
                         if (bool.TryParse(clean, out bool boolValue))
                             value = boolValue;
 
                         if (double.TryParse(clean, out double doubleValue))
                             value = doubleValue;
-
-                        value = (!string.IsNullOrEmpty(clean) ? clean : null);
                     }
                     profile.Add(one.Key, value);
                 }

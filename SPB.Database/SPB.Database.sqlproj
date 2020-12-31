@@ -105,7 +105,6 @@
     <Build Include="app\Stored Procedures\Account_New.sql" />
     <Build Include="app\Stored Procedures\Account_Insert.sql" />
     <Build Include="app\Stored Procedures\Account_Delete.sql" />
-    <Build Include="dbo\Tables\jag_ProfileSettings_1.sql" />
     <Build Include="app\Stored Procedures\AccountProfile_Update_1.sql" />
     <Build Include="app\Stored Procedures\AccountProfile_Select_1.sql" />
     <Build Include="app\Stored Procedures\AccountProfile_New_1.sql" />

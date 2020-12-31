@@ -104,10 +104,10 @@ export const onburger = (element: HTMLElement) => {
 }
 
 export const renderBlame = (obj: any, isNew: boolean) => {
-    if (isNew || obj == undefined || obj.updatedUtc == undefined || obj.by == undefined) return "";
+    if (isNew || obj == undefined || obj.updated == undefined || obj.by == undefined) return "";
     return `
     <div class="has-text-right js-blame">
-        <span>Last updated on ${Misc.toStaticDateTime(obj.updatedUtc)}${obj.by ? ` by ${obj.by}` : ``}</span>
+        <span>Last updated on ${Misc.toStaticDateTime(obj.updated)}${obj.by ? ` by ${obj.by}` : ``}</span>
     </div>
 `;
 }

@@ -43,7 +43,7 @@ interface IState {
     archiveDays: number
     readyToArchive: boolean
     currentYear: number
-    profile: any
+    profile: IProfile
     comment: string
     archive: boolean
     created: Date
@@ -56,7 +56,25 @@ interface IState {
     canCreateInvitation: boolean
 }
 
-const UTO = ["uid", "cie", "email", "password", "roleLUID", "firstName", "lastName", "useRealEmail", "archiveDays", "currentYear", "profile", "comment", "archive", "updated"];
+interface IProfile {
+    AcrobatPath: string
+    AutresRapportsPrinterMarginBottom: number
+    AutresRapportsPrinterMarginLeft: number
+    AutresRapportsPrinterMarginRight: number
+    AutresRapportsPrinterMarginTop: number
+    ExcelLanguage: string
+    FactureFormat: number
+    FactureSortType: number
+    ImprimanteAutresRapports: string
+    ImprimanteDePermis: string
+    MunicipaliteSortType: number
+    ProprietaireSortType: number
+    SignaturePath: string
+    SignaturePrint: boolean
+    TransporteurSortType: number
+}
+
+const blackList = ["cie_Text", "roleLUID_Text", "resetGuid", "created", "updatedBy", "by", "profileJson", "xtra"];
 
 
 let key: IKey;
@@ -68,14 +86,13 @@ let emailSubject: string;
 let emailBody: string;
 
 
-const formTemplate = (item: IState, roleList: Lookup.LookupData[]) => {
+const block_account = (item: IState, roleList: Lookup.LookupData[]) => {
 
     let roleLUID = Theme.renderRadios(NS, "roleLUID", Lookup.authrole, state.roleLUID, false);
 
     let canCreateFullAccount = true;//Perm.canCreateFullAccount();
 
     return `
-    <!-- edit -->
     <div class="columns js-2-columns">
     <div class="column">
     ${canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n(`USEREALEMAIL_HELP_${item.useRealEmail}`)) : ""}
@@ -114,6 +131,29 @@ ${!isNew ? `
 ` : ``}
     </div>
     </div>
+`;
+}
+
+const block_profile = (profile: IProfile, sortOrderKeysID: string) => {
+    return `
+    <div class="columns js-2-columns">
+    <div class="column">
+    ${Theme.renderTextField(NS, "profile.AcrobatPath", profile.AcrobatPath, "Chemin d'accès à Acrobat Reader", 100, false)}
+    ${Theme.renderDropdownField(NS, "profile.FactureSortType", sortOrderKeysID, "Ordre de tri des factures (croissant)")}
+    </div>
+    </div>
+`;
+}
+
+const formTemplate = (item: IState, roleList: Lookup.LookupData[], sortOrderKeysID: string) => {
+    return `
+<div class="columns">
+    <div class="column is-8 is-offset-2">
+        ${Theme.wrapFieldset("Compte", block_account(item, roleList))}
+        ${Theme.wrapFieldset("Profile", block_profile(item.profile, sortOrderKeysID))}
+    </div>
+</div>
+
     ${Theme.renderBlame(item, isNew)}
 `;
 };
@@ -208,6 +248,7 @@ export const fetchState = (uid: number) => {
             key = <IKey>{ uid };
         })
         .then(Lookup.fetch_authrole())
+        .then(Lookup.fetch_sortOrderKeys())
 };
 
 export const fetch = (params: string[]) => {
@@ -227,7 +268,11 @@ export const render = () => {
 
     let year = state.currentYear;
 
-    const form = formTemplate(state, Lookup.authrole);
+    let lookup_sortOrderKeys = Lookup.get_sortOrderKeys(year);
+
+    let sortOrderKeysID = Theme.renderOptions(lookup_sortOrderKeys, state.profile.FactureSortType, false);
+
+    const form = formTemplate(state, Lookup.authrole, sortOrderKeysID);
     emailBody = undefined;
 
     const tab = tabTemplate(state.uid, state.xtra);
@@ -257,7 +302,9 @@ const getFormState = () => {
     clone.roleLUID = Misc.fromRadioNumber(`${NS}_roleLUID`, state.roleLUID);
     clone.archiveDays = Misc.fromInputNumberNullable(`${NS}_archiveDays`, state.archiveDays);
     clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
-    clone.profile = Misc.clone(state.profile);
+    //
+    clone.profile.AcrobatPath = Misc.fromInputText(`${NS}_profile.AcrobatPath`, state.profile.AcrobatPath);
+    clone.profile.FactureSortType = Misc.fromSelectNumber(`${NS}_profile.FactureSortType`, state.profile.FactureSortType);
     return clone;
 };
 
@@ -287,7 +334,7 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.POST("/account", Misc.createWhite(formState, UTO))
+    App.POST("/account", Misc.createBlack(formState, blackList))
         .then(payload => {
             let newkey = <IKey>payload;
             emailSubject = payload.emailSubject;
@@ -303,7 +350,7 @@ export const save = (done = false) => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.PUT("/account", Misc.createWhite(formState, UTO))
+    App.PUT("/account", Misc.createBlack(formState, blackList))
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
@@ -344,6 +391,7 @@ export const createInvitation = () => {
 }
 
 const dirtyExit = () => {
+    //console.log(fetchedState); console.log(getFormState())
     isDirty = !Misc.same(fetchedState, getFormState());
     if (isDirty) {
         setTimeout(() => {

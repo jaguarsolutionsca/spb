@@ -14,7 +14,7 @@ DECLARE @query AS nvarchar(MAX) =
 '
 SELECT
 (
-	SELECT * FROM (SELECT [Name], ISNULL([Value],'''') [Value] FROM dbo.jag_ProfileSettings WHERE ProfileID = '+ CAST(@uid as varchar(8)) +') t1
+	SELECT * FROM (SELECT [Name], ISNULL([Value],'''') [Value] FROM Gestion_Paie.dbo.jag_ProfileSettings WHERE ProfileID = '+ CAST(@uid as varchar(8)) +') t1
 	PIVOT (MAX([Value]) FOR [Name] IN (' + @columns  + ')) t2
 	FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
 ) AS [account_profile]
