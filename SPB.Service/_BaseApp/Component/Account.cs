@@ -400,7 +400,7 @@ namespace BaseApp.Service
         public Account_PK Account_Insert(UTO.Account_Insert uto, string url)
         {
             int uid;
-            var entity = mapTo<UTO.Account_Insert, DAL.Account_Insert>(uto);
+            var entity = Common.Mapper.mapTo<UTO.Account_Insert, DAL.Account_Insert>(uto);
 
             var email = sanitizeEmail(entity.email);
             entity.email = email;
@@ -440,7 +440,7 @@ namespace BaseApp.Service
 
         public void Account_Update(UTO.Account_Update uto)
         {
-            var entity = mapTo<UTO.Account_Update, DAL.Account_Update>(uto);
+            var entity = Common.Mapper.mapTo<UTO.Account_Update, DAL.Account_Update>(uto);
 
             if (entity.uid == 1 && user.Get_UID() != 1)
                 throw new ValidationException("Only the administrator can update this account!");
