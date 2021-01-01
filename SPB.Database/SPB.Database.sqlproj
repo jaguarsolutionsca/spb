@@ -112,6 +112,15 @@
     <Build Include="app\Stored Procedures\AccountProfile_Delete_1.sql" />
     <Build Include="dbo\Stored Procedures\Lookup_ListBy_Groupe.sql" />
     <Build Include="app\Stored Procedures\Lookup_ListBy_Groupe.sql" />
+    <Build Include="app\Stored Procedures\Company_Select.sql" />
+    <Build Include="app\Stored Procedures\CompanyProfile_Update.sql" />
+    <Build Include="app\Stored Procedures\CompanyProfile_Select_BROKEN.sql" />
+    <Build Include="app\Stored Procedures\Company_Update.sql" />
+    <Build Include="app\Stored Procedures\Company_Summary.sql" />
+    <Build Include="app\Stored Procedures\Company_Search.sql" />
+    <Build Include="app\Stored Procedures\Company_New.sql" />
+    <Build Include="app\Stored Procedures\Company_Insert.sql" />
+    <Build Include="app\Stored Procedures\Company_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />

@@ -7,7 +7,7 @@ import { setOpenedMenu } from "../layout"
 declare const i18n: any;
 
 
-interface ISummary {
+export interface ISummary {
     title: string
     fileCount: number
 }
@@ -66,3 +66,11 @@ ${showFile ? `
 </div>
 `;
 };
+
+export const buildTitle = (xtra: ISummary, defaultText: string) => {
+    return xtra?.title ?? defaultText;
+}
+
+export const buildSubtitle = (xtra: any, defaultText: string) => {
+    return xtra?.subtitle ?? defaultText;
+}

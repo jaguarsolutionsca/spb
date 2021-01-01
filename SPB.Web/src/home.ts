@@ -83,7 +83,7 @@ export const getMenuData = () => {
                     merge: "end",
                     name: "Jaguar", icon: "fas fa-tools",
                     links: [
-                        { name: "Compagnies", },
+                        { name: "Compagnies", href: "#/admin/companys", ns: ["App_companys", "App_company"] },
                         { name: "Metadata des permissions", },
                         { name: "Audit", },
                     ]

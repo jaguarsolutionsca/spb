@@ -22,7 +22,7 @@ namespace BaseApp.Service
         public object Company_Search(Dico pager)
         {
             var parameters = KVList.Build(pager.TrimRowCount().Revive());
-            var list = repo.queryDicoList(GP("Company_Search"), parameters, uid: true);
+            var list = repo.queryDicoList("app.Company_Search", parameters, uid: true);
             return new
             {
                 list = list,
@@ -35,8 +35,8 @@ namespace BaseApp.Service
         {
             return new
             {
-                item = repo.queryDico(GP("Company_Select"), "@id", id, uid: true),
-                xtra = repo.queryDico(GP("Company_Summary"), "@id", id, uid: true)
+                item = repo.queryDico("appCompany_Select", "@id", id, uid: true),
+                xtra = repo.queryDico("app.Company_Summary", "@id", id, uid: true)
             };
         }
 
@@ -44,7 +44,7 @@ namespace BaseApp.Service
         {
             return new
             {
-                item = repo.queryDico(GP("Company_New"), uid: true),
+                item = repo.queryDico("app.Company_New", uid: true),
                 xtra = (object)null
             };
         }
@@ -52,21 +52,21 @@ namespace BaseApp.Service
         public object Company_Insert(Dico uto)
         {
             var parameters = KVList.Build(uto.Revive());
-            var id = repo.queryScalar<string>(GP("Company_Insert"), parameters, uid: true);
+            var cie = repo.queryScalar<string>("app.Company_Insert", parameters, uid: true);
             return new
             {
-                id = id
+                cie = cie
             };
         }
 
         public void Company_Update(Dico uto)
         {
-            repo.queryNonQuery(GP("Company_Update"), KVList.Build(uto.Revive()), uid: true);
+            repo.queryNonQuery("app.Company_Update", KVList.Build(uto.Revive()), uid: true);
         }
 
         public void Company_Delete(Dico key)
         {
-            repo.queryNonQuery(GP("Company_Delete"), KVList.Build(key.Revive()), uid: true);
+            repo.queryNonQuery("app.Company_Delete", KVList.Build(key.Revive()), uid: true);
         }
 
         public int? Company_GetID(string company)

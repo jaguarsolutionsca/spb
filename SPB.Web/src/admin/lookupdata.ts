@@ -49,3 +49,23 @@ export const fetch_institutionBanquaire = () => {
     }
 }
 export const get_institutionBanquaire = (year: number) => institutionBanquaire;
+
+let compte: Lookup.LookupData[];
+export const fetch_compte = () => {
+    return function (data: any) {
+        if (compte != undefined && compte.length > 0)
+            return;
+        return App.GET(`/lookup/by/compte`).then(json => { compte = json; });
+    }
+}
+export const get_compte = (year: number) => compte;
+
+let autreFournisseur: Lookup.LookupData[];
+export const fetch_autreFournisseur = () => {
+    return function (data: any) {
+        if (autreFournisseur != undefined && autreFournisseur.length > 0)
+            return;
+        return App.GET(`/lookup/by/autreFournisseur`).then(json => { autreFournisseur = json; });
+    }
+}
+export const get_autreFournisseur = (year: number) => autreFournisseur;

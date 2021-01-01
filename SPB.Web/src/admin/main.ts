@@ -7,6 +7,8 @@ import * as Perm from "../permission"
 import * as accounts from "./accounts"
 import * as account from "./account"
 //import * as profile from "./profile"
+import * as companys from "./companys"
+import * as company from "./company"
 //import * as DataFiles from "./datafiles"
 //import * as DataFile from "./datafile"
 //import * as Lookups from "./lookups"
@@ -21,6 +23,8 @@ import * as account from "./account"
 (<any>window).App_accounts = accounts;
 (<any>window).App_account = account;
 //(<any>window).App_profile = profile;
+(<any>window).App_companys = companys;
+(<any>window).App_company = company;
 //(<any>window).App_DataFiles = DataFiles;
 //(<any>window).App_DataFile = DataFile;
 //(<any>window).App_Lookups = Lookups;
@@ -30,6 +34,8 @@ import * as account from "./account"
 export const startup = () => {
     Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
     Router.addRoute("^#/admin/account/(.*)$", account.fetch);
+    Router.addRoute("^#/admin/companys/?(.*)?$", companys.fetch);
+    Router.addRoute("^#/admin/company/(.*)$", company.fetch);
     //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
     //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
     //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
@@ -41,6 +47,8 @@ export const render = () => {
     return `
     ${accounts.render()}
     ${account.render()}
+    ${companys.render()}
+    ${company.render()}
 `;
     //${DataFiles.render()}
     //${DataFile.render()}
@@ -51,6 +59,8 @@ export const render = () => {
 export const postRender = () => {
     accounts.postRender();
     account.postRender();
+    companys.postRender();
+    company.postRender();
     //DataFiles.postRender();
     //DataFile.postRender();
     //Lookups.postRender();

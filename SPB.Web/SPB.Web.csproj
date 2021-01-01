@@ -12,6 +12,8 @@
   <ItemGroup>
     <None Remove="src\admin\account.ts" />
     <None Remove="src\admin\accounts.ts" />
+    <None Remove="src\admin\company.ts" />
+    <None Remove="src\admin\companys.ts" />
     <None Remove="src\admin\layout.ts" />
     <None Remove="src\admin\main.ts" />
     <None Remove="src\fournisseur\layout.ts" />
@@ -37,7 +39,6 @@
   <ItemGroup>
     <Folder Include="log\" />
     <Folder Include="_BaseApp\Common\" />
-    <Folder Include="_BaseApp\Controllers\" />
     <Folder Include="_BaseApp\src\" />
   </ItemGroup>
 
@@ -48,6 +49,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\admin\account.ts" />
     <TypeScriptCompile Include="src\admin\accounts.ts" />
+    <TypeScriptCompile Include="src\admin\company.ts" />
+    <TypeScriptCompile Include="src\admin\companys.ts" />
     <TypeScriptCompile Include="src\admin\layout.ts" />
     <TypeScriptCompile Include="src\admin\main.ts" />
     <TypeScriptCompile Include="src\fournisseur\layout.ts" />

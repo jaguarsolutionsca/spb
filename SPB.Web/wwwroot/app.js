@@ -3585,7 +3585,7 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
 });
 System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
     "use strict";
-    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire;
+    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur;
     var __moduleName = context_34 && context_34.id;
     return {
         setters: [
@@ -3635,6 +3635,22 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
                 };
             });
             exports_34("get_institutionBanquaire", get_institutionBanquaire = function (year) { return institutionBanquaire; });
+            exports_34("fetch_compte", fetch_compte = function () {
+                return function (data) {
+                    if (compte != undefined && compte.length > 0)
+                        return;
+                    return App.GET("/lookup/by/compte").then(function (json) { compte = json; });
+                };
+            });
+            exports_34("get_compte", get_compte = function (year) { return compte; });
+            exports_34("fetch_autreFournisseur", fetch_autreFournisseur = function () {
+                return function (data) {
+                    if (autreFournisseur != undefined && autreFournisseur.length > 0)
+                        return;
+                    return App.GET("/lookup/by/autreFournisseur").then(function (json) { autreFournisseur = json; });
+                };
+            });
+            exports_34("get_autreFournisseur", get_autreFournisseur = function (year) { return autreFournisseur; });
         }
     };
 });
@@ -3681,7 +3697,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                                 merge: "end",
                                 name: "Jaguar", icon: "fas fa-tools",
                                 links: [
-                                    { name: "Compagnies", },
+                                    { name: "Compagnies", href: "#/admin/companys", ns: ["App_companys", "App_company"] },
                                     { name: "Metadata des permissions", },
                                     { name: "Audit", },
                                 ]
@@ -4225,7 +4241,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
 });
 System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_36, context_36) {
     "use strict";
-    var App, layout_1, icon, prepareMenu, tabTemplate;
+    var App, layout_1, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_36 && context_36.id;
     return {
         setters: [
@@ -4251,6 +4267,14 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], fun
                 var showFiles = showDetail && xtra;
                 var showFile = isFile;
                 return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isAccounts ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/accounts\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isAccount ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/account/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Account Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.fileCount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            });
+            exports_36("buildTitle", buildTitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
+            });
+            exports_36("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
         }
     };
@@ -4672,119 +4696,18 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         }
     };
 });
-System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account"], function (exports_39, context_39) {
+// File: companys.ts
+System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/admin/layout"], function (exports_39, context_39) {
     "use strict";
-    var Router, accounts, account, startup, render, postRender;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_4, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
     var __moduleName = context_39 && context_39.id;
-    return {
-        setters: [
-            function (Router_7) {
-                Router = Router_7;
-            },
-            function (accounts_1) {
-                accounts = accounts_1;
-            },
-            function (account_1) {
-                account = account_1;
-            }
-        ],
-        execute: function () {
-            //import * as profile from "./profile"
-            //import * as DataFiles from "./datafiles"
-            //import * as DataFile from "./datafile"
-            //import * as Lookups from "./lookups"
-            //import * as Lookup from "./lookup"
-            //
-            // Global references to application objects
-            // These must match the "NS" values defined in modules
-            // Mainly used for event handlers
-            //
-            window.App_accounts = accounts;
-            window.App_account = account;
-            //(<any>window).App_profile = profile;
-            //(<any>window).App_DataFiles = DataFiles;
-            //(<any>window).App_DataFile = DataFile;
-            //(<any>window).App_Lookups = Lookups;
-            //(<any>window).App_Lookup = Lookup;
-            exports_39("startup", startup = function () {
-                Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
-                Router.addRoute("^#/admin/account/(.*)$", account.fetch);
-                //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
-                //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
-                //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
-                //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
-                //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
-            });
-            exports_39("render", render = function () {
-                return "\n    " + accounts.render() + "\n    " + account.render() + "\n";
-                //${DataFiles.render()}
-                //${DataFile.render()}
-                //${Lookups.render()}
-                //${Lookup.render()}
-            });
-            exports_39("postRender", postRender = function () {
-                accounts.postRender();
-                account.postRender();
-                //DataFiles.postRender();
-                //DataFile.postRender();
-                //Lookups.postRender();
-                //Lookup.postRender();
-            });
-        }
-    };
-});
-System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_40, context_40) {
-    "use strict";
-    var App, layout_4, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_40 && context_40.id;
     return {
         setters: [
             function (App_12) {
                 App = App_12;
             },
-            function (layout_4_1) {
-                layout_4 = layout_4_1;
-            }
-        ],
-        execute: function () {
-            exports_40("icon", icon = "far fa-user");
-            exports_40("prepareMenu", prepareMenu = function () {
-                layout_4.setOpenedMenu("Fournisseur-Propriétaires");
-            });
-            exports_40("tabTemplate", tabTemplate = function (id, xtra, isNew) {
-                if (isNew === void 0) { isNew = false; }
-                var isProprietaires = App.inContext("App_proprietaires");
-                var isProprietaire = App.inContext("App_proprietaire");
-                var isFiles = window.location.hash.startsWith("#/files/proprietaire");
-                var isFile = window.location.hash.startsWith("#/file/proprietaire");
-                var showDetail = !isProprietaires;
-                var showFiles = showDetail && xtra;
-                var showFile = isFile;
-                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
-            });
-            exports_40("buildTitle", buildTitle = function (xtra, defaultText) {
-                var _a;
-                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
-            });
-            exports_40("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
-                var _a;
-                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
-            });
-        }
-    };
-});
-// File: proprietaires.ts
-System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_41, context_41) {
-    "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_5, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
-    var __moduleName = context_41 && context_41.id;
-    return {
-        setters: [
-            function (App_13) {
-                App = App_13;
-            },
-            function (Router_8) {
-                Router = Router_8;
+            function (Router_7) {
+                Router = Router_7;
             },
             function (Perm_2) {
                 Perm = Perm_2;
@@ -4801,12 +4724,587 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             function (Lookup_2) {
                 Lookup = Lookup_2;
             },
+            function (layout_4_1) {
+                layout_4 = layout_4_1;
+            }
+        ],
+        execute: function () {
+            exports_39("NS", NS = "App_companys");
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "CIE", sortDirection: "ASC", filter: {} }
+            };
+            filterTemplate = function () {
+                var filters = [];
+                return filters.join("");
+            };
+            trTemplate = function (item, rowNumber) {
+                return "\n<tr class=\"" + (isSelectedRow(item.cie) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail(" + item.cie + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.cie) + "</td>\n    <td>" + Misc.toStaticText(item.name) + "</td>\n    <td>" + Misc.toStaticText(item.features) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n    <td>" + Misc.toStaticText(item.acombapassword) + "</td>\n    <td>" + Misc.toStaticText(item.acombapath) + "</td>\n    <td>" + Misc.toStaticText(item.acombasocietepath) + "</td>\n    <td>" + Misc.toStaticText(item.acombasyncropath) + "</td>\n    <td>" + Misc.toStaticText(item.acombausername) + "</td>\n    <td>" + Misc.toStaticText(item.acrobatpath) + "</td>\n    <td>" + Misc.toStaticText(item.adminpassword) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherpermit1) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherpermit2) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherpermit3) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.afficherpermit4) + "</td>\n    <td>" + Misc.toStaticText(item.anneecourante) + "</td>\n    <td>" + Misc.toStaticText(item.autresraportsprintermarginbottom) + "</td>\n    <td>" + Misc.toStaticText(item.autresraportsprintermarginleft) + "</td>\n    <td>" + Misc.toStaticText(item.autresraportsprintermarginright) + "</td>\n    <td>" + Misc.toStaticText(item.autresraportsprintermargintop) + "</td>\n    <td>" + Misc.toStaticText(item.caneditundeliveredpermits) + "</td>\n    <td>" + Misc.toStaticText(item.ccemail) + "</td>\n    <td>" + Misc.toStaticText(item.cletriclientnom) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.copiepermit1) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.copiepermit2) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.copiepermit3) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.copiepermit4) + "</td>\n    <td>" + Misc.toStaticText(item.deletefichepassword) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.emailpermit1) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.emailpermit2) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.emailpermit3) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.emailpermit4) + "</td>\n    <td>" + Misc.toStaticText(item.excellanguage) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraisautrechargepourtransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraisautresproducteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraisautresrevenusproducteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraisautresrevenustransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraisautrestransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraischargeurproducteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraischargeurtransporteur) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesafficherfraiscompensationdedeplacement) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.facturesaffichersurchargeproducteur) + "</td>\n    <td>" + Misc.toStaticText(item.formicon) + "</td>\n    <td>" + Misc.toStaticText(item.formtext) + "</td>\n    <td>" + Misc.toStaticText(item.fournisseurpointerid) + "</td>\n    <td>" + Misc.toStaticText(item.fromemail) + "</td>\n    <td>" + Misc.toStaticText(item.gpversion) + "</td>\n    <td>" + Misc.toStaticText(item.helpfilepath) + "</td>\n    <td>" + Misc.toStaticText(item.imprimanteautresrapports) + "</td>\n    <td>" + Misc.toStaticText(item.imprimantedepermis) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.livraisonliertaux) + "</td>\n    <td>" + Misc.toStaticText(item.logfile) + "</td>\n    <td>" + Misc.toStaticText(item.logopath) + "</td>\n    <td>" + Misc.toStaticText(item.massecontingentvoyagedefaut) + "</td>\n    <td>" + Misc.toStaticText(item.masselimitedefaut) + "</td>\n    <td>" + Misc.toStaticText(item.message_autorisationdeslivraisons) + "</td>\n    <td>" + Misc.toStaticText(item.message_demandecontingentement) + "</td>\n    <td>" + Misc.toStaticText(item.messageimpressionsdefactures) + "</td>\n    <td>" + Misc.toStaticText(item.messagelivraisonnonconforme) + "</td>\n    <td>" + Misc.toStaticText(item.messagespecpermitanglais) + "</td>\n    <td>" + Misc.toStaticText(item.messagespecpermitfrancais) + "</td>\n    <td>" + Misc.toStaticText(item.nomdb) + "</td>\n    <td>" + Misc.toStaticText(item.permisprintermarginbottom) + "</td>\n    <td>" + Misc.toStaticText(item.permisprintermarginleft) + "</td>\n    <td>" + Misc.toStaticText(item.permisprintermarginright) + "</td>\n    <td>" + Misc.toStaticText(item.permisprintermargintop) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.permisprintpreview) + "</td>\n    <td>" + Misc.toStaticText(item.preleves_notps) + "</td>\n    <td>" + Misc.toStaticText(item.preleves_notvq) + "</td>\n    <td>" + Misc.toStaticText(item.serveuremail) + "</td>\n    <td>" + Misc.toStaticText(item.showyearsinpermislistview) + "</td>\n    <td>" + Misc.toStaticText(item.superficiecontingenteepourcentagededuction) + "</td>\n    <td>" + Misc.toStaticText(item.superficiecontingenteesansdeduction) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_codepostal) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_fax) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_nom) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_nomanglais) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_nomfrancais) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_notps) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_notvq) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_rue) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_telephone) + "</td>\n    <td>" + Misc.toStaticText(item.syndicat_ville) + "</td>\n    <td>" + Misc.toStaticText(item.syndicatouoffice) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.takeacombabackup) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.takesqlbackup) + "</td>\n    <td>" + Misc.toStaticText(item.tempsentrelesbackupsautomatiques) + "</td>\n    <td>" + Misc.toStaticText(item.timeoutsql) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis1) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis1anglais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis1francais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis2) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis2anglais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis2francais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis3) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis3anglais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis3francais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis4) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis4anglais) + "</td>\n    <td>" + Misc.toStaticText(item.typepermis4francais) + "</td>\n    <td>" + Misc.toStaticText(item.updateotherdatabase) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.utiliselesychronisateurdirect) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.utiliserlesnomsdemachinedanslenomdeprinter) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.utiliserlotscontingentes) + "</td>\n    <td>" + Misc.toStaticText(item.xlstemplatespath) + "</td>\n    <td>" + Misc.toStaticText(item.fournisseur_planconjoint_text) + "</td>\n    <td>" + Misc.toStaticText(item.fournisseur_surcharge_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_paiements_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_arecevoir_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_apayer_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_duauxproducteurs_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_tpspercues_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_tpspayees_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_tvqpercues_text) + "</td>\n    <td>" + Misc.toStaticText(item.compte_tvqpayees_text) + "</td>\n    <td>" + Misc.toStaticText(item.taux_tps) + "</td>\n    <td>" + Misc.toStaticText(item.taux_tvq) + "</td>\n    <td>" + Misc.toStaticText(item.fournisseur_fond_roulement_text) + "</td>\n    <td>" + Misc.toStaticText(item.fournisseur_fond_forestier_text) + "</td>\n    <td>" + Misc.toStaticText(item.fournisseur_preleve_divers_text) + "</td>\n</tr>";
+            };
+            tableTemplate = function (tbody, pager) {
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CIE"), "cie", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NAME"), "name", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FEATURES"), "features", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACOMBAPASSWORD"), "acombapassword", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACOMBAPATH"), "acombapath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACOMBASOCIETEPATH"), "acombasocietepath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACOMBASYNCROPATH"), "acombasyncropath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACOMBAUSERNAME"), "acombausername", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ACROBATPATH"), "acrobatpath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ADMINPASSWORD"), "adminpassword", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERPERMIT1"), "afficherpermit1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERPERMIT2"), "afficherpermit2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERPERMIT3"), "afficherpermit3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AFFICHERPERMIT4"), "afficherpermit4", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ANNEECOURANTE"), "anneecourante", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUTRESRAPORTSPRINTERMARGINBOTTOM"), "autresraportsprintermarginbottom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUTRESRAPORTSPRINTERMARGINLEFT"), "autresraportsprintermarginleft", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUTRESRAPORTSPRINTERMARGINRIGHT"), "autresraportsprintermarginright", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("AUTRESRAPORTSPRINTERMARGINTOP"), "autresraportsprintermargintop", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CANEDITUNDELIVEREDPERMITS"), "caneditundeliveredpermits", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CCEMAIL"), "ccemail", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CLETRICLIENTNOM"), "cletriclientnom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COPIEPERMIT1"), "copiepermit1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COPIEPERMIT2"), "copiepermit2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COPIEPERMIT3"), "copiepermit3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COPIEPERMIT4"), "copiepermit4", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DELETEFICHEPASSWORD"), "deletefichepassword", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAILPERMIT1"), "emailpermit1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAILPERMIT2"), "emailpermit2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAILPERMIT3"), "emailpermit3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAILPERMIT4"), "emailpermit4", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EXCELLANGUAGE"), "excellanguage", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISAUTRECHARGEPOURTRANSPORTEUR"), "facturesafficherfraisautrechargepourtransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISAUTRESPRODUCTEUR"), "facturesafficherfraisautresproducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSPRODUCTEUR"), "facturesafficherfraisautresrevenusproducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSTRANSPORTEUR"), "facturesafficherfraisautresrevenustransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISAUTRESTRANSPORTEUR"), "facturesafficherfraisautrestransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISCHARGEURPRODUCTEUR"), "facturesafficherfraischargeurproducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISCHARGEURTRANSPORTEUR"), "facturesafficherfraischargeurtransporteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERFRAISCOMPENSATIONDEDEPLACEMENT"), "facturesafficherfraiscompensationdedeplacement", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FACTURESAFFICHERSURCHARGEPRODUCTEUR"), "facturesaffichersurchargeproducteur", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FORMICON"), "formicon", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FORMTEXT"), "formtext", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FOURNISSEURPOINTERID"), "fournisseurpointerid", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FROMEMAIL"), "fromemail", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GPVERSION"), "gpversion", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("HELPFILEPATH"), "helpfilepath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("IMPRIMANTEAUTRESRAPPORTS"), "imprimanteautresrapports", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("IMPRIMANTEDEPERMIS"), "imprimantedepermis", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LIVRAISONLIERTAUX"), "livraisonliertaux", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LOGFILE"), "logfile", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LOGOPATH"), "logopath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MASSECONTINGENTVOYAGEDEFAUT"), "massecontingentvoyagedefaut", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MASSELIMITEDEFAUT"), "masselimitedefaut", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MESSAGE_AUTORISATIONDESLIVRAISONS"), "message_autorisationdeslivraisons", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MESSAGE_DEMANDECONTINGENTEMENT"), "message_demandecontingentement", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MESSAGEIMPRESSIONSDEFACTURES"), "messageimpressionsdefactures", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MESSAGELIVRAISONNONCONFORME"), "messagelivraisonnonconforme", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MESSAGESPECPERMITANGLAIS"), "messagespecpermitanglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("MESSAGESPECPERMITFRANCAIS"), "messagespecpermitfrancais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("NOMDB"), "nomdb", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PERMISPRINTERMARGINBOTTOM"), "permisprintermarginbottom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PERMISPRINTERMARGINLEFT"), "permisprintermarginleft", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PERMISPRINTERMARGINRIGHT"), "permisprintermarginright", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PERMISPRINTERMARGINTOP"), "permisprintermargintop", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PERMISPRINTPREVIEW"), "permisprintpreview", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PRELEVES_NOTPS"), "preleves_notps", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("PRELEVES_NOTVQ"), "preleves_notvq", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SERVEUREMAIL"), "serveuremail", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SHOWYEARSINPERMISLISTVIEW"), "showyearsinpermislistview", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SUPERFICIECONTINGENTEEPOURCENTAGEDEDUCTION"), "superficiecontingenteepourcentagededuction", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SUPERFICIECONTINGENTEESANSDEDUCTION"), "superficiecontingenteesansdeduction", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_CODEPOSTAL"), "syndicat_codepostal", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_FAX"), "syndicat_fax", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_NOM"), "syndicat_nom", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_NOMANGLAIS"), "syndicat_nomanglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_NOMFRANCAIS"), "syndicat_nomfrancais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_NOTPS"), "syndicat_notps", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_NOTVQ"), "syndicat_notvq", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_RUE"), "syndicat_rue", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_TELEPHONE"), "syndicat_telephone", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICAT_VILLE"), "syndicat_ville", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SYNDICATOUOFFICE"), "syndicatouoffice", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TAKEACOMBABACKUP"), "takeacombabackup", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TAKESQLBACKUP"), "takesqlbackup", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TEMPSENTRELESBACKUPSAUTOMATIQUES"), "tempsentrelesbackupsautomatiques", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TIMEOUTSQL"), "timeoutsql", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS"), "typepermis", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS1"), "typepermis1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS1ANGLAIS"), "typepermis1anglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS1FRANCAIS"), "typepermis1francais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS2"), "typepermis2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS2ANGLAIS"), "typepermis2anglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS2FRANCAIS"), "typepermis2francais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS3"), "typepermis3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS3ANGLAIS"), "typepermis3anglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS3FRANCAIS"), "typepermis3francais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS4"), "typepermis4", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS4ANGLAIS"), "typepermis4anglais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TYPEPERMIS4FRANCAIS"), "typepermis4francais", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("UPDATEOTHERDATABASE"), "updateotherdatabase", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("UTILISELESYCHRONISATEURDIRECT"), "utiliselesychronisateurdirect", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("UTILISERLESNOMSDEMACHINEDANSLENOMDEPRINTER"), "utiliserlesnomsdemachinedanslenomdeprinter", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("UTILISERLOTSCONTINGENTES"), "utiliserlotscontingentes", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("XLSTEMPLATESPATH"), "xlstemplatespath", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FOURNISSEUR_PLANCONJOINT_TEXT"), "fournisseur_planconjoint_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FOURNISSEUR_SURCHARGE_TEXT"), "fournisseur_surcharge_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_PAIEMENTS_TEXT"), "compte_paiements_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_ARECEVOIR_TEXT"), "compte_arecevoir_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_APAYER_TEXT"), "compte_apayer_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_DUAUXPRODUCTEURS_TEXT"), "compte_duauxproducteurs_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_TPSPERCUES_TEXT"), "compte_tpspercues_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_TPSPAYEES_TEXT"), "compte_tpspayees_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_TVQPERCUES_TEXT"), "compte_tvqpercues_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("COMPTE_TVQPAYEES_TEXT"), "compte_tvqpayees_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TAUX_TPS"), "taux_tps", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("TAUX_TVQ"), "taux_tvq", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FOURNISSEUR_FOND_ROULEMENT_TEXT"), "fournisseur_fond_roulement_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FOURNISSEUR_FOND_FORESTIER_TEXT"), "fournisseur_fond_forestier_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FOURNISSEUR_PRELEVE_DIVERS_TEXT"), "fournisseur_preleve_divers_text", "ASC") + "\n            " + Pager.headerLink(i18n("TODO")) + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (pager, table, tab, warning, dirty) {
+                var readonly = false;
+                var buttons = [];
+                buttons.push(Theme.buttonAddNew(NS, "#/company/new", i18n("Add New")));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout_4.buildTitle(xtra, i18n("companys title"));
+                var subtitle = layout_4.buildSubtitle(xtra, i18n("companys subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_4.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+            };
+            exports_39("fetchState", fetchState = function (cie) {
+                Router.registerDirtyExit(null);
+                return App.POST("/company/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                    xtra = payload.xtra;
+                    key = {};
+                })
+                    .then(Lookup.fetch_autreFournisseur())
+                    .then(Lookup.fetch_compte());
+            });
+            exports_39("fetch", fetch = function (params) {
+                var cie = +params[0];
+                App.prepareRender(NS, i18n("companys"));
+                fetchState(cie)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            refresh = function () {
+                App.prepareRender(NS, i18n("companys"));
+                App.POST("/company/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            };
+            exports_39("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var warning = App.warningTemplate();
+                var dirty = "";
+                var tbody = state.list.reduce(function (html, item, index) {
+                    var rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, rowNumber);
+                }, "");
+                var year = Perm.getCurrentYear(); //state.pager.filter.year;
+                var filter = filterTemplate();
+                var search = Pager.searchTemplate(state.pager, NS);
+                var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
+                var table = tableTemplate(tbody, state.pager);
+                var tab = layout_4.tabTemplate(null, null);
+                return pageTemplate(pager, table, tab, dirty, warning);
+            });
+            exports_39("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+            });
+            exports_39("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            setSelectedRow = function (cie) {
+                if (uiSelectedRow == undefined)
+                    uiSelectedRow = { cie: cie };
+                uiSelectedRow.cie = cie;
+            };
+            isSelectedRow = function (cie) {
+                if (uiSelectedRow == undefined)
+                    return false;
+                return (uiSelectedRow.cie == cie);
+            };
+            exports_39("goto", goto = function (pageNo, pageSize) {
+                state.pager.pageNo = pageNo;
+                state.pager.pageSize = pageSize;
+                refresh();
+            });
+            exports_39("sortBy", sortBy = function (columnName, direction) {
+                state.pager.pageNo = 1;
+                state.pager.sortColumn = columnName;
+                state.pager.sortDirection = direction;
+                refresh();
+            });
+            exports_39("search", search = function (element) {
+                state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_39("gotoDetail", gotoDetail = function (cie) {
+                setSelectedRow(cie);
+                Router.goto("#/company/" + cie);
+            });
+        }
+    };
+});
+// File: company.ts
+System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_40, context_40) {
+    "use strict";
+    var App, Router, Misc, Theme, Lookup, Perm, layout_5, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_40 && context_40.id;
+    return {
+        setters: [
+            function (App_13) {
+                App = App_13;
+            },
+            function (Router_8) {
+                Router = Router_8;
+            },
+            function (Misc_16) {
+                Misc = Misc_16;
+            },
+            function (Theme_4) {
+                Theme = Theme_4;
+            },
+            function (Lookup_3) {
+                Lookup = Lookup_3;
+            },
+            function (Perm_3) {
+                Perm = Perm_3;
+            },
             function (layout_5_1) {
                 layout_5 = layout_5_1;
             }
         ],
         execute: function () {
-            exports_41("NS", NS = "App_proprietaires");
+            exports_40("NS", NS = "App_company");
+            blackList = ["fournisseur_planconjoint", "fournisseur_surcharge", "compte_paiements", "compte_arecevoir", "compte_apayer", "compte_duauxproducteurs", "compte_tpspercues", "compte_tpspayees", "compte_tvqpercues", "compte_tvqpayees", "fournisseur_fond_roulement", "fournisseur_fond_forestier", "fournisseur_preleve_divers"];
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            formTemplate = function (item, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers) {
+                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.cie), i18n("CIE")) + "\n") + "\n    " + Theme.renderNumberField(NS, "cie", item.cie, i18n("CIE"), true) + "\n    " + Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 64, true) + "\n    " + Theme.renderTextField(NS, "features", item.features, i18n("FEATURES"), 2048) + "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE")) + "\n    " + Theme.renderTextField(NS, "acombapassword", item.acombapassword, i18n("ACOMBAPASSWORD"), 500) + "\n    " + Theme.renderTextField(NS, "acombapath", item.acombapath, i18n("ACOMBAPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombasocietepath", item.acombasocietepath, i18n("ACOMBASOCIETEPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombasyncropath", item.acombasyncropath, i18n("ACOMBASYNCROPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombausername", item.acombausername, i18n("ACOMBAUSERNAME"), 500) + "\n    " + Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, i18n("ACROBATPATH"), 500) + "\n    " + Theme.renderTextField(NS, "adminpassword", item.adminpassword, i18n("ADMINPASSWORD"), 500) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit1", item.afficherpermit1, i18n("AFFICHERPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit2", item.afficherpermit2, i18n("AFFICHERPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit3", item.afficherpermit3, i18n("AFFICHERPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit4", item.afficherpermit4, i18n("AFFICHERPERMIT4")) + "\n    " + Theme.renderNumberField(NS, "anneecourante", item.anneecourante, i18n("ANNEECOURANTE"), true) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginbottom", item.autresraportsprintermarginbottom, i18n("AUTRESRAPORTSPRINTERMARGINBOTTOM")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginleft", item.autresraportsprintermarginleft, i18n("AUTRESRAPORTSPRINTERMARGINLEFT")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginright", item.autresraportsprintermarginright, i18n("AUTRESRAPORTSPRINTERMARGINRIGHT")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermargintop", item.autresraportsprintermargintop, i18n("AUTRESRAPORTSPRINTERMARGINTOP")) + "\n    " + Theme.renderTextField(NS, "caneditundeliveredpermits", item.caneditundeliveredpermits, i18n("CANEDITUNDELIVEREDPERMITS"), 500) + "\n    " + Theme.renderTextField(NS, "ccemail", item.ccemail, i18n("CCEMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "cletriclientnom", item.cletriclientnom, i18n("CLETRICLIENTNOM"), 500) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit1", item.copiepermit1, i18n("COPIEPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit2", item.copiepermit2, i18n("COPIEPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit3", item.copiepermit3, i18n("COPIEPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit4", item.copiepermit4, i18n("COPIEPERMIT4")) + "\n    " + Theme.renderTextField(NS, "deletefichepassword", item.deletefichepassword, i18n("DELETEFICHEPASSWORD"), 500) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit1", item.emailpermit1, i18n("EMAILPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit2", item.emailpermit2, i18n("EMAILPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit3", item.emailpermit3, i18n("EMAILPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit4", item.emailpermit4, i18n("EMAILPERMIT4")) + "\n    " + Theme.renderTextField(NS, "excellanguage", item.excellanguage, i18n("EXCELLANGUAGE"), 500) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautrechargepourtransporteur", item.facturesafficherfraisautrechargepourtransporteur, i18n("FACTURESAFFICHERFRAISAUTRECHARGEPOURTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresproducteur", item.facturesafficherfraisautresproducteur, i18n("FACTURESAFFICHERFRAISAUTRESPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenusproducteur", item.facturesafficherfraisautresrevenusproducteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenustransporteur", item.facturesafficherfraisautresrevenustransporteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautrestransporteur", item.facturesafficherfraisautrestransporteur, i18n("FACTURESAFFICHERFRAISAUTRESTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraischargeurproducteur", item.facturesafficherfraischargeurproducteur, i18n("FACTURESAFFICHERFRAISCHARGEURPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraischargeurtransporteur", item.facturesafficherfraischargeurtransporteur, i18n("FACTURESAFFICHERFRAISCHARGEURTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraiscompensationdedeplacement", item.facturesafficherfraiscompensationdedeplacement, i18n("FACTURESAFFICHERFRAISCOMPENSATIONDEDEPLACEMENT")) + "\n    " + Theme.renderCheckboxField(NS, "facturesaffichersurchargeproducteur", item.facturesaffichersurchargeproducteur, i18n("FACTURESAFFICHERSURCHARGEPRODUCTEUR")) + "\n    " + Theme.renderTextField(NS, "formicon", item.formicon, i18n("FORMICON"), 500) + "\n    " + Theme.renderTextField(NS, "formtext", item.formtext, i18n("FORMTEXT"), 500) + "\n    " + Theme.renderNumberField(NS, "fournisseurpointerid", item.fournisseurpointerid, i18n("FOURNISSEURPOINTERID"), true) + "\n    " + Theme.renderTextField(NS, "fromemail", item.fromemail, i18n("FROMEMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "gpversion", item.gpversion, i18n("GPVERSION"), 500) + "\n    " + Theme.renderTextField(NS, "helpfilepath", item.helpfilepath, i18n("HELPFILEPATH"), 500) + "\n    " + Theme.renderTextField(NS, "imprimanteautresrapports", item.imprimanteautresrapports, i18n("IMPRIMANTEAUTRESRAPPORTS"), 500) + "\n    " + Theme.renderTextField(NS, "imprimantedepermis", item.imprimantedepermis, i18n("IMPRIMANTEDEPERMIS"), 500) + "\n    " + Theme.renderCheckboxField(NS, "livraisonliertaux", item.livraisonliertaux, i18n("LIVRAISONLIERTAUX")) + "\n    " + Theme.renderTextField(NS, "logfile", item.logfile, i18n("LOGFILE"), 500) + "\n    " + Theme.renderTextField(NS, "logopath", item.logopath, i18n("LOGOPATH"), 500) + "\n    " + Theme.renderNumberField(NS, "massecontingentvoyagedefaut", item.massecontingentvoyagedefaut, i18n("MASSECONTINGENTVOYAGEDEFAUT"), true) + "\n    " + Theme.renderNumberField(NS, "masselimitedefaut", item.masselimitedefaut, i18n("MASSELIMITEDEFAUT"), true) + "\n    " + Theme.renderTextField(NS, "message_autorisationdeslivraisons", item.message_autorisationdeslivraisons, i18n("MESSAGE_AUTORISATIONDESLIVRAISONS"), 500) + "\n    " + Theme.renderTextField(NS, "message_demandecontingentement", item.message_demandecontingentement, i18n("MESSAGE_DEMANDECONTINGENTEMENT"), 500) + "\n    " + Theme.renderTextField(NS, "messageimpressionsdefactures", item.messageimpressionsdefactures, i18n("MESSAGEIMPRESSIONSDEFACTURES"), 500) + "\n    " + Theme.renderTextField(NS, "messagelivraisonnonconforme", item.messagelivraisonnonconforme, i18n("MESSAGELIVRAISONNONCONFORME"), 500) + "\n    " + Theme.renderTextField(NS, "messagespecpermitanglais", item.messagespecpermitanglais, i18n("MESSAGESPECPERMITANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "messagespecpermitfrancais", item.messagespecpermitfrancais, i18n("MESSAGESPECPERMITFRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "nomdb", item.nomdb, i18n("NOMDB"), 500) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginbottom", item.permisprintermarginbottom, i18n("PERMISPRINTERMARGINBOTTOM")) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginleft", item.permisprintermarginleft, i18n("PERMISPRINTERMARGINLEFT")) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginright", item.permisprintermarginright, i18n("PERMISPRINTERMARGINRIGHT")) + "\n    " + Theme.renderNumberField(NS, "permisprintermargintop", item.permisprintermargintop, i18n("PERMISPRINTERMARGINTOP")) + "\n    " + Theme.renderCheckboxField(NS, "permisprintpreview", item.permisprintpreview, i18n("PERMISPRINTPREVIEW")) + "\n    " + Theme.renderTextField(NS, "preleves_notps", item.preleves_notps, i18n("PRELEVES_NOTPS"), 500) + "\n    " + Theme.renderTextField(NS, "preleves_notvq", item.preleves_notvq, i18n("PRELEVES_NOTVQ"), 500) + "\n    " + Theme.renderTextField(NS, "serveuremail", item.serveuremail, i18n("SERVEUREMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "showyearsinpermislistview", item.showyearsinpermislistview, i18n("SHOWYEARSINPERMISLISTVIEW"), 500) + "\n    " + Theme.renderNumberField(NS, "superficiecontingenteepourcentagededuction", item.superficiecontingenteepourcentagededuction, i18n("SUPERFICIECONTINGENTEEPOURCENTAGEDEDUCTION")) + "\n    " + Theme.renderNumberField(NS, "superficiecontingenteesansdeduction", item.superficiecontingenteesansdeduction, i18n("SUPERFICIECONTINGENTEESANSDEDUCTION")) + "\n    " + Theme.renderTextField(NS, "syndicat_codepostal", item.syndicat_codepostal, i18n("SYNDICAT_CODEPOSTAL"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_fax", item.syndicat_fax, i18n("SYNDICAT_FAX"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nom", item.syndicat_nom, i18n("SYNDICAT_NOM"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nomanglais", item.syndicat_nomanglais, i18n("SYNDICAT_NOMANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nomfrancais", item.syndicat_nomfrancais, i18n("SYNDICAT_NOMFRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_notps", item.syndicat_notps, i18n("SYNDICAT_NOTPS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_notvq", item.syndicat_notvq, i18n("SYNDICAT_NOTVQ"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_rue", item.syndicat_rue, i18n("SYNDICAT_RUE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_telephone", item.syndicat_telephone, i18n("SYNDICAT_TELEPHONE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_ville", item.syndicat_ville, i18n("SYNDICAT_VILLE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicatouoffice", item.syndicatouoffice, i18n("SYNDICATOUOFFICE"), 500) + "\n    " + Theme.renderCheckboxField(NS, "takeacombabackup", item.takeacombabackup, i18n("TAKEACOMBABACKUP")) + "\n    " + Theme.renderCheckboxField(NS, "takesqlbackup", item.takesqlbackup, i18n("TAKESQLBACKUP")) + "\n    " + Theme.renderNumberField(NS, "tempsentrelesbackupsautomatiques", item.tempsentrelesbackupsautomatiques, i18n("TEMPSENTRELESBACKUPSAUTOMATIQUES")) + "\n    " + Theme.renderNumberField(NS, "timeoutsql", item.timeoutsql, i18n("TIMEOUTSQL"), true) + "\n    " + Theme.renderNumberField(NS, "typepermis", item.typepermis, i18n("TYPEPERMIS"), true) + "\n    " + Theme.renderTextField(NS, "typepermis1", item.typepermis1, i18n("TYPEPERMIS1"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis1anglais", item.typepermis1anglais, i18n("TYPEPERMIS1ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis1francais", item.typepermis1francais, i18n("TYPEPERMIS1FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2", item.typepermis2, i18n("TYPEPERMIS2"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2anglais", item.typepermis2anglais, i18n("TYPEPERMIS2ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2francais", item.typepermis2francais, i18n("TYPEPERMIS2FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3", item.typepermis3, i18n("TYPEPERMIS3"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3anglais", item.typepermis3anglais, i18n("TYPEPERMIS3ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3francais", item.typepermis3francais, i18n("TYPEPERMIS3FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4", item.typepermis4, i18n("TYPEPERMIS4"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4anglais", item.typepermis4anglais, i18n("TYPEPERMIS4ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4francais", item.typepermis4francais, i18n("TYPEPERMIS4FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "updateotherdatabase", item.updateotherdatabase, i18n("UPDATEOTHERDATABASE"), 500) + "\n    " + Theme.renderCheckboxField(NS, "utiliselesychronisateurdirect", item.utiliselesychronisateurdirect, i18n("UTILISELESYCHRONISATEURDIRECT")) + "\n    " + Theme.renderCheckboxField(NS, "utiliserlesnomsdemachinedanslenomdeprinter", item.utiliserlesnomsdemachinedanslenomdeprinter, i18n("UTILISERLESNOMSDEMACHINEDANSLENOMDEPRINTER")) + "\n    " + Theme.renderCheckboxField(NS, "utiliserlotscontingentes", item.utiliserlotscontingentes, i18n("UTILISERLOTSCONTINGENTES")) + "\n    " + Theme.renderTextField(NS, "xlstemplatespath", item.xlstemplatespath, i18n("XLSTEMPLATESPATH"), 500) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_planconjoint", fournisseur_planconjoint, i18n("FOURNISSEUR_PLANCONJOINT")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_surcharge", fournisseur_surcharge, i18n("FOURNISSEUR_SURCHARGE")) + "\n    " + Theme.renderDropdownField(NS, "compte_paiements", compte_paiements, i18n("COMPTE_PAIEMENTS")) + "\n    " + Theme.renderDropdownField(NS, "compte_arecevoir", compte_arecevoir, i18n("COMPTE_ARECEVOIR")) + "\n    " + Theme.renderDropdownField(NS, "compte_apayer", compte_apayer, i18n("COMPTE_APAYER")) + "\n    " + Theme.renderDropdownField(NS, "compte_duauxproducteurs", compte_duauxproducteurs, i18n("COMPTE_DUAUXPRODUCTEURS")) + "\n    " + Theme.renderDropdownField(NS, "compte_tpspercues", compte_tpspercues, i18n("COMPTE_TPSPERCUES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tpspayees", compte_tpspayees, i18n("COMPTE_TPSPAYEES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tvqpercues", compte_tvqpercues, i18n("COMPTE_TVQPERCUES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tvqpayees", compte_tvqpayees, i18n("COMPTE_TVQPAYEES")) + "\n    " + Theme.renderNumberField(NS, "taux_tps", item.taux_tps, i18n("TAUX_TPS")) + "\n    " + Theme.renderNumberField(NS, "taux_tvq", item.taux_tvq, i18n("TAUX_TVQ")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_fond_roulement", fournisseur_fond_roulement, i18n("FOURNISSEUR_FOND_ROULEMENT")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_fond_forestier", fournisseur_fond_forestier, i18n("FOURNISSEUR_FOND_FORESTIER")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_preleve_divers", fournisseur_preleve_divers, i18n("FOURNISSEUR_PRELEVE_DIVERS")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+            };
+            pageTemplate = function (item, form, tab, warning, dirty) {
+                var canEdit = true;
+                var readonly = !canEdit;
+                var canInsert = canEdit && isNew; // && Perm.hasCompany_CanAddCompany;
+                var canDelete = canEdit && !canInsert; // && Perm.hasCompany_CanDeleteCompany;
+                var canAdd = canEdit && !canInsert; // && Perm.hasCompany_CanAddCompany;
+                var canUpdate = canEdit && !isNew;
+                var buttons = [];
+                buttons.push(Theme.buttonCancel(NS));
+                if (canInsert)
+                    buttons.push(Theme.buttonInsert(NS));
+                if (canDelete)
+                    buttons.push(Theme.buttonDelete(NS));
+                if (canAdd)
+                    buttons.push(Theme.buttonAddNew(NS, "#/company/new"));
+                if (canUpdate)
+                    buttons.push(Theme.buttonUpdate(NS));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout_5.buildTitle(xtra, !isNew ? i18n("company Details") : i18n("New company"));
+                var subtitle = layout_5.buildSubtitle(xtra, i18n("company subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_5.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+            };
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            exports_40("fetchState", fetchState = function (cie) {
+                isNew = isNaN(cie);
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
+                return App.GET("/company/" + (isNew ? "new" : cie))
+                    .then(function (payload) {
+                    state = payload.item;
+                    fetchedState = Misc.clone(state);
+                    xtra = payload.xtra;
+                    key = { cie: cie };
+                })
+                    .then(Lookup.fetch_autreFournisseur())
+                    .then(Lookup.fetch_compte());
+            });
+            exports_40("fetch", fetch = function (params) {
+                var cie = +params[0];
+                App.prepareRender(NS, i18n("company"));
+                fetchState(cie)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_40("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var year = Perm.getCurrentYear(); //or something better
+                var lookup_autreFournisseur = Lookup.get_autreFournisseur(year);
+                var lookup_compte = Lookup.get_compte(year);
+                var fournisseur_planconjoint = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_planconjoint, true);
+                var fournisseur_surcharge = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_surcharge, true);
+                var compte_paiements = Theme.renderOptions(lookup_compte, state.compte_paiements, true);
+                var compte_arecevoir = Theme.renderOptions(lookup_compte, state.compte_arecevoir, true);
+                var compte_apayer = Theme.renderOptions(lookup_compte, state.compte_apayer, true);
+                var compte_duauxproducteurs = Theme.renderOptions(lookup_compte, state.compte_duauxproducteurs, true);
+                var compte_tpspercues = Theme.renderOptions(lookup_compte, state.compte_tpspercues, true);
+                var compte_tpspayees = Theme.renderOptions(lookup_compte, state.compte_tpspayees, true);
+                var compte_tvqpercues = Theme.renderOptions(lookup_compte, state.compte_tvqpercues, true);
+                var compte_tvqpayees = Theme.renderOptions(lookup_compte, state.compte_tvqpayees, true);
+                var fournisseur_fond_roulement = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_fond_roulement, true);
+                var fournisseur_fond_forestier = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_fond_forestier, true);
+                var fournisseur_preleve_divers = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_preleve_divers, true);
+                var form = formTemplate(state, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers);
+                var tab = layout_5.tabTemplate(state.cie, xtra, isNew);
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_40("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+                App.setPageTitle(isNew ? i18n("New company") : xtra.title);
+            });
+            exports_40("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.name = Misc.fromInputText(NS + "_name", state.name);
+                clone.features = Misc.fromInputTextNullable(NS + "_features", state.features);
+                clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
+                clone.acombapassword = Misc.fromInputTextNullable(NS + "_acombapassword", state.acombapassword);
+                clone.acombapath = Misc.fromInputTextNullable(NS + "_acombapath", state.acombapath);
+                clone.acombasocietepath = Misc.fromInputTextNullable(NS + "_acombasocietepath", state.acombasocietepath);
+                clone.acombasyncropath = Misc.fromInputTextNullable(NS + "_acombasyncropath", state.acombasyncropath);
+                clone.acombausername = Misc.fromInputTextNullable(NS + "_acombausername", state.acombausername);
+                clone.acrobatpath = Misc.fromInputTextNullable(NS + "_acrobatpath", state.acrobatpath);
+                clone.adminpassword = Misc.fromInputTextNullable(NS + "_adminpassword", state.adminpassword);
+                clone.afficherpermit1 = Misc.fromInputCheckbox(NS + "_afficherpermit1", state.afficherpermit1);
+                clone.afficherpermit2 = Misc.fromInputCheckbox(NS + "_afficherpermit2", state.afficherpermit2);
+                clone.afficherpermit3 = Misc.fromInputCheckbox(NS + "_afficherpermit3", state.afficherpermit3);
+                clone.afficherpermit4 = Misc.fromInputCheckbox(NS + "_afficherpermit4", state.afficherpermit4);
+                clone.anneecourante = Misc.fromInputNumber(NS + "_anneecourante", state.anneecourante);
+                clone.autresraportsprintermarginbottom = Misc.fromInputNumberNullable(NS + "_autresraportsprintermarginbottom", state.autresraportsprintermarginbottom);
+                clone.autresraportsprintermarginleft = Misc.fromInputNumberNullable(NS + "_autresraportsprintermarginleft", state.autresraportsprintermarginleft);
+                clone.autresraportsprintermarginright = Misc.fromInputNumberNullable(NS + "_autresraportsprintermarginright", state.autresraportsprintermarginright);
+                clone.autresraportsprintermargintop = Misc.fromInputNumberNullable(NS + "_autresraportsprintermargintop", state.autresraportsprintermargintop);
+                clone.caneditundeliveredpermits = Misc.fromInputTextNullable(NS + "_caneditundeliveredpermits", state.caneditundeliveredpermits);
+                clone.ccemail = Misc.fromInputTextNullable(NS + "_ccemail", state.ccemail);
+                clone.cletriclientnom = Misc.fromInputTextNullable(NS + "_cletriclientnom", state.cletriclientnom);
+                clone.copiepermit1 = Misc.fromInputCheckbox(NS + "_copiepermit1", state.copiepermit1);
+                clone.copiepermit2 = Misc.fromInputCheckbox(NS + "_copiepermit2", state.copiepermit2);
+                clone.copiepermit3 = Misc.fromInputCheckbox(NS + "_copiepermit3", state.copiepermit3);
+                clone.copiepermit4 = Misc.fromInputCheckbox(NS + "_copiepermit4", state.copiepermit4);
+                clone.deletefichepassword = Misc.fromInputTextNullable(NS + "_deletefichepassword", state.deletefichepassword);
+                clone.emailpermit1 = Misc.fromInputCheckbox(NS + "_emailpermit1", state.emailpermit1);
+                clone.emailpermit2 = Misc.fromInputCheckbox(NS + "_emailpermit2", state.emailpermit2);
+                clone.emailpermit3 = Misc.fromInputCheckbox(NS + "_emailpermit3", state.emailpermit3);
+                clone.emailpermit4 = Misc.fromInputCheckbox(NS + "_emailpermit4", state.emailpermit4);
+                clone.excellanguage = Misc.fromInputTextNullable(NS + "_excellanguage", state.excellanguage);
+                clone.facturesafficherfraisautrechargepourtransporteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraisautrechargepourtransporteur", state.facturesafficherfraisautrechargepourtransporteur);
+                clone.facturesafficherfraisautresproducteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraisautresproducteur", state.facturesafficherfraisautresproducteur);
+                clone.facturesafficherfraisautresrevenusproducteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraisautresrevenusproducteur", state.facturesafficherfraisautresrevenusproducteur);
+                clone.facturesafficherfraisautresrevenustransporteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraisautresrevenustransporteur", state.facturesafficherfraisautresrevenustransporteur);
+                clone.facturesafficherfraisautrestransporteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraisautrestransporteur", state.facturesafficherfraisautrestransporteur);
+                clone.facturesafficherfraischargeurproducteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraischargeurproducteur", state.facturesafficherfraischargeurproducteur);
+                clone.facturesafficherfraischargeurtransporteur = Misc.fromInputCheckbox(NS + "_facturesafficherfraischargeurtransporteur", state.facturesafficherfraischargeurtransporteur);
+                clone.facturesafficherfraiscompensationdedeplacement = Misc.fromInputCheckbox(NS + "_facturesafficherfraiscompensationdedeplacement", state.facturesafficherfraiscompensationdedeplacement);
+                clone.facturesaffichersurchargeproducteur = Misc.fromInputCheckbox(NS + "_facturesaffichersurchargeproducteur", state.facturesaffichersurchargeproducteur);
+                clone.formicon = Misc.fromInputTextNullable(NS + "_formicon", state.formicon);
+                clone.formtext = Misc.fromInputTextNullable(NS + "_formtext", state.formtext);
+                clone.fournisseurpointerid = Misc.fromInputNumber(NS + "_fournisseurpointerid", state.fournisseurpointerid);
+                clone.fromemail = Misc.fromInputTextNullable(NS + "_fromemail", state.fromemail);
+                clone.gpversion = Misc.fromInputTextNullable(NS + "_gpversion", state.gpversion);
+                clone.helpfilepath = Misc.fromInputTextNullable(NS + "_helpfilepath", state.helpfilepath);
+                clone.imprimanteautresrapports = Misc.fromInputTextNullable(NS + "_imprimanteautresrapports", state.imprimanteautresrapports);
+                clone.imprimantedepermis = Misc.fromInputTextNullable(NS + "_imprimantedepermis", state.imprimantedepermis);
+                clone.livraisonliertaux = Misc.fromInputCheckbox(NS + "_livraisonliertaux", state.livraisonliertaux);
+                clone.logfile = Misc.fromInputTextNullable(NS + "_logfile", state.logfile);
+                clone.logopath = Misc.fromInputTextNullable(NS + "_logopath", state.logopath);
+                clone.massecontingentvoyagedefaut = Misc.fromInputNumber(NS + "_massecontingentvoyagedefaut", state.massecontingentvoyagedefaut);
+                clone.masselimitedefaut = Misc.fromInputNumber(NS + "_masselimitedefaut", state.masselimitedefaut);
+                clone.message_autorisationdeslivraisons = Misc.fromInputTextNullable(NS + "_message_autorisationdeslivraisons", state.message_autorisationdeslivraisons);
+                clone.message_demandecontingentement = Misc.fromInputTextNullable(NS + "_message_demandecontingentement", state.message_demandecontingentement);
+                clone.messageimpressionsdefactures = Misc.fromInputTextNullable(NS + "_messageimpressionsdefactures", state.messageimpressionsdefactures);
+                clone.messagelivraisonnonconforme = Misc.fromInputTextNullable(NS + "_messagelivraisonnonconforme", state.messagelivraisonnonconforme);
+                clone.messagespecpermitanglais = Misc.fromInputTextNullable(NS + "_messagespecpermitanglais", state.messagespecpermitanglais);
+                clone.messagespecpermitfrancais = Misc.fromInputTextNullable(NS + "_messagespecpermitfrancais", state.messagespecpermitfrancais);
+                clone.nomdb = Misc.fromInputTextNullable(NS + "_nomdb", state.nomdb);
+                clone.permisprintermarginbottom = Misc.fromInputNumberNullable(NS + "_permisprintermarginbottom", state.permisprintermarginbottom);
+                clone.permisprintermarginleft = Misc.fromInputNumberNullable(NS + "_permisprintermarginleft", state.permisprintermarginleft);
+                clone.permisprintermarginright = Misc.fromInputNumberNullable(NS + "_permisprintermarginright", state.permisprintermarginright);
+                clone.permisprintermargintop = Misc.fromInputNumberNullable(NS + "_permisprintermargintop", state.permisprintermargintop);
+                clone.permisprintpreview = Misc.fromInputCheckbox(NS + "_permisprintpreview", state.permisprintpreview);
+                clone.preleves_notps = Misc.fromInputTextNullable(NS + "_preleves_notps", state.preleves_notps);
+                clone.preleves_notvq = Misc.fromInputTextNullable(NS + "_preleves_notvq", state.preleves_notvq);
+                clone.serveuremail = Misc.fromInputTextNullable(NS + "_serveuremail", state.serveuremail);
+                clone.showyearsinpermislistview = Misc.fromInputTextNullable(NS + "_showyearsinpermislistview", state.showyearsinpermislistview);
+                clone.superficiecontingenteepourcentagededuction = Misc.fromInputNumberNullable(NS + "_superficiecontingenteepourcentagededuction", state.superficiecontingenteepourcentagededuction);
+                clone.superficiecontingenteesansdeduction = Misc.fromInputNumberNullable(NS + "_superficiecontingenteesansdeduction", state.superficiecontingenteesansdeduction);
+                clone.syndicat_codepostal = Misc.fromInputTextNullable(NS + "_syndicat_codepostal", state.syndicat_codepostal);
+                clone.syndicat_fax = Misc.fromInputTextNullable(NS + "_syndicat_fax", state.syndicat_fax);
+                clone.syndicat_nom = Misc.fromInputTextNullable(NS + "_syndicat_nom", state.syndicat_nom);
+                clone.syndicat_nomanglais = Misc.fromInputTextNullable(NS + "_syndicat_nomanglais", state.syndicat_nomanglais);
+                clone.syndicat_nomfrancais = Misc.fromInputTextNullable(NS + "_syndicat_nomfrancais", state.syndicat_nomfrancais);
+                clone.syndicat_notps = Misc.fromInputTextNullable(NS + "_syndicat_notps", state.syndicat_notps);
+                clone.syndicat_notvq = Misc.fromInputTextNullable(NS + "_syndicat_notvq", state.syndicat_notvq);
+                clone.syndicat_rue = Misc.fromInputTextNullable(NS + "_syndicat_rue", state.syndicat_rue);
+                clone.syndicat_telephone = Misc.fromInputTextNullable(NS + "_syndicat_telephone", state.syndicat_telephone);
+                clone.syndicat_ville = Misc.fromInputTextNullable(NS + "_syndicat_ville", state.syndicat_ville);
+                clone.syndicatouoffice = Misc.fromInputTextNullable(NS + "_syndicatouoffice", state.syndicatouoffice);
+                clone.takeacombabackup = Misc.fromInputCheckbox(NS + "_takeacombabackup", state.takeacombabackup);
+                clone.takesqlbackup = Misc.fromInputCheckbox(NS + "_takesqlbackup", state.takesqlbackup);
+                clone.tempsentrelesbackupsautomatiques = Misc.fromInputNumberNullable(NS + "_tempsentrelesbackupsautomatiques", state.tempsentrelesbackupsautomatiques);
+                clone.timeoutsql = Misc.fromInputNumber(NS + "_timeoutsql", state.timeoutsql);
+                clone.typepermis = Misc.fromInputNumber(NS + "_typepermis", state.typepermis);
+                clone.typepermis1 = Misc.fromInputTextNullable(NS + "_typepermis1", state.typepermis1);
+                clone.typepermis1anglais = Misc.fromInputTextNullable(NS + "_typepermis1anglais", state.typepermis1anglais);
+                clone.typepermis1francais = Misc.fromInputTextNullable(NS + "_typepermis1francais", state.typepermis1francais);
+                clone.typepermis2 = Misc.fromInputTextNullable(NS + "_typepermis2", state.typepermis2);
+                clone.typepermis2anglais = Misc.fromInputTextNullable(NS + "_typepermis2anglais", state.typepermis2anglais);
+                clone.typepermis2francais = Misc.fromInputTextNullable(NS + "_typepermis2francais", state.typepermis2francais);
+                clone.typepermis3 = Misc.fromInputTextNullable(NS + "_typepermis3", state.typepermis3);
+                clone.typepermis3anglais = Misc.fromInputTextNullable(NS + "_typepermis3anglais", state.typepermis3anglais);
+                clone.typepermis3francais = Misc.fromInputTextNullable(NS + "_typepermis3francais", state.typepermis3francais);
+                clone.typepermis4 = Misc.fromInputTextNullable(NS + "_typepermis4", state.typepermis4);
+                clone.typepermis4anglais = Misc.fromInputTextNullable(NS + "_typepermis4anglais", state.typepermis4anglais);
+                clone.typepermis4francais = Misc.fromInputTextNullable(NS + "_typepermis4francais", state.typepermis4francais);
+                clone.updateotherdatabase = Misc.fromInputTextNullable(NS + "_updateotherdatabase", state.updateotherdatabase);
+                clone.utiliselesychronisateurdirect = Misc.fromInputCheckbox(NS + "_utiliselesychronisateurdirect", state.utiliselesychronisateurdirect);
+                clone.utiliserlesnomsdemachinedanslenomdeprinter = Misc.fromInputCheckbox(NS + "_utiliserlesnomsdemachinedanslenomdeprinter", state.utiliserlesnomsdemachinedanslenomdeprinter);
+                clone.utiliserlotscontingentes = Misc.fromInputCheckbox(NS + "_utiliserlotscontingentes", state.utiliserlotscontingentes);
+                clone.xlstemplatespath = Misc.fromInputTextNullable(NS + "_xlstemplatespath", state.xlstemplatespath);
+                clone.fournisseur_planconjoint = Misc.fromSelectText(NS + "_fournisseur_planconjoint", state.fournisseur_planconjoint);
+                clone.fournisseur_surcharge = Misc.fromSelectText(NS + "_fournisseur_surcharge", state.fournisseur_surcharge);
+                clone.compte_paiements = Misc.fromSelectNumber(NS + "_compte_paiements", state.compte_paiements);
+                clone.compte_arecevoir = Misc.fromSelectNumber(NS + "_compte_arecevoir", state.compte_arecevoir);
+                clone.compte_apayer = Misc.fromSelectNumber(NS + "_compte_apayer", state.compte_apayer);
+                clone.compte_duauxproducteurs = Misc.fromSelectNumber(NS + "_compte_duauxproducteurs", state.compte_duauxproducteurs);
+                clone.compte_tpspercues = Misc.fromSelectNumber(NS + "_compte_tpspercues", state.compte_tpspercues);
+                clone.compte_tpspayees = Misc.fromSelectNumber(NS + "_compte_tpspayees", state.compte_tpspayees);
+                clone.compte_tvqpercues = Misc.fromSelectNumber(NS + "_compte_tvqpercues", state.compte_tvqpercues);
+                clone.compte_tvqpayees = Misc.fromSelectNumber(NS + "_compte_tvqpayees", state.compte_tvqpayees);
+                clone.taux_tps = Misc.fromInputNumberNullable(NS + "_taux_tps", state.taux_tps);
+                clone.taux_tvq = Misc.fromInputNumberNullable(NS + "_taux_tvq", state.taux_tvq);
+                clone.fournisseur_fond_roulement = Misc.fromSelectText(NS + "_fournisseur_fond_roulement", state.fournisseur_fond_roulement);
+                clone.fournisseur_fond_forestier = Misc.fromSelectText(NS + "_fournisseur_fond_forestier", state.fournisseur_fond_forestier);
+                clone.fournisseur_preleve_divers = Misc.fromSelectText(NS + "_fournisseur_preleve_divers", state.fournisseur_preleve_divers);
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById(NS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_40("onchange", onchange = function (input) {
+                state = getFormState();
+                App.render();
+            });
+            exports_40("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_40("create", create = function () {
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/company", Misc.createBlack(formState, blackList))
+                    .then(function (payload) {
+                    var newkey = payload;
+                    Misc.toastSuccessSave();
+                    Router.goto("#/company/" + newkey.cie, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_40("save", save = function (done) {
+                if (done === void 0) { done = false; }
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/company", Misc.createBlack(formState, blackList))
+                    .then(function (_) {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto("#/companys/", 100);
+                    else
+                        Router.goto("#/company/" + key.cie, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_40("drop", drop = function () {
+                key.updated = state.updated;
+                App.prepareRender();
+                App.DELETE("/company", key)
+                    .then(function (_) {
+                    Router.goto("#/companys/", 250);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = function () {
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
+System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/companys", "src/admin/company"], function (exports_41, context_41) {
+    "use strict";
+    var Router, accounts, account, companys, company, startup, render, postRender;
+    var __moduleName = context_41 && context_41.id;
+    return {
+        setters: [
+            function (Router_9) {
+                Router = Router_9;
+            },
+            function (accounts_1) {
+                accounts = accounts_1;
+            },
+            function (account_1) {
+                account = account_1;
+            },
+            function (companys_1) {
+                companys = companys_1;
+            },
+            function (company_1) {
+                company = company_1;
+            }
+        ],
+        execute: function () {
+            //import * as DataFiles from "./datafiles"
+            //import * as DataFile from "./datafile"
+            //import * as Lookups from "./lookups"
+            //import * as Lookup from "./lookup"
+            //
+            // Global references to application objects
+            // These must match the "NS" values defined in modules
+            // Mainly used for event handlers
+            //
+            window.App_accounts = accounts;
+            window.App_account = account;
+            //(<any>window).App_profile = profile;
+            window.App_companys = companys;
+            window.App_company = company;
+            //(<any>window).App_DataFiles = DataFiles;
+            //(<any>window).App_DataFile = DataFile;
+            //(<any>window).App_Lookups = Lookups;
+            //(<any>window).App_Lookup = Lookup;
+            exports_41("startup", startup = function () {
+                Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
+                Router.addRoute("^#/admin/account/(.*)$", account.fetch);
+                Router.addRoute("^#/admin/companys/?(.*)?$", companys.fetch);
+                Router.addRoute("^#/admin/company/(.*)$", company.fetch);
+                //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
+                //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
+                //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
+                //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
+                //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
+            });
+            exports_41("render", render = function () {
+                return "\n    " + accounts.render() + "\n    " + account.render() + "\n    " + companys.render() + "\n    " + company.render() + "\n";
+                //${DataFiles.render()}
+                //${DataFile.render()}
+                //${Lookups.render()}
+                //${Lookup.render()}
+            });
+            exports_41("postRender", postRender = function () {
+                accounts.postRender();
+                account.postRender();
+                companys.postRender();
+                company.postRender();
+                //DataFiles.postRender();
+                //DataFile.postRender();
+                //Lookups.postRender();
+                //Lookup.postRender();
+            });
+        }
+    };
+});
+System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_42, context_42) {
+    "use strict";
+    var App, layout_6, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var __moduleName = context_42 && context_42.id;
+    return {
+        setters: [
+            function (App_14) {
+                App = App_14;
+            },
+            function (layout_6_1) {
+                layout_6 = layout_6_1;
+            }
+        ],
+        execute: function () {
+            exports_42("icon", icon = "far fa-user");
+            exports_42("prepareMenu", prepareMenu = function () {
+                layout_6.setOpenedMenu("Fournisseur-Propriétaires");
+            });
+            exports_42("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+                if (isNew === void 0) { isNew = false; }
+                var isProprietaires = App.inContext("App_proprietaires");
+                var isProprietaire = App.inContext("App_proprietaire");
+                var isFiles = window.location.hash.startsWith("#/files/proprietaire");
+                var isFile = window.location.hash.startsWith("#/file/proprietaire");
+                var showDetail = !isProprietaires;
+                var showFiles = showDetail && xtra;
+                var showFile = isFile;
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            });
+            exports_42("buildTitle", buildTitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
+            });
+            exports_42("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
+            });
+        }
+    };
+});
+// File: proprietaires.ts
+System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_43, context_43) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_7, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
+    var __moduleName = context_43 && context_43.id;
+    return {
+        setters: [
+            function (App_15) {
+                App = App_15;
+            },
+            function (Router_10) {
+                Router = Router_10;
+            },
+            function (Perm_4) {
+                Perm = Perm_4;
+            },
+            function (Misc_17) {
+                Misc = Misc_17;
+            },
+            function (Theme_5) {
+                Theme = Theme_5;
+            },
+            function (Pager_3) {
+                Pager = Pager_3;
+            },
+            function (Lookup_4) {
+                Lookup = Lookup_4;
+            },
+            function (layout_7_1) {
+                layout_7 = layout_7_1;
+            }
+        ],
+        execute: function () {
+            exports_43("NS", NS = "App_proprietaires");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
@@ -4827,11 +5325,11 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 var buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new", i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_5.buildTitle(xtra, i18n("fournisseurs title"));
-                var subtitle = layout_5.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_5.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+                var title = layout_7.buildTitle(xtra, i18n("fournisseurs title"));
+                var subtitle = layout_7.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_7.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_41("fetchState", fetchState = function (id) {
+            exports_43("fetchState", fetchState = function (id) {
                 Router.registerDirtyExit(null);
                 return App.POST("/fournisseur/search", state.pager)
                     .then(function (payload) {
@@ -4842,7 +5340,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(Lookup.fetch_pays())
                     .then(Lookup.fetch_institutionBanquaire());
             });
-            exports_41("fetch", fetch = function (params) {
+            exports_43("fetch", fetch = function (params) {
                 var id = params[0];
                 App.prepareRender(NS, i18n("fournisseurs"));
                 fetchState(id)
@@ -4858,7 +5356,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_41("render", render = function () {
+            exports_43("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -4876,14 +5374,14 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 var search = Pager.searchTemplate(state.pager, NS);
                 var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 var table = tableTemplate(tbody, state.pager);
-                var tab = layout_5.tabTemplate(null, null);
+                var tab = layout_7.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_41("postRender", postRender = function () {
+            exports_43("postRender", postRender = function () {
                 if (!inContext())
                     return;
             });
-            exports_41("inContext", inContext = function () {
+            exports_43("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             setSelectedRow = function (id) {
@@ -4896,26 +5394,26 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_41("goto", goto = function (pageNo, pageSize) {
+            exports_43("goto", goto = function (pageNo, pageSize) {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_41("sortBy", sortBy = function (columnName, direction) {
+            exports_43("sortBy", sortBy = function (columnName, direction) {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_41("search", search = function (element) {
+            exports_43("search", search = function (element) {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_41("filter_nom", filter_nom = function (element) {
+            exports_43("filter_nom", filter_nom = function (element) {
                 // TODO (filterDef)
             });
-            exports_41("gotoDetail", gotoDetail = function (id) {
+            exports_43("gotoDetail", gotoDetail = function (id) {
                 setSelectedRow(id);
                 Router.goto("#/proprietaire/" + id);
             });
@@ -4923,33 +5421,33 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
     };
 });
 // File: proprietaire.ts
-System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_42, context_42) {
+System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_44, context_44) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, layout_6, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_42 && context_42.id;
+    var App, Router, Misc, Theme, Lookup, layout_8, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_44 && context_44.id;
     return {
         setters: [
-            function (App_14) {
-                App = App_14;
+            function (App_16) {
+                App = App_16;
             },
-            function (Router_9) {
-                Router = Router_9;
+            function (Router_11) {
+                Router = Router_11;
             },
-            function (Misc_16) {
-                Misc = Misc_16;
+            function (Misc_18) {
+                Misc = Misc_18;
             },
-            function (Theme_4) {
-                Theme = Theme_4;
+            function (Theme_6) {
+                Theme = Theme_6;
             },
-            function (Lookup_3) {
-                Lookup = Lookup_3;
+            function (Lookup_5) {
+                Lookup = Lookup_5;
             },
-            function (layout_6_1) {
-                layout_6 = layout_6_1;
+            function (layout_8_1) {
+                layout_8 = layout_8_1;
             }
         ],
         execute: function () {
-            exports_42("NS", NS = "App_proprietaire");
+            exports_44("NS", NS = "App_proprietaire");
             blackList = ["paysid_text", "institutionbanquaireid_text"];
             state = {};
             fetchedState = {};
@@ -4976,14 +5474,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_6.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
-                var subtitle = layout_6.buildSubtitle(xtra, i18n("fournisseur subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_6.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+                var title = layout_8.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
+                var subtitle = layout_8.buildSubtitle(xtra, i18n("fournisseur subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_8.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_42("fetchState", fetchState = function (id) {
+            exports_44("fetchState", fetchState = function (id) {
                 isNew = (id == "new");
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -4997,14 +5495,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                     .then(Lookup.fetch_pays())
                     .then(Lookup.fetch_institutionBanquaire());
             });
-            exports_42("fetch", fetch = function (params) {
+            exports_44("fetch", fetch = function (params) {
                 var id = params[0];
                 App.prepareRender(NS, i18n("proprietaire"));
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_42("render", render = function () {
+            exports_44("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5017,17 +5515,17 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 var paysid = Theme.renderOptions(lookup_pays, state.paysid, true);
                 var institutionbanquaireid = Theme.renderOptions(lookup_institutionBanquaire, state.institutionbanquaireid, true);
                 var form = formTemplate(state, paysid, institutionbanquaireid);
-                var tab = layout_6.tabTemplate(state.id, xtra, isNew);
+                var tab = layout_8.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_42("postRender", postRender = function () {
+            exports_44("postRender", postRender = function () {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
             });
-            exports_42("inContext", inContext = function () {
+            exports_44("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -5103,14 +5601,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_42("onchange", onchange = function (input) {
+            exports_44("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_42("cancel", cancel = function () {
+            exports_44("cancel", cancel = function () {
                 Router.goBackOrResume(isDirty);
             });
-            exports_42("create", create = function () {
+            exports_44("create", create = function () {
                 var formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -5125,7 +5623,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 })
                     .catch(App.render);
             });
-            exports_42("save", save = function (done) {
+            exports_44("save", save = function (done) {
                 if (done === void 0) { done = false; }
                 var formState = getFormState();
                 if (!html5Valid())
@@ -5143,7 +5641,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 })
                     .catch(App.render);
             });
-            exports_42("drop", drop = function () {
+            exports_44("drop", drop = function () {
                 //(<any>key).updatedUtc = state.updatedUtc;
                 App.prepareRender();
                 App.DELETE("/fournisseur", key)
@@ -5165,14 +5663,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
         }
     };
 });
-System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire"], function (exports_43, context_43) {
+System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire"], function (exports_45, context_45) {
     "use strict";
     var Router, proprietaires, proprietaire, startup, render, postRender;
-    var __moduleName = context_43 && context_43.id;
+    var __moduleName = context_45 && context_45.id;
     return {
         setters: [
-            function (Router_10) {
-                Router = Router_10;
+            function (Router_12) {
+                Router = Router_12;
             },
             function (proprietaires_1) {
                 proprietaires = proprietaires_1;
@@ -5189,31 +5687,31 @@ System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fourni
             //
             window[proprietaires.NS] = proprietaires;
             window[proprietaire.NS] = proprietaire;
-            exports_43("startup", startup = function () {
+            exports_45("startup", startup = function () {
                 Router.addRoute("^#/proprietaires/?(.*)?$", proprietaires.fetch);
                 Router.addRoute("^#/proprietaire/?(.*)?$", proprietaire.fetch);
             });
-            exports_43("render", render = function () {
+            exports_45("render", render = function () {
                 return "\n<div>\n    " + proprietaires.render() + "\n    " + proprietaire.render() + "\n</div>\n";
             });
-            exports_43("postRender", postRender = function () {
+            exports_45("postRender", postRender = function () {
                 proprietaires.postRender();
                 proprietaire.postRender();
             });
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_44, context_44) {
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_46, context_46) {
     "use strict";
     var App, Perm, Main, Home, Admin, Fournisseur, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
-    var __moduleName = context_44 && context_44.id;
+    var __moduleName = context_46 && context_46.id;
     return {
         setters: [
-            function (App_15) {
-                App = App_15;
+            function (App_17) {
+                App = App_17;
             },
-            function (Perm_3) {
-                Perm = Perm_3;
+            function (Perm_5) {
+                Perm = Perm_5;
             },
             function (Main_1) {
                 Main = Main_1;
@@ -5229,8 +5727,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             }
         ],
         execute: function () {
-            exports_44("NS", NS = "App_Layout");
-            exports_44("render", render = function () {
+            exports_46("NS", NS = "App_Layout");
+            exports_46("render", render = function () {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
@@ -5238,7 +5736,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 var menu = menuTemplate(Home.getMenuData());
                 return "\n<div class=\"js-layout " + (Main.state.menuOpened ? "" : "js-close") + "\">\n" + renderHeader() + "\n" + renderAsideMenu(menu) + "\n<section class=\"js-uc-main js-waitable\">\n" + ucMain + "\n</section>\n</div>\n";
             });
-            exports_44("postRender", postRender = function () {
+            exports_46("postRender", postRender = function () {
                 Home.postRender();
                 Admin.postRender();
                 Fournisseur.postRender();
@@ -5283,43 +5781,43 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_44("menuClick", menuClick = function () {
+            exports_46("menuClick", menuClick = function () {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_44("toggle", toggle = function (entry) {
+            exports_46("toggle", toggle = function (entry) {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_44("setOpenedMenu", setOpenedMenu = function (entry) {
+            exports_46("setOpenedMenu", setOpenedMenu = function (entry) {
                 Main.state.subMenu = entry;
             });
-            exports_44("editProfile", editProfile = function () {
+            exports_46("editProfile", editProfile = function () {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_44("toggleProfileMenu", toggleProfileMenu = function (element) {
+            exports_46("toggleProfileMenu", toggleProfileMenu = function (element) {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_45, context_45) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_47, context_47) {
     "use strict";
     var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, FournisseurMain, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_45 && context_45.id;
+    var __moduleName = context_47 && context_47.id;
     return {
         setters: [
-            function (App_16) {
-                App = App_16;
+            function (App_18) {
+                App = App_18;
             },
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
             },
-            function (Theme_5) {
-                Theme = Theme_5;
+            function (Theme_7) {
+                Theme = Theme_7;
             },
             function (LatLong_1) {
                 LatLong = LatLong_1;
@@ -5327,8 +5825,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_4) {
-                Perm = Perm_4;
+            function (Perm_6) {
+                Perm = Perm_6;
             },
             function (Layout_2) {
                 Layout = Layout_2;
@@ -5359,7 +5857,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_45("startup", startup = function (hasPublicHomePage) {
+            exports_47("startup", startup = function (hasPublicHomePage) {
                 if (hasPublicHomePage === void 0) { hasPublicHomePage = false; }
                 var main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 var router = main.router;
@@ -5374,18 +5872,18 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                 FournisseurMain.startup();
                 loadUIState();
             });
-            exports_45("loadUIState", loadUIState = function () {
+            exports_47("loadUIState", loadUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
-                exports_45("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_47("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_45("state", state = {
+                    exports_47("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_45("saveUIState", saveUIState = function () {
+            exports_47("saveUIState", saveUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -5393,10 +5891,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_46, context_46) {
+System.register("src/app", ["src/main"], function (exports_48, context_48) {
     "use strict";
     var main;
-    var __moduleName = context_46 && context_46.id;
+    var __moduleName = context_48 && context_48.id;
     return {
         setters: [
             function (main_1) {
