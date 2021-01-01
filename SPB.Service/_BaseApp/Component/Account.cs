@@ -1,5 +1,6 @@
 ﻿// File: Component/Account.cs
 
+using BaseApp.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace BaseApp.DAL
 {
+    using BaseApp.Common;
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
@@ -43,7 +45,7 @@ namespace BaseApp.DAL
             var pagedList = new DTO.PagedList<DTO.Account_Search, DTO.Account_Search_Filter>();
             pagedList.pager = pagerData;
 
-            var list = queryList<DTO.Account_Search>("app.Account_List", Service.KVList.Build()
+            var list = queryList<DTO.Account_Search>("app.Account_List", KVList.Build()
                 .Add("@archive", pagerData.filter.archive)
                 .Add("@readyToArchive", pagerData.filter.readyToArchive)
                 );
@@ -151,7 +153,7 @@ namespace BaseApp.DAL
             entity.Serialize();
             entity.Encrypt(crypto);
             entity.ToLocalTime();
-            return queryScalar<int>("app.Account_Insert", Service.KVList.Build<Account_Insert>(entity));
+            return queryScalar<int>("app.Account_Insert", KVList.Build<Account_Insert>(entity));
         }
 
         public void spAccount_Update(Account_Update entity)
@@ -159,12 +161,12 @@ namespace BaseApp.DAL
             entity.Serialize();
             entity.Encrypt(crypto);
             entity.ToLocalTime();
-            queryNonQuery("app.Account_Update", Service.KVList.Build<Account_Update>(entity));
+            queryNonQuery("app.Account_Update", KVList.Build<Account_Update>(entity));
         }
 
         public void spAccount_Delete(int uid, DateTime updated)
         {
-            queryNonQuery("app.Account_Delete", Service.KVList.Build()
+            queryNonQuery("app.Account_Delete", KVList.Build()
                 .Add("@uid", uid)
                 .Add("@updated", updated.ToLocalTime())
                 );
@@ -251,34 +253,7 @@ namespace BaseApp.DTO
 
         internal Account_Full Deserialize()
         {
-            profile = null;
-            if (profileJson != null)
-            {
-                profile = new Dictionary<string, object>();
-                var profiles = JsonSerializer.Deserialize<Dictionary<string, object>>(profileJson);
-                foreach (var one in profiles)
-                {
-                    object value = null;
-
-                    if (one.Value == null)
-                    {
-                        value = (object)null;
-                    }
-                    else
-                    {
-                        var clean = one.Value.ToString().Trim();
-                        value = (!string.IsNullOrEmpty(clean) ? clean : null);
-
-                        if (bool.TryParse(clean, out bool boolValue))
-                            value = boolValue;
-
-                        if (double.TryParse(clean, out double doubleValue))
-                            value = doubleValue;
-                    }
-                    profile.Add(one.Key, value);
-                }
-            }
-
+            profile = Dico.Deserialize(profileJson);
             profileJson = null;
             return this;
         }

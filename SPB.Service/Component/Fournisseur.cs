@@ -1,5 +1,7 @@
 ﻿// File: Component/Fournisseur.cs
 
+using BaseApp.Common;
+
 namespace BaseApp.Service
 {
     public partial interface IAppService

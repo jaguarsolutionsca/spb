@@ -8,13 +8,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace BaseApp.DAL
 {
     internal partial class Repo : IDisposable
     {
-        public T queryScalar<T>(string command_text, Service.KVList parameters = null, bool uid = false)
+        public T queryScalar<T>(string command_text, KVList parameters = null, bool uid = false)
         {
             T scalar = default(T);
             using (var command = connex.CreateCommand())
@@ -45,13 +46,13 @@ namespace BaseApp.DAL
 
         public T queryScalar<T>(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
-            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
+            var parameters = new KVList().Add(parameter_name, parameter_value);
             return queryScalar<T>(command_text, parameters, uid);
 
         }
 
 
-        public List<T> queryList<T>(string command_text, Service.KVList parameters = null, bool uid = false)
+        public List<T> queryList<T>(string command_text, KVList parameters = null, bool uid = false)
         {
             var properties = typeof(T).GetProperties(); //note: not dealing with Fields
 
@@ -104,12 +105,12 @@ namespace BaseApp.DAL
 
         public List<T> queryList<T>(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
-            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
+            var parameters = new KVList().Add(parameter_name, parameter_value);
             return queryList<T>(command_text, parameters, uid);
         }
 
 
-        public T queryEntity<T>(string command_text, Service.KVList parameters = null, bool uid = false)
+        public T queryEntity<T>(string command_text, KVList parameters = null, bool uid = false)
         {
             var properties = typeof(T).GetProperties(); //note: not dealing with Fields
             var instance = Activator.CreateInstance<T>();
@@ -162,12 +163,12 @@ namespace BaseApp.DAL
 
         public T queryEntity<T>(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
-            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
+            var parameters = new KVList().Add(parameter_name, parameter_value);
             return queryEntity<T>(command_text, parameters, uid);
         }
 
 
-        public void queryNonQuery(string command_text, Service.KVList parameters = null, bool uid = false)
+        public void queryNonQuery(string command_text, KVList parameters = null, bool uid = false)
         {
             using (var command = connex.CreateCommand())
             {
@@ -189,14 +190,14 @@ namespace BaseApp.DAL
 
         public void queryNonQuery(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
-            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
+            var parameters = new KVList().Add(parameter_name, parameter_value);
             queryNonQuery(command_text, parameters, uid);
         }
 
 
-        public Service.Dico queryDico(string command_text, Service.KVList parameters = null, bool uid = false)
+        public Dico queryDico(string command_text, KVList parameters = null, bool uid = false)
         {
-            var entity = new Service.Dico();
+            var entity = new Dico();
             using (var command = connex.CreateCommand())
             {
                 command.CommandText = command_text;
@@ -231,16 +232,16 @@ namespace BaseApp.DAL
             return entity;
         }
 
-        public Service.Dico queryDico(string command_text, string parameter_name, object parameter_value, bool uid = false)
+        public Dico queryDico(string command_text, string parameter_name, object parameter_value, bool uid = false)
         {
-            var parameters = new Service.KVList().Add(parameter_name, parameter_value);
+            var parameters = new KVList().Add(parameter_name, parameter_value);
             return queryDico(command_text, parameters, uid);
         }
 
 
-        public List<Service.Dico> queryDicoList(string command_text, Service.KVList parameters = null, bool uid = false)
+        public List<Dico> queryDicoList(string command_text, KVList parameters = null, bool uid = false)
         {
-            var list = new List<Service.Dico>();
+            var list = new List<Dico>();
             using (var command = connex.CreateCommand())
             {
                 command.CommandText = command_text;
@@ -261,7 +262,7 @@ namespace BaseApp.DAL
 
                     while (reader.Read())
                     {
-                        var entity = new Service.Dico();
+                        var entity = new Dico();
                         for (var ix = 0; ix < reader.FieldCount; ix++)
                         {
                             var value = reader[ix];
@@ -281,116 +282,6 @@ namespace BaseApp.DAL
 
 namespace BaseApp.Service
 {
-    public class KVList : List<KeyValuePair<string, object>>
-    {
-        public KVList Add(string key, object value)
-        {
-            this.Add(new KeyValuePair<string, object>(key, value));
-            return this;
-        }
-
-        public static KVList Build()
-        {
-            return new KVList();
-        }
-
-        public static KVList Build<T>(T entity)
-        {
-            var properties = typeof(T).GetProperties(); //note: not dealing with Fields
-            var kvlist = Build();
-
-            foreach (var property in properties)
-            {
-                var propName = property.Name.ToLower();
-                kvlist.Add(propName, property.GetValue(entity) ?? DBNull.Value);
-            }
-
-            return kvlist;
-        }
-
-        public static KVList Build(Dico dico)
-        {
-            var kvlist = Build();
-            foreach (var key in dico.Keys)
-            {
-                var obj = dico[key];
-                if (obj == null)
-                    kvlist.Add(key, DBNull.Value);
-                else
-                    kvlist.Add(key, dico[key]);
-            }
-            return kvlist;
-        }
-    }
-
-    public class Dico : Dictionary<string, object>
-    {
-        private Regex regex = new Regex(@"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}");
-
-        public Dico Revive(string[] blacklist = null)
-        {
-            var dico = new Dico();
-            foreach (var key in this.Keys)
-            {
-                if (blacklist != null && blacklist.Contains(key))
-                    continue;
-
-                var obj = (System.Text.Json.JsonElement?)this[key];
-                if (!obj.HasValue)
-                    dico.Add(key, null);
-                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Number)
-                    dico.Add(key, obj.Value.GetDouble());
-                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.True)
-                    dico.Add(key, true);
-                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.False)
-                    dico.Add(key, false);
-                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.String)
-                {
-                    var text = obj.Value.GetString();
-                    var match = regex.Match(text);
-                    if (match.Success)
-                    {
-                        dico.Add(key, DateTime.Parse(text).ToLocalTime());
-                    }
-                    else
-                    {
-                        dico.Add(key, text);
-                    }
-                }
-                else if (obj.Value.ValueKind == System.Text.Json.JsonValueKind.Object)
-                {
-                    var json = obj.Value.ToString();
-                    var obj2 = System.Text.Json.JsonSerializer.Deserialize<Dico>(json).Revive(blacklist);
-                    foreach (var key2 in obj2.Keys)
-                    {
-                        dico.Add(key2, obj2[key2]);
-                    }
-                }
-                else
-                {
-                    dico.Add(key, this[key]);
-                }
-            }
-            return dico;
-        }
-
-        public Dico TrimRowCount()
-        {
-            this.Remove("rowCount");
-            return this;
-        }
-
-        internal Dico ReviveRowCount(List<Dico> list)
-        {
-            var rowCount = 0;
-            if (list != null && list.Count > 0)
-                rowCount = int.Parse(list[0]["totalcount"].ToString());
-
-            Add("rowCount", rowCount);
-            return this;
-        }
-    }
-
     public partial class AppService
     {
         public static Tdestin mapTo<Tsource, Tdestin>(Tsource source) where Tdestin : new()

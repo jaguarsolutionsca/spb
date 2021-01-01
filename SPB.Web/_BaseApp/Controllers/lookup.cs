@@ -64,7 +64,7 @@ namespace BaseApp.Web.Controllers
         //
         [AllowAnonymous]
         [HttpGet("by/{groupe}")]
-        public List<Dico> Lookup_By(string groupe)
+        public List<Common.Dico> Lookup_By(string groupe)
         {
             return app.Lookup_By(groupe);
         }

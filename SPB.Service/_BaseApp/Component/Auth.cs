@@ -14,7 +14,7 @@ namespace BaseApp.DAL
         public DTO.Account_Full Account_SelectBy_Credential(string email, string password, int? cie)
         {
             var query = "app.Account_SelectBy_Credential";
-            var parameters = new Service.KVList()
+            var parameters = new KVList()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@password", password)
                 .Add("@cie", cie);
@@ -24,7 +24,7 @@ namespace BaseApp.DAL
         public DTO.Account_Full Account_SelectBy_Email(string email, int? cie)
         {
             var query = "app.Account_SelectBy_Email";
-            var parameters = new Service.KVList()
+            var parameters = new KVList()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@cie", cie);
             return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
@@ -38,14 +38,14 @@ namespace BaseApp.DAL
 
         public void Account_Update_LastActivity(int uid, DateTime lastActivity)
         {
-            queryNonQuery("app.Account_Update_LastActivity", Service.KVList.Build()
+            queryNonQuery("app.Account_Update_LastActivity", KVList.Build()
                 .Add("@uid", uid)
                 .Add("@lastActivity", lastActivity));
         }
 
         public void Account_SetPassword(string email, string password)
         {
-            queryNonQuery("app.Account_SetPassword", Service.KVList.Build()
+            queryNonQuery("app.Account_SetPassword", KVList.Build()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@password", password));
         }
@@ -53,7 +53,7 @@ namespace BaseApp.DAL
         public void Account_ResetPassword(string email, Guid guid, DateTime expiry, bool forcedReset = false, bool unArchive = false)
         {
             var query = "app.Account_ResetPassword";
-            var parameters = new Service.KVList()
+            var parameters = new KVList()
                 .Add("@email", crypto.Encrypt(email))
                 .Add("@guid", guid)
                 .Add("@expiry", expiry)
