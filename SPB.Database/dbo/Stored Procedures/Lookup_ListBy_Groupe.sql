@@ -45,7 +45,7 @@ ELSE IF @groupe = 'compte'
 	WHERE Actif = 1
 	ORDER BY c.[ID]
 
-ELSE IF @groupe = 'fournisseur'
+ELSE IF @groupe = 'autreFournisseur'
 	SELECT
 		f.ID [id],
 		0 [cie],

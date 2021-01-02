@@ -214,19 +214,24 @@ namespace BaseApp.DAL
 
                 using (var reader = command.ExecuteReader())
                 {
-                    var columns = Enumerable.Range(0, reader.FieldCount).Select((one, ix) => { return reader.GetName(ix).ToLower(); }).ToList();
-
-                    if (reader.Read())
+                    // Merge all resultsets
+                    do
                     {
-                        for (var ix = 0; ix < reader.FieldCount; ix++)
+                        if (reader.Read())
                         {
-                            var value = reader[ix];
-                            if (value != null && value != DBNull.Value)
-                                entity.Add(columns[ix], value);
-                            else
-                                entity.Add(columns[ix], null);
+                            for (var ix = 0; ix < reader.FieldCount; ix++)
+                            {
+                                var name = reader.GetName(ix).ToLower();
+                                var value = reader[ix];
+
+                                if (value != null && value != DBNull.Value)
+                                    entity.Add(name, value);
+                                else
+                                    entity.Add(name, null);
+                            }
                         }
                     }
+                    while (reader.NextResult());
                 }
             }
             return entity;

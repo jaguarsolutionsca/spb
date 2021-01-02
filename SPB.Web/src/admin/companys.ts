@@ -10,7 +10,7 @@ import * as Theme from "../../_BaseApp/src/theme/theme"
 import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Lookup from "../admin/lookupdata"
 import * as Layout from "./layout"
-import { tabTemplate, icon, buildTitle, buildSubtitle } from "./layout"
+import { tabTemplate, icon, buildTitle, buildSubtitle } from "./layout2"
 
 declare const i18n: any;
 
@@ -456,7 +456,7 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
     let readonly = false;
 
     let buttons: string[] = [];
-    buttons.push(Theme.buttonAddNew(NS, "#/company/new", i18n("Add New")));
+    buttons.push(Theme.buttonAddNew(NS, "#/admin/company/new", i18n("Add New")));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, i18n("companys title"));
@@ -586,5 +586,6 @@ export const search = (element) => {
 
 export const gotoDetail = (cie: number) => {
     setSelectedRow(cie);
-    Router.goto(`#/company/${cie}`);
+    Router.goto(`#/admin/company/${cie}`);
 };
+

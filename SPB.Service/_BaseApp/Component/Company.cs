@@ -8,7 +8,7 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         object Company_Search(Dico pager);
-        object Company_Select(string id);
+        object Company_Select(string cie);
         object Company_New();
         object Company_Insert(Dico uto);
         void Company_Update(Dico uto);
@@ -21,7 +21,7 @@ namespace BaseApp.Service
     {
         public object Company_Search(Dico pager)
         {
-            var parameters = KVList.Build(pager.TrimRowCount().Revive());
+            var parameters = KVList.Build(pager.TrimRowCount().ReviveUTO());
             var list = repo.queryDicoList("app.Company_Search", parameters, uid: true);
             return new
             {
@@ -31,12 +31,13 @@ namespace BaseApp.Service
             };
         }
 
-        public object Company_Select(string id)
+        public object Company_Select(string cie)
         {
+            var graylist = "caneditundeliveredpermits,fournisseur_planconjoint,fournisseur_surcharge,fournisseur_fond_roulement,fournisseur_fond_forestier,fournisseur_preleve_divers,gpversion,showyearsinpermislistview".Split(',');
             return new
             {
-                item = repo.queryDico("appCompany_Select", "@id", id, uid: true),
-                xtra = repo.queryDico("app.Company_Summary", "@id", id, uid: true)
+                item = repo.queryDico("app.Company_Select", "@cie", cie, uid: true).ReviveDTO(graylist: graylist),
+                xtra = repo.queryDico("app.Company_Summary", "@cie", cie, uid: true)
             };
         }
 
@@ -51,7 +52,7 @@ namespace BaseApp.Service
 
         public object Company_Insert(Dico uto)
         {
-            var parameters = KVList.Build(uto.Revive());
+            var parameters = KVList.Build(uto.ReviveUTO());
             var cie = repo.queryScalar<string>("app.Company_Insert", parameters, uid: true);
             return new
             {
@@ -61,12 +62,20 @@ namespace BaseApp.Service
 
         public void Company_Update(Dico uto)
         {
-            repo.queryNonQuery("app.Company_Update", KVList.Build(uto.Revive()), uid: true);
+            uto.Remove("created");
+
+            var appProps = new string[] { "cie", "name", "features", "archive", "updated", "updatedby" };
+            var appUTO = uto.ReviveUTO(whitelist: appProps);
+            var dboUTO = uto.ReviveUTO(blacklist: appProps);
+
+            appUTO.Add("profileJson", Dico.Serialize(dboUTO));
+
+            repo.queryNonQuery("app.Company_Update", KVList.Build(appUTO), uid: true);
         }
 
         public void Company_Delete(Dico key)
         {
-            repo.queryNonQuery("app.Company_Delete", KVList.Build(key.Revive()), uid: true);
+            repo.queryNonQuery("app.Company_Delete", KVList.Build(key.ReviveUTO()), uid: true);
         }
 
         public int? Company_GetID(string company)

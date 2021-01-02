@@ -12,7 +12,7 @@ import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
-import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout"
+import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout2"
 
 declare const i18n: any;
 
@@ -168,7 +168,7 @@ interface IState {
     fournisseur_preleve_divers_text: string
 }
 
-const blackList = ["fournisseur_planconjoint", "fournisseur_surcharge", "compte_paiements", "compte_arecevoir", "compte_apayer", "compte_duauxproducteurs", "compte_tpspercues", "compte_tpspayees", "compte_tvqpercues", "compte_tvqpayees", "fournisseur_fond_roulement", "fournisseur_fond_forestier", "fournisseur_preleve_divers"];
+const blackList = ["created"];
 
 
 
@@ -180,122 +180,71 @@ let isNew = false;
 let isDirty = false;
 
 
-
-const formTemplate = (item: IState, fournisseur_planconjoint: string, fournisseur_surcharge: string, compte_paiements: string, compte_arecevoir: string, compte_apayer: string, compte_duauxproducteurs: string, compte_tpspercues: string, compte_tpspayees: string, compte_tvqpercues: string, compte_tvqpayees: string, fournisseur_fond_roulement: string, fournisseur_fond_forestier: string, fournisseur_preleve_divers: string) => {
+const block_company = (item: IState) => {
     return `
-
-${isNew ? `
-` : `
-    ${Theme.renderStaticField(Misc.toStaticNumber(item.cie), i18n("CIE"))}
-`}
-    ${Theme.renderNumberField(NS, "cie", item.cie, i18n("CIE"), true)}
     ${Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 64, true)}
     ${Theme.renderTextField(NS, "features", item.features, i18n("FEATURES"), 2048)}
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
-    ${Theme.renderTextField(NS, "acombapassword", item.acombapassword, i18n("ACOMBAPASSWORD"), 500)}
-    ${Theme.renderTextField(NS, "acombapath", item.acombapath, i18n("ACOMBAPATH"), 500)}
-    ${Theme.renderTextField(NS, "acombasocietepath", item.acombasocietepath, i18n("ACOMBASOCIETEPATH"), 500)}
-    ${Theme.renderTextField(NS, "acombasyncropath", item.acombasyncropath, i18n("ACOMBASYNCROPATH"), 500)}
-    ${Theme.renderTextField(NS, "acombausername", item.acombausername, i18n("ACOMBAUSERNAME"), 500)}
-    ${Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, i18n("ACROBATPATH"), 500)}
-    ${Theme.renderTextField(NS, "adminpassword", item.adminpassword, i18n("ADMINPASSWORD"), 500)}
-    ${Theme.renderCheckboxField(NS, "afficherpermit1", item.afficherpermit1, i18n("AFFICHERPERMIT1"))}
-    ${Theme.renderCheckboxField(NS, "afficherpermit2", item.afficherpermit2, i18n("AFFICHERPERMIT2"))}
-    ${Theme.renderCheckboxField(NS, "afficherpermit3", item.afficherpermit3, i18n("AFFICHERPERMIT3"))}
-    ${Theme.renderCheckboxField(NS, "afficherpermit4", item.afficherpermit4, i18n("AFFICHERPERMIT4"))}
+`;
+}
+
+const block_system = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "xlstemplatespath", item.xlstemplatespath, i18n("XLSTEMPLATESPATH"), 500)}
+    ${Theme.renderTextField(NS, "helpfilepath", item.helpfilepath, i18n("HELPFILEPATH"), 500)}
+
+    ${Theme.renderNumberField(NS, "masselimitedefaut", item.masselimitedefaut, i18n("MASSELIMITEDEFAUT"), true)}
     ${Theme.renderNumberField(NS, "anneecourante", item.anneecourante, i18n("ANNEECOURANTE"), true)}
-    ${Theme.renderNumberField(NS, "autresraportsprintermarginbottom", item.autresraportsprintermarginbottom, i18n("AUTRESRAPORTSPRINTERMARGINBOTTOM"))}
-    ${Theme.renderNumberField(NS, "autresraportsprintermarginleft", item.autresraportsprintermarginleft, i18n("AUTRESRAPORTSPRINTERMARGINLEFT"))}
-    ${Theme.renderNumberField(NS, "autresraportsprintermarginright", item.autresraportsprintermarginright, i18n("AUTRESRAPORTSPRINTERMARGINRIGHT"))}
-    ${Theme.renderNumberField(NS, "autresraportsprintermargintop", item.autresraportsprintermargintop, i18n("AUTRESRAPORTSPRINTERMARGINTOP"))}
-    ${Theme.renderTextField(NS, "caneditundeliveredpermits", item.caneditundeliveredpermits, i18n("CANEDITUNDELIVEREDPERMITS"), 500)}
-    ${Theme.renderTextField(NS, "ccemail", item.ccemail, i18n("CCEMAIL"), 500)}
-    ${Theme.renderTextField(NS, "cletriclientnom", item.cletriclientnom, i18n("CLETRICLIENTNOM"), 500)}
-    ${Theme.renderCheckboxField(NS, "copiepermit1", item.copiepermit1, i18n("COPIEPERMIT1"))}
-    ${Theme.renderCheckboxField(NS, "copiepermit2", item.copiepermit2, i18n("COPIEPERMIT2"))}
-    ${Theme.renderCheckboxField(NS, "copiepermit3", item.copiepermit3, i18n("COPIEPERMIT3"))}
-    ${Theme.renderCheckboxField(NS, "copiepermit4", item.copiepermit4, i18n("COPIEPERMIT4"))}
-    ${Theme.renderTextField(NS, "deletefichepassword", item.deletefichepassword, i18n("DELETEFICHEPASSWORD"), 500)}
-    ${Theme.renderCheckboxField(NS, "emailpermit1", item.emailpermit1, i18n("EMAILPERMIT1"))}
-    ${Theme.renderCheckboxField(NS, "emailpermit2", item.emailpermit2, i18n("EMAILPERMIT2"))}
-    ${Theme.renderCheckboxField(NS, "emailpermit3", item.emailpermit3, i18n("EMAILPERMIT3"))}
-    ${Theme.renderCheckboxField(NS, "emailpermit4", item.emailpermit4, i18n("EMAILPERMIT4"))}
-    ${Theme.renderTextField(NS, "excellanguage", item.excellanguage, i18n("EXCELLANGUAGE"), 500)}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautrechargepourtransporteur", item.facturesafficherfraisautrechargepourtransporteur, i18n("FACTURESAFFICHERFRAISAUTRECHARGEPOURTRANSPORTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautresproducteur", item.facturesafficherfraisautresproducteur, i18n("FACTURESAFFICHERFRAISAUTRESPRODUCTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenusproducteur", item.facturesafficherfraisautresrevenusproducteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSPRODUCTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenustransporteur", item.facturesafficherfraisautresrevenustransporteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSTRANSPORTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautrestransporteur", item.facturesafficherfraisautrestransporteur, i18n("FACTURESAFFICHERFRAISAUTRESTRANSPORTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraischargeurproducteur", item.facturesafficherfraischargeurproducteur, i18n("FACTURESAFFICHERFRAISCHARGEURPRODUCTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraischargeurtransporteur", item.facturesafficherfraischargeurtransporteur, i18n("FACTURESAFFICHERFRAISCHARGEURTRANSPORTEUR"))}
-    ${Theme.renderCheckboxField(NS, "facturesafficherfraiscompensationdedeplacement", item.facturesafficherfraiscompensationdedeplacement, i18n("FACTURESAFFICHERFRAISCOMPENSATIONDEDEPLACEMENT"))}
-    ${Theme.renderCheckboxField(NS, "facturesaffichersurchargeproducteur", item.facturesaffichersurchargeproducteur, i18n("FACTURESAFFICHERSURCHARGEPRODUCTEUR"))}
+    ${Theme.renderNumberField(NS, "taux_tps", item.taux_tps, i18n("TAUX_TPS"))}
+    ${Theme.renderNumberField(NS, "taux_tvq", item.taux_tvq, i18n("TAUX_TVQ"))}
+
+    ${Theme.renderNumberField(NS, "massecontingentvoyagedefaut", item.massecontingentvoyagedefaut, i18n("MASSECONTINGENTVOYAGEDEFAUT"), true)}
+    ${Theme.renderNumberField(NS, "superficiecontingenteesansdeduction", item.superficiecontingenteesansdeduction, i18n("SUPERFICIECONTINGENTEESANSDEDUCTION"))}
+    ${Theme.renderNumberField(NS, "superficiecontingenteepourcentagededuction", item.superficiecontingenteepourcentagededuction, i18n("SUPERFICIECONTINGENTEEPOURCENTAGEDEDUCTION"))}
+
+    ${Theme.renderCheckboxField(NS, "livraisonliertaux", item.livraisonliertaux, i18n("LIVRAISONLIERTAUX"))}
+    ${Theme.renderCheckboxField(NS, "utiliserlotscontingentes", item.utiliserlotscontingentes, i18n("UTILISERLOTSCONTINGENTES"))}
+
     ${Theme.renderTextField(NS, "formicon", item.formicon, i18n("FORMICON"), 500)}
     ${Theme.renderTextField(NS, "formtext", item.formtext, i18n("FORMTEXT"), 500)}
-    ${Theme.renderNumberField(NS, "fournisseurpointerid", item.fournisseurpointerid, i18n("FOURNISSEURPOINTERID"), true)}
-    ${Theme.renderTextField(NS, "fromemail", item.fromemail, i18n("FROMEMAIL"), 500)}
-    ${Theme.renderTextField(NS, "gpversion", item.gpversion, i18n("GPVERSION"), 500)}
-    ${Theme.renderTextField(NS, "helpfilepath", item.helpfilepath, i18n("HELPFILEPATH"), 500)}
-    ${Theme.renderTextField(NS, "imprimanteautresrapports", item.imprimanteautresrapports, i18n("IMPRIMANTEAUTRESRAPPORTS"), 500)}
-    ${Theme.renderTextField(NS, "imprimantedepermis", item.imprimantedepermis, i18n("IMPRIMANTEDEPERMIS"), 500)}
-    ${Theme.renderCheckboxField(NS, "livraisonliertaux", item.livraisonliertaux, i18n("LIVRAISONLIERTAUX"))}
-    ${Theme.renderTextField(NS, "logfile", item.logfile, i18n("LOGFILE"), 500)}
-    ${Theme.renderTextField(NS, "logopath", item.logopath, i18n("LOGOPATH"), 500)}
-    ${Theme.renderNumberField(NS, "massecontingentvoyagedefaut", item.massecontingentvoyagedefaut, i18n("MASSECONTINGENTVOYAGEDEFAUT"), true)}
-    ${Theme.renderNumberField(NS, "masselimitedefaut", item.masselimitedefaut, i18n("MASSELIMITEDEFAUT"), true)}
-    ${Theme.renderTextField(NS, "message_autorisationdeslivraisons", item.message_autorisationdeslivraisons, i18n("MESSAGE_AUTORISATIONDESLIVRAISONS"), 500)}
-    ${Theme.renderTextField(NS, "message_demandecontingentement", item.message_demandecontingentement, i18n("MESSAGE_DEMANDECONTINGENTEMENT"), 500)}
-    ${Theme.renderTextField(NS, "messageimpressionsdefactures", item.messageimpressionsdefactures, i18n("MESSAGEIMPRESSIONSDEFACTURES"), 500)}
-    ${Theme.renderTextField(NS, "messagelivraisonnonconforme", item.messagelivraisonnonconforme, i18n("MESSAGELIVRAISONNONCONFORME"), 500)}
-    ${Theme.renderTextField(NS, "messagespecpermitanglais", item.messagespecpermitanglais, i18n("MESSAGESPECPERMITANGLAIS"), 500)}
-    ${Theme.renderTextField(NS, "messagespecpermitfrancais", item.messagespecpermitfrancais, i18n("MESSAGESPECPERMITFRANCAIS"), 500)}
-    ${Theme.renderTextField(NS, "nomdb", item.nomdb, i18n("NOMDB"), 500)}
-    ${Theme.renderNumberField(NS, "permisprintermarginbottom", item.permisprintermarginbottom, i18n("PERMISPRINTERMARGINBOTTOM"))}
-    ${Theme.renderNumberField(NS, "permisprintermarginleft", item.permisprintermarginleft, i18n("PERMISPRINTERMARGINLEFT"))}
-    ${Theme.renderNumberField(NS, "permisprintermarginright", item.permisprintermarginright, i18n("PERMISPRINTERMARGINRIGHT"))}
-    ${Theme.renderNumberField(NS, "permisprintermargintop", item.permisprintermargintop, i18n("PERMISPRINTERMARGINTOP"))}
-    ${Theme.renderCheckboxField(NS, "permisprintpreview", item.permisprintpreview, i18n("PERMISPRINTPREVIEW"))}
-    ${Theme.renderTextField(NS, "preleves_notps", item.preleves_notps, i18n("PRELEVES_NOTPS"), 500)}
-    ${Theme.renderTextField(NS, "preleves_notvq", item.preleves_notvq, i18n("PRELEVES_NOTVQ"), 500)}
-    ${Theme.renderTextField(NS, "serveuremail", item.serveuremail, i18n("SERVEUREMAIL"), 500)}
-    ${Theme.renderTextField(NS, "showyearsinpermislistview", item.showyearsinpermislistview, i18n("SHOWYEARSINPERMISLISTVIEW"), 500)}
-    ${Theme.renderNumberField(NS, "superficiecontingenteepourcentagededuction", item.superficiecontingenteepourcentagededuction, i18n("SUPERFICIECONTINGENTEEPOURCENTAGEDEDUCTION"))}
-    ${Theme.renderNumberField(NS, "superficiecontingenteesansdeduction", item.superficiecontingenteesansdeduction, i18n("SUPERFICIECONTINGENTEESANSDEDUCTION"))}
-    ${Theme.renderTextField(NS, "syndicat_codepostal", item.syndicat_codepostal, i18n("SYNDICAT_CODEPOSTAL"), 500)}
-    ${Theme.renderTextField(NS, "syndicat_fax", item.syndicat_fax, i18n("SYNDICAT_FAX"), 500)}
-    ${Theme.renderTextField(NS, "syndicat_nom", item.syndicat_nom, i18n("SYNDICAT_NOM"), 500)}
+`;
+}
+
+const block_personnalisation = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "syndicatouoffice", item.syndicatouoffice, i18n("SYNDICATOUOFFICE"), 500)}
+
     ${Theme.renderTextField(NS, "syndicat_nomanglais", item.syndicat_nomanglais, i18n("SYNDICAT_NOMANGLAIS"), 500)}
     ${Theme.renderTextField(NS, "syndicat_nomfrancais", item.syndicat_nomfrancais, i18n("SYNDICAT_NOMFRANCAIS"), 500)}
-    ${Theme.renderTextField(NS, "syndicat_notps", item.syndicat_notps, i18n("SYNDICAT_NOTPS"), 500)}
-    ${Theme.renderTextField(NS, "syndicat_notvq", item.syndicat_notvq, i18n("SYNDICAT_NOTVQ"), 500)}
+
     ${Theme.renderTextField(NS, "syndicat_rue", item.syndicat_rue, i18n("SYNDICAT_RUE"), 500)}
-    ${Theme.renderTextField(NS, "syndicat_telephone", item.syndicat_telephone, i18n("SYNDICAT_TELEPHONE"), 500)}
     ${Theme.renderTextField(NS, "syndicat_ville", item.syndicat_ville, i18n("SYNDICAT_VILLE"), 500)}
-    ${Theme.renderTextField(NS, "syndicatouoffice", item.syndicatouoffice, i18n("SYNDICATOUOFFICE"), 500)}
-    ${Theme.renderCheckboxField(NS, "takeacombabackup", item.takeacombabackup, i18n("TAKEACOMBABACKUP"))}
-    ${Theme.renderCheckboxField(NS, "takesqlbackup", item.takesqlbackup, i18n("TAKESQLBACKUP"))}
-    ${Theme.renderNumberField(NS, "tempsentrelesbackupsautomatiques", item.tempsentrelesbackupsautomatiques, i18n("TEMPSENTRELESBACKUPSAUTOMATIQUES"))}
-    ${Theme.renderNumberField(NS, "timeoutsql", item.timeoutsql, i18n("TIMEOUTSQL"), true)}
-    ${Theme.renderNumberField(NS, "typepermis", item.typepermis, i18n("TYPEPERMIS"), true)}
-    ${Theme.renderTextField(NS, "typepermis1", item.typepermis1, i18n("TYPEPERMIS1"), 500)}
-    ${Theme.renderTextField(NS, "typepermis1anglais", item.typepermis1anglais, i18n("TYPEPERMIS1ANGLAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis1francais", item.typepermis1francais, i18n("TYPEPERMIS1FRANCAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis2", item.typepermis2, i18n("TYPEPERMIS2"), 500)}
-    ${Theme.renderTextField(NS, "typepermis2anglais", item.typepermis2anglais, i18n("TYPEPERMIS2ANGLAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis2francais", item.typepermis2francais, i18n("TYPEPERMIS2FRANCAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis3", item.typepermis3, i18n("TYPEPERMIS3"), 500)}
-    ${Theme.renderTextField(NS, "typepermis3anglais", item.typepermis3anglais, i18n("TYPEPERMIS3ANGLAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis3francais", item.typepermis3francais, i18n("TYPEPERMIS3FRANCAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis4", item.typepermis4, i18n("TYPEPERMIS4"), 500)}
-    ${Theme.renderTextField(NS, "typepermis4anglais", item.typepermis4anglais, i18n("TYPEPERMIS4ANGLAIS"), 500)}
-    ${Theme.renderTextField(NS, "typepermis4francais", item.typepermis4francais, i18n("TYPEPERMIS4FRANCAIS"), 500)}
-    ${Theme.renderTextField(NS, "updateotherdatabase", item.updateotherdatabase, i18n("UPDATEOTHERDATABASE"), 500)}
+    ${Theme.renderTextField(NS, "syndicat_codepostal", item.syndicat_codepostal, i18n("SYNDICAT_CODEPOSTAL"), 500)}
+    ${Theme.renderTextField(NS, "syndicat_telephone", item.syndicat_telephone, i18n("SYNDICAT_TELEPHONE"), 500)}
+    ${Theme.renderTextField(NS, "syndicat_fax", item.syndicat_fax, i18n("SYNDICAT_FAX"), 500)}
+`;
+}
+
+const block_acomba = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "acombausername", item.acombausername, i18n("ACOMBAUSERNAME"), 500)}
+    ${Theme.renderTextField(NS, "acombapassword", item.acombapassword, i18n("ACOMBAPASSWORD"), 500)}
+    ${Theme.renderTextField(NS, "acombasocietepath", item.acombasocietepath, i18n("ACOMBASOCIETEPATH"), 500)}
+    ${Theme.renderTextField(NS, "acombapath", item.acombapath, i18n("ACOMBAPATH"), 500)}
+
     ${Theme.renderCheckboxField(NS, "utiliselesychronisateurdirect", item.utiliselesychronisateurdirect, i18n("UTILISELESYCHRONISATEURDIRECT"))}
-    ${Theme.renderCheckboxField(NS, "utiliserlesnomsdemachinedanslenomdeprinter", item.utiliserlesnomsdemachinedanslenomdeprinter, i18n("UTILISERLESNOMSDEMACHINEDANSLENOMDEPRINTER"))}
-    ${Theme.renderCheckboxField(NS, "utiliserlotscontingentes", item.utiliserlotscontingentes, i18n("UTILISERLOTSCONTINGENTES"))}
-    ${Theme.renderTextField(NS, "xlstemplatespath", item.xlstemplatespath, i18n("XLSTEMPLATESPATH"), 500)}
+    ${Theme.renderTextField(NS, "acombasyncropath", item.acombasyncropath, i18n("ACOMBASYNCROPATH"), 500)}
+`;
+}
+
+const block_comptes = (item: IState, fournisseur_planconjoint: string, fournisseur_surcharge: string, compte_paiements: string, compte_arecevoir: string, compte_apayer: string, compte_duauxproducteurs: string, compte_tpspercues: string, compte_tpspayees: string, compte_tvqpercues: string, compte_tvqpayees: string, fournisseur_fond_roulement: string, fournisseur_fond_forestier: string, fournisseur_preleve_divers: string) => {
+    return `
     ${Theme.renderDropdownField(NS, "fournisseur_planconjoint", fournisseur_planconjoint, i18n("FOURNISSEUR_PLANCONJOINT"))}
     ${Theme.renderDropdownField(NS, "fournisseur_surcharge", fournisseur_surcharge, i18n("FOURNISSEUR_SURCHARGE"))}
+    ${Theme.renderDropdownField(NS, "fournisseur_fond_roulement", fournisseur_fond_roulement, i18n("FOURNISSEUR_FOND_ROULEMENT"))}
+    ${Theme.renderDropdownField(NS, "fournisseur_fond_forestier", fournisseur_fond_forestier, i18n("FOURNISSEUR_FOND_FORESTIER"))}
+    ${Theme.renderDropdownField(NS, "fournisseur_preleve_divers", fournisseur_preleve_divers, i18n("FOURNISSEUR_PRELEVE_DIVERS"))}
+
     ${Theme.renderDropdownField(NS, "compte_paiements", compte_paiements, i18n("COMPTE_PAIEMENTS"))}
     ${Theme.renderDropdownField(NS, "compte_arecevoir", compte_arecevoir, i18n("COMPTE_ARECEVOIR"))}
     ${Theme.renderDropdownField(NS, "compte_apayer", compte_apayer, i18n("COMPTE_APAYER"))}
@@ -304,11 +253,175 @@ ${isNew ? `
     ${Theme.renderDropdownField(NS, "compte_tpspayees", compte_tpspayees, i18n("COMPTE_TPSPAYEES"))}
     ${Theme.renderDropdownField(NS, "compte_tvqpercues", compte_tvqpercues, i18n("COMPTE_TVQPERCUES"))}
     ${Theme.renderDropdownField(NS, "compte_tvqpayees", compte_tvqpayees, i18n("COMPTE_TVQPAYEES"))}
-    ${Theme.renderNumberField(NS, "taux_tps", item.taux_tps, i18n("TAUX_TPS"))}
-    ${Theme.renderNumberField(NS, "taux_tvq", item.taux_tvq, i18n("TAUX_TVQ"))}
-    ${Theme.renderDropdownField(NS, "fournisseur_fond_roulement", fournisseur_fond_roulement, i18n("FOURNISSEUR_FOND_ROULEMENT"))}
-    ${Theme.renderDropdownField(NS, "fournisseur_fond_forestier", fournisseur_fond_forestier, i18n("FOURNISSEUR_FOND_FORESTIER"))}
-    ${Theme.renderDropdownField(NS, "fournisseur_preleve_divers", fournisseur_preleve_divers, i18n("FOURNISSEUR_PRELEVE_DIVERS"))}
+`;
+}
+
+const block_preleve = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "preleves_notps", item.preleves_notps, i18n("PRELEVES_NOTPS"), 500)}
+    ${Theme.renderTextField(NS, "preleves_notvq", item.preleves_notvq, i18n("PRELEVES_NOTVQ"), 500)}
+
+    ${Theme.renderTextField(NS, "syndicat_notps", item.syndicat_notps, i18n("SYNDICAT_NOTPS"), 500)}
+    ${Theme.renderTextField(NS, "syndicat_notvq", item.syndicat_notvq, i18n("SYNDICAT_NOTVQ"), 500)}
+`;
+}
+
+const block_permis = (item: IState) => {
+    return `
+    ${Theme.renderNumberField(NS, "typepermis", item.typepermis, i18n("TYPEPERMIS"), true)}
+
+    ${Theme.renderTextField(NS, "serveuremail", item.serveuremail, i18n("SERVEUREMAIL"), 500)}
+    ${Theme.renderTextField(NS, "ccemail", item.ccemail, i18n("CCEMAIL"), 500)}
+    ${Theme.renderTextField(NS, "fromemail", item.fromemail, i18n("FROMEMAIL"), 500)}
+
+    ${Theme.renderCheckboxField(NS, "permisprintpreview", item.permisprintpreview, i18n("PERMISPRINTPREVIEW"))}
+    ${Theme.renderTextField(NS, "typepermis1", item.typepermis1, i18n("TYPEPERMIS1"), 500)}
+    ${Theme.renderTextField(NS, "typepermis1anglais", item.typepermis1anglais, i18n("TYPEPERMIS1ANGLAIS"), 500)}
+    ${Theme.renderTextField(NS, "typepermis1francais", item.typepermis1francais, i18n("TYPEPERMIS1FRANCAIS"), 500)}
+    ${Theme.renderCheckboxField(NS, "afficherpermit1", item.afficherpermit1, i18n("AFFICHERPERMIT1"))}
+    ${Theme.renderCheckboxField(NS, "emailpermit1", item.emailpermit1, i18n("EMAILPERMIT1"))}
+    ${Theme.renderCheckboxField(NS, "copiepermit1", item.copiepermit1, i18n("COPIEPERMIT1"))}
+
+    ${Theme.renderTextField(NS, "typepermis2", item.typepermis2, i18n("TYPEPERMIS2"), 500)}
+    ${Theme.renderTextField(NS, "typepermis2anglais", item.typepermis2anglais, i18n("TYPEPERMIS2ANGLAIS"), 500)}
+    ${Theme.renderTextField(NS, "typepermis2francais", item.typepermis2francais, i18n("TYPEPERMIS2FRANCAIS"), 500)}
+    ${Theme.renderCheckboxField(NS, "afficherpermit2", item.afficherpermit2, i18n("AFFICHERPERMIT2"))}
+    ${Theme.renderCheckboxField(NS, "emailpermit2", item.emailpermit2, i18n("EMAILPERMIT2"))}
+    ${Theme.renderCheckboxField(NS, "copiepermit2", item.copiepermit2, i18n("COPIEPERMIT2"))}
+
+    ${Theme.renderTextField(NS, "typepermis3", item.typepermis3, i18n("TYPEPERMIS3"), 500)}
+    ${Theme.renderTextField(NS, "typepermis3anglais", item.typepermis3anglais, i18n("TYPEPERMIS3ANGLAIS"), 500)}
+    ${Theme.renderTextField(NS, "typepermis3francais", item.typepermis3francais, i18n("TYPEPERMIS3FRANCAIS"), 500)}
+    ${Theme.renderCheckboxField(NS, "afficherpermit3", item.afficherpermit3, i18n("AFFICHERPERMIT3"))}
+    ${Theme.renderCheckboxField(NS, "emailpermit3", item.emailpermit3, i18n("EMAILPERMIT3"))}
+    ${Theme.renderCheckboxField(NS, "copiepermit3", item.copiepermit3, i18n("COPIEPERMIT3"))}
+
+    ${Theme.renderTextField(NS, "typepermis4", item.typepermis4, i18n("TYPEPERMIS4"), 500)}
+    ${Theme.renderTextField(NS, "typepermis4anglais", item.typepermis4anglais, i18n("TYPEPERMIS4ANGLAIS"), 500)}
+    ${Theme.renderTextField(NS, "typepermis4francais", item.typepermis4francais, i18n("TYPEPERMIS4FRANCAIS"), 500)}
+    ${Theme.renderCheckboxField(NS, "afficherpermit4", item.afficherpermit4, i18n("AFFICHERPERMIT4"))}
+    ${Theme.renderCheckboxField(NS, "emailpermit4", item.emailpermit4, i18n("EMAILPERMIT4"))}
+    ${Theme.renderCheckboxField(NS, "copiepermit4", item.copiepermit4, i18n("COPIEPERMIT4"))}
+
+    ${Theme.renderTextField(NS, "messagespecpermitanglais", item.messagespecpermitanglais, i18n("MESSAGESPECPERMITANGLAIS"), 500)}
+    ${Theme.renderTextField(NS, "messagespecpermitfrancais", item.messagespecpermitfrancais, i18n("MESSAGESPECPERMITFRANCAIS"), 500)}
+
+    ${Theme.renderTextField(NS, "showyearsinpermislistview", item.showyearsinpermislistview, i18n("SHOWYEARSINPERMISLISTVIEW"), 500)}
+`;
+}
+
+const block_print = (item: IState) => {
+    return `
+    ${Theme.renderCheckboxField(NS, "facturesaffichersurchargeproducteur", item.facturesaffichersurchargeproducteur, i18n("FACTURESAFFICHERSURCHARGEPRODUCTEUR"))}
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraischargeurproducteur", item.facturesafficherfraischargeurproducteur, i18n("FACTURESAFFICHERFRAISCHARGEURPRODUCTEUR"))}
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraischargeurtransporteur", item.facturesafficherfraischargeurtransporteur, i18n("FACTURESAFFICHERFRAISCHARGEURTRANSPORTEUR"))}
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautresproducteur", item.facturesafficherfraisautresproducteur, i18n("FACTURESAFFICHERFRAISAUTRESPRODUCTEUR"))}
+
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautrestransporteur", item.facturesafficherfraisautrestransporteur, i18n("FACTURESAFFICHERFRAISAUTRESTRANSPORTEUR"))}
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraiscompensationdedeplacement", item.facturesafficherfraiscompensationdedeplacement, i18n("FACTURESAFFICHERFRAISCOMPENSATIONDEDEPLACEMENT"))}
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenustransporteur", item.facturesafficherfraisautresrevenustransporteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSTRANSPORTEUR"))}
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenusproducteur", item.facturesafficherfraisautresrevenusproducteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSPRODUCTEUR"))}
+
+    ${Theme.renderTextField(NS, "logopath", item.logopath, i18n("LOGOPATH"), 500)}
+
+    ${Theme.renderCheckboxField(NS, "utiliserlesnomsdemachinedanslenomdeprinter", item.utiliserlesnomsdemachinedanslenomdeprinter, i18n("UTILISERLESNOMSDEMACHINEDANSLENOMDEPRINTER"))}
+
+    ${Theme.renderTextareaField(NS, "message_autorisationdeslivraisons", item.message_autorisationdeslivraisons, i18n("MESSAGE_AUTORISATIONDESLIVRAISONS"), 500, false, null, 10)}
+    ${Theme.renderTextareaField(NS, "message_demandecontingentement", item.message_demandecontingentement, i18n("MESSAGE_DEMANDECONTINGENTEMENT"), 500, false, null, 10)}
+`;
+}
+
+const block_backup = (item: IState) => {
+    return `
+    ${Theme.renderCheckboxField(NS, "takeacombabackup", item.takeacombabackup, i18n("TAKEACOMBABACKUP"))}
+    ${Theme.renderCheckboxField(NS, "takesqlbackup", item.takesqlbackup, i18n("TAKESQLBACKUP"))}
+    ${Theme.renderTextField(NS, "nomdb", item.nomdb, i18n("NOMDB"), 500)}
+    ${Theme.renderNumberField(NS, "timeoutsql", item.timeoutsql, i18n("TIMEOUTSQL"), true)}
+    ${Theme.renderNumberField(NS, "tempsentrelesbackupsautomatiques", item.tempsentrelesbackupsautomatiques, i18n("TEMPSENTRELESBACKUPSAUTOMATIQUES"))}
+`;
+}
+
+const block_security = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "caneditundeliveredpermits", item.caneditundeliveredpermits, i18n("CANEDITUNDELIVEREDPERMITS"), 500)}
+
+    ${Theme.renderTextField(NS, "adminpassword", item.adminpassword, i18n("ADMINPASSWORD"), 500)}
+    ${Theme.renderTextField(NS, "deletefichepassword", item.deletefichepassword, i18n("DELETEFICHEPASSWORD"), 500)}
+`;
+}
+
+const block_default_profile = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "imprimantedepermis", item.imprimantedepermis, i18n("IMPRIMANTEDEPERMIS"), 500)}
+    ${Theme.renderNumberField(NS, "permisprintermarginbottom", item.permisprintermarginbottom, i18n("PERMISPRINTERMARGINBOTTOM"))}
+    ${Theme.renderNumberField(NS, "permisprintermarginleft", item.permisprintermarginleft, i18n("PERMISPRINTERMARGINLEFT"))}
+    ${Theme.renderNumberField(NS, "permisprintermarginright", item.permisprintermarginright, i18n("PERMISPRINTERMARGINRIGHT"))}
+    ${Theme.renderNumberField(NS, "permisprintermargintop", item.permisprintermargintop, i18n("PERMISPRINTERMARGINTOP"))}
+
+    ${Theme.renderTextField(NS, "imprimanteautresrapports", item.imprimanteautresrapports, i18n("IMPRIMANTEAUTRESRAPPORTS"), 500)}
+    ${Theme.renderNumberField(NS, "autresraportsprintermarginbottom", item.autresraportsprintermarginbottom, i18n("AUTRESRAPORTSPRINTERMARGINBOTTOM"))}
+    ${Theme.renderNumberField(NS, "autresraportsprintermarginleft", item.autresraportsprintermarginleft, i18n("AUTRESRAPORTSPRINTERMARGINLEFT"))}
+    ${Theme.renderNumberField(NS, "autresraportsprintermarginright", item.autresraportsprintermarginright, i18n("AUTRESRAPORTSPRINTERMARGINRIGHT"))}
+    ${Theme.renderNumberField(NS, "autresraportsprintermargintop", item.autresraportsprintermargintop, i18n("AUTRESRAPORTSPRINTERMARGINTOP"))}
+
+    ${Theme.renderTextField(NS, "excellanguage", item.excellanguage, i18n("EXCELLANGUAGE"), 500)}
+
+    ${Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, i18n("ACROBATPATH"), 500)}
+
+    ${Theme.renderTextField(NS, "cletriclientnom", item.cletriclientnom, i18n("CLETRICLIENTNOM"), 500)}
+`;
+}
+
+const block_todo = (item: IState) => {
+    return `
+    ${Theme.renderCheckboxField(NS, "facturesafficherfraisautrechargepourtransporteur", item.facturesafficherfraisautrechargepourtransporteur, i18n("FACTURESAFFICHERFRAISAUTRECHARGEPOURTRANSPORTEUR"))}
+    ${Theme.renderNumberField(NS, "fournisseurpointerid", item.fournisseurpointerid, i18n("FOURNISSEURPOINTERID"), true)}
+    ${Theme.renderTextField(NS, "gpversion", item.gpversion, i18n("GPVERSION"), 500)}
+    ${Theme.renderTextField(NS, "logfile", item.logfile, i18n("LOGFILE"), 500)}
+    ${Theme.renderTextField(NS, "messageimpressionsdefactures", item.messageimpressionsdefactures, i18n("MESSAGEIMPRESSIONSDEFACTURES"), 500)}
+    ${Theme.renderTextField(NS, "messagelivraisonnonconforme", item.messagelivraisonnonconforme, i18n("MESSAGELIVRAISONNONCONFORME"), 500)}
+    ${Theme.renderTextField(NS, "syndicat_nom", item.syndicat_nom, i18n("SYNDICAT_NOM"), 500)}
+    ${Theme.renderTextField(NS, "updateotherdatabase", item.updateotherdatabase, i18n("UPDATEOTHERDATABASE"), 500)}
+`;
+}
+
+
+const formTemplate = (item: IState, fournisseur_planconjoint: string, fournisseur_surcharge: string, compte_paiements: string, compte_arecevoir: string, compte_apayer: string, compte_duauxproducteurs: string, compte_tpspercues: string, compte_tpspayees: string, compte_tvqpercues: string, compte_tvqpayees: string, fournisseur_fond_roulement: string, fournisseur_fond_forestier: string, fournisseur_preleve_divers: string) => {
+    return `
+<div class="js-float-menu">
+    <ul>
+        <li>${Theme.float_menu_button("Compte")}</li>
+        <li>${Theme.float_menu_button("Paramètres système")}</li>
+        <li>${Theme.float_menu_button("Personnalisation")}</li>
+        <li>${Theme.float_menu_button("Acomba")}</li>
+        <li>${Theme.float_menu_button("Comptes/Fournisseurs")}</li>
+        <li>${Theme.float_menu_button("Taxe")}</li>
+        <li>${Theme.float_menu_button("Permis")}</li>
+        <li>${Theme.float_menu_button("Paramètres imprimantes")}</li>
+        <li>${Theme.float_menu_button("Backup")}</li>
+        <li>${Theme.float_menu_button("Sécurité")}</li>
+        <li>${Theme.float_menu_button("Profil par défaut")}</li>
+        <li>${Theme.float_menu_button("TODO")}</li>
+    </ul>
+</div>
+
+<div class="columns">
+    <div class="column is-8 is-offset-3">
+        ${Theme.wrapFieldset("Compte", block_company(item))}
+        ${Theme.wrapFieldset("Paramètres système", block_system(item))}
+        ${Theme.wrapFieldset("Personnalisation", block_personnalisation(item))}
+        ${Theme.wrapFieldset("Acomba", block_acomba(item))}
+        ${Theme.wrapFieldset("Comptes/Fournisseurs", block_comptes(item, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers))}
+        ${Theme.wrapFieldset("Taxe", block_preleve(item))}
+        ${Theme.wrapFieldset("Permis", block_permis(item))}
+        ${Theme.wrapFieldset("Paramètres imprimantes", block_print(item))}
+        ${Theme.wrapFieldset("Backup", block_backup(item))}
+        ${Theme.wrapFieldset("Sécurité", block_security(item))}
+        ${Theme.wrapFieldset("Profil par défaut", block_default_profile(item))}
+        ${Theme.wrapFieldset("TODO", block_todo(item))}
+    </div>
+</div>
+
     ${Theme.renderBlame(item, isNew)}
 `;
 };
@@ -326,7 +439,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
-    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/company/new"));
+    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/admin/company/new"));
     if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
     let actions = Theme.renderButtons(buttons);
 
@@ -593,7 +706,7 @@ export const create = () => {
         .then(payload => {
             let newkey = <IKey>payload;
             Misc.toastSuccessSave();
-            Router.goto(`#/company/${newkey.cie}`, 10);
+            Router.goto(`#/admin/company/${newkey.cie}`, 10);
         })
         .catch(App.render);
 }
@@ -607,9 +720,9 @@ export const save = (done = false) => {
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
-                Router.goto(`#/companys/`, 100);
+                Router.goto(`#/admin/companys/`, 100);
             else
-                Router.goto(`#/company/${key.cie}`, 10);
+                Router.goto(`#/admin/company/${key.cie}`, 10);
         })
         .catch(App.render);
 }
@@ -620,7 +733,7 @@ export const drop = () => {
     App.DELETE("/company", key)
         .then(_ => {
 
-            Router.goto(`#/companys/`, 250);
+            Router.goto(`#/admin/companys/`, 250);
         })
         .catch(App.render);
 }

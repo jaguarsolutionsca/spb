@@ -18,7 +18,7 @@ namespace BaseApp.Service
     {
         public object Fournisseur_Search(Dico pager)
         {
-            var parameters = KVList.Build(pager.TrimRowCount().Revive());
+            var parameters = KVList.Build(pager.TrimRowCount().ReviveUTO());
             var list = repo.queryDicoList(GP("Fournisseur_Search"), parameters, uid: true);
             return new
             {
@@ -48,7 +48,7 @@ namespace BaseApp.Service
 
         public object Fournisseur_Insert(Dico uto)
         {
-            var parameters = KVList.Build(uto.Revive());
+            var parameters = KVList.Build(uto.ReviveUTO());
             var id = repo.queryScalar<string>(GP("Fournisseur_Insert"), parameters, uid: true);
             return new
             {
@@ -58,12 +58,12 @@ namespace BaseApp.Service
 
         public void Fournisseur_Update(Dico uto)
         {
-            repo.queryNonQuery(GP("Fournisseur_Update"), KVList.Build(uto.Revive()), uid: true);
+            repo.queryNonQuery(GP("Fournisseur_Update"), KVList.Build(uto.ReviveUTO()), uid: true);
         }
 
         public void Fournisseur_Delete(Dico key)
         {
-            repo.queryNonQuery(GP("Fournisseur_Delete"), KVList.Build(key.Revive()), uid: true);
+            repo.queryNonQuery(GP("Fournisseur_Delete"), KVList.Build(key.ReviveUTO()), uid: true);
         }
     }
 }

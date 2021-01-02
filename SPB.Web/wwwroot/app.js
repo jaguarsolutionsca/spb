@@ -4683,7 +4683,6 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .catch(App.render);
             });
             dirtyExit = function () {
-                //console.log(fetchedState); console.log(getFormState())
                 isDirty = !Misc.same(fetchedState, getFormState());
                 if (isDirty) {
                     setTimeout(function () {
@@ -4696,15 +4695,55 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         }
     };
 });
-// File: companys.ts
-System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/admin/layout"], function (exports_39, context_39) {
+System.register("src/admin/layout2", ["_BaseApp/src/core/app", "src/layout"], function (exports_39, context_39) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_4, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var App, layout_4, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_39 && context_39.id;
     return {
         setters: [
             function (App_12) {
                 App = App_12;
+            },
+            function (layout_4_1) {
+                layout_4 = layout_4_1;
+            }
+        ],
+        execute: function () {
+            exports_39("icon", icon = "far fa-user");
+            exports_39("prepareMenu", prepareMenu = function () {
+                layout_4.setOpenedMenu("Administration-Management");
+            });
+            exports_39("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+                if (isNew === void 0) { isNew = false; }
+                var isCompanys = App.inContext("App_companys");
+                var isCompany = App.inContext("App_company");
+                var isFiles = window.location.hash.startsWith("#/files/company");
+                var isFile = window.location.hash.startsWith("#/file/company");
+                var showDetail = !isCompanys;
+                var showFiles = showDetail && xtra;
+                var showFile = isFile;
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isCompanys ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/companys\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isCompany ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/company/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Company Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.fileCount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            });
+            exports_39("buildTitle", buildTitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
+            });
+            exports_39("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
+            });
+        }
+    };
+});
+// File: companys.ts
+System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/admin/layout2"], function (exports_40, context_40) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout2_1, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var __moduleName = context_40 && context_40.id;
+    return {
+        setters: [
+            function (App_13) {
+                App = App_13;
             },
             function (Router_7) {
                 Router = Router_7;
@@ -4724,12 +4763,12 @@ System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/co
             function (Lookup_2) {
                 Lookup = Lookup_2;
             },
-            function (layout_4_1) {
-                layout_4 = layout_4_1;
+            function (layout2_1_1) {
+                layout2_1 = layout2_1_1;
             }
         ],
         execute: function () {
-            exports_39("NS", NS = "App_companys");
+            exports_40("NS", NS = "App_companys");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "CIE", sortDirection: "ASC", filter: {} }
@@ -4747,13 +4786,13 @@ System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/co
             pageTemplate = function (pager, table, tab, warning, dirty) {
                 var readonly = false;
                 var buttons = [];
-                buttons.push(Theme.buttonAddNew(NS, "#/company/new", i18n("Add New")));
+                buttons.push(Theme.buttonAddNew(NS, "#/admin/company/new", i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_4.buildTitle(xtra, i18n("companys title"));
-                var subtitle = layout_4.buildSubtitle(xtra, i18n("companys subtitle"));
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_4.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+                var title = layout2_1.buildTitle(xtra, i18n("companys title"));
+                var subtitle = layout2_1.buildSubtitle(xtra, i18n("companys subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout2_1.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_39("fetchState", fetchState = function (cie) {
+            exports_40("fetchState", fetchState = function (cie) {
                 Router.registerDirtyExit(null);
                 return App.POST("/company/search", state.pager)
                     .then(function (payload) {
@@ -4764,7 +4803,7 @@ System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     .then(Lookup.fetch_autreFournisseur())
                     .then(Lookup.fetch_compte());
             });
-            exports_39("fetch", fetch = function (params) {
+            exports_40("fetch", fetch = function (params) {
                 var cie = +params[0];
                 App.prepareRender(NS, i18n("companys"));
                 fetchState(cie)
@@ -4780,7 +4819,7 @@ System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_39("render", render = function () {
+            exports_40("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -4798,14 +4837,14 @@ System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 var search = Pager.searchTemplate(state.pager, NS);
                 var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 var table = tableTemplate(tbody, state.pager);
-                var tab = layout_4.tabTemplate(null, null);
+                var tab = layout2_1.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_39("postRender", postRender = function () {
+            exports_40("postRender", postRender = function () {
                 if (!inContext())
                     return;
             });
-            exports_39("inContext", inContext = function () {
+            exports_40("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             setSelectedRow = function (cie) {
@@ -4818,38 +4857,38 @@ System.register("src/admin/companys", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     return false;
                 return (uiSelectedRow.cie == cie);
             };
-            exports_39("goto", goto = function (pageNo, pageSize) {
+            exports_40("goto", goto = function (pageNo, pageSize) {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_39("sortBy", sortBy = function (columnName, direction) {
+            exports_40("sortBy", sortBy = function (columnName, direction) {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_39("search", search = function (element) {
+            exports_40("search", search = function (element) {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_39("gotoDetail", gotoDetail = function (cie) {
+            exports_40("gotoDetail", gotoDetail = function (cie) {
                 setSelectedRow(cie);
-                Router.goto("#/company/" + cie);
+                Router.goto("#/admin/company/" + cie);
             });
         }
     };
 });
 // File: company.ts
-System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_40, context_40) {
+System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout2"], function (exports_41, context_41) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_5, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_40 && context_40.id;
+    var App, Router, Misc, Theme, Lookup, Perm, layout2_2, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, block_company, block_system, block_personnalisation, block_acomba, block_comptes, block_preleve, block_permis, block_print, block_backup, block_security, block_default_profile, block_todo, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_41 && context_41.id;
     return {
         setters: [
-            function (App_13) {
-                App = App_13;
+            function (App_14) {
+                App = App_14;
             },
             function (Router_8) {
                 Router = Router_8;
@@ -4866,19 +4905,55 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             function (Perm_3) {
                 Perm = Perm_3;
             },
-            function (layout_5_1) {
-                layout_5 = layout_5_1;
+            function (layout2_2_1) {
+                layout2_2 = layout2_2_1;
             }
         ],
         execute: function () {
-            exports_40("NS", NS = "App_company");
-            blackList = ["fournisseur_planconjoint", "fournisseur_surcharge", "compte_paiements", "compte_arecevoir", "compte_apayer", "compte_duauxproducteurs", "compte_tpspercues", "compte_tpspayees", "compte_tvqpercues", "compte_tvqpayees", "fournisseur_fond_roulement", "fournisseur_fond_forestier", "fournisseur_preleve_divers"];
+            exports_41("NS", NS = "App_company");
+            blackList = ["created"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
+            block_company = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 64, true) + "\n    " + Theme.renderTextField(NS, "features", item.features, i18n("FEATURES"), 2048) + "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE")) + "\n";
+            };
+            block_system = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "xlstemplatespath", item.xlstemplatespath, i18n("XLSTEMPLATESPATH"), 500) + "\n    " + Theme.renderTextField(NS, "helpfilepath", item.helpfilepath, i18n("HELPFILEPATH"), 500) + "\n\n    " + Theme.renderNumberField(NS, "masselimitedefaut", item.masselimitedefaut, i18n("MASSELIMITEDEFAUT"), true) + "\n    " + Theme.renderNumberField(NS, "anneecourante", item.anneecourante, i18n("ANNEECOURANTE"), true) + "\n    " + Theme.renderNumberField(NS, "taux_tps", item.taux_tps, i18n("TAUX_TPS")) + "\n    " + Theme.renderNumberField(NS, "taux_tvq", item.taux_tvq, i18n("TAUX_TVQ")) + "\n\n    " + Theme.renderNumberField(NS, "massecontingentvoyagedefaut", item.massecontingentvoyagedefaut, i18n("MASSECONTINGENTVOYAGEDEFAUT"), true) + "\n    " + Theme.renderNumberField(NS, "superficiecontingenteesansdeduction", item.superficiecontingenteesansdeduction, i18n("SUPERFICIECONTINGENTEESANSDEDUCTION")) + "\n    " + Theme.renderNumberField(NS, "superficiecontingenteepourcentagededuction", item.superficiecontingenteepourcentagededuction, i18n("SUPERFICIECONTINGENTEEPOURCENTAGEDEDUCTION")) + "\n\n    " + Theme.renderCheckboxField(NS, "livraisonliertaux", item.livraisonliertaux, i18n("LIVRAISONLIERTAUX")) + "\n    " + Theme.renderCheckboxField(NS, "utiliserlotscontingentes", item.utiliserlotscontingentes, i18n("UTILISERLOTSCONTINGENTES")) + "\n\n    " + Theme.renderTextField(NS, "formicon", item.formicon, i18n("FORMICON"), 500) + "\n    " + Theme.renderTextField(NS, "formtext", item.formtext, i18n("FORMTEXT"), 500) + "\n";
+            };
+            block_personnalisation = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "syndicatouoffice", item.syndicatouoffice, i18n("SYNDICATOUOFFICE"), 500) + "\n\n    " + Theme.renderTextField(NS, "syndicat_nomanglais", item.syndicat_nomanglais, i18n("SYNDICAT_NOMANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nomfrancais", item.syndicat_nomfrancais, i18n("SYNDICAT_NOMFRANCAIS"), 500) + "\n\n    " + Theme.renderTextField(NS, "syndicat_rue", item.syndicat_rue, i18n("SYNDICAT_RUE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_ville", item.syndicat_ville, i18n("SYNDICAT_VILLE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_codepostal", item.syndicat_codepostal, i18n("SYNDICAT_CODEPOSTAL"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_telephone", item.syndicat_telephone, i18n("SYNDICAT_TELEPHONE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_fax", item.syndicat_fax, i18n("SYNDICAT_FAX"), 500) + "\n";
+            };
+            block_acomba = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "acombausername", item.acombausername, i18n("ACOMBAUSERNAME"), 500) + "\n    " + Theme.renderTextField(NS, "acombapassword", item.acombapassword, i18n("ACOMBAPASSWORD"), 500) + "\n    " + Theme.renderTextField(NS, "acombasocietepath", item.acombasocietepath, i18n("ACOMBASOCIETEPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombapath", item.acombapath, i18n("ACOMBAPATH"), 500) + "\n\n    " + Theme.renderCheckboxField(NS, "utiliselesychronisateurdirect", item.utiliselesychronisateurdirect, i18n("UTILISELESYCHRONISATEURDIRECT")) + "\n    " + Theme.renderTextField(NS, "acombasyncropath", item.acombasyncropath, i18n("ACOMBASYNCROPATH"), 500) + "\n";
+            };
+            block_comptes = function (item, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers) {
+                return "\n    " + Theme.renderDropdownField(NS, "fournisseur_planconjoint", fournisseur_planconjoint, i18n("FOURNISSEUR_PLANCONJOINT")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_surcharge", fournisseur_surcharge, i18n("FOURNISSEUR_SURCHARGE")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_fond_roulement", fournisseur_fond_roulement, i18n("FOURNISSEUR_FOND_ROULEMENT")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_fond_forestier", fournisseur_fond_forestier, i18n("FOURNISSEUR_FOND_FORESTIER")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_preleve_divers", fournisseur_preleve_divers, i18n("FOURNISSEUR_PRELEVE_DIVERS")) + "\n\n    " + Theme.renderDropdownField(NS, "compte_paiements", compte_paiements, i18n("COMPTE_PAIEMENTS")) + "\n    " + Theme.renderDropdownField(NS, "compte_arecevoir", compte_arecevoir, i18n("COMPTE_ARECEVOIR")) + "\n    " + Theme.renderDropdownField(NS, "compte_apayer", compte_apayer, i18n("COMPTE_APAYER")) + "\n    " + Theme.renderDropdownField(NS, "compte_duauxproducteurs", compte_duauxproducteurs, i18n("COMPTE_DUAUXPRODUCTEURS")) + "\n    " + Theme.renderDropdownField(NS, "compte_tpspercues", compte_tpspercues, i18n("COMPTE_TPSPERCUES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tpspayees", compte_tpspayees, i18n("COMPTE_TPSPAYEES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tvqpercues", compte_tvqpercues, i18n("COMPTE_TVQPERCUES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tvqpayees", compte_tvqpayees, i18n("COMPTE_TVQPAYEES")) + "\n";
+            };
+            block_preleve = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "preleves_notps", item.preleves_notps, i18n("PRELEVES_NOTPS"), 500) + "\n    " + Theme.renderTextField(NS, "preleves_notvq", item.preleves_notvq, i18n("PRELEVES_NOTVQ"), 500) + "\n\n    " + Theme.renderTextField(NS, "syndicat_notps", item.syndicat_notps, i18n("SYNDICAT_NOTPS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_notvq", item.syndicat_notvq, i18n("SYNDICAT_NOTVQ"), 500) + "\n";
+            };
+            block_permis = function (item) {
+                return "\n    " + Theme.renderNumberField(NS, "typepermis", item.typepermis, i18n("TYPEPERMIS"), true) + "\n\n    " + Theme.renderTextField(NS, "serveuremail", item.serveuremail, i18n("SERVEUREMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "ccemail", item.ccemail, i18n("CCEMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "fromemail", item.fromemail, i18n("FROMEMAIL"), 500) + "\n\n    " + Theme.renderCheckboxField(NS, "permisprintpreview", item.permisprintpreview, i18n("PERMISPRINTPREVIEW")) + "\n    " + Theme.renderTextField(NS, "typepermis1", item.typepermis1, i18n("TYPEPERMIS1"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis1anglais", item.typepermis1anglais, i18n("TYPEPERMIS1ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis1francais", item.typepermis1francais, i18n("TYPEPERMIS1FRANCAIS"), 500) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit1", item.afficherpermit1, i18n("AFFICHERPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit1", item.emailpermit1, i18n("EMAILPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit1", item.copiepermit1, i18n("COPIEPERMIT1")) + "\n\n    " + Theme.renderTextField(NS, "typepermis2", item.typepermis2, i18n("TYPEPERMIS2"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2anglais", item.typepermis2anglais, i18n("TYPEPERMIS2ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2francais", item.typepermis2francais, i18n("TYPEPERMIS2FRANCAIS"), 500) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit2", item.afficherpermit2, i18n("AFFICHERPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit2", item.emailpermit2, i18n("EMAILPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit2", item.copiepermit2, i18n("COPIEPERMIT2")) + "\n\n    " + Theme.renderTextField(NS, "typepermis3", item.typepermis3, i18n("TYPEPERMIS3"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3anglais", item.typepermis3anglais, i18n("TYPEPERMIS3ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3francais", item.typepermis3francais, i18n("TYPEPERMIS3FRANCAIS"), 500) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit3", item.afficherpermit3, i18n("AFFICHERPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit3", item.emailpermit3, i18n("EMAILPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit3", item.copiepermit3, i18n("COPIEPERMIT3")) + "\n\n    " + Theme.renderTextField(NS, "typepermis4", item.typepermis4, i18n("TYPEPERMIS4"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4anglais", item.typepermis4anglais, i18n("TYPEPERMIS4ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4francais", item.typepermis4francais, i18n("TYPEPERMIS4FRANCAIS"), 500) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit4", item.afficherpermit4, i18n("AFFICHERPERMIT4")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit4", item.emailpermit4, i18n("EMAILPERMIT4")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit4", item.copiepermit4, i18n("COPIEPERMIT4")) + "\n\n    " + Theme.renderTextField(NS, "messagespecpermitanglais", item.messagespecpermitanglais, i18n("MESSAGESPECPERMITANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "messagespecpermitfrancais", item.messagespecpermitfrancais, i18n("MESSAGESPECPERMITFRANCAIS"), 500) + "\n\n    " + Theme.renderTextField(NS, "showyearsinpermislistview", item.showyearsinpermislistview, i18n("SHOWYEARSINPERMISLISTVIEW"), 500) + "\n";
+            };
+            block_print = function (item) {
+                return "\n    " + Theme.renderCheckboxField(NS, "facturesaffichersurchargeproducteur", item.facturesaffichersurchargeproducteur, i18n("FACTURESAFFICHERSURCHARGEPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraischargeurproducteur", item.facturesafficherfraischargeurproducteur, i18n("FACTURESAFFICHERFRAISCHARGEURPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraischargeurtransporteur", item.facturesafficherfraischargeurtransporteur, i18n("FACTURESAFFICHERFRAISCHARGEURTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresproducteur", item.facturesafficherfraisautresproducteur, i18n("FACTURESAFFICHERFRAISAUTRESPRODUCTEUR")) + "\n\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautrestransporteur", item.facturesafficherfraisautrestransporteur, i18n("FACTURESAFFICHERFRAISAUTRESTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraiscompensationdedeplacement", item.facturesafficherfraiscompensationdedeplacement, i18n("FACTURESAFFICHERFRAISCOMPENSATIONDEDEPLACEMENT")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenustransporteur", item.facturesafficherfraisautresrevenustransporteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenusproducteur", item.facturesafficherfraisautresrevenusproducteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSPRODUCTEUR")) + "\n\n    " + Theme.renderTextField(NS, "logopath", item.logopath, i18n("LOGOPATH"), 500) + "\n\n    " + Theme.renderCheckboxField(NS, "utiliserlesnomsdemachinedanslenomdeprinter", item.utiliserlesnomsdemachinedanslenomdeprinter, i18n("UTILISERLESNOMSDEMACHINEDANSLENOMDEPRINTER")) + "\n\n    " + Theme.renderTextareaField(NS, "message_autorisationdeslivraisons", item.message_autorisationdeslivraisons, i18n("MESSAGE_AUTORISATIONDESLIVRAISONS"), 500, false, null, 10) + "\n    " + Theme.renderTextareaField(NS, "message_demandecontingentement", item.message_demandecontingentement, i18n("MESSAGE_DEMANDECONTINGENTEMENT"), 500, false, null, 10) + "\n";
+            };
+            block_backup = function (item) {
+                return "\n    " + Theme.renderCheckboxField(NS, "takeacombabackup", item.takeacombabackup, i18n("TAKEACOMBABACKUP")) + "\n    " + Theme.renderCheckboxField(NS, "takesqlbackup", item.takesqlbackup, i18n("TAKESQLBACKUP")) + "\n    " + Theme.renderTextField(NS, "nomdb", item.nomdb, i18n("NOMDB"), 500) + "\n    " + Theme.renderNumberField(NS, "timeoutsql", item.timeoutsql, i18n("TIMEOUTSQL"), true) + "\n    " + Theme.renderNumberField(NS, "tempsentrelesbackupsautomatiques", item.tempsentrelesbackupsautomatiques, i18n("TEMPSENTRELESBACKUPSAUTOMATIQUES")) + "\n";
+            };
+            block_security = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "caneditundeliveredpermits", item.caneditundeliveredpermits, i18n("CANEDITUNDELIVEREDPERMITS"), 500) + "\n\n    " + Theme.renderTextField(NS, "adminpassword", item.adminpassword, i18n("ADMINPASSWORD"), 500) + "\n    " + Theme.renderTextField(NS, "deletefichepassword", item.deletefichepassword, i18n("DELETEFICHEPASSWORD"), 500) + "\n";
+            };
+            block_default_profile = function (item) {
+                return "\n    " + Theme.renderTextField(NS, "imprimantedepermis", item.imprimantedepermis, i18n("IMPRIMANTEDEPERMIS"), 500) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginbottom", item.permisprintermarginbottom, i18n("PERMISPRINTERMARGINBOTTOM")) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginleft", item.permisprintermarginleft, i18n("PERMISPRINTERMARGINLEFT")) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginright", item.permisprintermarginright, i18n("PERMISPRINTERMARGINRIGHT")) + "\n    " + Theme.renderNumberField(NS, "permisprintermargintop", item.permisprintermargintop, i18n("PERMISPRINTERMARGINTOP")) + "\n\n    " + Theme.renderTextField(NS, "imprimanteautresrapports", item.imprimanteautresrapports, i18n("IMPRIMANTEAUTRESRAPPORTS"), 500) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginbottom", item.autresraportsprintermarginbottom, i18n("AUTRESRAPORTSPRINTERMARGINBOTTOM")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginleft", item.autresraportsprintermarginleft, i18n("AUTRESRAPORTSPRINTERMARGINLEFT")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginright", item.autresraportsprintermarginright, i18n("AUTRESRAPORTSPRINTERMARGINRIGHT")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermargintop", item.autresraportsprintermargintop, i18n("AUTRESRAPORTSPRINTERMARGINTOP")) + "\n\n    " + Theme.renderTextField(NS, "excellanguage", item.excellanguage, i18n("EXCELLANGUAGE"), 500) + "\n\n    " + Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, i18n("ACROBATPATH"), 500) + "\n\n    " + Theme.renderTextField(NS, "cletriclientnom", item.cletriclientnom, i18n("CLETRICLIENTNOM"), 500) + "\n";
+            };
+            block_todo = function (item) {
+                return "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautrechargepourtransporteur", item.facturesafficherfraisautrechargepourtransporteur, i18n("FACTURESAFFICHERFRAISAUTRECHARGEPOURTRANSPORTEUR")) + "\n    " + Theme.renderNumberField(NS, "fournisseurpointerid", item.fournisseurpointerid, i18n("FOURNISSEURPOINTERID"), true) + "\n    " + Theme.renderTextField(NS, "gpversion", item.gpversion, i18n("GPVERSION"), 500) + "\n    " + Theme.renderTextField(NS, "logfile", item.logfile, i18n("LOGFILE"), 500) + "\n    " + Theme.renderTextField(NS, "messageimpressionsdefactures", item.messageimpressionsdefactures, i18n("MESSAGEIMPRESSIONSDEFACTURES"), 500) + "\n    " + Theme.renderTextField(NS, "messagelivraisonnonconforme", item.messagelivraisonnonconforme, i18n("MESSAGELIVRAISONNONCONFORME"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nom", item.syndicat_nom, i18n("SYNDICAT_NOM"), 500) + "\n    " + Theme.renderTextField(NS, "updateotherdatabase", item.updateotherdatabase, i18n("UPDATEOTHERDATABASE"), 500) + "\n";
+            };
             formTemplate = function (item, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers) {
-                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.cie), i18n("CIE")) + "\n") + "\n    " + Theme.renderNumberField(NS, "cie", item.cie, i18n("CIE"), true) + "\n    " + Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 64, true) + "\n    " + Theme.renderTextField(NS, "features", item.features, i18n("FEATURES"), 2048) + "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE")) + "\n    " + Theme.renderTextField(NS, "acombapassword", item.acombapassword, i18n("ACOMBAPASSWORD"), 500) + "\n    " + Theme.renderTextField(NS, "acombapath", item.acombapath, i18n("ACOMBAPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombasocietepath", item.acombasocietepath, i18n("ACOMBASOCIETEPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombasyncropath", item.acombasyncropath, i18n("ACOMBASYNCROPATH"), 500) + "\n    " + Theme.renderTextField(NS, "acombausername", item.acombausername, i18n("ACOMBAUSERNAME"), 500) + "\n    " + Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, i18n("ACROBATPATH"), 500) + "\n    " + Theme.renderTextField(NS, "adminpassword", item.adminpassword, i18n("ADMINPASSWORD"), 500) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit1", item.afficherpermit1, i18n("AFFICHERPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit2", item.afficherpermit2, i18n("AFFICHERPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit3", item.afficherpermit3, i18n("AFFICHERPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "afficherpermit4", item.afficherpermit4, i18n("AFFICHERPERMIT4")) + "\n    " + Theme.renderNumberField(NS, "anneecourante", item.anneecourante, i18n("ANNEECOURANTE"), true) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginbottom", item.autresraportsprintermarginbottom, i18n("AUTRESRAPORTSPRINTERMARGINBOTTOM")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginleft", item.autresraportsprintermarginleft, i18n("AUTRESRAPORTSPRINTERMARGINLEFT")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermarginright", item.autresraportsprintermarginright, i18n("AUTRESRAPORTSPRINTERMARGINRIGHT")) + "\n    " + Theme.renderNumberField(NS, "autresraportsprintermargintop", item.autresraportsprintermargintop, i18n("AUTRESRAPORTSPRINTERMARGINTOP")) + "\n    " + Theme.renderTextField(NS, "caneditundeliveredpermits", item.caneditundeliveredpermits, i18n("CANEDITUNDELIVEREDPERMITS"), 500) + "\n    " + Theme.renderTextField(NS, "ccemail", item.ccemail, i18n("CCEMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "cletriclientnom", item.cletriclientnom, i18n("CLETRICLIENTNOM"), 500) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit1", item.copiepermit1, i18n("COPIEPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit2", item.copiepermit2, i18n("COPIEPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit3", item.copiepermit3, i18n("COPIEPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "copiepermit4", item.copiepermit4, i18n("COPIEPERMIT4")) + "\n    " + Theme.renderTextField(NS, "deletefichepassword", item.deletefichepassword, i18n("DELETEFICHEPASSWORD"), 500) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit1", item.emailpermit1, i18n("EMAILPERMIT1")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit2", item.emailpermit2, i18n("EMAILPERMIT2")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit3", item.emailpermit3, i18n("EMAILPERMIT3")) + "\n    " + Theme.renderCheckboxField(NS, "emailpermit4", item.emailpermit4, i18n("EMAILPERMIT4")) + "\n    " + Theme.renderTextField(NS, "excellanguage", item.excellanguage, i18n("EXCELLANGUAGE"), 500) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautrechargepourtransporteur", item.facturesafficherfraisautrechargepourtransporteur, i18n("FACTURESAFFICHERFRAISAUTRECHARGEPOURTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresproducteur", item.facturesafficherfraisautresproducteur, i18n("FACTURESAFFICHERFRAISAUTRESPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenusproducteur", item.facturesafficherfraisautresrevenusproducteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautresrevenustransporteur", item.facturesafficherfraisautresrevenustransporteur, i18n("FACTURESAFFICHERFRAISAUTRESREVENUSTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraisautrestransporteur", item.facturesafficherfraisautrestransporteur, i18n("FACTURESAFFICHERFRAISAUTRESTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraischargeurproducteur", item.facturesafficherfraischargeurproducteur, i18n("FACTURESAFFICHERFRAISCHARGEURPRODUCTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraischargeurtransporteur", item.facturesafficherfraischargeurtransporteur, i18n("FACTURESAFFICHERFRAISCHARGEURTRANSPORTEUR")) + "\n    " + Theme.renderCheckboxField(NS, "facturesafficherfraiscompensationdedeplacement", item.facturesafficherfraiscompensationdedeplacement, i18n("FACTURESAFFICHERFRAISCOMPENSATIONDEDEPLACEMENT")) + "\n    " + Theme.renderCheckboxField(NS, "facturesaffichersurchargeproducteur", item.facturesaffichersurchargeproducteur, i18n("FACTURESAFFICHERSURCHARGEPRODUCTEUR")) + "\n    " + Theme.renderTextField(NS, "formicon", item.formicon, i18n("FORMICON"), 500) + "\n    " + Theme.renderTextField(NS, "formtext", item.formtext, i18n("FORMTEXT"), 500) + "\n    " + Theme.renderNumberField(NS, "fournisseurpointerid", item.fournisseurpointerid, i18n("FOURNISSEURPOINTERID"), true) + "\n    " + Theme.renderTextField(NS, "fromemail", item.fromemail, i18n("FROMEMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "gpversion", item.gpversion, i18n("GPVERSION"), 500) + "\n    " + Theme.renderTextField(NS, "helpfilepath", item.helpfilepath, i18n("HELPFILEPATH"), 500) + "\n    " + Theme.renderTextField(NS, "imprimanteautresrapports", item.imprimanteautresrapports, i18n("IMPRIMANTEAUTRESRAPPORTS"), 500) + "\n    " + Theme.renderTextField(NS, "imprimantedepermis", item.imprimantedepermis, i18n("IMPRIMANTEDEPERMIS"), 500) + "\n    " + Theme.renderCheckboxField(NS, "livraisonliertaux", item.livraisonliertaux, i18n("LIVRAISONLIERTAUX")) + "\n    " + Theme.renderTextField(NS, "logfile", item.logfile, i18n("LOGFILE"), 500) + "\n    " + Theme.renderTextField(NS, "logopath", item.logopath, i18n("LOGOPATH"), 500) + "\n    " + Theme.renderNumberField(NS, "massecontingentvoyagedefaut", item.massecontingentvoyagedefaut, i18n("MASSECONTINGENTVOYAGEDEFAUT"), true) + "\n    " + Theme.renderNumberField(NS, "masselimitedefaut", item.masselimitedefaut, i18n("MASSELIMITEDEFAUT"), true) + "\n    " + Theme.renderTextField(NS, "message_autorisationdeslivraisons", item.message_autorisationdeslivraisons, i18n("MESSAGE_AUTORISATIONDESLIVRAISONS"), 500) + "\n    " + Theme.renderTextField(NS, "message_demandecontingentement", item.message_demandecontingentement, i18n("MESSAGE_DEMANDECONTINGENTEMENT"), 500) + "\n    " + Theme.renderTextField(NS, "messageimpressionsdefactures", item.messageimpressionsdefactures, i18n("MESSAGEIMPRESSIONSDEFACTURES"), 500) + "\n    " + Theme.renderTextField(NS, "messagelivraisonnonconforme", item.messagelivraisonnonconforme, i18n("MESSAGELIVRAISONNONCONFORME"), 500) + "\n    " + Theme.renderTextField(NS, "messagespecpermitanglais", item.messagespecpermitanglais, i18n("MESSAGESPECPERMITANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "messagespecpermitfrancais", item.messagespecpermitfrancais, i18n("MESSAGESPECPERMITFRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "nomdb", item.nomdb, i18n("NOMDB"), 500) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginbottom", item.permisprintermarginbottom, i18n("PERMISPRINTERMARGINBOTTOM")) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginleft", item.permisprintermarginleft, i18n("PERMISPRINTERMARGINLEFT")) + "\n    " + Theme.renderNumberField(NS, "permisprintermarginright", item.permisprintermarginright, i18n("PERMISPRINTERMARGINRIGHT")) + "\n    " + Theme.renderNumberField(NS, "permisprintermargintop", item.permisprintermargintop, i18n("PERMISPRINTERMARGINTOP")) + "\n    " + Theme.renderCheckboxField(NS, "permisprintpreview", item.permisprintpreview, i18n("PERMISPRINTPREVIEW")) + "\n    " + Theme.renderTextField(NS, "preleves_notps", item.preleves_notps, i18n("PRELEVES_NOTPS"), 500) + "\n    " + Theme.renderTextField(NS, "preleves_notvq", item.preleves_notvq, i18n("PRELEVES_NOTVQ"), 500) + "\n    " + Theme.renderTextField(NS, "serveuremail", item.serveuremail, i18n("SERVEUREMAIL"), 500) + "\n    " + Theme.renderTextField(NS, "showyearsinpermislistview", item.showyearsinpermislistview, i18n("SHOWYEARSINPERMISLISTVIEW"), 500) + "\n    " + Theme.renderNumberField(NS, "superficiecontingenteepourcentagededuction", item.superficiecontingenteepourcentagededuction, i18n("SUPERFICIECONTINGENTEEPOURCENTAGEDEDUCTION")) + "\n    " + Theme.renderNumberField(NS, "superficiecontingenteesansdeduction", item.superficiecontingenteesansdeduction, i18n("SUPERFICIECONTINGENTEESANSDEDUCTION")) + "\n    " + Theme.renderTextField(NS, "syndicat_codepostal", item.syndicat_codepostal, i18n("SYNDICAT_CODEPOSTAL"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_fax", item.syndicat_fax, i18n("SYNDICAT_FAX"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nom", item.syndicat_nom, i18n("SYNDICAT_NOM"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nomanglais", item.syndicat_nomanglais, i18n("SYNDICAT_NOMANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_nomfrancais", item.syndicat_nomfrancais, i18n("SYNDICAT_NOMFRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_notps", item.syndicat_notps, i18n("SYNDICAT_NOTPS"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_notvq", item.syndicat_notvq, i18n("SYNDICAT_NOTVQ"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_rue", item.syndicat_rue, i18n("SYNDICAT_RUE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_telephone", item.syndicat_telephone, i18n("SYNDICAT_TELEPHONE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicat_ville", item.syndicat_ville, i18n("SYNDICAT_VILLE"), 500) + "\n    " + Theme.renderTextField(NS, "syndicatouoffice", item.syndicatouoffice, i18n("SYNDICATOUOFFICE"), 500) + "\n    " + Theme.renderCheckboxField(NS, "takeacombabackup", item.takeacombabackup, i18n("TAKEACOMBABACKUP")) + "\n    " + Theme.renderCheckboxField(NS, "takesqlbackup", item.takesqlbackup, i18n("TAKESQLBACKUP")) + "\n    " + Theme.renderNumberField(NS, "tempsentrelesbackupsautomatiques", item.tempsentrelesbackupsautomatiques, i18n("TEMPSENTRELESBACKUPSAUTOMATIQUES")) + "\n    " + Theme.renderNumberField(NS, "timeoutsql", item.timeoutsql, i18n("TIMEOUTSQL"), true) + "\n    " + Theme.renderNumberField(NS, "typepermis", item.typepermis, i18n("TYPEPERMIS"), true) + "\n    " + Theme.renderTextField(NS, "typepermis1", item.typepermis1, i18n("TYPEPERMIS1"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis1anglais", item.typepermis1anglais, i18n("TYPEPERMIS1ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis1francais", item.typepermis1francais, i18n("TYPEPERMIS1FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2", item.typepermis2, i18n("TYPEPERMIS2"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2anglais", item.typepermis2anglais, i18n("TYPEPERMIS2ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis2francais", item.typepermis2francais, i18n("TYPEPERMIS2FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3", item.typepermis3, i18n("TYPEPERMIS3"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3anglais", item.typepermis3anglais, i18n("TYPEPERMIS3ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis3francais", item.typepermis3francais, i18n("TYPEPERMIS3FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4", item.typepermis4, i18n("TYPEPERMIS4"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4anglais", item.typepermis4anglais, i18n("TYPEPERMIS4ANGLAIS"), 500) + "\n    " + Theme.renderTextField(NS, "typepermis4francais", item.typepermis4francais, i18n("TYPEPERMIS4FRANCAIS"), 500) + "\n    " + Theme.renderTextField(NS, "updateotherdatabase", item.updateotherdatabase, i18n("UPDATEOTHERDATABASE"), 500) + "\n    " + Theme.renderCheckboxField(NS, "utiliselesychronisateurdirect", item.utiliselesychronisateurdirect, i18n("UTILISELESYCHRONISATEURDIRECT")) + "\n    " + Theme.renderCheckboxField(NS, "utiliserlesnomsdemachinedanslenomdeprinter", item.utiliserlesnomsdemachinedanslenomdeprinter, i18n("UTILISERLESNOMSDEMACHINEDANSLENOMDEPRINTER")) + "\n    " + Theme.renderCheckboxField(NS, "utiliserlotscontingentes", item.utiliserlotscontingentes, i18n("UTILISERLOTSCONTINGENTES")) + "\n    " + Theme.renderTextField(NS, "xlstemplatespath", item.xlstemplatespath, i18n("XLSTEMPLATESPATH"), 500) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_planconjoint", fournisseur_planconjoint, i18n("FOURNISSEUR_PLANCONJOINT")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_surcharge", fournisseur_surcharge, i18n("FOURNISSEUR_SURCHARGE")) + "\n    " + Theme.renderDropdownField(NS, "compte_paiements", compte_paiements, i18n("COMPTE_PAIEMENTS")) + "\n    " + Theme.renderDropdownField(NS, "compte_arecevoir", compte_arecevoir, i18n("COMPTE_ARECEVOIR")) + "\n    " + Theme.renderDropdownField(NS, "compte_apayer", compte_apayer, i18n("COMPTE_APAYER")) + "\n    " + Theme.renderDropdownField(NS, "compte_duauxproducteurs", compte_duauxproducteurs, i18n("COMPTE_DUAUXPRODUCTEURS")) + "\n    " + Theme.renderDropdownField(NS, "compte_tpspercues", compte_tpspercues, i18n("COMPTE_TPSPERCUES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tpspayees", compte_tpspayees, i18n("COMPTE_TPSPAYEES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tvqpercues", compte_tvqpercues, i18n("COMPTE_TVQPERCUES")) + "\n    " + Theme.renderDropdownField(NS, "compte_tvqpayees", compte_tvqpayees, i18n("COMPTE_TVQPAYEES")) + "\n    " + Theme.renderNumberField(NS, "taux_tps", item.taux_tps, i18n("TAUX_TPS")) + "\n    " + Theme.renderNumberField(NS, "taux_tvq", item.taux_tvq, i18n("TAUX_TVQ")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_fond_roulement", fournisseur_fond_roulement, i18n("FOURNISSEUR_FOND_ROULEMENT")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_fond_forestier", fournisseur_fond_forestier, i18n("FOURNISSEUR_FOND_FORESTIER")) + "\n    " + Theme.renderDropdownField(NS, "fournisseur_preleve_divers", fournisseur_preleve_divers, i18n("FOURNISSEUR_PRELEVE_DIVERS")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+                return "\n<div class=\"js-float-menu\">\n    <ul>\n        <li>" + Theme.float_menu_button("Compte") + "</li>\n        <li>" + Theme.float_menu_button("Paramètres système") + "</li>\n        <li>" + Theme.float_menu_button("Personnalisation") + "</li>\n        <li>" + Theme.float_menu_button("Acomba") + "</li>\n        <li>" + Theme.float_menu_button("Comptes/Fournisseurs") + "</li>\n        <li>" + Theme.float_menu_button("Taxe") + "</li>\n        <li>" + Theme.float_menu_button("Permis") + "</li>\n        <li>" + Theme.float_menu_button("Paramètres imprimantes") + "</li>\n        <li>" + Theme.float_menu_button("Backup") + "</li>\n        <li>" + Theme.float_menu_button("Sécurité") + "</li>\n        <li>" + Theme.float_menu_button("Profil par défaut") + "</li>\n        <li>" + Theme.float_menu_button("TODO") + "</li>\n    </ul>\n</div>\n\n<div class=\"columns\">\n    <div class=\"column is-8 is-offset-3\">\n        " + Theme.wrapFieldset("Compte", block_company(item)) + "\n        " + Theme.wrapFieldset("Paramètres système", block_system(item)) + "\n        " + Theme.wrapFieldset("Personnalisation", block_personnalisation(item)) + "\n        " + Theme.wrapFieldset("Acomba", block_acomba(item)) + "\n        " + Theme.wrapFieldset("Comptes/Fournisseurs", block_comptes(item, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers)) + "\n        " + Theme.wrapFieldset("Taxe", block_preleve(item)) + "\n        " + Theme.wrapFieldset("Permis", block_permis(item)) + "\n        " + Theme.wrapFieldset("Paramètres imprimantes", block_print(item)) + "\n        " + Theme.wrapFieldset("Backup", block_backup(item)) + "\n        " + Theme.wrapFieldset("Sécurité", block_security(item)) + "\n        " + Theme.wrapFieldset("Profil par défaut", block_default_profile(item)) + "\n        " + Theme.wrapFieldset("TODO", block_todo(item)) + "\n    </div>\n</div>\n\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var canEdit = true;
@@ -4894,18 +4969,18 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 if (canDelete)
                     buttons.push(Theme.buttonDelete(NS));
                 if (canAdd)
-                    buttons.push(Theme.buttonAddNew(NS, "#/company/new"));
+                    buttons.push(Theme.buttonAddNew(NS, "#/admin/company/new"));
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_5.buildTitle(xtra, !isNew ? i18n("company Details") : i18n("New company"));
-                var subtitle = layout_5.buildSubtitle(xtra, i18n("company subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_5.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+                var title = layout2_2.buildTitle(xtra, !isNew ? i18n("company Details") : i18n("New company"));
+                var subtitle = layout2_2.buildSubtitle(xtra, i18n("company subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout2_2.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_40("fetchState", fetchState = function (cie) {
+            exports_41("fetchState", fetchState = function (cie) {
                 isNew = isNaN(cie);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -4919,14 +4994,14 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .then(Lookup.fetch_autreFournisseur())
                     .then(Lookup.fetch_compte());
             });
-            exports_40("fetch", fetch = function (params) {
+            exports_41("fetch", fetch = function (params) {
                 var cie = +params[0];
                 App.prepareRender(NS, i18n("company"));
                 fetchState(cie)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_40("render", render = function () {
+            exports_41("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -4950,17 +5025,17 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 var fournisseur_fond_forestier = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_fond_forestier, true);
                 var fournisseur_preleve_divers = Theme.renderOptions(lookup_autreFournisseur, state.fournisseur_preleve_divers, true);
                 var form = formTemplate(state, fournisseur_planconjoint, fournisseur_surcharge, compte_paiements, compte_arecevoir, compte_apayer, compte_duauxproducteurs, compte_tpspercues, compte_tpspayees, compte_tvqpercues, compte_tvqpayees, fournisseur_fond_roulement, fournisseur_fond_forestier, fournisseur_preleve_divers);
-                var tab = layout_5.tabTemplate(state.cie, xtra, isNew);
+                var tab = layout2_2.tabTemplate(state.cie, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_40("postRender", postRender = function () {
+            exports_41("postRender", postRender = function () {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New company") : xtra.title);
             });
-            exports_40("inContext", inContext = function () {
+            exports_41("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -5097,14 +5172,14 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_40("onchange", onchange = function (input) {
+            exports_41("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_40("cancel", cancel = function () {
+            exports_41("cancel", cancel = function () {
                 Router.goBackOrResume(isDirty);
             });
-            exports_40("create", create = function () {
+            exports_41("create", create = function () {
                 var formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -5115,11 +5190,11 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .then(function (payload) {
                     var newkey = payload;
                     Misc.toastSuccessSave();
-                    Router.goto("#/company/" + newkey.cie, 10);
+                    Router.goto("#/admin/company/" + newkey.cie, 10);
                 })
                     .catch(App.render);
             });
-            exports_40("save", save = function (done) {
+            exports_41("save", save = function (done) {
                 if (done === void 0) { done = false; }
                 var formState = getFormState();
                 if (!html5Valid())
@@ -5131,18 +5206,18 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
-                        Router.goto("#/companys/", 100);
+                        Router.goto("#/admin/companys/", 100);
                     else
-                        Router.goto("#/company/" + key.cie, 10);
+                        Router.goto("#/admin/company/" + key.cie, 10);
                 })
                     .catch(App.render);
             });
-            exports_40("drop", drop = function () {
+            exports_41("drop", drop = function () {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/company", key)
                     .then(function (_) {
-                    Router.goto("#/companys/", 250);
+                    Router.goto("#/admin/companys/", 250);
                 })
                     .catch(App.render);
             });
@@ -5159,10 +5234,10 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         }
     };
 });
-System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/companys", "src/admin/company"], function (exports_41, context_41) {
+System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/companys", "src/admin/company"], function (exports_42, context_42) {
     "use strict";
     var Router, accounts, account, companys, company, startup, render, postRender;
-    var __moduleName = context_41 && context_41.id;
+    var __moduleName = context_42 && context_42.id;
     return {
         setters: [
             function (Router_9) {
@@ -5200,7 +5275,7 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
             //(<any>window).App_DataFile = DataFile;
             //(<any>window).App_Lookups = Lookups;
             //(<any>window).App_Lookup = Lookup;
-            exports_41("startup", startup = function () {
+            exports_42("startup", startup = function () {
                 Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
                 Router.addRoute("^#/admin/account/(.*)$", account.fetch);
                 Router.addRoute("^#/admin/companys/?(.*)?$", companys.fetch);
@@ -5211,14 +5286,14 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
                 //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
                 //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
             });
-            exports_41("render", render = function () {
+            exports_42("render", render = function () {
                 return "\n    " + accounts.render() + "\n    " + account.render() + "\n    " + companys.render() + "\n    " + company.render() + "\n";
                 //${DataFiles.render()}
                 //${DataFile.render()}
                 //${Lookups.render()}
                 //${Lookup.render()}
             });
-            exports_41("postRender", postRender = function () {
+            exports_42("postRender", postRender = function () {
                 accounts.postRender();
                 account.postRender();
                 companys.postRender();
@@ -5231,25 +5306,25 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
         }
     };
 });
-System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_42, context_42) {
+System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_43, context_43) {
     "use strict";
-    var App, layout_6, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_42 && context_42.id;
+    var App, layout_5, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var __moduleName = context_43 && context_43.id;
     return {
         setters: [
-            function (App_14) {
-                App = App_14;
+            function (App_15) {
+                App = App_15;
             },
-            function (layout_6_1) {
-                layout_6 = layout_6_1;
+            function (layout_5_1) {
+                layout_5 = layout_5_1;
             }
         ],
         execute: function () {
-            exports_42("icon", icon = "far fa-user");
-            exports_42("prepareMenu", prepareMenu = function () {
-                layout_6.setOpenedMenu("Fournisseur-Propriétaires");
+            exports_43("icon", icon = "far fa-user");
+            exports_43("prepareMenu", prepareMenu = function () {
+                layout_5.setOpenedMenu("Fournisseur-Propriétaires");
             });
-            exports_42("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+            exports_43("tabTemplate", tabTemplate = function (id, xtra, isNew) {
                 if (isNew === void 0) { isNew = false; }
                 var isProprietaires = App.inContext("App_proprietaires");
                 var isProprietaire = App.inContext("App_proprietaire");
@@ -5260,11 +5335,11 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"
                 var showFile = isFile;
                 return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
             });
-            exports_42("buildTitle", buildTitle = function (xtra, defaultText) {
+            exports_43("buildTitle", buildTitle = function (xtra, defaultText) {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_42("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+            exports_43("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -5272,14 +5347,14 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"
     };
 });
 // File: proprietaires.ts
-System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_43, context_43) {
+System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_44, context_44) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_7, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
-    var __moduleName = context_43 && context_43.id;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_6, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
+    var __moduleName = context_44 && context_44.id;
     return {
         setters: [
-            function (App_15) {
-                App = App_15;
+            function (App_16) {
+                App = App_16;
             },
             function (Router_10) {
                 Router = Router_10;
@@ -5299,12 +5374,12 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             function (Lookup_4) {
                 Lookup = Lookup_4;
             },
-            function (layout_7_1) {
-                layout_7 = layout_7_1;
+            function (layout_6_1) {
+                layout_6 = layout_6_1;
             }
         ],
         execute: function () {
-            exports_43("NS", NS = "App_proprietaires");
+            exports_44("NS", NS = "App_proprietaires");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
@@ -5325,11 +5400,11 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 var buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new", i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_7.buildTitle(xtra, i18n("fournisseurs title"));
-                var subtitle = layout_7.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_7.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+                var title = layout_6.buildTitle(xtra, i18n("fournisseurs title"));
+                var subtitle = layout_6.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_6.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_43("fetchState", fetchState = function (id) {
+            exports_44("fetchState", fetchState = function (id) {
                 Router.registerDirtyExit(null);
                 return App.POST("/fournisseur/search", state.pager)
                     .then(function (payload) {
@@ -5340,7 +5415,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(Lookup.fetch_pays())
                     .then(Lookup.fetch_institutionBanquaire());
             });
-            exports_43("fetch", fetch = function (params) {
+            exports_44("fetch", fetch = function (params) {
                 var id = params[0];
                 App.prepareRender(NS, i18n("fournisseurs"));
                 fetchState(id)
@@ -5356,7 +5431,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_43("render", render = function () {
+            exports_44("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5374,14 +5449,14 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 var search = Pager.searchTemplate(state.pager, NS);
                 var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 var table = tableTemplate(tbody, state.pager);
-                var tab = layout_7.tabTemplate(null, null);
+                var tab = layout_6.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_43("postRender", postRender = function () {
+            exports_44("postRender", postRender = function () {
                 if (!inContext())
                     return;
             });
-            exports_43("inContext", inContext = function () {
+            exports_44("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             setSelectedRow = function (id) {
@@ -5394,26 +5469,26 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_43("goto", goto = function (pageNo, pageSize) {
+            exports_44("goto", goto = function (pageNo, pageSize) {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_43("sortBy", sortBy = function (columnName, direction) {
+            exports_44("sortBy", sortBy = function (columnName, direction) {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_43("search", search = function (element) {
+            exports_44("search", search = function (element) {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_43("filter_nom", filter_nom = function (element) {
+            exports_44("filter_nom", filter_nom = function (element) {
                 // TODO (filterDef)
             });
-            exports_43("gotoDetail", gotoDetail = function (id) {
+            exports_44("gotoDetail", gotoDetail = function (id) {
                 setSelectedRow(id);
                 Router.goto("#/proprietaire/" + id);
             });
@@ -5421,14 +5496,14 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
     };
 });
 // File: proprietaire.ts
-System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_44, context_44) {
+System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_45, context_45) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, layout_8, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_44 && context_44.id;
+    var App, Router, Misc, Theme, Lookup, layout_7, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_45 && context_45.id;
     return {
         setters: [
-            function (App_16) {
-                App = App_16;
+            function (App_17) {
+                App = App_17;
             },
             function (Router_11) {
                 Router = Router_11;
@@ -5442,12 +5517,12 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             function (Lookup_5) {
                 Lookup = Lookup_5;
             },
-            function (layout_8_1) {
-                layout_8 = layout_8_1;
+            function (layout_7_1) {
+                layout_7 = layout_7_1;
             }
         ],
         execute: function () {
-            exports_44("NS", NS = "App_proprietaire");
+            exports_45("NS", NS = "App_proprietaire");
             blackList = ["paysid_text", "institutionbanquaireid_text"];
             state = {};
             fetchedState = {};
@@ -5474,14 +5549,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_8.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
-                var subtitle = layout_8.buildSubtitle(xtra, i18n("fournisseur subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_8.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+                var title = layout_7.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
+                var subtitle = layout_7.buildSubtitle(xtra, i18n("fournisseur subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_7.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_44("fetchState", fetchState = function (id) {
+            exports_45("fetchState", fetchState = function (id) {
                 isNew = (id == "new");
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -5495,14 +5570,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                     .then(Lookup.fetch_pays())
                     .then(Lookup.fetch_institutionBanquaire());
             });
-            exports_44("fetch", fetch = function (params) {
+            exports_45("fetch", fetch = function (params) {
                 var id = params[0];
                 App.prepareRender(NS, i18n("proprietaire"));
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_44("render", render = function () {
+            exports_45("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5515,17 +5590,17 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 var paysid = Theme.renderOptions(lookup_pays, state.paysid, true);
                 var institutionbanquaireid = Theme.renderOptions(lookup_institutionBanquaire, state.institutionbanquaireid, true);
                 var form = formTemplate(state, paysid, institutionbanquaireid);
-                var tab = layout_8.tabTemplate(state.id, xtra, isNew);
+                var tab = layout_7.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_44("postRender", postRender = function () {
+            exports_45("postRender", postRender = function () {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
             });
-            exports_44("inContext", inContext = function () {
+            exports_45("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -5601,14 +5676,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_44("onchange", onchange = function (input) {
+            exports_45("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_44("cancel", cancel = function () {
+            exports_45("cancel", cancel = function () {
                 Router.goBackOrResume(isDirty);
             });
-            exports_44("create", create = function () {
+            exports_45("create", create = function () {
                 var formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -5623,7 +5698,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 })
                     .catch(App.render);
             });
-            exports_44("save", save = function (done) {
+            exports_45("save", save = function (done) {
                 if (done === void 0) { done = false; }
                 var formState = getFormState();
                 if (!html5Valid())
@@ -5641,7 +5716,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 })
                     .catch(App.render);
             });
-            exports_44("drop", drop = function () {
+            exports_45("drop", drop = function () {
                 //(<any>key).updatedUtc = state.updatedUtc;
                 App.prepareRender();
                 App.DELETE("/fournisseur", key)
@@ -5663,10 +5738,10 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
         }
     };
 });
-System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire"], function (exports_45, context_45) {
+System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire"], function (exports_46, context_46) {
     "use strict";
     var Router, proprietaires, proprietaire, startup, render, postRender;
-    var __moduleName = context_45 && context_45.id;
+    var __moduleName = context_46 && context_46.id;
     return {
         setters: [
             function (Router_12) {
@@ -5687,28 +5762,28 @@ System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fourni
             //
             window[proprietaires.NS] = proprietaires;
             window[proprietaire.NS] = proprietaire;
-            exports_45("startup", startup = function () {
+            exports_46("startup", startup = function () {
                 Router.addRoute("^#/proprietaires/?(.*)?$", proprietaires.fetch);
                 Router.addRoute("^#/proprietaire/?(.*)?$", proprietaire.fetch);
             });
-            exports_45("render", render = function () {
+            exports_46("render", render = function () {
                 return "\n<div>\n    " + proprietaires.render() + "\n    " + proprietaire.render() + "\n</div>\n";
             });
-            exports_45("postRender", postRender = function () {
+            exports_46("postRender", postRender = function () {
                 proprietaires.postRender();
                 proprietaire.postRender();
             });
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_46, context_46) {
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_47, context_47) {
     "use strict";
     var App, Perm, Main, Home, Admin, Fournisseur, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
-    var __moduleName = context_46 && context_46.id;
+    var __moduleName = context_47 && context_47.id;
     return {
         setters: [
-            function (App_17) {
-                App = App_17;
+            function (App_18) {
+                App = App_18;
             },
             function (Perm_5) {
                 Perm = Perm_5;
@@ -5727,8 +5802,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             }
         ],
         execute: function () {
-            exports_46("NS", NS = "App_Layout");
-            exports_46("render", render = function () {
+            exports_47("NS", NS = "App_Layout");
+            exports_47("render", render = function () {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
@@ -5736,7 +5811,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 var menu = menuTemplate(Home.getMenuData());
                 return "\n<div class=\"js-layout " + (Main.state.menuOpened ? "" : "js-close") + "\">\n" + renderHeader() + "\n" + renderAsideMenu(menu) + "\n<section class=\"js-uc-main js-waitable\">\n" + ucMain + "\n</section>\n</div>\n";
             });
-            exports_46("postRender", postRender = function () {
+            exports_47("postRender", postRender = function () {
                 Home.postRender();
                 Admin.postRender();
                 Fournisseur.postRender();
@@ -5781,37 +5856,37 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_46("menuClick", menuClick = function () {
+            exports_47("menuClick", menuClick = function () {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_46("toggle", toggle = function (entry) {
+            exports_47("toggle", toggle = function (entry) {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_46("setOpenedMenu", setOpenedMenu = function (entry) {
+            exports_47("setOpenedMenu", setOpenedMenu = function (entry) {
                 Main.state.subMenu = entry;
             });
-            exports_46("editProfile", editProfile = function () {
+            exports_47("editProfile", editProfile = function () {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_46("toggleProfileMenu", toggleProfileMenu = function (element) {
+            exports_47("toggleProfileMenu", toggleProfileMenu = function (element) {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_47, context_47) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main"], function (exports_48, context_48) {
     "use strict";
     var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, FournisseurMain, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_47 && context_47.id;
+    var __moduleName = context_48 && context_48.id;
     return {
         setters: [
-            function (App_18) {
-                App = App_18;
+            function (App_19) {
+                App = App_19;
             },
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
@@ -5857,7 +5932,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_47("startup", startup = function (hasPublicHomePage) {
+            exports_48("startup", startup = function (hasPublicHomePage) {
                 if (hasPublicHomePage === void 0) { hasPublicHomePage = false; }
                 var main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 var router = main.router;
@@ -5872,18 +5947,18 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                 FournisseurMain.startup();
                 loadUIState();
             });
-            exports_47("loadUIState", loadUIState = function () {
+            exports_48("loadUIState", loadUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
-                exports_47("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_48("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_47("state", state = {
+                    exports_48("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_47("saveUIState", saveUIState = function () {
+            exports_48("saveUIState", saveUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -5891,10 +5966,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_48, context_48) {
+System.register("src/app", ["src/main"], function (exports_49, context_49) {
     "use strict";
     var main;
-    var __moduleName = context_48 && context_48.id;
+    var __moduleName = context_49 && context_49.id;
     return {
         setters: [
             function (main_1) {

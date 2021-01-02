@@ -7,7 +7,6 @@
     @Archive bit,
     @Updated datetime,
     @UpdatedBy int,
-	@Profile char(1) NULL, -- not used, but required!
 	@ProfileJson nvarchar(MAX)
 )
 AS
@@ -32,6 +31,6 @@ SET
 WHERE CIE = @CIE
 ;
 
---EXEC app.CompanyProfile_Update @cie = @cie, @json = @ProfileJson;
+EXEC app.CompanyProfile_Update @_uid = @_uid, @cie = @cie, @json = @ProfileJson;
 
 END

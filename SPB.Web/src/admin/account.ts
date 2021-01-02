@@ -391,7 +391,6 @@ export const createInvitation = () => {
 }
 
 const dirtyExit = () => {
-    //console.log(fetchedState); console.log(getFormState())
     isDirty = !Misc.same(fetchedState, getFormState());
     if (isDirty) {
         setTimeout(() => {

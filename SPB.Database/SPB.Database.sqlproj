@@ -121,6 +121,8 @@
     <Build Include="app\Stored Procedures\Company_New.sql" />
     <Build Include="app\Stored Procedures\Company_Insert.sql" />
     <Build Include="app\Stored Procedures\Company_Delete.sql" />
+    <Build Include="app\Stored Procedures\CompanyProfile_Select.sql" />
+    <Build Include="app\Stored Procedures\CompanyProfile_New.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
