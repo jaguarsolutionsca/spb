@@ -10,7 +10,7 @@ namespace BaseApp.Common
 {
     public class Dico : Dictionary<string, object>
     {
-        private Regex regex = new Regex(@"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}");
+        private static Regex regex = new Regex(@"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}");
 
         public Dico ReviveUTO(string[] whitelist = null, string[] blacklist = null)
         {

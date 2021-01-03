@@ -105,75 +105,157 @@ let isDirty = false;
 
 
 
-const formTemplate = (item: IState, paysid: string, institutionbanquaireid: string) => {
+const block_address = (item: IState, paysid: string) => {
     return `
-
-${isNew ? `
-` : `
-    ${Theme.renderStaticField(Misc.toStaticText(item.id), i18n("ID"))}
-`}
-    ${Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true)}
-    ${Theme.renderTextField(NS, "cletri", item.cletri, i18n("CLETRI"), 15)}
     ${Theme.renderTextField(NS, "nom", item.nom, i18n("NOM"), 40)}
     ${Theme.renderTextField(NS, "ausoinsde", item.ausoinsde, i18n("AUSOINSDE"), 30)}
     ${Theme.renderTextField(NS, "rue", item.rue, i18n("RUE"), 30)}
     ${Theme.renderTextField(NS, "ville", item.ville, i18n("VILLE"), 30)}
     ${Theme.renderDropdownField(NS, "paysid", paysid, i18n("PAYSID"))}
     ${Theme.renderTextField(NS, "code_postal", item.code_postal, i18n("CODE_POSTAL"), 7)}
+`;
+}
+
+const block_telephone = (item: IState) => {
+    return `
     ${Theme.renderTextField(NS, "telephone", item.telephone, i18n("TELEPHONE"), 12)}
     ${Theme.renderTextField(NS, "telephone_poste", item.telephone_poste, i18n("TELEPHONE_POSTE"), 4)}
     ${Theme.renderTextField(NS, "telecopieur", item.telecopieur, i18n("TELECOPIEUR"), 12)}
-    ${Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12)}
+
     ${Theme.renderTextField(NS, "telephone2_desc", item.telephone2_desc, i18n("TELEPHONE2_DESC"), 20)}
+    ${Theme.renderTextField(NS, "telephone2", item.telephone2, i18n("TELEPHONE2"), 12)}
     ${Theme.renderTextField(NS, "telephone2_poste", item.telephone2_poste, i18n("TELEPHONE2_POSTE"), 4)}
-    ${Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12)}
+
     ${Theme.renderTextField(NS, "telephone3_desc", item.telephone3_desc, i18n("TELEPHONE3_DESC"), 20)}
+    ${Theme.renderTextField(NS, "telephone3", item.telephone3, i18n("TELEPHONE3"), 12)}
     ${Theme.renderTextField(NS, "telephone3_poste", item.telephone3_poste, i18n("TELEPHONE3_POSTE"), 4)}
-    ${Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10)}
+`;
+}
+
+const block_ciel = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50)}
     ${Theme.renderTextField(NS, "resident", item.resident, i18n("RESIDENT"), 1)}
+    ${Theme.renderTextField(NS, "no_membre", item.no_membre, i18n("NO_MEMBRE"), 10)}
+`;
+}
+
+const block_internet = (item: IState) => {
+    return `
     ${Theme.renderTextField(NS, "email", item.email, i18n("EMAIL"), 80)}
     ${Theme.renderTextField(NS, "www", item.www, i18n("WWW"), 80)}
+`;
+}
+
+const block_autres = (item: IState) => {
+    return `
+    ${Theme.renderTextField(NS, "id", item.id, i18n("ID"), 15, true)}
+
+    ${Theme.renderCheckboxField(NS, "isproducteur", item.isproducteur, i18n("ISPRODUCTEUR"))}
+    ${Theme.renderCheckboxField(NS, "istransporteur", item.istransporteur, i18n("ISTRANSPORTEUR"))}
+    ${Theme.renderCheckboxField(NS, "ischargeur", item.ischargeur, i18n("ISCHARGEUR"))}
+    ${Theme.renderCheckboxField(NS, "isogc", item.isogc, i18n("ISOGC"))}
+    ${Theme.renderCheckboxField(NS, "isautre", item.isautre, i18n("ISAUTRE"))}
+
     ${Theme.renderTextareaField(NS, "commentaires", item.commentaires, i18n("COMMENTAIRES"), 255, false, null, 5)}
     ${Theme.renderCheckboxField(NS, "affichercommentaires", item.affichercommentaires, i18n("AFFICHERCOMMENTAIRES"))}
+    ${Theme.renderCheckboxField(NS, "affichercommentairessurpermit", item.affichercommentairessurpermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT"))}
+
+    ${Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF"))}
+    ${Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL"))}
+    ${Theme.renderCheckboxField(NS, "pasemissionpermis", item.pasemissionpermis, i18n("PASEMISSIONPERMIS"))}
+
+    ${Theme.renderCheckboxField(NS, "enanglais", item.enanglais, i18n("ENANGLAIS"))}
+    ${Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE"))}
+    ${Theme.renderCheckboxField(NS, "membre_ogc", item.membre_ogc, i18n("MEMBRE_OGC"))}
+`;
+}
+
+const block_depotdirect = (item: IState, institutionbanquaireid: string) => {
+    return `
     ${Theme.renderCheckboxField(NS, "depotdirect", item.depotdirect, i18n("DEPOTDIRECT"))}
+
     ${Theme.renderDropdownField(NS, "institutionbanquaireid", institutionbanquaireid, i18n("INSTITUTIONBANQUAIREID"))}
     ${Theme.renderTextField(NS, "banque_transit", item.banque_transit, i18n("BANQUE_TRANSIT"), 5)}
     ${Theme.renderTextField(NS, "banque_folio", item.banque_folio, i18n("BANQUE_FOLIO"), 12)}
+
     ${Theme.renderTextField(NS, "no_tps", item.no_tps, i18n("NO_TPS"), 25)}
+    ${Theme.renderCheckboxField(NS, "recoittps", item.recoittps, i18n("RECOITTPS"))}
+    ${Theme.renderCheckboxField(NS, "inscrittps", item.inscrittps, i18n("INSCRITTPS"))}
+
     ${Theme.renderTextField(NS, "no_tvq", item.no_tvq, i18n("NO_TVQ"), 25)}
+    ${Theme.renderCheckboxField(NS, "recoittvq", item.recoittvq, i18n("RECOITTVQ"))}
+    ${Theme.renderCheckboxField(NS, "inscrittvq", item.inscrittvq, i18n("INSCRITTVQ"))}
+
     ${Theme.renderCheckboxField(NS, "payera", item.payera, i18n("PAYERA"))}
     ${Theme.renderTextField(NS, "payeraid", item.payeraid, i18n("PAYERAID"), 15)}
-    ${Theme.renderTextField(NS, "statut", item.statut, i18n("STATUT"), 50)}
+    ${Theme.renderCheckboxField(NS, "paiementmanuel", item.paiementmanuel, i18n("PAIEMENTMANUEL"))}
+`;
+}
+
+const block_representant = (item: IState) => {
+    return `
     ${Theme.renderTextField(NS, "rep_nom", item.rep_nom, i18n("REP_NOM"), 30)}
     ${Theme.renderTextField(NS, "rep_telephone", item.rep_telephone, i18n("REP_TELEPHONE"), 12)}
     ${Theme.renderTextField(NS, "rep_telephone_poste", item.rep_telephone_poste, i18n("REP_TELEPHONE_POSTE"), 4)}
     ${Theme.renderTextField(NS, "rep_email", item.rep_email, i18n("REP_EMAIL"), 80)}
-    ${Theme.renderCheckboxField(NS, "enanglais", item.enanglais, i18n("ENANGLAIS"))}
-    ${Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF"))}
-    ${Theme.renderNumberField(NS, "mrcproducteurid", item.mrcproducteurid, i18n("MRCPRODUCTEURID"))}
-    ${Theme.renderCheckboxField(NS, "paiementmanuel", item.paiementmanuel, i18n("PAIEMENTMANUEL"))}
-    ${Theme.renderCheckboxField(NS, "journal", item.journal, i18n("JOURNAL"))}
-    ${Theme.renderCheckboxField(NS, "recoittps", item.recoittps, i18n("RECOITTPS"))}
-    ${Theme.renderCheckboxField(NS, "recoittvq", item.recoittvq, i18n("RECOITTVQ"))}
-    ${Theme.renderCheckboxField(NS, "modifiertrigger", item.modifiertrigger, i18n("MODIFIERTRIGGER"))}
-    ${Theme.renderCheckboxField(NS, "isproducteur", item.isproducteur, i18n("ISPRODUCTEUR"))}
-    ${Theme.renderCheckboxField(NS, "istransporteur", item.istransporteur, i18n("ISTRANSPORTEUR"))}
-    ${Theme.renderCheckboxField(NS, "ischargeur", item.ischargeur, i18n("ISCHARGEUR"))}
-    ${Theme.renderCheckboxField(NS, "isautre", item.isautre, i18n("ISAUTRE"))}
-    ${Theme.renderCheckboxField(NS, "affichercommentairessurpermit", item.affichercommentairessurpermit, i18n("AFFICHERCOMMENTAIRESSURPERMIT"))}
-    ${Theme.renderCheckboxField(NS, "pasemissionpermis", item.pasemissionpermis, i18n("PASEMISSIONPERMIS"))}
-    ${Theme.renderCheckboxField(NS, "generique", item.generique, i18n("GENERIQUE"))}
-    ${Theme.renderCheckboxField(NS, "membre_ogc", item.membre_ogc, i18n("MEMBRE_OGC"))}
-    ${Theme.renderCheckboxField(NS, "inscrittps", item.inscrittps, i18n("INSCRITTPS"))}
-    ${Theme.renderCheckboxField(NS, "inscrittvq", item.inscrittvq, i18n("INSCRITTVQ"))}
-    ${Theme.renderCheckboxField(NS, "isogc", item.isogc, i18n("ISOGC"))}
+
     ${Theme.renderTextField(NS, "rep2_nom", item.rep2_nom, i18n("REP2_NOM"), 80)}
     ${Theme.renderTextField(NS, "rep2_telephone", item.rep2_telephone, i18n("REP2_TELEPHONE"), 12)}
     ${Theme.renderTextField(NS, "rep2_telephone_poste", item.rep2_telephone_poste, i18n("REP2_TELEPHONE_POSTE"), 4)}
     ${Theme.renderTextField(NS, "rep2_email", item.rep2_email, i18n("REP2_EMAIL"), 80)}
     ${Theme.renderTextareaField(NS, "rep2_commentaires", item.rep2_commentaires, i18n("REP2_COMMENTAIRES"), 255, false, null, 3)}
+`;
+}
+
+const block_camions = (item: IState) => {
+    return `
+`;
+}
+
+const block_lots = (item: IState) => {
+    return `
+`;
+}
+
+
+const formTemplate = (item: IState, paysid: string, institutionbanquaireid: string) => {
+    return `
+<div class="js-float-menu">
+    <ul>
+        <li>${Theme.float_menu_button("Adresse")}</li>
+        <li>${Theme.float_menu_button("Téléphone")}</li>
+        <li>${Theme.float_menu_button("Ciel")}</li>
+        <li>${Theme.float_menu_button("Internet")}</li>
+        <li>${Theme.float_menu_button("Autres")}</li>
+        <li>${Theme.float_menu_button("Dépôt direct")}</li>
+        <li>${Theme.float_menu_button("Représentant")}</li>
+        <li>${Theme.float_menu_button("Camions")}</li>
+        <li>${Theme.float_menu_button("Lots")}</li>
+    </ul>
+</div>
+
+<div class="columns">
+    <div class="column is-8 is-offset-3">
+        ${Theme.wrapFieldset("Adresse", block_address(item, paysid))}
+        ${Theme.wrapFieldset("Téléphone", block_telephone(item))}
+        ${Theme.wrapFieldset("Ciel", block_ciel(item))}
+        ${Theme.wrapFieldset("Internet", block_internet(item))}
+        ${Theme.wrapFieldset("Autres", block_autres(item))}
+        ${Theme.wrapFieldset("Dépôt direct", block_depotdirect(item, institutionbanquaireid))}
+        ${Theme.wrapFieldset("Représentant", block_representant(item))}
+        ${Theme.wrapFieldset("Camions", block_camions(item))}
+        ${Theme.wrapFieldset("Lots", block_lots(item))}
+    </div>
+</div>
+
     ${Theme.renderBlame(item, isNew)}
 `;
+
+//    return `
+//    ${Theme.renderNumberField(NS, "mrcproducteurid", item.mrcproducteurid, i18n("MRCPRODUCTEURID"))}
+//    ${Theme.renderCheckboxField(NS, "modifiertrigger", item.modifiertrigger, i18n("MODIFIERTRIGGER"))}
+//`;
 };
 
 const pageTemplate = (item: IState, form: string, tab: string, warning: string, dirty: string) => {
