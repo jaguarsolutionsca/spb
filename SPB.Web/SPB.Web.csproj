@@ -17,6 +17,7 @@
     <None Remove="src\admin\layout.ts" />
     <None Remove="src\admin\main.ts" />
     <None Remove="src\fournisseur\layout.ts" />
+    <None Remove="src\fournisseur\lots2.ts" />
     <None Remove="src\fournisseur\main.ts" />
     <None Remove="src\fournisseur\proprietaire.ts" />
     <None Remove="src\fournisseur\proprietaires.ts" />
@@ -38,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="log\" />
+    <Folder Include="src\territoire\" />
     <Folder Include="_BaseApp\Common\" />
     <Folder Include="_BaseApp\src\" />
   </ItemGroup>
@@ -54,6 +56,7 @@
     <TypeScriptCompile Include="src\admin\layout.ts" />
     <TypeScriptCompile Include="src\admin\main.ts" />
     <TypeScriptCompile Include="src\fournisseur\layout.ts" />
+    <TypeScriptCompile Include="src\fournisseur\lots2.ts" />
     <TypeScriptCompile Include="src\fournisseur\main.ts" />
     <TypeScriptCompile Include="src\fournisseur\proprietaire.ts" />
     <TypeScriptCompile Include="src\fournisseur\proprietaires.ts" />

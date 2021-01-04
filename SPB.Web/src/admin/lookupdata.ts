@@ -69,3 +69,73 @@ export const fetch_autreFournisseur = () => {
     }
 }
 export const get_autreFournisseur = (year: number) => autreFournisseur;
+
+let lot: Lookup.LookupData[];
+export const fetch_lot = () => {
+    return function (data: any) {
+        if (lot != undefined && lot.length > 0)
+            return;
+        return App.GET(`/lookup/by/lot`).then(json => { lot = json; });
+    }
+}
+export const get_lot = (year: number) => lot;
+
+let canton: Lookup.LookupData[];
+export const fetch_canton = () => {
+    return function (data: any) {
+        if (canton != undefined && canton.length > 0)
+            return;
+        return App.GET(`/lookup/by/canton`).then(json => { canton = json; });
+    }
+}
+export const get_canton = (year: number) => canton;
+
+let municipalite: Lookup.LookupData[];
+export const fetch_municipalite = () => {
+    return function (data: any) {
+        if (municipalite != undefined && municipalite.length > 0)
+            return;
+        return App.GET(`/lookup/by/municipalite`).then(json => { municipalite = json; });
+    }
+}
+export const get_municipalite = (year: number) => municipalite;
+
+let proprietaire: Lookup.LookupData[];
+export const fetch_proprietaire = () => {
+    return function (data: any) {
+        if (proprietaire != undefined && proprietaire.length > 0)
+            return;
+        return App.GET(`/lookup/by/proprietaire`).then(json => { proprietaire = json; });
+    }
+}
+export const get_proprietaire = (year: number) => proprietaire;
+
+let contingent: Lookup.LookupData[];
+export const fetch_contingent = () => {
+    return function (data: any) {
+        if (contingent != undefined && contingent.length > 0)
+            return;
+        return App.GET(`/lookup/by/contingent`).then(json => { contingent = json; });
+    }
+}
+export const get_contingent = (year: number) => contingent;
+
+let droit_coupe: Lookup.LookupData[];
+export const fetch_droit_coupe = () => {
+    return function (data: any) {
+        if (droit_coupe != undefined && droit_coupe.length > 0)
+            return;
+        return App.GET(`/lookup/by/droit_coupe`).then(json => { droit_coupe = json; });
+    }
+}
+export const get_droit_coupe = (year: number) => droit_coupe;
+
+let entente_paiement: Lookup.LookupData[];
+export const fetch_entente_paiement = () => {
+    return function (data: any) {
+        if (entente_paiement != undefined && entente_paiement.length > 0)
+            return;
+        return App.GET(`/lookup/by/entente_paiement`).then(json => { entente_paiement = json; });
+    }
+}
+export const get_entente_paiement = (year: number) => entente_paiement;

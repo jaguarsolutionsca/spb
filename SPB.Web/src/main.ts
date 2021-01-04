@@ -12,6 +12,7 @@ import * as Home from "./home"
 //
 import * as AdminMain from "./admin/main"
 import * as FournisseurMain from "./fournisseur/main"
+import * as TerritoireMain from "./territoire/main"
 //
 //import "time-input-polyfill/auto"
 
@@ -60,6 +61,7 @@ export const startup = (hasPublicHomePage = false) => {
 
     AdminMain.startup();
     FournisseurMain.startup();
+    TerritoireMain.startup();
 
     loadUIState();
 }

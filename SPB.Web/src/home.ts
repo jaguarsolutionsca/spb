@@ -113,7 +113,7 @@ export const getMenuData = () => {
                 {
                     name: "Saisie", icon: "fal fa-table",
                     links: [
-                        { name: "Lots", },
+                        { name: "Lots", href: "#/lots", ns: ["App_lots", "App_lot"] },
                         { name: "Municipalités", },
                         { name: "Lots répétitifs", },
                         { name: "Agences", },

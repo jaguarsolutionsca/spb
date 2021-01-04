@@ -1297,13 +1297,20 @@
     <Build Include="dbo\Stored Procedures\spI_IndexationCalcule_Transporteur.sql" />
     <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_LotsParSecteur.sql" />
     <Build Include="dbo\Functions\fun_Lot_Proprietaire_Select.sql" />
-    <Build Include="dbo\Functions\fun_Company_Select.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Update.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Select.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Search.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Proprietaire_New.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Delete.sql" />
+    <Build Include="dbo\Functions\fun_Lot_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Search.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_New.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac">
@@ -1314,5 +1321,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
+    <None Include="02.schema.project_to_dev.scmp" />
   </ItemGroup>
 </Project>

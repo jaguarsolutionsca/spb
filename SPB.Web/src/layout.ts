@@ -13,6 +13,7 @@ import * as Main from "./main"
 import * as Home from "./home"
 import * as Admin from "./admin/main"
 import * as Fournisseur from "./fournisseur/main"
+import * as Territoire from "./territoire/main"
 
 
 declare const i18n: any;
@@ -30,6 +31,7 @@ export const render = () => {
 ${Home.render()}
 ${Admin.render()}
 ${Fournisseur.render()}
+${Territoire.render()}
 `;
 
     let menu = menuTemplate(Home.getMenuData());
@@ -49,6 +51,7 @@ export const postRender = () => {
     Home.postRender();
     Admin.postRender()
     Fournisseur.postRender()
+    Territoire.postRender()
 }
 
 const renderHeader = () => {
