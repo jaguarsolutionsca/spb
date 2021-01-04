@@ -16,7 +16,6 @@ namespace BaseAppCore.Controllers
     [Authorize, ApiController]
     public class LotController : _CoreController
     {
-
         [HttpPost("search")]
         public object Search([FromBody] Dico pager)
         {

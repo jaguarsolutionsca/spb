@@ -224,10 +224,17 @@ namespace BaseApp.DAL
                                 var name = reader.GetName(ix).ToLower();
                                 var value = reader[ix];
 
-                                if (value != null && value != DBNull.Value)
-                                    entity.Add(name, value);
-                                else
+                                if (value == null || value == DBNull.Value)
+                                {
                                     entity.Add(name, null);
+                                }
+                                else
+                                {
+                                    if (value.GetType().Equals(typeof(string)) && string.IsNullOrEmpty(value.ToString()))
+                                        entity.Add(name, null);
+                                    else
+                                        entity.Add(name, value);
+                                }
                             }
                         }
                     }
@@ -271,10 +278,18 @@ namespace BaseApp.DAL
                         for (var ix = 0; ix < reader.FieldCount; ix++)
                         {
                             var value = reader[ix];
-                            if (value != null && value != DBNull.Value)
-                                entity.Add(columns[ix], value);
-                            else
+
+                            if (value == null || value == DBNull.Value)
+                            {
                                 entity.Add(columns[ix], null);
+                            }
+                            else
+                            {
+                                if (value.GetType().Equals(typeof(string)) && string.IsNullOrEmpty(value.ToString()))
+                                    entity.Add(columns[ix], null);
+                                else
+                                    entity.Add(columns[ix], value);
+                            }
                         }
                         list.Add(entity);
                     }

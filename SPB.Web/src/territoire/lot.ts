@@ -106,7 +106,7 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "secteur", item.secteur, i18n("SECTEUR"), 2)}
     ${Theme.renderNumberField(NS, "cadastre", item.cadastre, i18n("CADASTRE"))}
     ${Theme.renderCheckboxField(NS, "reforme", item.reforme, i18n("REFORME"))}
-    ${Theme.renderTextField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255)}
+    ${Theme.renderTextareaField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255)}
     ${Theme.renderCheckboxField(NS, "certifie", item.certifie, i18n("CERTIFIE"))}
     ${Theme.renderTextField(NS, "numerocertification", item.numerocertification, i18n("NUMEROCERTIFICATION"), 50)}
     ${Theme.renderCheckboxField(NS, "ogc", item.ogc, i18n("OGC"))}
@@ -344,6 +344,7 @@ export const drop = () => {
 }
 
 const dirtyExit = () => {
+    //console.log(fetchedState, getFormState());
     isDirty = !Misc.same(fetchedState, getFormState());
     if (isDirty) {
         setTimeout(() => {
