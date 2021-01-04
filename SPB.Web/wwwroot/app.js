@@ -485,7 +485,7 @@ System.register("_BaseApp/src/core/router", [], function (exports_2, context_2) 
 });
 System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) {
     "use strict";
-    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectText, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createWhite, createBlack;
+    var ESC_MAP, tolerance, escapeHTML, keepAttr, keepClass, clone, same, changes, toInputText, fromInputText, fromInputTextNullable, toInputNumber, fromInputNumber, fromInputNumberNullable, toInputDate, fromInputDate, fromInputDateNullable, fromInputTime, fromInputTimeComboNullable, fromInputTimeNullable, toInputCheckbox, fromInputCheckbox, fromInputCheckboxMask, toStaticText, toStaticTextNA, toStaticNumber, toStaticNumberNA, toStaticNumberDecimal, toStaticMoney, toStaticDateTime, toStaticDateTimeNA, toStaticDate, toStaticDateNA, toStaticCheckbox, toStaticCheckboxYesNo, filesizeText, fromSelectNumber, fromSelectText, fromSelectBoolean, fromRadioNumber, fromRadioString, fromAutocompleteNumber, fromAutocompleteText, toastSuccess, toastSuccessSave, toastSuccessUpload, toastFailure, blameText, toInputTimeHHMM, toInputTimeHHMMSS, toInputDateTime_2rows, toInputDateTime_hhmm_2rows, toInputDateTime_hhmm, toInputDateTime_hhmmssNA, toInputDateTime_hhmm24, formatYYYYMMDD, formatYYYYMMDDHHMM, formatMMDDYYYY, parseYYYYMMDD, parseYYYYMMDD_number, dateOnly, previousDate, nextDate, formatDuration, isDateInstance, isValidDateString, isValidTimeString, formatLatLong, toInputLatLong, toInputLatLongDDMMCC, fromInputLatLong, fromInputLatLongNullable, getLatLongFullPrecision, createWhite, createBlack;
     var __moduleName = context_3 && context_3.id;
     return {
         setters: [],
@@ -881,6 +881,18 @@ System.register("_BaseApp/src/lib-ts/misc", [], function (exports_3, context_3) 
                 if (key.length == 0)
                     return null;
                 return +key;
+            });
+            exports_3("fromAutocompleteText", fromAutocompleteText = function (id, defValue) {
+                if (defValue === void 0) { defValue = null; }
+                var input = document.getElementById(id);
+                if (input == undefined)
+                    return defValue;
+                var key = input.dataset["key"];
+                if (key === "undefined")
+                    return defValue;
+                if (key.length == 0)
+                    return null;
+                return key;
             });
             exports_3("toastSuccess", toastSuccess = function (text) {
                 var div = document.createElement("div");
@@ -5970,7 +5982,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                 })
                     .then(Lookup.fetch_canton())
                     .then(Lookup.fetch_municipalite())
-                    .then(Lookup.fetch_proprietaire())
+                    //.then(Lookup.fetch_proprietaire())
                     .then(Lookup.fetch_contingent())
                     .then(Lookup.fetch_droit_coupe())
                     .then(Lookup.fetch_entente_paiement());
@@ -6053,9 +6065,9 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
     };
 });
 // File: lot.ts
-System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_49, context_49) {
+System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_49, context_49) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_1, Lookup, Perm, layout_10, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, calendar_1, autocomplete_1, Lookup, Perm, layout_10, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_registration, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_49 && context_49.id;
     return {
         setters: [
@@ -6073,6 +6085,9 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
             },
             function (calendar_1_1) {
                 calendar_1 = calendar_1_1;
+            },
+            function (autocomplete_1_1) {
+                autocomplete_1 = autocomplete_1_1;
             },
             function (Lookup_7) {
                 Lookup = Lookup_7;
@@ -6094,8 +6109,23 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
             contingent_dateCalendar = new calendar_1.Calendar(NS + "_contingent_date");
             droit_coupe_dateCalendar = new calendar_1.Calendar(NS + "_droit_coupe_date");
             entente_paiement_dateCalendar = new calendar_1.Calendar(NS + "_entente_paiement_date");
+            state_registration = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
+            };
+            proprietaireidAutocomplete = new autocomplete_1.Autocomplete(NS, "proprietaireid", true);
+            proprietaireidAutocomplete.options = {
+                keyTemplate: function (one) { return "" + one.id; },
+                valueTemplate: function (one) { return one.id + " - " + one.nom; },
+                detailTemplate: function (one) { return "<b>" + one.id + " - " + one.nom + "</b><br>" + one.email; },
+            };
             formTemplate = function (item, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid) {
-                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderDropdownField(NS, "cantonid", cantonid, i18n("CANTONID")) + "\n    " + Theme.renderTextField(NS, "rang", item.rang, i18n("RANG"), 25) + "\n    " + Theme.renderTextField(NS, "lot", item.lot, i18n("LOT"), 6) + "\n    " + Theme.renderDropdownField(NS, "municipaliteid", municipaliteid, i18n("MUNICIPALITEID")) + "\n    " + Theme.renderNumberField(NS, "superficie_total", item.superficie_total, i18n("SUPERFICIE_TOTAL")) + "\n    " + Theme.renderNumberField(NS, "superficie_boisee", item.superficie_boisee, i18n("SUPERFICIE_BOISEE")) + "\n    " + Theme.renderDropdownField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID")) + "\n    " + Theme.renderDropdownField(NS, "contingentid", contingentid, i18n("CONTINGENTID")) + "\n    " + Theme.renderCalendarField(NS, "contingent_date", contingent_dateCalendar, i18n("CONTINGENT_DATE")) + "\n    " + Theme.renderDropdownField(NS, "droit_coupeid", droit_coupeid, i18n("DROIT_COUPEID")) + "\n    " + Theme.renderCalendarField(NS, "droit_coupe_date", droit_coupe_dateCalendar, i18n("DROIT_COUPE_DATE")) + "\n    " + Theme.renderDropdownField(NS, "entente_paiementid", entente_paiementid, i18n("ENTENTE_PAIEMENTID")) + "\n    " + Theme.renderCalendarField(NS, "entente_paiement_date", entente_paiement_dateCalendar, i18n("ENTENTE_PAIEMENT_DATE")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderTextField(NS, "sequence", item.sequence, i18n("SEQUENCE"), 6) + "\n    " + Theme.renderCheckboxField(NS, "partie", item.partie, i18n("PARTIE")) + "\n    " + Theme.renderTextField(NS, "matricule", item.matricule, i18n("MATRICULE"), 20) + "\n    " + Theme.renderTextField(NS, "secteur", item.secteur, i18n("SECTEUR"), 2) + "\n    " + Theme.renderNumberField(NS, "cadastre", item.cadastre, i18n("CADASTRE")) + "\n    " + Theme.renderCheckboxField(NS, "reforme", item.reforme, i18n("REFORME")) + "\n    " + Theme.renderTextareaField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "certifie", item.certifie, i18n("CERTIFIE")) + "\n    " + Theme.renderTextField(NS, "numerocertification", item.numerocertification, i18n("NUMEROCERTIFICATION"), 50) + "\n    " + Theme.renderCheckboxField(NS, "ogc", item.ogc, i18n("OGC")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+                //${Theme.renderDropdownField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"))}
+                var proprietaireOption = {
+                    addon: (item.proprietaireid ? "<a class=\"button is-text\" href=\"#/proprietaire/" + item.proprietaireid + "\">Voir</a>" : null),
+                    required: true
+                };
+                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderDropdownField(NS, "cantonid", cantonid, i18n("CANTONID")) + "\n    " + Theme.renderTextField(NS, "rang", item.rang, i18n("RANG"), 25) + "\n    " + Theme.renderTextField(NS, "lot", item.lot, i18n("LOT"), 6) + "\n    " + Theme.renderDropdownField(NS, "municipaliteid", municipaliteid, i18n("MUNICIPALITEID")) + "\n    " + Theme.renderNumberField(NS, "superficie_total", item.superficie_total, i18n("SUPERFICIE_TOTAL")) + "\n    " + Theme.renderNumberField(NS, "superficie_boisee", item.superficie_boisee, i18n("SUPERFICIE_BOISEE")) + "\n\n    " + Theme.renderAutocompleteField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"), proprietaireOption) + "\n\n    " + Theme.renderDropdownField(NS, "contingentid", contingentid, i18n("CONTINGENTID")) + "\n    " + Theme.renderCalendarField(NS, "contingent_date", contingent_dateCalendar, i18n("CONTINGENT_DATE")) + "\n    " + Theme.renderDropdownField(NS, "droit_coupeid", droit_coupeid, i18n("DROIT_COUPEID")) + "\n    " + Theme.renderCalendarField(NS, "droit_coupe_date", droit_coupe_dateCalendar, i18n("DROIT_COUPE_DATE")) + "\n    " + Theme.renderDropdownField(NS, "entente_paiementid", entente_paiementid, i18n("ENTENTE_PAIEMENTID")) + "\n    " + Theme.renderCalendarField(NS, "entente_paiement_date", entente_paiement_dateCalendar, i18n("ENTENTE_PAIEMENT_DATE")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderTextField(NS, "sequence", item.sequence, i18n("SEQUENCE"), 6) + "\n    " + Theme.renderCheckboxField(NS, "partie", item.partie, i18n("PARTIE")) + "\n    " + Theme.renderTextField(NS, "matricule", item.matricule, i18n("MATRICULE"), 20) + "\n    " + Theme.renderTextField(NS, "secteur", item.secteur, i18n("SECTEUR"), 2) + "\n    " + Theme.renderNumberField(NS, "cadastre", item.cadastre, i18n("CADASTRE")) + "\n    " + Theme.renderCheckboxField(NS, "reforme", item.reforme, i18n("REFORME")) + "\n    " + Theme.renderTextareaField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "certifie", item.certifie, i18n("CERTIFIE")) + "\n    " + Theme.renderTextField(NS, "numerocertification", item.numerocertification, i18n("NUMEROCERTIFICATION"), 50) + "\n    " + Theme.renderCheckboxField(NS, "ogc", item.ogc, i18n("OGC")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var canEdit = true;
@@ -6135,10 +6165,11 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     contingent_dateCalendar.setState(state.contingent_date);
                     droit_coupe_dateCalendar.setState(state.droit_coupe_date);
                     entente_paiement_dateCalendar.setState(state.entente_paiement_date);
+                    proprietaireidAutocomplete.setState(state.proprietaireid, state.proprietaireid_text);
                 })
                     .then(Lookup.fetch_canton())
                     .then(Lookup.fetch_municipalite())
-                    .then(Lookup.fetch_proprietaire())
+                    //.then(Lookup.fetch_proprietaire())
                     .then(Lookup.fetch_contingent())
                     .then(Lookup.fetch_droit_coupe())
                     .then(Lookup.fetch_entente_paiement());
@@ -6160,17 +6191,18 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 var year = Perm.getCurrentYear(); //or something better
                 var lookup_canton = Lookup.get_canton(year);
                 var lookup_municipalite = Lookup.get_municipalite(year);
-                var lookup_proprietaire = Lookup.get_proprietaire(year);
+                //let lookup_proprietaire = Lookup.get_proprietaire(year);
                 var lookup_contingent = Lookup.get_contingent(year);
                 var lookup_droit_coupe = Lookup.get_droit_coupe(year);
                 var lookup_entente_paiement = Lookup.get_entente_paiement(year);
                 var cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
                 var municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
-                var proprietaireid = Theme.renderOptions(lookup_proprietaire, state.proprietaireid, true);
+                //let proprietaireid = Theme.renderOptions(lookup_proprietaire, state.proprietaireid, true);
                 var contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
                 var droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
                 var entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
-                var form = formTemplate(state, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid);
+                proprietaireidAutocomplete.pagedList = state_registration;
+                var form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
                 var tab = layout_10.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
@@ -6195,7 +6227,8 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 clone.municipaliteid = Misc.fromSelectText(NS + "_municipaliteid", state.municipaliteid);
                 clone.superficie_total = Misc.fromInputNumberNullable(NS + "_superficie_total", state.superficie_total);
                 clone.superficie_boisee = Misc.fromInputNumberNullable(NS + "_superficie_boisee", state.superficie_boisee);
-                clone.proprietaireid = Misc.fromSelectText(NS + "_proprietaireid", state.proprietaireid);
+                clone.proprietaireid = Misc.fromAutocompleteText(NS + "_proprietaireid", state.proprietaireid);
+                //clone.proprietaireid = Misc.fromSelectText(`${NS}_proprietaireid`, state.proprietaireid);
                 clone.contingentid = Misc.fromSelectText(NS + "_contingentid", state.contingentid);
                 clone.contingent_date = Misc.fromInputDateNullable(NS + "_contingent_date", state.contingent_date);
                 clone.droit_coupeid = Misc.fromSelectText(NS + "_droit_coupeid", state.droit_coupeid);
@@ -6233,6 +6266,16 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     droit_coupe_dateCalendar.toggle();
                 if (entente_paiement_dateCalendar.id == id)
                     entente_paiement_dateCalendar.toggle();
+            });
+            exports_49("onautocomplete", onautocomplete = function (id) {
+                if (proprietaireidAutocomplete.id == id) {
+                    state_registration.pager.searchText = proprietaireidAutocomplete.textValue;
+                    App.POST("/fournisseur/search", state_registration.pager)
+                        .then(function (payload) {
+                        state_registration = payload;
+                    })
+                        .then(App.render);
+                }
             });
             exports_49("onchange", onchange = function (input) {
                 state = getFormState();

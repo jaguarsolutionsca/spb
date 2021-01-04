@@ -207,7 +207,7 @@ export const fetchState = (id: number) => {
         })
         .then(Lookup.fetch_canton())
         .then(Lookup.fetch_municipalite())
-        .then(Lookup.fetch_proprietaire())
+        //.then(Lookup.fetch_proprietaire())
         .then(Lookup.fetch_contingent())
         .then(Lookup.fetch_droit_coupe())
         .then(Lookup.fetch_entente_paiement())

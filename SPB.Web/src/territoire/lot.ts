@@ -64,6 +64,26 @@ interface IState {
     ogc: boolean
 }
 
+interface IState_Proprietaire {
+    id: string
+    nom: string
+    ausoinsde: string
+    rue: string
+    ville: string
+    code_postal: string
+    no_membre: string
+    email: string
+    isproducteur: boolean
+    istransporteur: boolean
+    ischargeur: boolean
+    isautre: boolean
+}
+
+interface IFilter {
+    nom: string
+}
+
+
 const blackList = ["cantonid", "municipaliteid", "proprietaireid", "contingentid", "droit_coupeid", "entente_paiementid", "zoneid"];
 
 
@@ -79,7 +99,27 @@ let droit_coupe_dateCalendar = new Calendar(`${NS}_droit_coupe_date`);
 let entente_paiement_dateCalendar = new Calendar(`${NS}_entente_paiement_date`);
 
 
-const formTemplate = (item: IState, cantonid: string, municipaliteid: string, proprietaireid: string, contingentid: string, droit_coupeid: string, entente_paiementid: string) => {
+let state_registration = <Pager.IPagedList<IState_Proprietaire, IFilter>>{
+    list: [],
+    pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
+};
+let proprietaireidAutocomplete = new Autocomplete(NS, "proprietaireid", true);
+proprietaireidAutocomplete.options = {
+    keyTemplate: (one: IState_Proprietaire) => { return `${one.id}` },
+    valueTemplate: (one: IState_Proprietaire) => { return `${one.id} - ${one.nom}` },
+    detailTemplate: (one: IState_Proprietaire) => { return `<b>${one.id} - ${one.nom}</b><br>${one.email}` },
+}
+
+
+const formTemplate = (item: IState, cantonid: string, municipaliteid: string, proprietaireid: Autocomplete, contingentid: string, droit_coupeid: string, entente_paiementid: string) => {
+
+    //${Theme.renderDropdownField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"))}
+
+    let proprietaireOption = <Theme.IOpt>{
+        addon: (item.proprietaireid ? `<a class="button is-text" href="#/proprietaire/${item.proprietaireid}">Voir</a>` : null),
+        required: true
+    };
+
     return `
 
 ${isNew ? `
@@ -92,7 +132,9 @@ ${isNew ? `
     ${Theme.renderDropdownField(NS, "municipaliteid", municipaliteid, i18n("MUNICIPALITEID"))}
     ${Theme.renderNumberField(NS, "superficie_total", item.superficie_total, i18n("SUPERFICIE_TOTAL"))}
     ${Theme.renderNumberField(NS, "superficie_boisee", item.superficie_boisee, i18n("SUPERFICIE_BOISEE"))}
-    ${Theme.renderDropdownField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"))}
+
+    ${Theme.renderAutocompleteField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"), proprietaireOption)}
+
     ${Theme.renderDropdownField(NS, "contingentid", contingentid, i18n("CONTINGENTID"))}
     ${Theme.renderCalendarField(NS, "contingent_date", contingent_dateCalendar, i18n("CONTINGENT_DATE"))}
     ${Theme.renderDropdownField(NS, "droit_coupeid", droit_coupeid, i18n("DROIT_COUPEID"))}
@@ -183,10 +225,12 @@ export const fetchState = (id: number) => {
             droit_coupe_dateCalendar.setState(state.droit_coupe_date);
             entente_paiement_dateCalendar.setState(state.entente_paiement_date);
 
+            proprietaireidAutocomplete.setState(state.proprietaireid, state.proprietaireid_text);
+
         })
         .then(Lookup.fetch_canton())
         .then(Lookup.fetch_municipalite())
-        .then(Lookup.fetch_proprietaire())
+        //.then(Lookup.fetch_proprietaire())
         .then(Lookup.fetch_contingent())
         .then(Lookup.fetch_droit_coupe())
         .then(Lookup.fetch_entente_paiement())
@@ -208,22 +252,25 @@ export const render = () => {
         return App.warningTemplate() || App.unexpectedTemplate();
 
     let year = Perm.getCurrentYear(); //or something better
+
     let lookup_canton = Lookup.get_canton(year);
     let lookup_municipalite = Lookup.get_municipalite(year);
-    let lookup_proprietaire = Lookup.get_proprietaire(year);
+    //let lookup_proprietaire = Lookup.get_proprietaire(year);
     let lookup_contingent = Lookup.get_contingent(year);
     let lookup_droit_coupe = Lookup.get_droit_coupe(year);
     let lookup_entente_paiement = Lookup.get_entente_paiement(year);
 
     let cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
     let municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
-    let proprietaireid = Theme.renderOptions(lookup_proprietaire, state.proprietaireid, true);
+    //let proprietaireid = Theme.renderOptions(lookup_proprietaire, state.proprietaireid, true);
     let contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
     let droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
     let entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
 
+    proprietaireidAutocomplete.pagedList = state_registration;
 
-    const form = formTemplate(state, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid);
+
+    const form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
 
     const tab = tabTemplate(state.id, xtra, isNew);
     const dirty = dirtyTemplate();
@@ -253,7 +300,10 @@ const getFormState = () => {
     clone.municipaliteid = Misc.fromSelectText(`${NS}_municipaliteid`, state.municipaliteid);
     clone.superficie_total = Misc.fromInputNumberNullable(`${NS}_superficie_total`, state.superficie_total);
     clone.superficie_boisee = Misc.fromInputNumberNullable(`${NS}_superficie_boisee`, state.superficie_boisee);
-    clone.proprietaireid = Misc.fromSelectText(`${NS}_proprietaireid`, state.proprietaireid);
+
+    clone.proprietaireid = Misc.fromAutocompleteText(`${NS}_proprietaireid`, state.proprietaireid);
+    //clone.proprietaireid = Misc.fromSelectText(`${NS}_proprietaireid`, state.proprietaireid);
+
     clone.contingentid = Misc.fromSelectText(`${NS}_contingentid`, state.contingentid);
     clone.contingent_date = Misc.fromInputDateNullable(`${NS}_contingent_date`, state.contingent_date);
     clone.droit_coupeid = Misc.fromSelectText(`${NS}_droit_coupeid`, state.droit_coupeid);
@@ -291,6 +341,17 @@ export const oncalendar = (id: string) => {
     if (contingent_dateCalendar.id == id) contingent_dateCalendar.toggle();
     if (droit_coupe_dateCalendar.id == id) droit_coupe_dateCalendar.toggle();
     if (entente_paiement_dateCalendar.id == id) entente_paiement_dateCalendar.toggle();
+};
+
+export const onautocomplete = (id: string) => {
+    if (proprietaireidAutocomplete.id == id) {
+        state_registration.pager.searchText = proprietaireidAutocomplete.textValue;
+        App.POST("/fournisseur/search", state_registration.pager)
+            .then(payload => {
+                state_registration = payload;
+            })
+            .then(App.render)
+    }
 };
 
 export const onchange = (input: HTMLInputElement) => {

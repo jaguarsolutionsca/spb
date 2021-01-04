@@ -157,64 +157,14 @@ WHERE
 (
     (@searchText IS NULL) OR
     (pt.ID LIKE '%'+@searchText+'%') OR
-    (pt.CleTri LIKE '%'+@searchText+'%') OR
     (pt.Nom LIKE '%'+@searchText+'%') OR
     (pt.AuSoinsDe LIKE '%'+@searchText+'%') OR
     (pt.Rue LIKE '%'+@searchText+'%') OR
     (pt.Ville LIKE '%'+@searchText+'%') OR
-    (pt.PaysID LIKE '%'+@searchText+'%') OR
     (pt.Code_postal LIKE '%'+@searchText+'%') OR
-    (pt.Telephone LIKE '%'+@searchText+'%') OR
-    (pt.Telephone_Poste LIKE '%'+@searchText+'%') OR
-    (pt.Telecopieur LIKE '%'+@searchText+'%') OR
-    (pt.Telephone2 LIKE '%'+@searchText+'%') OR
-    (pt.Telephone2_Desc LIKE '%'+@searchText+'%') OR
-    (pt.Telephone2_Poste LIKE '%'+@searchText+'%') OR
-    (pt.Telephone3 LIKE '%'+@searchText+'%') OR
-    (pt.Telephone3_Desc LIKE '%'+@searchText+'%') OR
-    (pt.Telephone3_Poste LIKE '%'+@searchText+'%') OR
-    (pt.No_membre LIKE '%'+@searchText+'%') OR
-    (pt.Resident LIKE '%'+@searchText+'%') OR
     (pt.Email LIKE '%'+@searchText+'%') OR
-    (pt.WWW LIKE '%'+@searchText+'%') OR
-    (pt.Commentaires LIKE '%'+@searchText+'%') OR
-    (pt.AfficherCommentaires LIKE '%'+@searchText+'%') OR
-    (pt.DepotDirect LIKE '%'+@searchText+'%') OR
-    (pt.InstitutionBanquaireID LIKE '%'+@searchText+'%') OR
-    (pt.Banque_transit LIKE '%'+@searchText+'%') OR
-    (pt.Banque_folio LIKE '%'+@searchText+'%') OR
-    (pt.No_TPS LIKE '%'+@searchText+'%') OR
-    (pt.No_TVQ LIKE '%'+@searchText+'%') OR
-    (pt.PayerA LIKE '%'+@searchText+'%') OR
-    (pt.PayerAID LIKE '%'+@searchText+'%') OR
-    (pt.Statut LIKE '%'+@searchText+'%') OR
     (pt.Rep_Nom LIKE '%'+@searchText+'%') OR
-    (pt.Rep_Telephone LIKE '%'+@searchText+'%') OR
-    (pt.Rep_Telephone_Poste LIKE '%'+@searchText+'%') OR
-    (pt.Rep_Email LIKE '%'+@searchText+'%') OR
-    (pt.EnAnglais LIKE '%'+@searchText+'%') OR
-    (pt.Actif LIKE '%'+@searchText+'%') OR
-    (pt.PaiementManuel LIKE '%'+@searchText+'%') OR
-    (pt.Journal LIKE '%'+@searchText+'%') OR
-    (pt.RecoitTPS LIKE '%'+@searchText+'%') OR
-    (pt.RecoitTVQ LIKE '%'+@searchText+'%') OR
-    (pt.ModifierTrigger LIKE '%'+@searchText+'%') OR
-    (pt.IsProducteur LIKE '%'+@searchText+'%') OR
-    (pt.IsTransporteur LIKE '%'+@searchText+'%') OR
-    (pt.IsChargeur LIKE '%'+@searchText+'%') OR
-    (pt.IsAutre LIKE '%'+@searchText+'%') OR
-    (pt.AfficherCommentairesSurPermit LIKE '%'+@searchText+'%') OR
-    (pt.PasEmissionPermis LIKE '%'+@searchText+'%') OR
-    (pt.Generique LIKE '%'+@searchText+'%') OR
-    (pt.Membre_OGC LIKE '%'+@searchText+'%') OR
-    (pt.InscritTPS LIKE '%'+@searchText+'%') OR
-    (pt.InscritTVQ LIKE '%'+@searchText+'%') OR
-    (pt.IsOGC LIKE '%'+@searchText+'%') OR
-    (pt.Rep2_Nom LIKE '%'+@searchText+'%') OR
-    (pt.Rep2_Telephone LIKE '%'+@searchText+'%') OR
-    (pt.Rep2_Telephone_Poste LIKE '%'+@searchText+'%') OR
-    (pt.Rep2_Email LIKE '%'+@searchText+'%') OR
-    (pt.Rep2_Commentaires LIKE '%'+@searchText+'%')
+    (pt.Rep2_Nom LIKE '%'+@searchText+'%')
 ) AND (
     ((@Nom IS NULL) OR (pt.Nom = @Nom))
 )

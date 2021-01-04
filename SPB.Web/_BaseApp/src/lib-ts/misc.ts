@@ -432,6 +432,18 @@ export const fromAutocompleteNumber = (id: string, defValue: number = null) => {
     return +key;
 }
 
+export const fromAutocompleteText = (id: string, defValue: string = null) => {
+    let input = <HTMLInputElement>document.getElementById(id);
+    if (input == undefined)
+        return defValue;
+    let key = input.dataset["key"];
+    if (key === "undefined")
+        return defValue;
+    if (key.length == 0)
+        return null;
+    return key;
+}
+
 export const toastSuccess = (text: string) => {
     let div = document.createElement("div");
     div.classList.add("js-toast");
