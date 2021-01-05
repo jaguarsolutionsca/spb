@@ -64,7 +64,7 @@ interface IState {
     ogc: boolean
 }
 
-interface IState_Proprietaire {
+interface IState_Fournisseur {
     id: string
     nom: string
     ausoinsde: string
@@ -79,14 +79,8 @@ interface IState_Proprietaire {
     isautre: boolean
 }
 
-interface IFilter {
-    nom: string
-}
 
-
-const blackList = ["cantonid", "municipaliteid", "proprietaireid", "contingentid", "droit_coupeid", "entente_paiementid", "zoneid"];
-
-
+const blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
 
 let key: IKey;
 let state = <IState>{};
@@ -98,24 +92,19 @@ let contingent_dateCalendar = new Calendar(`${NS}_contingent_date`);
 let droit_coupe_dateCalendar = new Calendar(`${NS}_droit_coupe_date`);
 let entente_paiement_dateCalendar = new Calendar(`${NS}_entente_paiement_date`);
 
-
-let state_proprietaire = <Pager.IPagedList<IState_Proprietaire, IFilter>>{
+let state_proprietaireid = <Pager.IPagedList<IState_Fournisseur, any>>{
     list: [],
-    pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
+    pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: {} }
 };
 let proprietaireidAutocomplete = new Autocomplete(NS, "proprietaireid", true);
 proprietaireidAutocomplete.options = {
-    keyTemplate: (one: IState_Proprietaire) => { return `${one.id}` },
-    valueTemplate: (one: IState_Proprietaire) => { return `${one.id} - ${one.nom}` },
-    detailTemplate: (one: IState_Proprietaire) => { return `<b>${one.id} - ${one.nom}</b><br>${one.email}` },
+    keyTemplate: (one: IState_Fournisseur) => { return `${one.id}` },
+    valueTemplate: (one: IState_Fournisseur) => { return `${one.id} - ${one.nom}` },
+    detailTemplate: (one: IState_Fournisseur) => { return `<b>${one.id} - ${one.nom}</b>` },
 }
 
-
 const formTemplate = (item: IState, cantonid: string, municipaliteid: string, proprietaireid: Autocomplete, contingentid: string, droit_coupeid: string, entente_paiementid: string) => {
-
-    //${Theme.renderDropdownField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"))}
-
-    let proprietaireOption = <Theme.IOpt>{
+    let proprietaireidOption = <Theme.IOpt>{
         addon: (item.proprietaireid ? `<a class="button is-text" href="#/proprietaire/${item.proprietaireid}">Voir</a>` : null),
         required: true
     };
@@ -132,9 +121,7 @@ ${isNew ? `
     ${Theme.renderDropdownField(NS, "municipaliteid", municipaliteid, i18n("MUNICIPALITEID"))}
     ${Theme.renderNumberField(NS, "superficie_total", item.superficie_total, i18n("SUPERFICIE_TOTAL"))}
     ${Theme.renderNumberField(NS, "superficie_boisee", item.superficie_boisee, i18n("SUPERFICIE_BOISEE"))}
-
-    ${Theme.renderAutocompleteField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"), proprietaireOption)}
-
+    ${Theme.renderAutocompleteField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"), proprietaireidOption)}
     ${Theme.renderDropdownField(NS, "contingentid", contingentid, i18n("CONTINGENTID"))}
     ${Theme.renderCalendarField(NS, "contingent_date", contingent_dateCalendar, i18n("CONTINGENT_DATE"))}
     ${Theme.renderDropdownField(NS, "droit_coupeid", droit_coupeid, i18n("DROIT_COUPEID"))}
@@ -224,13 +211,10 @@ export const fetchState = (id: number) => {
             contingent_dateCalendar.setState(state.contingent_date);
             droit_coupe_dateCalendar.setState(state.droit_coupe_date);
             entente_paiement_dateCalendar.setState(state.entente_paiement_date);
-
             proprietaireidAutocomplete.setState(state.proprietaireid, state.proprietaireid_text);
-
         })
         .then(Lookup.fetch_canton())
         .then(Lookup.fetch_municipalite())
-        //.then(Lookup.fetch_proprietaire())
         .then(Lookup.fetch_contingent())
         .then(Lookup.fetch_droit_coupe())
         .then(Lookup.fetch_entente_paiement())
@@ -255,20 +239,17 @@ export const render = () => {
 
     let lookup_canton = Lookup.get_canton(year);
     let lookup_municipalite = Lookup.get_municipalite(year);
-    //let lookup_proprietaire = Lookup.get_proprietaire(year);
     let lookup_contingent = Lookup.get_contingent(year);
     let lookup_droit_coupe = Lookup.get_droit_coupe(year);
     let lookup_entente_paiement = Lookup.get_entente_paiement(year);
 
     let cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
     let municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
-    //let proprietaireid = Theme.renderOptions(lookup_proprietaire, state.proprietaireid, true);
     let contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
     let droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
     let entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
 
-    proprietaireidAutocomplete.pagedList = state_proprietaire;
-
+    proprietaireidAutocomplete.pagedList = state_proprietaireid;
 
     const form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
 
@@ -300,10 +281,7 @@ const getFormState = () => {
     clone.municipaliteid = Misc.fromSelectText(`${NS}_municipaliteid`, state.municipaliteid);
     clone.superficie_total = Misc.fromInputNumberNullable(`${NS}_superficie_total`, state.superficie_total);
     clone.superficie_boisee = Misc.fromInputNumberNullable(`${NS}_superficie_boisee`, state.superficie_boisee);
-
     clone.proprietaireid = Misc.fromAutocompleteText(`${NS}_proprietaireid`, state.proprietaireid);
-    //clone.proprietaireid = Misc.fromSelectText(`${NS}_proprietaireid`, state.proprietaireid);
-
     clone.contingentid = Misc.fromSelectText(`${NS}_contingentid`, state.contingentid);
     clone.contingent_date = Misc.fromInputDateNullable(`${NS}_contingent_date`, state.contingent_date);
     clone.droit_coupeid = Misc.fromSelectText(`${NS}_droit_coupeid`, state.droit_coupeid);
@@ -314,7 +292,6 @@ const getFormState = () => {
     clone.sequence = Misc.fromInputTextNullable(`${NS}_sequence`, state.sequence);
     clone.partie = Misc.fromInputCheckbox(`${NS}_partie`, state.partie);
     clone.matricule = Misc.fromInputTextNullable(`${NS}_matricule`, state.matricule);
-    clone.zoneid = Misc.fromSelectText(`${NS}_zoneid`, state.zoneid);
     clone.secteur = Misc.fromInputTextNullable(`${NS}_secteur`, state.secteur);
     clone.cadastre = Misc.fromInputNumberNullable(`${NS}_cadastre`, state.cadastre);
     clone.reforme = Misc.fromInputCheckbox(`${NS}_reforme`, state.reforme);
@@ -345,10 +322,10 @@ export const oncalendar = (id: string) => {
 
 export const onautocomplete = (id: string) => {
     if (proprietaireidAutocomplete.id == id) {
-        state_proprietaire.pager.searchText = proprietaireidAutocomplete.textValue;
-        App.POST("/fournisseur/search", state_proprietaire.pager)
+        state_proprietaireid.pager.searchText = proprietaireidAutocomplete.textValue;
+        App.POST("/fournisseur/search", state_proprietaireid.pager)
             .then(payload => {
-                state_proprietaire = payload;
+                state_proprietaireid = payload;
             })
             .then(App.render)
     }
@@ -405,7 +382,6 @@ export const drop = () => {
 }
 
 const dirtyExit = () => {
-    //console.log(fetchedState, getFormState());
     isDirty = !Misc.same(fetchedState, getFormState());
     if (isDirty) {
         setTimeout(() => {
