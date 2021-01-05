@@ -139,3 +139,13 @@ export const fetch_entente_paiement = () => {
     }
 }
 export const get_entente_paiement = (year: number) => entente_paiement;
+
+let zone: Lookup.LookupData[];
+export const fetch_zone = () => {
+    return function (data: any) {
+        if (zone != undefined && zone.length > 0)
+            return;
+        return App.GET(`/lookup/by/zone`).then(json => { zone = json; });
+    }
+}
+export const get_zone = (year: number) => zone;

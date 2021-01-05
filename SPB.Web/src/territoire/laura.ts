@@ -97,7 +97,7 @@ proprietaireidAutocomplete.options = {
 }
 
 
-const formTemplate = (item: IState, cantonid: string, municipaliteid: string, proprietaireid: Autocomplete, contingentid: string, droit_coupeid: string, entente_paiementid: string) => {
+const formTemplate = (item: IState, cantonid: string, municipaliteid: string, proprietaireid: Autocomplete, contingentid: string, droit_coupeid: string, entente_paiementid: string, zoneid: string) => {
 
     let proprietaireidOption = <Theme.IOpt>{
         addon: (item.proprietaireid ? `<a class="button is-text" href="#/proprietaire/${item.proprietaireid}">Voir</a>` : null),
@@ -211,11 +211,10 @@ export const fetchState = (id: number) => {
         })
         .then(Lookup.fetch_canton())
         .then(Lookup.fetch_municipalite())
-        //.then(Lookup.fetch_proprietaire())
         .then(Lookup.fetch_contingent())
         .then(Lookup.fetch_droit_coupe())
         .then(Lookup.fetch_entente_paiement())
-
+        .then(Lookup.fetch_zone())
 };
 
 export const fetch = (params: string[]) => {
@@ -239,17 +238,19 @@ export const render = () => {
     let lookup_contingent = Lookup.get_contingent(year);
     let lookup_droit_coupe = Lookup.get_droit_coupe(year);
     let lookup_entente_paiement = Lookup.get_entente_paiement(year);
+    let lookup_zone = Lookup.get_zone(year);
 
     let cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
     let municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
     let contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
     let droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
     let entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
+    let zoneid = Theme.renderOptions(lookup_zone, state.zoneid, true);
 
     proprietaireidAutocomplete.pagedList = state_proprietaireid;
 
 
-    const form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
+    const form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid, zoneid);
 
     const tab = tabTemplate(state.id, xtra, isNew);
     const dirty = dirtyTemplate();

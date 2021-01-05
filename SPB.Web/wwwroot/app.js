@@ -3597,7 +3597,7 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
 });
 System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
     "use strict";
-    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement;
+    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone;
     var __moduleName = context_34 && context_34.id;
     return {
         setters: [
@@ -3719,6 +3719,14 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
                 };
             });
             exports_34("get_entente_paiement", get_entente_paiement = function (year) { return entente_paiement; });
+            exports_34("fetch_zone", fetch_zone = function () {
+                return function (data) {
+                    if (zone != undefined && zone.length > 0)
+                        return;
+                    return App.GET("/lookup/by/zone").then(function (json) { zone = json; });
+                };
+            });
+            exports_34("get_zone", get_zone = function (year) { return zone; });
         }
     };
 });
@@ -6857,7 +6865,7 @@ System.register("src/territoire/laura", ["_BaseApp/src/core/app", "_BaseApp/src/
                 valueTemplate: function (one) { return one.id + " - " + one.description; },
                 detailTemplate: function (one) { return "<b>" + one.id + " - " + one.description + "</b>"; },
             };
-            formTemplate = function (item, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid) {
+            formTemplate = function (item, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid, zoneid) {
                 var proprietaireidOption = {
                     addon: (item.proprietaireid ? "<a class=\"button is-text\" href=\"#/proprietaire/" + item.proprietaireid + "\">Voir</a>" : null),
                     required: true
@@ -6906,10 +6914,10 @@ System.register("src/territoire/laura", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .then(Lookup.fetch_canton())
                     .then(Lookup.fetch_municipalite())
-                    //.then(Lookup.fetch_proprietaire())
                     .then(Lookup.fetch_contingent())
                     .then(Lookup.fetch_droit_coupe())
-                    .then(Lookup.fetch_entente_paiement());
+                    .then(Lookup.fetch_entente_paiement())
+                    .then(Lookup.fetch_zone());
             });
             exports_55("fetch", fetch = function (params) {
                 var id = +params[0];
@@ -6931,13 +6939,15 @@ System.register("src/territoire/laura", ["_BaseApp/src/core/app", "_BaseApp/src/
                 var lookup_contingent = Lookup.get_contingent(year);
                 var lookup_droit_coupe = Lookup.get_droit_coupe(year);
                 var lookup_entente_paiement = Lookup.get_entente_paiement(year);
+                var lookup_zone = Lookup.get_zone(year);
                 var cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
                 var municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
                 var contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
                 var droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
                 var entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
+                var zoneid = Theme.renderOptions(lookup_zone, state.zoneid, true);
                 proprietaireidAutocomplete.pagedList = state_proprietaireid;
-                var form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
+                var form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid, zoneid);
                 var tab = layout_11.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
