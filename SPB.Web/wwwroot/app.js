@@ -6847,7 +6847,7 @@ System.register("src/territoire/laura", ["_BaseApp/src/core/app", "_BaseApp/src/
         ],
         execute: function () {
             exports_55("NS", NS = "App_lot");
-            blackList = [];
+            blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
             state = {};
             fetchedState = {};
             isNew = false;

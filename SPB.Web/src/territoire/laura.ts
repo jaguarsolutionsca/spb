@@ -70,7 +70,7 @@ interface IState_Fournisseur {
 }
 
 
-const blackList = [];
+const blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
 
 
 
