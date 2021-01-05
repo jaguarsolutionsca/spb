@@ -6802,4 +6802,276 @@ System.register("src/app", ["src/main"], function (exports_54, context_54) {
         }
     };
 });
+// File: lot.ts
+System.register("src/territoire/laura", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_55, context_55) {
+    "use strict";
+    var App, Router, Misc, Theme, calendar_2, autocomplete_2, Lookup, Perm, layout_11, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_55 && context_55.id;
+    return {
+        setters: [
+            function (App_24) {
+                App = App_24;
+            },
+            function (Router_17) {
+                Router = Router_17;
+            },
+            function (Misc_22) {
+                Misc = Misc_22;
+            },
+            function (Theme_11) {
+                Theme = Theme_11;
+            },
+            function (calendar_2_1) {
+                calendar_2 = calendar_2_1;
+            },
+            function (autocomplete_2_1) {
+                autocomplete_2 = autocomplete_2_1;
+            },
+            function (Lookup_9) {
+                Lookup = Lookup_9;
+            },
+            function (Perm_10) {
+                Perm = Perm_10;
+            },
+            function (layout_11_1) {
+                layout_11 = layout_11_1;
+            }
+        ],
+        execute: function () {
+            exports_55("NS", NS = "App_lot");
+            blackList = [];
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            contingent_dateCalendar = new calendar_2.Calendar(NS + "_contingent_date");
+            droit_coupe_dateCalendar = new calendar_2.Calendar(NS + "_droit_coupe_date");
+            entente_paiement_dateCalendar = new calendar_2.Calendar(NS + "_entente_paiement_date");
+            state_proprietaireid = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
+            };
+            proprietaireidAutocomplete = new autocomplete_2.Autocomplete(NS, "proprietaireid", true);
+            proprietaireidAutocomplete.options = {
+                keyTemplate: function (one) { return "" + one.id; },
+                valueTemplate: function (one) { return one.id + " - " + one.description; },
+                detailTemplate: function (one) { return "<b>" + one.id + " - " + one.description + "</b>"; },
+            };
+            formTemplate = function (item, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid) {
+                var proprietaireidOption = {
+                    addon: (item.proprietaireid ? "<a class=\"button is-text\" href=\"#/proprietaire/" + item.proprietaireid + "\">Voir</a>" : null),
+                    required: true
+                };
+                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderDropdownField(NS, "cantonid", cantonid, i18n("CANTONID")) + "\n    " + Theme.renderTextField(NS, "rang", item.rang, i18n("RANG"), 25) + "\n    " + Theme.renderTextField(NS, "lot", item.lot, i18n("LOT"), 6) + "\n    " + Theme.renderDropdownField(NS, "municipaliteid", municipaliteid, i18n("MUNICIPALITEID")) + "\n    " + Theme.renderNumberField(NS, "superficie_total", item.superficie_total, i18n("SUPERFICIE_TOTAL")) + "\n    " + Theme.renderNumberField(NS, "superficie_boisee", item.superficie_boisee, i18n("SUPERFICIE_BOISEE")) + "\n    " + Theme.renderAutocompleteField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"), proprietaireidOption) + "\n    " + Theme.renderDropdownField(NS, "contingentid", contingentid, i18n("CONTINGENTID")) + "\n    " + Theme.renderCalendarField(NS, "contingent_date", contingent_dateCalendar, i18n("CONTINGENT_DATE")) + "\n    " + Theme.renderDropdownField(NS, "droit_coupeid", droit_coupeid, i18n("DROIT_COUPEID")) + "\n    " + Theme.renderCalendarField(NS, "droit_coupe_date", droit_coupe_dateCalendar, i18n("DROIT_COUPE_DATE")) + "\n    " + Theme.renderDropdownField(NS, "entente_paiementid", entente_paiementid, i18n("ENTENTE_PAIEMENTID")) + "\n    " + Theme.renderCalendarField(NS, "entente_paiement_date", entente_paiement_dateCalendar, i18n("ENTENTE_PAIEMENT_DATE")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderTextField(NS, "sequence", item.sequence, i18n("SEQUENCE"), 6) + "\n    " + Theme.renderCheckboxField(NS, "partie", item.partie, i18n("PARTIE")) + "\n    " + Theme.renderTextField(NS, "matricule", item.matricule, i18n("MATRICULE"), 20) + "\n    " + Theme.renderTextField(NS, "secteur", item.secteur, i18n("SECTEUR"), 2) + "\n    " + Theme.renderNumberField(NS, "cadastre", item.cadastre, i18n("CADASTRE")) + "\n    " + Theme.renderCheckboxField(NS, "reforme", item.reforme, i18n("REFORME")) + "\n    " + Theme.renderTextareaField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "certifie", item.certifie, i18n("CERTIFIE")) + "\n    " + Theme.renderTextField(NS, "numerocertification", item.numerocertification, i18n("NUMEROCERTIFICATION"), 50) + "\n    " + Theme.renderCheckboxField(NS, "ogc", item.ogc, i18n("OGC")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+            };
+            pageTemplate = function (item, form, tab, warning, dirty) {
+                var canEdit = true;
+                var readonly = !canEdit;
+                var canInsert = canEdit && isNew; // && Perm.hasLot_CanAddLot;
+                var canDelete = canEdit && !canInsert; // && Perm.hasLot_CanDeleteLot;
+                var canAdd = canEdit && !canInsert; // && Perm.hasLot_CanAddLot;
+                var canUpdate = canEdit && !isNew;
+                var buttons = [];
+                buttons.push(Theme.buttonCancel(NS));
+                if (canInsert)
+                    buttons.push(Theme.buttonInsert(NS));
+                if (canDelete)
+                    buttons.push(Theme.buttonDelete(NS));
+                if (canAdd)
+                    buttons.push(Theme.buttonAddNew(NS, "#/lot/new"));
+                if (canUpdate)
+                    buttons.push(Theme.buttonUpdate(NS));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout_11.buildTitle(xtra, !isNew ? i18n("lot Details") : i18n("New lot"));
+                var subtitle = layout_11.buildSubtitle(xtra, i18n("lot subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_11.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+            };
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            exports_55("fetchState", fetchState = function (id) {
+                isNew = isNaN(id);
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
+                return App.GET("/lot/" + (isNew ? "new" : id))
+                    .then(function (payload) {
+                    state = payload.item;
+                    fetchedState = Misc.clone(state);
+                    xtra = payload.xtra;
+                    key = { id: id };
+                    contingent_dateCalendar.setState(state.contingent_date);
+                    droit_coupe_dateCalendar.setState(state.droit_coupe_date);
+                    entente_paiement_dateCalendar.setState(state.entente_paiement_date);
+                    proprietaireidAutocomplete.setState(state.proprietaireid, state.proprietaireid_text);
+                })
+                    .then(Lookup.fetch_canton())
+                    .then(Lookup.fetch_municipalite())
+                    //.then(Lookup.fetch_proprietaire())
+                    .then(Lookup.fetch_contingent())
+                    .then(Lookup.fetch_droit_coupe())
+                    .then(Lookup.fetch_entente_paiement());
+            });
+            exports_55("fetch", fetch = function (params) {
+                var id = +params[0];
+                App.prepareRender(NS, i18n("lot"));
+                fetchState(id)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_55("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var year = Perm.getCurrentYear(); //or something better
+                var lookup_canton = Lookup.get_canton(year);
+                var lookup_municipalite = Lookup.get_municipalite(year);
+                var lookup_contingent = Lookup.get_contingent(year);
+                var lookup_droit_coupe = Lookup.get_droit_coupe(year);
+                var lookup_entente_paiement = Lookup.get_entente_paiement(year);
+                var cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
+                var municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
+                var contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
+                var droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
+                var entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
+                proprietaireidAutocomplete.pagedList = state_proprietaireid;
+                var form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
+                var tab = layout_11.tabTemplate(state.id, xtra, isNew);
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_55("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+                contingent_dateCalendar.postRender();
+                droit_coupe_dateCalendar.postRender();
+                entente_paiement_dateCalendar.postRender();
+                App.setPageTitle(isNew ? i18n("New lot") : xtra.title);
+            });
+            exports_55("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.cantonid = Misc.fromSelectText(NS + "_cantonid", state.cantonid);
+                clone.rang = Misc.fromInputTextNullable(NS + "_rang", state.rang);
+                clone.lot = Misc.fromInputTextNullable(NS + "_lot", state.lot);
+                clone.municipaliteid = Misc.fromSelectText(NS + "_municipaliteid", state.municipaliteid);
+                clone.superficie_total = Misc.fromInputNumberNullable(NS + "_superficie_total", state.superficie_total);
+                clone.superficie_boisee = Misc.fromInputNumberNullable(NS + "_superficie_boisee", state.superficie_boisee);
+                clone.proprietaireid = Misc.fromAutocompleteText(NS + "_proprietaireid", state.proprietaireid);
+                clone.contingentid = Misc.fromSelectText(NS + "_contingentid", state.contingentid);
+                clone.contingent_date = Misc.fromInputDateNullable(NS + "_contingent_date", state.contingent_date);
+                clone.droit_coupeid = Misc.fromSelectText(NS + "_droit_coupeid", state.droit_coupeid);
+                clone.droit_coupe_date = Misc.fromInputDateNullable(NS + "_droit_coupe_date", state.droit_coupe_date);
+                clone.entente_paiementid = Misc.fromSelectText(NS + "_entente_paiementid", state.entente_paiementid);
+                clone.entente_paiement_date = Misc.fromInputDateNullable(NS + "_entente_paiement_date", state.entente_paiement_date);
+                clone.actif = Misc.fromInputCheckbox(NS + "_actif", state.actif);
+                clone.sequence = Misc.fromInputTextNullable(NS + "_sequence", state.sequence);
+                clone.partie = Misc.fromInputCheckbox(NS + "_partie", state.partie);
+                clone.matricule = Misc.fromInputTextNullable(NS + "_matricule", state.matricule);
+                clone.zoneid = Misc.fromSelectText(NS + "_zoneid", state.zoneid);
+                clone.secteur = Misc.fromInputTextNullable(NS + "_secteur", state.secteur);
+                clone.cadastre = Misc.fromInputNumberNullable(NS + "_cadastre", state.cadastre);
+                clone.reforme = Misc.fromInputCheckbox(NS + "_reforme", state.reforme);
+                clone.lotscomplementaires = Misc.fromInputTextNullable(NS + "_lotscomplementaires", state.lotscomplementaires);
+                clone.certifie = Misc.fromInputCheckbox(NS + "_certifie", state.certifie);
+                clone.numerocertification = Misc.fromInputTextNullable(NS + "_numerocertification", state.numerocertification);
+                clone.ogc = Misc.fromInputCheckbox(NS + "_ogc", state.ogc);
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById(NS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_55("oncalendar", oncalendar = function (id) {
+                if (contingent_dateCalendar.id == id)
+                    contingent_dateCalendar.toggle();
+                if (droit_coupe_dateCalendar.id == id)
+                    droit_coupe_dateCalendar.toggle();
+                if (entente_paiement_dateCalendar.id == id)
+                    entente_paiement_dateCalendar.toggle();
+            });
+            exports_55("onautocomplete", onautocomplete = function (id) {
+                if (proprietaireidAutocomplete.id == id) {
+                    state_proprietaireid.pager.searchText = proprietaireidAutocomplete.textValue;
+                    App.POST("/fournisseur/search", state_proprietaireid.pager)
+                        .then(function (payload) {
+                        state_proprietaireid = payload;
+                    })
+                        .then(App.render);
+                }
+            });
+            exports_55("onchange", onchange = function (input) {
+                state = getFormState();
+                App.render();
+            });
+            exports_55("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_55("create", create = function () {
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/lot", Misc.createBlack(formState, blackList))
+                    .then(function (payload) {
+                    var newkey = payload;
+                    Misc.toastSuccessSave();
+                    Router.goto("#/lot/" + newkey.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_55("save", save = function (done) {
+                if (done === void 0) { done = false; }
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/lot", Misc.createBlack(formState, blackList))
+                    .then(function (_) {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto("#/lots/", 100);
+                    else
+                        Router.goto("#/lot/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_55("drop", drop = function () {
+                //(<any>key).updated = state.updated;
+                App.prepareRender();
+                App.DELETE("/lot", key)
+                    .then(function (_) {
+                    Router.goto("#/lots/", 250);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = function () {
+                //console.log(fetchedState, getFormState());
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
 //# sourceMappingURL=app.js.map
