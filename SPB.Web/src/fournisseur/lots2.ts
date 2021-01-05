@@ -139,6 +139,9 @@ export const fetchState = (proprietaireid: string, ownerNS?: string) => {
         .then(Lookup.fetch_lot())
 };
 
+export const preRender = () => {
+};
+
 export const render = () => {
     if (isAddingNewParent) return "";
 

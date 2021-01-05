@@ -99,7 +99,7 @@ let droit_coupe_dateCalendar = new Calendar(`${NS}_droit_coupe_date`);
 let entente_paiement_dateCalendar = new Calendar(`${NS}_entente_paiement_date`);
 
 
-let state_registration = <Pager.IPagedList<IState_Proprietaire, IFilter>>{
+let state_proprietaire = <Pager.IPagedList<IState_Proprietaire, IFilter>>{
     list: [],
     pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
 };
@@ -267,7 +267,7 @@ export const render = () => {
     let droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
     let entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
 
-    proprietaireidAutocomplete.pagedList = state_registration;
+    proprietaireidAutocomplete.pagedList = state_proprietaire;
 
 
     const form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
@@ -345,10 +345,10 @@ export const oncalendar = (id: string) => {
 
 export const onautocomplete = (id: string) => {
     if (proprietaireidAutocomplete.id == id) {
-        state_registration.pager.searchText = proprietaireidAutocomplete.textValue;
-        App.POST("/fournisseur/search", state_registration.pager)
+        state_proprietaire.pager.searchText = proprietaireidAutocomplete.textValue;
+        App.POST("/fournisseur/search", state_proprietaire.pager)
             .then(payload => {
-                state_registration = payload;
+                state_proprietaire = payload;
             })
             .then(App.render)
     }

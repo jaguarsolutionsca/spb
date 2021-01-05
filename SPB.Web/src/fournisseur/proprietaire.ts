@@ -13,6 +13,7 @@ import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
 import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout"
+import * as app_inline2 from "./lots2"
 
 declare const i18n: any;
 
@@ -213,13 +214,8 @@ const block_camions = (item: IState) => {
 `;
 }
 
-const block_lots = (item: IState) => {
-    return `
-`;
-}
 
-
-const formTemplate = (item: IState, paysid: string, institutionbanquaireid: string) => {
+const formTemplate = (item: IState, paysid: string, institutionbanquaireid: string, inline2: string) => {
     return `
 <div class="js-float-menu">
     <ul>
@@ -245,7 +241,7 @@ const formTemplate = (item: IState, paysid: string, institutionbanquaireid: stri
         ${Theme.wrapFieldset("Dépôt direct", block_depotdirect(item, institutionbanquaireid))}
         ${Theme.wrapFieldset("Représentant", block_representant(item))}
         ${Theme.wrapFieldset("Camions", block_camions(item))}
-        ${Theme.wrapFieldset("Lots", block_lots(item))}
+        ${Theme.wrapFieldset("Lots", inline2)}
     </div>
 </div>
 
@@ -267,12 +263,14 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     let canAdd = canEdit && !canInsert; // && Perm.hasFournisseur_CanAddFournisseur;
     let canUpdate = canEdit && !isNew;
 
+    let inline2_dirty = app_inline2.hasChanges();
+
     let buttons: string[] = [];
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
     if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new"));
-    if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
+    if (canUpdate) buttons.push(Theme.buttonUpdate(NS, inline2_dirty));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
@@ -328,7 +326,7 @@ export const fetchState = (id: string) => {
         })
         .then(Lookup.fetch_pays())
         .then(Lookup.fetch_institutionBanquaire())
-
+        .then(() => { return app_inline2.fetchState(id, NS) })
 };
 
 export const fetch = (params: string[]) => {
@@ -352,8 +350,11 @@ export const render = () => {
     let paysid = Theme.renderOptions(lookup_pays, state.paysid, true);
     let institutionbanquaireid = Theme.renderOptions(lookup_institutionBanquaire, state.institutionbanquaireid, true);
 
+    app_inline2.preRender();
+    let inline2 = app_inline2.render();
 
-    const form = formTemplate(state, paysid, institutionbanquaireid);
+
+    const form = formTemplate(state, paysid, institutionbanquaireid, inline2);
 
     const tab = tabTemplate(state.id, xtra, isNew);
     const dirty = dirtyTemplate();
@@ -364,6 +365,7 @@ export const render = () => {
 export const postRender = () => {
     if (!inContext()) return;
 
+    app_inline2.postRender();
 
 
     App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
@@ -499,7 +501,9 @@ export const drop = () => {
 }
 
 const dirtyExit = () => {
-    isDirty = !Misc.same(fetchedState, getFormState());
+    let masterHasChange = !Misc.same(fetchedState, getFormState());
+    let detailsHasChange = app_inline2.hasChanges();
+    isDirty = masterHasChange || detailsHasChange;
     if (isDirty) {
         setTimeout(() => {
             state = getFormState();
