@@ -127,11 +127,11 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "sequence", item.sequence, i18n("SEQUENCE"), 6)}
     ${Theme.renderCheckboxField(NS, "partie", item.partie, i18n("PARTIE"))}
     ${Theme.renderTextField(NS, "matricule", item.matricule, i18n("MATRICULE"), 20)}
-    ${Theme.renderDropdownField(NS, "zoneid", item.zoneid, i18n("ZONEID"))}
+    ${Theme.renderDropdownField(NS, "zoneid", zoneid, i18n("ZONEID"))}
     ${Theme.renderTextField(NS, "secteur", item.secteur, i18n("SECTEUR"), 2)}
     ${Theme.renderNumberField(NS, "cadastre", item.cadastre, i18n("CADASTRE"))}
     ${Theme.renderCheckboxField(NS, "reforme", item.reforme, i18n("REFORME"))}
-    ${Theme.renderTextareaField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255)}
+    ${Theme.renderTextField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255)}
     ${Theme.renderCheckboxField(NS, "certifie", item.certifie, i18n("CERTIFIE"))}
     ${Theme.renderTextField(NS, "numerocertification", item.numerocertification, i18n("NUMEROCERTIFICATION"), 50)}
     ${Theme.renderCheckboxField(NS, "ogc", item.ogc, i18n("OGC"))}
