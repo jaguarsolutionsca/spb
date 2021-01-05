@@ -72,8 +72,6 @@ interface IState_Fournisseur {
 
 const blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
 
-
-
 let key: IKey;
 let state = <IState>{};
 let fetchedState = <IState>{};
@@ -83,7 +81,6 @@ let isDirty = false;
 let contingent_dateCalendar = new Calendar(`${NS}_contingent_date`);
 let droit_coupe_dateCalendar = new Calendar(`${NS}_droit_coupe_date`);
 let entente_paiement_dateCalendar = new Calendar(`${NS}_entente_paiement_date`);
-
 
 let state_proprietaireid = <Pager.IPagedList<IState_Fournisseur, any>>{
     list: [],
@@ -95,7 +92,6 @@ proprietaireidAutocomplete.options = {
     valueTemplate: (one: IState_Fournisseur) => { return `${one.id} - ${one.description}` },
     detailTemplate: (one: IState_Fournisseur) => { return `<b>${one.id} - ${one.description}</b>` },
 }
-
 
 const formTemplate = (item: IState, cantonid: string, municipaliteid: string, proprietaireid: Autocomplete, contingentid: string, droit_coupeid: string, entente_paiementid: string, zoneid: string) => {
 
