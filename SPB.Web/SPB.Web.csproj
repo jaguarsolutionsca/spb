@@ -21,6 +21,7 @@
     <None Remove="src\fournisseur\main.ts" />
     <None Remove="src\fournisseur\proprietaire.ts" />
     <None Remove="src\fournisseur\proprietaires.ts" />
+    <None Remove="src\territoire\laura.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +40,6 @@
 
   <ItemGroup>
     <Folder Include="log\" />
-    <Folder Include="src\territoire\" />
     <Folder Include="_BaseApp\Common\" />
     <Folder Include="_BaseApp\src\" />
   </ItemGroup>
@@ -60,6 +60,7 @@
     <TypeScriptCompile Include="src\fournisseur\main.ts" />
     <TypeScriptCompile Include="src\fournisseur\proprietaire.ts" />
     <TypeScriptCompile Include="src\fournisseur\proprietaires.ts" />
+    <TypeScriptCompile Include="src\territoire\laura.ts" />
   </ItemGroup>
 
 

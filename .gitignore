@@ -340,6 +340,8 @@ ASALocalRun/
 healthchecksdb
 
 /.vs
+/SPB.Web/wwwroot/app.js
+/SPB.Web/wwwroot/app.js.map
 /SPB.Web/log
 /SPB.Web/appsettings.Development.json
 *.7z
