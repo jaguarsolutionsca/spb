@@ -7,6 +7,7 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         object Lot_Search(Dico pager);
+        object Lot_Search_ForProprietaire(string id, Dico pager);
         object Lot_Select(int id);
         object Lot_New();
         object Lot_Insert(Dico uto);
@@ -20,6 +21,19 @@ namespace BaseApp.Service
         {
             var parameters = KVList.Build(pager.TrimRowCount().ReviveUTO());
             var list = repo.queryDicoList(GP("Lot_Search"), parameters, uid: true);
+            return new
+            {
+                list = list,
+                pager = pager.ReviveRowCount(list),
+                xtra = (object)null
+            };
+        }
+
+        public object Lot_Search_ForProprietaire(string id, Dico pager)
+        {
+            var parameters = KVList.Build(pager.TrimRowCount().ReviveUTO());
+            parameters.Add("@ProprietaireID", id);
+            var list = repo.queryDicoList(GP("Lot_Search_ForProprietaire"), parameters, uid: true);
             return new
             {
                 list = list,

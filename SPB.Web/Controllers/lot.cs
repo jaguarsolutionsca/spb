@@ -23,6 +23,13 @@ namespace BaseAppCore.Controllers
             return app.Lot_Search(pager);
         }
 
+        [HttpPost("search/proprietaire/{id}")]
+        public object Search_ForProprietaire(string id, [FromBody] Dico pager)
+        {
+            //app.RequirePermission(Perm.Lot_Edit);
+            return app.Lot_Search_ForProprietaire(id, pager);
+        }
+
         [HttpGet("{id}")]
         public object Select(int id)
         {

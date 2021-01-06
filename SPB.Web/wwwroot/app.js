@@ -5610,7 +5610,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
             fetchedState = {};
             isNew = false;
             isAddingNewParent = false;
-            trTemplate = function (item, editId, deleteId, rowNumber, lotid) {
+            trTemplate = function (item, editId, deleteId, rowNumber, cantonid, municipaliteid, contingentid, droit_coupeid, entente_paiementid, zoneid) {
                 var id = item.id;
                 var tdConfirm = "<td class=\"js-td-33\">&nbsp;</td>";
                 if (item._editing)
@@ -5631,13 +5631,13 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                     classList.push("js-new");
                 if (readonly)
                     classList.push("js-readonly");
-                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n\n" + (markDeletion ? "<td onclick=\"" + NS + ".selectfordrop(" + id + ")\" class=\"has-text-danger\" title=\"Click to mark for deletion\"><i class='fas fa-times'></i></td>" : "") + "\n" + (clickUndo ? "<td onclick=\"" + NS + ".undo()\" class=\"has-text-primary\" title=\"Click to undo\"><i class='fa fa-undo'></i></td>" : "") + "\n" + tdConfirm + "\n\n" + (!readonly ? "\n    <td class=\"js-inline-input\">" + Theme.renderDateInline(NS, "datedebut_" + id, item.datedebut, { required: true }) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderDateInline(NS, "datefin_" + id, item.datefin, { required: false }) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "lotid_" + id, lotid, true) + "</td>\n" : "\n    <td>" + Misc.toInputDate(item.datedebut) + "</td>\n    <td>" + Misc.toInputDate(item.datefin) + "</td>\n    <td>" + Misc.toStaticText(item.lotid_text) + "</td>\n") + "\n</tr>";
+                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n\n" + (markDeletion ? "<td onclick=\"" + NS + ".selectfordrop(" + id + ")\" class=\"has-text-danger\" title=\"Click to mark for deletion\"><i class='fas fa-times'></i></td>" : "") + "\n" + (clickUndo ? "<td onclick=\"" + NS + ".undo()\" class=\"has-text-primary\" title=\"Click to undo\"><i class='fa fa-undo'></i></td>" : "") + "\n" + tdConfirm + "\n\n" + (!readonly ? "\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "cantonid_" + id, cantonid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "rang_" + id, item.rang, 25) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "lot_" + id, item.lot, 6) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "municipaliteid_" + id, municipaliteid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "superficie_total_" + id, item.superficie_total) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "superficie_boisee_" + id, item.superficie_boisee) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "contingentid_" + id, contingentid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderDateInline(NS, "contingent_date_" + id, item.contingent_date, { required: false }) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "droit_coupeid_" + id, droit_coupeid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderDateInline(NS, "droit_coupe_date_" + id, item.droit_coupe_date, { required: false }) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "entente_paiementid_" + id, entente_paiementid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderDateInline(NS, "entente_paiement_date_" + id, item.entente_paiement_date, { required: false }) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "actif_" + id, item.actif) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "sequence_" + id, item.sequence, 6) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "partie_" + id, item.partie) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "matricule_" + id, item.matricule, 20) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "zoneid_" + id, zoneid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "secteur_" + id, item.secteur, 2) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "cadastre_" + id, item.cadastre) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "reforme_" + id, item.reforme) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "lotscomplementaires_" + id, item.lotscomplementaires, 255) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "certifie_" + id, item.certifie) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "numerocertification_" + id, item.numerocertification, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "ogc_" + id, item.ogc) + "</td>\n" : "\n    <td>" + Misc.toStaticText(item.cantonid_text) + "</td>\n    <td>" + Misc.toStaticText(item.rang) + "</td>\n    <td>" + Misc.toStaticText(item.lot) + "</td>\n    <td>" + Misc.toStaticText(item.municipaliteid_text) + "</td>\n    <td>" + Misc.toStaticText(item.superficie_total) + "</td>\n    <td>" + Misc.toStaticText(item.superficie_boisee) + "</td>\n    <td>" + Misc.toStaticText(item.contingentid_text) + "</td>\n    <td>" + Misc.toInputDate(item.contingent_date) + "</td>\n    <td>" + Misc.toStaticText(item.droit_coupeid_text) + "</td>\n    <td>" + Misc.toInputDate(item.droit_coupe_date) + "</td>\n    <td>" + Misc.toStaticText(item.entente_paiementid_text) + "</td>\n    <td>" + Misc.toInputDate(item.entente_paiement_date) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.actif) + "</td>\n    <td>" + Misc.toStaticText(item.sequence) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.partie) + "</td>\n    <td>" + Misc.toStaticText(item.matricule) + "</td>\n    <td>" + Misc.toStaticText(item.zoneid_text) + "</td>\n    <td>" + Misc.toStaticText(item.secteur) + "</td>\n    <td>" + Misc.toStaticText(item.cadastre) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.reforme) + "</td>\n    <td>" + Misc.toStaticText(item.lotscomplementaires) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.certifie) + "</td>\n    <td>" + Misc.toStaticText(item.numerocertification) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.ogc) + "</td>\n") + "\n</tr>";
             };
-            tableTemplate = function (tbody, editId, deleteId, perm) {
+            tableTemplate = function (tbody, editId, deleteId) {
                 var disableAddNew = (deleteId != undefined || editId != undefined || isNew);
-                var canEdit = perm && perm.canEdit;
+                var canEdit = true; //perm?.canEdit;
                 disableAddNew = disableAddNew || !canEdit;
-                return "\n<style>.js-td-33 { width: 33px; }</style>\n<div id=\"" + table_id + "\" class=\"table-container\">\n<table class=\"table is-hoverable js-inline\" style=\"width: 100px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            <th style=\"width:99px\" colspan=\"3\">\n                <a class=\"button is-primary is-outlined is-small\" " + (disableAddNew ? "disabled" : "onclick=\"" + NS + ".addNew()\"") + ">\n                    <span class=\"icon\"><i class=\"fa fa-plus\"></i></span><span>" + i18n("Add New") + "</span>\n                </a>\n            </th>\n            <th style=\"width:100px\">" + i18n("DATEDEBUT") + "</th>\n            <th style=\"width:100px\">" + i18n("DATEFIN") + "</th>\n            <th style=\"width:100px\">" + i18n("LOT") + "</th>\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+                return "\n<style>.js-td-33 { width: 33px; }</style>\n<div id=\"" + table_id + "\" class=\"table-container\">\n<table class=\"table is-hoverable js-inline\" style=\"width: 100px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            <th style=\"width:99px\" colspan=\"3\">\n                <a class=\"button is-primary is-outlined is-small\" " + (disableAddNew ? "disabled" : "onclick=\"" + NS + ".addNew()\"") + ">\n                    <span class=\"icon\"><i class=\"fa fa-plus\"></i></span><span>" + i18n("Add New") + "</span>\n                </a>\n            </th>\n            <th style=\"width:100px\">" + i18n("CANTON") + "</th>\n            <th style=\"width:100px\">" + i18n("RANG") + "</th>\n            <th style=\"width:100px\">" + i18n("LOT") + "</th>\n            <th style=\"width:100px\">" + i18n("MUNICIPALITE") + "</th>\n            <th style=\"width:100px\">" + i18n("SUPERFICIE_TOTAL") + "</th>\n            <th style=\"width:100px\">" + i18n("SUPERFICIE_BOISEE") + "</th>\n            <th style=\"width:100px\">" + i18n("CONTINGENT") + "</th>\n            <th style=\"width:100px\">" + i18n("CONTINGENT_DATE") + "</th>\n            <th style=\"width:100px\">" + i18n("DROIT_COUPE") + "</th>\n            <th style=\"width:100px\">" + i18n("DROIT_COUPE_DATE") + "</th>\n            <th style=\"width:100px\">" + i18n("ENTENTE_PAIEMENT") + "</th>\n            <th style=\"width:100px\">" + i18n("ENTENTE_PAIEMENT_DATE") + "</th>\n            <th style=\"width:100px\">" + i18n("ACTIF") + "</th>\n            <th style=\"width:100px\">" + i18n("SEQUENCE") + "</th>\n            <th style=\"width:100px\">" + i18n("PARTIE") + "</th>\n            <th style=\"width:100px\">" + i18n("MATRICULE") + "</th>\n            <th style=\"width:100px\">" + i18n("ZONE") + "</th>\n            <th style=\"width:100px\">" + i18n("SECTEUR") + "</th>\n            <th style=\"width:100px\">" + i18n("CADASTRE") + "</th>\n            <th style=\"width:100px\">" + i18n("REFORME") + "</th>\n            <th style=\"width:100px\">" + i18n("LOTSCOMPLEMENTAIRES") + "</th>\n            <th style=\"width:100px\">" + i18n("CERTIFIE") + "</th>\n            <th style=\"width:100px\">" + i18n("NUMEROCERTIFICATION") + "</th>\n            <th style=\"width:100px\">" + i18n("OGC") + "</th>\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
             };
             pageTemplate = function (table) {
                 return "\n" + Theme.wrapContent("js-uc-list", table) + "\n";
@@ -5646,13 +5646,18 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 isAddingNewParent = (proprietaireid == "new");
                 callerNS = ownerNS || callerNS;
                 isNew = false;
-                return App.GET("/lot_proprietaire/search/" + proprietaireid + "/?" + Pager.asParams(state.pager))
+                return App.POST("/lot/search/proprietaire/" + proprietaireid, state.pager)
                     .then(function (payload) {
                     state = payload;
                     fetchedState = Misc.clone(state);
                     key = { proprietaireid: proprietaireid };
                 })
-                    .then(Lookup.fetch_lot());
+                    .then(Lookup.fetch_canton())
+                    .then(Lookup.fetch_municipalite())
+                    .then(Lookup.fetch_contingent())
+                    .then(Lookup.fetch_droit_coupe())
+                    .then(Lookup.fetch_entente_paiement())
+                    .then(Lookup.fetch_zone());
             });
             exports_45("preRender", preRender = function () {
             });
@@ -5669,14 +5674,24 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                     if (item._deleting)
                         deleteId = item.id;
                 });
-                var year = Perm.getCurrentYear();
-                var lookup_lot = Lookup.get_lot(year);
+                var year = Perm.getCurrentYear(); //or something better
+                var lookup_canton = Lookup.get_canton(year);
+                var lookup_municipalite = Lookup.get_municipalite(year);
+                var lookup_contingent = Lookup.get_contingent(year);
+                var lookup_droit_coupe = Lookup.get_droit_coupe(year);
+                var lookup_entente_paiement = Lookup.get_entente_paiement(year);
+                var lookup_zone = Lookup.get_zone(year);
                 var tbody = state.list.reduce(function (html, item, index) {
                     var rowNumber = Pager.rowNumber(state.pager, index);
-                    var lotid = Theme.renderOptions(lookup_lot, item.lotid, isNew);
-                    return html + trTemplate(item, editId, deleteId, rowNumber, lotid);
+                    var cantonid = Theme.renderOptions(lookup_canton, item.cantonid, true);
+                    var municipaliteid = Theme.renderOptions(lookup_municipalite, item.municipaliteid, true);
+                    var contingentid = Theme.renderOptions(lookup_contingent, item.contingentid, true);
+                    var droit_coupeid = Theme.renderOptions(lookup_droit_coupe, item.droit_coupeid, true);
+                    var entente_paiementid = Theme.renderOptions(lookup_entente_paiement, item.entente_paiementid, true);
+                    var zoneid = Theme.renderOptions(lookup_zone, item.zoneid, true);
+                    return html + trTemplate(item, editId, deleteId, rowNumber, cantonid, municipaliteid, contingentid, droit_coupeid, entente_paiementid, zoneid);
                 }, "");
-                var table = tableTemplate(tbody, editId, deleteId, null);
+                var table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
             });
             exports_45("postRender", postRender = function () {
@@ -5688,10 +5703,31 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 var clone = Misc.clone(state);
                 clone.list.forEach(function (item) {
                     var id = item.id;
+                    item.cantonid = Misc.fromSelectText(NS + "_cantonid_" + id, item.cantonid);
+                    item.rang = Misc.fromInputTextNullable(NS + "_rang_" + id, item.rang);
+                    item.lot = Misc.fromInputTextNullable(NS + "_lot_" + id, item.lot);
+                    item.municipaliteid = Misc.fromSelectText(NS + "_municipaliteid_" + id, item.municipaliteid);
+                    item.superficie_total = Misc.fromInputNumberNullable(NS + "_superficie_total_" + id, item.superficie_total);
+                    item.superficie_boisee = Misc.fromInputNumberNullable(NS + "_superficie_boisee_" + id, item.superficie_boisee);
                     item.proprietaireid = Misc.fromSelectText(NS + "_proprietaireid_" + id, item.proprietaireid);
-                    item.datedebut = Misc.fromInputDate(NS + "_datedebut_" + id, item.datedebut);
-                    item.datefin = Misc.fromInputDateNullable(NS + "_datefin_" + id, item.datefin);
-                    item.lotid = Misc.fromSelectNumber(NS + "_lotid_" + id, item.lotid);
+                    item.contingentid = Misc.fromSelectText(NS + "_contingentid_" + id, item.contingentid);
+                    item.contingent_date = Misc.fromInputDateNullable(NS + "_contingent_date_" + id, item.contingent_date);
+                    item.droit_coupeid = Misc.fromSelectText(NS + "_droit_coupeid_" + id, item.droit_coupeid);
+                    item.droit_coupe_date = Misc.fromInputDateNullable(NS + "_droit_coupe_date_" + id, item.droit_coupe_date);
+                    item.entente_paiementid = Misc.fromSelectText(NS + "_entente_paiementid_" + id, item.entente_paiementid);
+                    item.entente_paiement_date = Misc.fromInputDateNullable(NS + "_entente_paiement_date_" + id, item.entente_paiement_date);
+                    item.actif = Misc.fromInputCheckbox(NS + "_actif_" + id, item.actif);
+                    item.sequence = Misc.fromInputTextNullable(NS + "_sequence_" + id, item.sequence);
+                    item.partie = Misc.fromInputCheckbox(NS + "_partie_" + id, item.partie);
+                    item.matricule = Misc.fromInputTextNullable(NS + "_matricule_" + id, item.matricule);
+                    item.zoneid = Misc.fromSelectText(NS + "_zoneid_" + id, item.zoneid);
+                    item.secteur = Misc.fromInputTextNullable(NS + "_secteur_" + id, item.secteur);
+                    item.cadastre = Misc.fromInputNumberNullable(NS + "_cadastre_" + id, item.cadastre);
+                    item.reforme = Misc.fromInputCheckbox(NS + "_reforme_" + id, item.reforme);
+                    item.lotscomplementaires = Misc.fromInputTextNullable(NS + "_lotscomplementaires_" + id, item.lotscomplementaires);
+                    item.certifie = Misc.fromInputCheckbox(NS + "_certifie_" + id, item.certifie);
+                    item.numerocertification = Misc.fromInputTextNullable(NS + "_numerocertification_" + id, item.numerocertification);
+                    item.ogc = Misc.fromInputCheckbox(NS + "_ogc_" + id, item.ogc);
                 });
                 return clone;
             };
@@ -5714,7 +5750,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 App.render();
             });
             exports_45("addNew", addNew = function () {
-                var url = "/lot_proprietaire/new/" + key.proprietaireid;
+                var url = "/lot/new/" + key.proprietaireid;
                 return App.GET(url)
                     .then(function (payload) {
                     state.list.push(payload);
@@ -5731,7 +5767,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 if (!html5Valid())
                     return;
                 App.prepareRender();
-                App.POST("/lot_proprietaire", item)
+                App.POST("/lot", item)
                     .then(function () {
                     fetchedState = Misc.clone(state);
                     Router.gotoCurrent(1);
@@ -5744,7 +5780,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 if (!html5Valid())
                     return;
                 App.prepareRender();
-                App.PUT("/lot_proprietaire", item)
+                App.PUT("/lot", item)
                     .then(function () {
                     fetchedState = Misc.clone(state);
                     Router.gotoCurrent(1);
@@ -5759,7 +5795,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
             exports_45("drop", drop = function () {
                 App.prepareRender();
                 var item = state.list.find(function (one) { return one._deleting; });
-                App.DELETE("/lot_proprietaire", { id: item.id })
+                App.DELETE("/lot", { id: item.id })
                     .then(function () {
                     fetchedState = Misc.clone(state);
                     Router.gotoCurrent(1);
@@ -6800,279 +6836,6 @@ System.register("src/app", ["src/main"], function (exports_54, context_54) {
             // Startup code
             //
             main.startup();
-        }
-    };
-});
-// File: lot.ts
-System.register("src/territoire/laura", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_55, context_55) {
-    "use strict";
-    var App, Router, Misc, Theme, calendar_2, autocomplete_2, Lookup, Perm, layout_11, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_55 && context_55.id;
-    return {
-        setters: [
-            function (App_24) {
-                App = App_24;
-            },
-            function (Router_17) {
-                Router = Router_17;
-            },
-            function (Misc_22) {
-                Misc = Misc_22;
-            },
-            function (Theme_11) {
-                Theme = Theme_11;
-            },
-            function (calendar_2_1) {
-                calendar_2 = calendar_2_1;
-            },
-            function (autocomplete_2_1) {
-                autocomplete_2 = autocomplete_2_1;
-            },
-            function (Lookup_9) {
-                Lookup = Lookup_9;
-            },
-            function (Perm_10) {
-                Perm = Perm_10;
-            },
-            function (layout_11_1) {
-                layout_11 = layout_11_1;
-            }
-        ],
-        execute: function () {
-            exports_55("NS", NS = "App_lot");
-            blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
-            state = {};
-            fetchedState = {};
-            isNew = false;
-            isDirty = false;
-            contingent_dateCalendar = new calendar_2.Calendar(NS + "_contingent_date");
-            droit_coupe_dateCalendar = new calendar_2.Calendar(NS + "_droit_coupe_date");
-            entente_paiement_dateCalendar = new calendar_2.Calendar(NS + "_entente_paiement_date");
-            state_proprietaireid = {
-                list: [],
-                pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: {} }
-            };
-            proprietaireidAutocomplete = new autocomplete_2.Autocomplete(NS, "proprietaireid", false);
-            proprietaireidAutocomplete.options = {
-                keyTemplate: function (one) { return "" + one.id; },
-                valueTemplate: function (one) { return one.id + " - " + one.description; },
-                detailTemplate: function (one) { return "<b>" + one.id + " - " + one.description + "</b>"; },
-            };
-            formTemplate = function (item, cantonid, municipaliteid, proprietaireid, contingentid, droit_coupeid, entente_paiementid, zoneid) {
-                var proprietaireidOption = {
-                    addon: (item.proprietaireid ? "<a class=\"button is-text\" href=\"#/-----/" + item.proprietaireid + "\">Voir</a>" : null),
-                    required: false
-                };
-                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderDropdownField(NS, "cantonid", cantonid, i18n("CANTONID")) + "\n    " + Theme.renderTextField(NS, "rang", item.rang, i18n("RANG"), 25) + "\n    " + Theme.renderTextField(NS, "lot", item.lot, i18n("LOT"), 6) + "\n    " + Theme.renderDropdownField(NS, "municipaliteid", municipaliteid, i18n("MUNICIPALITEID")) + "\n    " + Theme.renderNumberField(NS, "superficie_total", item.superficie_total, i18n("SUPERFICIE_TOTAL")) + "\n    " + Theme.renderNumberField(NS, "superficie_boisee", item.superficie_boisee, i18n("SUPERFICIE_BOISEE")) + "\n    " + Theme.renderAutocompleteField(NS, "proprietaireid", proprietaireid, i18n("PROPRIETAIREID"), proprietaireidOption) + "\n    " + Theme.renderDropdownField(NS, "contingentid", contingentid, i18n("CONTINGENTID")) + "\n    " + Theme.renderCalendarField(NS, "contingent_date", contingent_dateCalendar, i18n("CONTINGENT_DATE")) + "\n    " + Theme.renderDropdownField(NS, "droit_coupeid", droit_coupeid, i18n("DROIT_COUPEID")) + "\n    " + Theme.renderCalendarField(NS, "droit_coupe_date", droit_coupe_dateCalendar, i18n("DROIT_COUPE_DATE")) + "\n    " + Theme.renderDropdownField(NS, "entente_paiementid", entente_paiementid, i18n("ENTENTE_PAIEMENTID")) + "\n    " + Theme.renderCalendarField(NS, "entente_paiement_date", entente_paiement_dateCalendar, i18n("ENTENTE_PAIEMENT_DATE")) + "\n    " + Theme.renderCheckboxField(NS, "actif", item.actif, i18n("ACTIF")) + "\n    " + Theme.renderTextField(NS, "sequence", item.sequence, i18n("SEQUENCE"), 6) + "\n    " + Theme.renderCheckboxField(NS, "partie", item.partie, i18n("PARTIE")) + "\n    " + Theme.renderTextField(NS, "matricule", item.matricule, i18n("MATRICULE"), 20) + "\n    " + Theme.renderDropdownField(NS, "zoneid", zoneid, i18n("ZONEID")) + "\n    " + Theme.renderTextField(NS, "secteur", item.secteur, i18n("SECTEUR"), 2) + "\n    " + Theme.renderNumberField(NS, "cadastre", item.cadastre, i18n("CADASTRE")) + "\n    " + Theme.renderCheckboxField(NS, "reforme", item.reforme, i18n("REFORME")) + "\n    " + Theme.renderTextField(NS, "lotscomplementaires", item.lotscomplementaires, i18n("LOTSCOMPLEMENTAIRES"), 255) + "\n    " + Theme.renderCheckboxField(NS, "certifie", item.certifie, i18n("CERTIFIE")) + "\n    " + Theme.renderTextField(NS, "numerocertification", item.numerocertification, i18n("NUMEROCERTIFICATION"), 50) + "\n    " + Theme.renderCheckboxField(NS, "ogc", item.ogc, i18n("OGC")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
-            };
-            pageTemplate = function (item, form, tab, warning, dirty) {
-                var canEdit = true;
-                var readonly = !canEdit;
-                var canInsert = canEdit && isNew; // && Perm.hasLot_CanAddLot;
-                var canDelete = canEdit && !canInsert; // && Perm.hasLot_CanDeleteLot;
-                var canAdd = canEdit && !canInsert; // && Perm.hasLot_CanAddLot;
-                var canUpdate = canEdit && !isNew;
-                var buttons = [];
-                buttons.push(Theme.buttonCancel(NS));
-                if (canInsert)
-                    buttons.push(Theme.buttonInsert(NS));
-                if (canDelete)
-                    buttons.push(Theme.buttonDelete(NS));
-                if (canAdd)
-                    buttons.push(Theme.buttonAddNew(NS, "#/lot/new"));
-                if (canUpdate)
-                    buttons.push(Theme.buttonUpdate(NS));
-                var actions = Theme.renderButtons(buttons);
-                var title = layout_11.buildTitle(xtra, !isNew ? i18n("lot Details") : i18n("New lot"));
-                var subtitle = layout_11.buildSubtitle(xtra, i18n("lot subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_11.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
-            };
-            dirtyTemplate = function () {
-                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
-            };
-            exports_55("fetchState", fetchState = function (id) {
-                isNew = isNaN(id);
-                isDirty = false;
-                Router.registerDirtyExit(dirtyExit);
-                return App.GET("/lot/" + (isNew ? "new" : id))
-                    .then(function (payload) {
-                    state = payload.item;
-                    fetchedState = Misc.clone(state);
-                    xtra = payload.xtra;
-                    key = { id: id };
-                    contingent_dateCalendar.setState(state.contingent_date);
-                    droit_coupe_dateCalendar.setState(state.droit_coupe_date);
-                    entente_paiement_dateCalendar.setState(state.entente_paiement_date);
-                    proprietaireidAutocomplete.setState(state.proprietaireid, state.proprietaireid_text);
-                })
-                    .then(Lookup.fetch_canton())
-                    .then(Lookup.fetch_municipalite())
-                    .then(Lookup.fetch_contingent())
-                    .then(Lookup.fetch_droit_coupe())
-                    .then(Lookup.fetch_entente_paiement())
-                    .then(Lookup.fetch_zone());
-            });
-            exports_55("fetch", fetch = function (params) {
-                var id = +params[0];
-                App.prepareRender(NS, i18n("lot"));
-                fetchState(id)
-                    .then(App.render)
-                    .catch(App.render);
-            });
-            exports_55("render", render = function () {
-                if (!inContext())
-                    return "";
-                if (App.fatalError())
-                    return App.fatalErrorTemplate();
-                if (state == undefined || Object.keys(state).length == 0)
-                    return App.warningTemplate() || App.unexpectedTemplate();
-                var year = Perm.getCurrentYear(); //or something better
-                var lookup_canton = Lookup.get_canton(year);
-                var lookup_municipalite = Lookup.get_municipalite(year);
-                var lookup_contingent = Lookup.get_contingent(year);
-                var lookup_droit_coupe = Lookup.get_droit_coupe(year);
-                var lookup_entente_paiement = Lookup.get_entente_paiement(year);
-                var lookup_zone = Lookup.get_zone(year);
-                var cantonid = Theme.renderOptions(lookup_canton, state.cantonid, true);
-                var municipaliteid = Theme.renderOptions(lookup_municipalite, state.municipaliteid, true);
-                var contingentid = Theme.renderOptions(lookup_contingent, state.contingentid, true);
-                var droit_coupeid = Theme.renderOptions(lookup_droit_coupe, state.droit_coupeid, true);
-                var entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
-                var zoneid = Theme.renderOptions(lookup_zone, state.zoneid, true);
-                proprietaireidAutocomplete.pagedList = state_proprietaireid;
-                var form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid, zoneid);
-                var tab = layout_11.tabTemplate(state.id, xtra, isNew);
-                var dirty = dirtyTemplate();
-                var warning = App.warningTemplate();
-                return pageTemplate(state, form, tab, warning, dirty);
-            });
-            exports_55("postRender", postRender = function () {
-                if (!inContext())
-                    return;
-                contingent_dateCalendar.postRender();
-                droit_coupe_dateCalendar.postRender();
-                entente_paiement_dateCalendar.postRender();
-                App.setPageTitle(isNew ? i18n("New lot") : xtra.title);
-            });
-            exports_55("inContext", inContext = function () {
-                return App.inContext(NS);
-            });
-            getFormState = function () {
-                var clone = Misc.clone(state);
-                clone.cantonid = Misc.fromSelectText(NS + "_cantonid", state.cantonid);
-                clone.rang = Misc.fromInputTextNullable(NS + "_rang", state.rang);
-                clone.lot = Misc.fromInputTextNullable(NS + "_lot", state.lot);
-                clone.municipaliteid = Misc.fromSelectText(NS + "_municipaliteid", state.municipaliteid);
-                clone.superficie_total = Misc.fromInputNumberNullable(NS + "_superficie_total", state.superficie_total);
-                clone.superficie_boisee = Misc.fromInputNumberNullable(NS + "_superficie_boisee", state.superficie_boisee);
-                clone.proprietaireid = Misc.fromAutocompleteText(NS + "_proprietaireid", state.proprietaireid);
-                clone.contingentid = Misc.fromSelectText(NS + "_contingentid", state.contingentid);
-                clone.contingent_date = Misc.fromInputDateNullable(NS + "_contingent_date", state.contingent_date);
-                clone.droit_coupeid = Misc.fromSelectText(NS + "_droit_coupeid", state.droit_coupeid);
-                clone.droit_coupe_date = Misc.fromInputDateNullable(NS + "_droit_coupe_date", state.droit_coupe_date);
-                clone.entente_paiementid = Misc.fromSelectText(NS + "_entente_paiementid", state.entente_paiementid);
-                clone.entente_paiement_date = Misc.fromInputDateNullable(NS + "_entente_paiement_date", state.entente_paiement_date);
-                clone.actif = Misc.fromInputCheckboxNullable(NS + "_actif", state.actif);
-                clone.sequence = Misc.fromInputTextNullable(NS + "_sequence", state.sequence);
-                clone.partie = Misc.fromInputCheckboxNullable(NS + "_partie", state.partie);
-                clone.matricule = Misc.fromInputTextNullable(NS + "_matricule", state.matricule);
-                clone.zoneid = Misc.fromSelectText(NS + "_zoneid", state.zoneid);
-                clone.secteur = Misc.fromInputTextNullable(NS + "_secteur", state.secteur);
-                clone.cadastre = Misc.fromInputNumberNullable(NS + "_cadastre", state.cadastre);
-                clone.reforme = Misc.fromInputCheckboxNullable(NS + "_reforme", state.reforme);
-                clone.lotscomplementaires = Misc.fromInputTextNullable(NS + "_lotscomplementaires", state.lotscomplementaires);
-                clone.certifie = Misc.fromInputCheckboxNullable(NS + "_certifie", state.certifie);
-                clone.numerocertification = Misc.fromInputTextNullable(NS + "_numerocertification", state.numerocertification);
-                clone.ogc = Misc.fromInputCheckboxNullable(NS + "_ogc", state.ogc);
-                return clone;
-            };
-            valid = function (formState) {
-                //if (formState.somefield.length == 0) App.setError("Somefield is required");
-                return App.hasNoError();
-            };
-            html5Valid = function () {
-                document.getElementById(NS + "_dummy_submit").click();
-                var form = document.getElementsByTagName("form")[0];
-                form.classList.add("js-error");
-                return form.checkValidity();
-            };
-            exports_55("oncalendar", oncalendar = function (id) {
-                if (contingent_dateCalendar.id == id)
-                    contingent_dateCalendar.toggle();
-                if (droit_coupe_dateCalendar.id == id)
-                    droit_coupe_dateCalendar.toggle();
-                if (entente_paiement_dateCalendar.id == id)
-                    entente_paiement_dateCalendar.toggle();
-            });
-            exports_55("onautocomplete", onautocomplete = function (id) {
-                if (proprietaireidAutocomplete.id == id) {
-                    state_proprietaireid.pager.searchText = proprietaireidAutocomplete.textValue;
-                    App.POST("/-----/search", state_proprietaireid.pager)
-                        .then(function (payload) {
-                        state_proprietaireid = payload;
-                    })
-                        .then(App.render);
-                }
-            });
-            exports_55("onchange", onchange = function (input) {
-                state = getFormState();
-                App.render();
-            });
-            exports_55("cancel", cancel = function () {
-                Router.goBackOrResume(isDirty);
-            });
-            exports_55("create", create = function () {
-                var formState = getFormState();
-                if (!html5Valid())
-                    return;
-                if (!valid(formState))
-                    return App.render();
-                App.prepareRender();
-                App.POST("/lot", Misc.createBlack(formState, blackList))
-                    .then(function (payload) {
-                    var newkey = payload;
-                    Misc.toastSuccessSave();
-                    Router.goto("#/lot/" + newkey.id, 10);
-                })
-                    .catch(App.render);
-            });
-            exports_55("save", save = function (done) {
-                if (done === void 0) { done = false; }
-                var formState = getFormState();
-                if (!html5Valid())
-                    return;
-                if (!valid(formState))
-                    return App.render();
-                App.prepareRender();
-                App.PUT("/lot", Misc.createBlack(formState, blackList))
-                    .then(function (_) {
-                    Misc.toastSuccessSave();
-                    if (done)
-                        Router.goto("#/lots/", 100);
-                    else
-                        Router.goto("#/lot/" + key.id, 10);
-                })
-                    .catch(App.render);
-            });
-            exports_55("drop", drop = function () {
-                key.updated = state.updated;
-                App.prepareRender();
-                App.DELETE("/lot", key)
-                    .then(function (_) {
-                    Router.goto("#/lots/", 250);
-                })
-                    .catch(App.render);
-            });
-            dirtyExit = function () {
-                isDirty = !Misc.same(fetchedState, getFormState());
-                if (isDirty) {
-                    setTimeout(function () {
-                        state = getFormState();
-                        App.render();
-                    }, 10);
-                }
-                return isDirty;
-            };
         }
     };
 });

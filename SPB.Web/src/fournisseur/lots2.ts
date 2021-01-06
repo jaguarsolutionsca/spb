@@ -23,13 +23,39 @@ interface IState {
     _deleting: boolean
     _isNew: boolean
     totalcount: number
-    id: number
+    cantonid: string
+    cantonid_text: string
+    rang: string
+    lot: string
+    municipaliteid: string
+    municipaliteid_text: string
+    superficie_total: number
+    superficie_boisee: number
     proprietaireid: string
     proprietaireid_text: string
-    datedebut: Date
-    datefin: Date
-    lotid: number
-    lotid_text: string
+    contingentid: string
+    contingentid_text: string
+    contingent_date: Date
+    droit_coupeid: string
+    droit_coupeid_text: string
+    droit_coupe_date: Date
+    entente_paiementid: string
+    entente_paiementid_text: string
+    entente_paiement_date: Date
+    actif: boolean
+    id: number
+    sequence: string
+    partie: boolean
+    matricule: string
+    zoneid: string
+    zoneid_text: string
+    secteur: string
+    cadastre: number
+    reforme: boolean
+    lotscomplementaires: string
+    certifie: boolean
+    numerocertification: string
+    ogc: boolean
 }
 
 interface IKey {
@@ -37,7 +63,6 @@ interface IKey {
 }
 
 interface IFilter {
-
 }
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
@@ -45,14 +70,14 @@ interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 let key: IKey;
 let state = <IPagedState>{
     list: [],
-    pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: {} }
+    pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: {  } }
 };
 let fetchedState = <IPagedState>{};
 let isNew = false;
 let callerNS: string;
 let isAddingNewParent = false;
 
-const trTemplate = (item: IState, editId: number, deleteId: number, rowNumber: number, lotid: string) => {
+const trTemplate = (item: IState, editId: number, deleteId: number, rowNumber: number, cantonid: string, municipaliteid: string, contingentid: string, droit_coupeid: string, entente_paiementid: string, zoneid: string) => {
     let id = item.id;
 
     let tdConfirm = `<td class="js-td-33">&nbsp;</td>`;
@@ -80,20 +105,62 @@ ${clickUndo ? `<td onclick="${NS}.undo()" class="has-text-primary" title="Click 
 ${tdConfirm}
 
 ${!readonly ? `
-    <td class="js-inline-input">${Theme.renderDateInline(NS, `datedebut_${id}`, item.datedebut, <Theme.IOptDate>{ required: true })}</td>
-    <td class="js-inline-input">${Theme.renderDateInline(NS, `datefin_${id}`, item.datefin, <Theme.IOptDate>{ required: false })}</td>
-    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `lotid_${id}`, lotid, true)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `cantonid_${id}`, cantonid)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `rang_${id}`, item.rang, 25)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `lot_${id}`, item.lot, 6)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `municipaliteid_${id}`, municipaliteid)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `superficie_total_${id}`, item.superficie_total)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `superficie_boisee_${id}`, item.superficie_boisee)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `contingentid_${id}`, contingentid)}</td>
+    <td class="js-inline-input">${Theme.renderDateInline(NS, `contingent_date_${id}`, item.contingent_date, <Theme.IOptDate>{ required: false })}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `droit_coupeid_${id}`, droit_coupeid)}</td>
+    <td class="js-inline-input">${Theme.renderDateInline(NS, `droit_coupe_date_${id}`, item.droit_coupe_date, <Theme.IOptDate>{ required: false })}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `entente_paiementid_${id}`, entente_paiementid)}</td>
+    <td class="js-inline-input">${Theme.renderDateInline(NS, `entente_paiement_date_${id}`, item.entente_paiement_date, <Theme.IOptDate>{ required: false })}</td>
+    <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `actif_${id}`, item.actif)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `sequence_${id}`, item.sequence, 6)}</td>
+    <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `partie_${id}`, item.partie)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `matricule_${id}`, item.matricule, 20)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `zoneid_${id}`, zoneid)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `secteur_${id}`, item.secteur, 2)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `cadastre_${id}`, item.cadastre)}</td>
+    <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `reforme_${id}`, item.reforme)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `lotscomplementaires_${id}`, item.lotscomplementaires, 255)}</td>
+    <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `certifie_${id}`, item.certifie)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `numerocertification_${id}`, item.numerocertification, 50)}</td>
+    <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `ogc_${id}`, item.ogc)}</td>
 ` : `
-    <td>${Misc.toInputDate(item.datedebut)}</td>
-    <td>${Misc.toInputDate(item.datefin)}</td>
-    <td>${Misc.toStaticText(item.lotid_text)}</td>
+    <td>${Misc.toStaticText(item.cantonid_text)}</td>
+    <td>${Misc.toStaticText(item.rang)}</td>
+    <td>${Misc.toStaticText(item.lot)}</td>
+    <td>${Misc.toStaticText(item.municipaliteid_text)}</td>
+    <td>${Misc.toStaticText(item.superficie_total)}</td>
+    <td>${Misc.toStaticText(item.superficie_boisee)}</td>
+    <td>${Misc.toStaticText(item.contingentid_text)}</td>
+    <td>${Misc.toInputDate(item.contingent_date)}</td>
+    <td>${Misc.toStaticText(item.droit_coupeid_text)}</td>
+    <td>${Misc.toInputDate(item.droit_coupe_date)}</td>
+    <td>${Misc.toStaticText(item.entente_paiementid_text)}</td>
+    <td>${Misc.toInputDate(item.entente_paiement_date)}</td>
+    <td>${Misc.toStaticCheckbox(item.actif)}</td>
+    <td>${Misc.toStaticText(item.sequence)}</td>
+    <td>${Misc.toStaticCheckbox(item.partie)}</td>
+    <td>${Misc.toStaticText(item.matricule)}</td>
+    <td>${Misc.toStaticText(item.zoneid_text)}</td>
+    <td>${Misc.toStaticText(item.secteur)}</td>
+    <td>${Misc.toStaticText(item.cadastre)}</td>
+    <td>${Misc.toStaticCheckbox(item.reforme)}</td>
+    <td>${Misc.toStaticText(item.lotscomplementaires)}</td>
+    <td>${Misc.toStaticCheckbox(item.certifie)}</td>
+    <td>${Misc.toStaticText(item.numerocertification)}</td>
+    <td>${Misc.toStaticCheckbox(item.ogc)}</td>
 `}
 </tr>`;
 };
 
-const tableTemplate = (tbody: string, editId: number, deleteId: number, perm) => {
+const tableTemplate = (tbody: string, editId: number, deleteId: number) => {
     let disableAddNew = (deleteId != undefined || editId != undefined || isNew);
-    let canEdit = perm && perm.canEdit;
+    let canEdit = true; //perm?.canEdit;
     disableAddNew = disableAddNew || !canEdit;
 
     return `
@@ -107,9 +174,30 @@ const tableTemplate = (tbody: string, editId: number, deleteId: number, perm) =>
                     <span class="icon"><i class="fa fa-plus"></i></span><span>${i18n("Add New")}</span>
                 </a>
             </th>
-            <th style="width:100px">${i18n("DATEDEBUT")}</th>
-            <th style="width:100px">${i18n("DATEFIN")}</th>
+            <th style="width:100px">${i18n("CANTON")}</th>
+            <th style="width:100px">${i18n("RANG")}</th>
             <th style="width:100px">${i18n("LOT")}</th>
+            <th style="width:100px">${i18n("MUNICIPALITE")}</th>
+            <th style="width:100px">${i18n("SUPERFICIE_TOTAL")}</th>
+            <th style="width:100px">${i18n("SUPERFICIE_BOISEE")}</th>
+            <th style="width:100px">${i18n("CONTINGENT")}</th>
+            <th style="width:100px">${i18n("CONTINGENT_DATE")}</th>
+            <th style="width:100px">${i18n("DROIT_COUPE")}</th>
+            <th style="width:100px">${i18n("DROIT_COUPE_DATE")}</th>
+            <th style="width:100px">${i18n("ENTENTE_PAIEMENT")}</th>
+            <th style="width:100px">${i18n("ENTENTE_PAIEMENT_DATE")}</th>
+            <th style="width:100px">${i18n("ACTIF")}</th>
+            <th style="width:100px">${i18n("SEQUENCE")}</th>
+            <th style="width:100px">${i18n("PARTIE")}</th>
+            <th style="width:100px">${i18n("MATRICULE")}</th>
+            <th style="width:100px">${i18n("ZONE")}</th>
+            <th style="width:100px">${i18n("SECTEUR")}</th>
+            <th style="width:100px">${i18n("CADASTRE")}</th>
+            <th style="width:100px">${i18n("REFORME")}</th>
+            <th style="width:100px">${i18n("LOTSCOMPLEMENTAIRES")}</th>
+            <th style="width:100px">${i18n("CERTIFIE")}</th>
+            <th style="width:100px">${i18n("NUMEROCERTIFICATION")}</th>
+            <th style="width:100px">${i18n("OGC")}</th>
         </tr>
     </thead>
     <tbody>
@@ -130,13 +218,18 @@ export const fetchState = (proprietaireid: string, ownerNS?: string) => {
     isAddingNewParent = (proprietaireid == "new");
     callerNS = ownerNS || callerNS;
     isNew = false;
-    return App.GET(`/lot_proprietaire/search/${proprietaireid}/?${Pager.asParams(state.pager)}`)
+    return App.POST(`/lot/search/proprietaire/${proprietaireid}`, state.pager)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IPagedState;
             key = { proprietaireid };
         })
-        .then(Lookup.fetch_lot())
+        .then(Lookup.fetch_canton())
+        .then(Lookup.fetch_municipalite())
+        .then(Lookup.fetch_contingent())
+        .then(Lookup.fetch_droit_coupe())
+        .then(Lookup.fetch_entente_paiement())
+        .then(Lookup.fetch_zone())
 };
 
 export const preRender = () => {
@@ -154,16 +247,27 @@ export const render = () => {
         if (item._deleting) deleteId = item.id;
     });
 
-    let year = Perm.getCurrentYear();
-    let lookup_lot = Lookup.get_lot(year);
+    let year = Perm.getCurrentYear(); //or something better
+
+    let lookup_canton = Lookup.get_canton(year);
+    let lookup_municipalite = Lookup.get_municipalite(year);
+    let lookup_contingent = Lookup.get_contingent(year);
+    let lookup_droit_coupe = Lookup.get_droit_coupe(year);
+    let lookup_entente_paiement = Lookup.get_entente_paiement(year);
+    let lookup_zone = Lookup.get_zone(year);
 
     const tbody = state.list.reduce((html, item, index) => {
         let rowNumber = Pager.rowNumber(state.pager, index);
-        let lotid = Theme.renderOptions(lookup_lot, item.lotid, isNew);
-        return html + trTemplate(item, editId, deleteId, rowNumber, lotid);
+        let cantonid = Theme.renderOptions(lookup_canton, item.cantonid, true);
+        let municipaliteid = Theme.renderOptions(lookup_municipalite, item.municipaliteid, true);
+        let contingentid = Theme.renderOptions(lookup_contingent, item.contingentid, true);
+        let droit_coupeid = Theme.renderOptions(lookup_droit_coupe, item.droit_coupeid, true);
+        let entente_paiementid = Theme.renderOptions(lookup_entente_paiement, item.entente_paiementid, true);
+        let zoneid = Theme.renderOptions(lookup_zone, item.zoneid, true);
+        return html + trTemplate(item, editId, deleteId, rowNumber, cantonid, municipaliteid, contingentid, droit_coupeid, entente_paiementid, zoneid);
     }, "");
 
-    const table = tableTemplate(tbody, editId, deleteId, null);
+    const table = tableTemplate(tbody, editId, deleteId);
     return pageTemplate(table);
 };
 
@@ -178,10 +282,31 @@ const getFormState = () => {
     let clone = Misc.clone(state) as IPagedState;
     clone.list.forEach(item => {
         let id = item.id;
+        item.cantonid = Misc.fromSelectText(`${NS}_cantonid_${id}`, item.cantonid);
+        item.rang = Misc.fromInputTextNullable(`${NS}_rang_${id}`, item.rang);
+        item.lot = Misc.fromInputTextNullable(`${NS}_lot_${id}`, item.lot);
+        item.municipaliteid = Misc.fromSelectText(`${NS}_municipaliteid_${id}`, item.municipaliteid);
+        item.superficie_total = Misc.fromInputNumberNullable(`${NS}_superficie_total_${id}`, item.superficie_total);
+        item.superficie_boisee = Misc.fromInputNumberNullable(`${NS}_superficie_boisee_${id}`, item.superficie_boisee);
         item.proprietaireid = Misc.fromSelectText(`${NS}_proprietaireid_${id}`, item.proprietaireid);
-        item.datedebut = Misc.fromInputDate(`${NS}_datedebut_${id}`, item.datedebut);
-        item.datefin = Misc.fromInputDateNullable(`${NS}_datefin_${id}`, item.datefin);
-        item.lotid = Misc.fromSelectNumber(`${NS}_lotid_${id}`, item.lotid);
+        item.contingentid = Misc.fromSelectText(`${NS}_contingentid_${id}`, item.contingentid);
+        item.contingent_date = Misc.fromInputDateNullable(`${NS}_contingent_date_${id}`, item.contingent_date);
+        item.droit_coupeid = Misc.fromSelectText(`${NS}_droit_coupeid_${id}`, item.droit_coupeid);
+        item.droit_coupe_date = Misc.fromInputDateNullable(`${NS}_droit_coupe_date_${id}`, item.droit_coupe_date);
+        item.entente_paiementid = Misc.fromSelectText(`${NS}_entente_paiementid_${id}`, item.entente_paiementid);
+        item.entente_paiement_date = Misc.fromInputDateNullable(`${NS}_entente_paiement_date_${id}`, item.entente_paiement_date);
+        item.actif = Misc.fromInputCheckbox(`${NS}_actif_${id}`, item.actif);
+        item.sequence = Misc.fromInputTextNullable(`${NS}_sequence_${id}`, item.sequence);
+        item.partie = Misc.fromInputCheckbox(`${NS}_partie_${id}`, item.partie);
+        item.matricule = Misc.fromInputTextNullable(`${NS}_matricule_${id}`, item.matricule);
+        item.zoneid = Misc.fromSelectText(`${NS}_zoneid_${id}`, item.zoneid);
+        item.secteur = Misc.fromInputTextNullable(`${NS}_secteur_${id}`, item.secteur);
+        item.cadastre = Misc.fromInputNumberNullable(`${NS}_cadastre_${id}`, item.cadastre);
+        item.reforme = Misc.fromInputCheckbox(`${NS}_reforme_${id}`, item.reforme);
+        item.lotscomplementaires = Misc.fromInputTextNullable(`${NS}_lotscomplementaires_${id}`, item.lotscomplementaires);
+        item.certifie = Misc.fromInputCheckbox(`${NS}_certifie_${id}`, item.certifie);
+        item.numerocertification = Misc.fromInputTextNullable(`${NS}_numerocertification_${id}`, item.numerocertification);
+        item.ogc = Misc.fromInputCheckbox(`${NS}_ogc_${id}`, item.ogc);
     })
     return clone;
 };
@@ -208,7 +333,7 @@ export const undo = () => {
 }
 
 export const addNew = () => {
-    let url = `/lot_proprietaire/new/${key.proprietaireid}`;
+    let url = `/lot/new/${key.proprietaireid}`;
     return App.GET(url)
         .then((payload: IState) => {
             state.list.push(payload);
@@ -225,7 +350,7 @@ export const create = () => {
     let item = formState.list.find(one => one._isNew);
     if (!html5Valid()) return;
     App.prepareRender();
-    App.POST("/lot_proprietaire", item)
+    App.POST("/lot", item)
         .then(() => {
             fetchedState = Misc.clone(state) as IPagedState;
             Router.gotoCurrent(1);
@@ -238,7 +363,7 @@ export const save = () => {
     let item = formState.list.find(one => one._editing);
     if (!html5Valid()) return;
     App.prepareRender();
-    App.PUT("/lot_proprietaire", item)
+    App.PUT("/lot", item)
         .then(() => {
             fetchedState = Misc.clone(state) as IPagedState;
             Router.gotoCurrent(1);
@@ -255,7 +380,7 @@ export const selectfordrop = (id: number) => {
 export const drop = () => {
     App.prepareRender();
     let item = state.list.find(one => one._deleting);
-    App.DELETE("/lot_proprietaire", { id: item.id })
+    App.DELETE("/lot", { id: item.id })
         .then(() => {
             fetchedState = Misc.clone(state) as IPagedState;
             Router.gotoCurrent(1);
