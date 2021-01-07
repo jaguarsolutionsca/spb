@@ -19,7 +19,7 @@ export const prepareMenu = () => {
     setOpenedMenu("Territoire-Lots");
 }
 
-export const tabTemplate = (id: int, xtra: ISummary, isNew: boolean = false) => {
+export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {
     let isLots = App.inContext("App_lots");
     let isLot = App.inContext("App_lot");
     let isFiles = window.location.hash.startsWith("#/files/lot");

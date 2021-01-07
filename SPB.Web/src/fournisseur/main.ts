@@ -6,6 +6,7 @@ import * as Router from "../../_BaseApp/src/core/router"
 import * as Perm from "../permission"
 import * as proprietaires from "./proprietaires"
 import * as proprietaire from "./proprietaire"
+import * as lots2 from "./lots2"
 
 
 //
@@ -15,6 +16,7 @@ import * as proprietaire from "./proprietaire"
 //
 window[proprietaires.NS] = proprietaires;
 window[proprietaire.NS] = proprietaire;
+window[lots2.NS] = lots2;
 
 
 export const startup = () => {

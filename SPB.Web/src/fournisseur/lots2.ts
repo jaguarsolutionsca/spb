@@ -67,6 +67,9 @@ interface IFilter {
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 
+const blackList = ["_editing", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
+
+
 let key: IKey;
 let state = <IPagedState>{
     list: [],
@@ -76,6 +79,7 @@ let fetchedState = <IPagedState>{};
 let isNew = false;
 let callerNS: string;
 let isAddingNewParent = false;
+
 
 const trTemplate = (item: IState, editId: number, deleteId: number, rowNumber: number, cantonid: string, municipaliteid: string, contingentid: string, droit_coupeid: string, entente_paiementid: string, zoneid: string) => {
     let id = item.id;
@@ -100,8 +104,8 @@ const trTemplate = (item: IState, editId: number, deleteId: number, rowNumber: n
 <tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
     <td class="js-index">${rowNumber}</td>
 
-${markDeletion ? `<td onclick="${NS}.selectfordrop(${id})" class="has-text-danger" title="Click to mark for deletion"><i class='fas fa-times'></i></td>` : ``}
-${clickUndo ? `<td onclick="${NS}.undo()" class="has-text-primary" title="Click to undo"><i class='fa fa-undo'></i></td>` : ``}
+${markDeletion ? `<td onclick="${NS}.selectfordrop(${id})" class="has-text-danger js-td-33 js-drop" title="Click to mark for deletion"><i class='fas fa-times'></i></td>` : ``}
+${clickUndo ? `<td onclick="${NS}.undo()" class="has-text-primary js-td-33" title="Click to undo"><i class='fa fa-undo'></i></td>` : ``}
 ${tdConfirm}
 
 ${!readonly ? `
@@ -109,8 +113,8 @@ ${!readonly ? `
     <td class="js-inline-input">${Theme.renderTextInline(NS, `rang_${id}`, item.rang, 25)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `lot_${id}`, item.lot, 6)}</td>
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `municipaliteid_${id}`, municipaliteid)}</td>
-    <td class="js-inline-input">${Theme.renderNumberInline(NS, `superficie_total_${id}`, item.superficie_total)}</td>
-    <td class="js-inline-input">${Theme.renderNumberInline(NS, `superficie_boisee_${id}`, item.superficie_boisee)}</td>
+    <td class="js-inline-input">${Theme.renderDecimalInline(NS, `superficie_total_${id}`, item.superficie_total, <Theme.IOptNumber>{ required: true, places: 1, min: 0 })}</td>
+    <td class="js-inline-input">${Theme.renderDecimalInline(NS, `superficie_boisee_${id}`, item.superficie_boisee, <Theme.IOptNumber>{ required: true, places: 1, min: 0 })}</td>
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `contingentid_${id}`, contingentid)}</td>
     <td class="js-inline-input">${Theme.renderDateInline(NS, `contingent_date_${id}`, item.contingent_date, <Theme.IOptDate>{ required: false })}</td>
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `droit_coupeid_${id}`, droit_coupeid)}</td>
@@ -160,20 +164,13 @@ ${!readonly ? `
 
 const tableTemplate = (tbody: string, editId: number, deleteId: number) => {
     let disableAddNew = (deleteId != undefined || editId != undefined || isNew);
-    let canEdit = true; //perm?.canEdit;
-    disableAddNew = disableAddNew || !canEdit;
 
     return `
-<style>.js-td-33 { width: 33px; }</style>
 <div id="${table_id}" class="table-container">
 <table class="table is-hoverable js-inline" style="width: 100px; table-layout: fixed;">
     <thead>
         <tr>
-            <th style="width:99px" colspan="3">
-                <a class="button is-primary is-outlined is-small" ${disableAddNew ? "disabled" : `onclick="${NS}.addNew()"`}>
-                    <span class="icon"><i class="fa fa-plus"></i></span><span>${i18n("Add New")}</span>
-                </a>
-            </th>
+            <th style="width:99px" colspan="3"></th>
             <th style="width:100px">${i18n("CANTON")}</th>
             <th style="width:100px">${i18n("RANG")}</th>
             <th style="width:100px">${i18n("LOT")}</th>
@@ -202,6 +199,12 @@ const tableTemplate = (tbody: string, editId: number, deleteId: number) => {
     </thead>
     <tbody>
         ${tbody}
+        <tr class="js-insert-row ${disableAddNew ? "js-disabled" : ""}">
+            <td class="js-index js-td-33">*</td>
+            <td class="has-text-primary js-td-33 js-add" onclick="${NS}.addNew()" title="Click to add a new row"><i class="fas fa-plus"></i></td>
+            <td></td>
+            <td colspan="24"></td>
+        </tr>
     </tbody>
 </table>
 </div>
@@ -350,7 +353,7 @@ export const create = () => {
     let item = formState.list.find(one => one._isNew);
     if (!html5Valid()) return;
     App.prepareRender();
-    App.POST("/lot", item)
+    App.POST("/lot", Misc.createBlack(item, blackList))
         .then(() => {
             fetchedState = Misc.clone(state) as IPagedState;
             Router.gotoCurrent(1);
@@ -363,7 +366,7 @@ export const save = () => {
     let item = formState.list.find(one => one._editing);
     if (!html5Valid()) return;
     App.prepareRender();
-    App.PUT("/lot", item)
+    App.PUT("/lot", Misc.createBlack(item, blackList))
         .then(() => {
             fetchedState = Misc.clone(state) as IPagedState;
             Router.gotoCurrent(1);

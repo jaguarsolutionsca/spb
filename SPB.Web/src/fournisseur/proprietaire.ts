@@ -233,6 +233,8 @@ const formTemplate = (item: IState, paysid: string, institutionbanquaireid: stri
 
 <div class="columns">
     <div class="column is-8 is-offset-3">
+        ${Theme.wrapFieldset("Camions", block_camions(item))}
+        ${Theme.wrapFieldset("Lots", `<h4>Lots propriétaire</h4>${inline2}`)}
         ${Theme.wrapFieldset("Adresse", block_address(item, paysid))}
         ${Theme.wrapFieldset("Téléphone", block_telephone(item))}
         ${Theme.wrapFieldset("Ciel", block_ciel(item))}
@@ -240,8 +242,6 @@ const formTemplate = (item: IState, paysid: string, institutionbanquaireid: stri
         ${Theme.wrapFieldset("Autres", block_autres(item))}
         ${Theme.wrapFieldset("Dépôt direct", block_depotdirect(item, institutionbanquaireid))}
         ${Theme.wrapFieldset("Représentant", block_representant(item))}
-        ${Theme.wrapFieldset("Camions", block_camions(item))}
-        ${Theme.wrapFieldset("Lots", inline2)}
     </div>
 </div>
 
