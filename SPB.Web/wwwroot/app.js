@@ -6842,4 +6842,202 @@ System.register("src/app", ["src/main"], function (exports_54, context_54) {
         }
     };
 });
+// File: commitcbeff.ts
+System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager"], function (exports_55, context_55) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
+    var __moduleName = context_55 && context_55.id;
+    return {
+        setters: [
+            function (App_24) {
+                App = App_24;
+            },
+            function (Router_17) {
+                Router = Router_17;
+            },
+            function (Perm_10) {
+                Perm = Perm_10;
+            },
+            function (Misc_22) {
+                Misc = Misc_22;
+            },
+            function (Theme_11) {
+                Theme = Theme_11;
+            },
+            function (Pager_6) {
+                Pager = Pager_6;
+            }
+        ],
+        execute: function () {
+            exports_55("NS", NS = "App_commitcbeff");
+            table_id = "commitcbeff_table";
+            blackList = ["_editing", "_deleting", "_isNew", "totalcount"];
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: { year: undefined, regionluid: undefined } }
+            };
+            fetchedState = {};
+            isNew = false;
+            isAddingNewParent = false;
+            trTemplate = function (item, editId, deleteId, rowNumber) {
+                var id = item.id;
+                var tdConfirm = "<td class=\"js-td-33\">&nbsp;</td>";
+                if (item._editing)
+                    tdConfirm = "<td onclick=\"" + NS + ".save()\" class=\"js-td-33\" title=\"Click to confirm\"><i class=\"fa fa-check\"></i></td>";
+                if (item._deleting)
+                    tdConfirm = "<td onclick=\"" + NS + ".drop()\" class=\"js-td-33\" title=\"Click to confirm\"><i class=\"fa fa-check\"></i></td>";
+                if (item._isNew)
+                    tdConfirm = "<td onclick=\"" + NS + ".create()\" class=\"js-td-33\" title=\"Click to confirm\"><i class=\"fa fa-check\"></i></td>";
+                var clickUndo = item._editing || item._deleting || item._isNew;
+                var markDeletion = !clickUndo;
+                var readonly = (deleteId != undefined) || (editId != undefined && id != editId) || (isNew && !item._isNew);
+                var classList = [];
+                if (item._editing || item._isNew)
+                    classList.push("js-not-same");
+                if (item._deleting)
+                    classList.push("js-strikeout");
+                if (item._isNew)
+                    classList.push("js-new");
+                if (readonly)
+                    classList.push("js-readonly");
+                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n\n" + (markDeletion ? "<td onclick=\"" + NS + ".selectfordrop(" + id + ")\" class=\"has-text-danger js-td-33 js-drop\" title=\"Click to mark for deletion\"><i class='fas fa-times'></i></td>" : "") + "\n" + (clickUndo ? "<td onclick=\"" + NS + ".undo()\" class=\"has-text-primary js-td-33\" title=\"Click to undo\"><i class='fa fa-undo'></i></td>" : "") + "\n" + tdConfirm + "\n\n" + (!readonly ? "\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "year_" + id, item.year, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "regionluid_" + id, item.regionluid, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "details_" + id, item.details, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "monthpaid_" + id, item.monthpaid, 25) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "paid_" + id, item.paid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "amount_" + id, item.amount, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "comment_" + id, item.comment, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "archive_" + id, item.archive) + "</td>\n" : "\n    <td>" + Misc.toStaticText(item.year) + "</td>\n    <td>" + Misc.toStaticText(item.regionluid) + "</td>\n    <td>" + Misc.toStaticText(item.details) + "</td>\n    <td>" + Misc.toStaticText(item.monthpaid) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.paid) + "</td>\n    <td>" + Misc.toStaticText(item.amount) + "</td>\n    <td>" + Misc.toStaticText(item.comment) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n") + "\n</tr>";
+            };
+            tableTemplate = function (tbody, editId, deleteId) {
+                var disableAddNew = (deleteId != undefined || editId != undefined || isNew);
+                return "\n<div id=\"" + table_id + "\" class=\"table-container\">\n<table class=\"table is-hoverable js-inline\" style=\"width: 100px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            <th style=\"width:99px\" colspan=\"3\"></th>\n            <th style=\"width:100px\">" + i18n("YEAR") + "</th>\n            <th style=\"width:100px\">" + i18n("REGIONLUID") + "</th>\n            <th style=\"width:100px\">" + i18n("DETAILS") + "</th>\n            <th style=\"width:100px\">" + i18n("MONTHPAID") + "</th>\n            <th style=\"width:100px\">" + i18n("PAID") + "</th>\n            <th style=\"width:100px\">" + i18n("AMOUNT") + "</th>\n            <th style=\"width:100px\">" + i18n("COMMENT") + "</th>\n            <th style=\"width:100px\">" + i18n("ARCHIVE") + "</th>\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n        <tr class=\"js-insert-row " + (disableAddNew ? "js-disabled" : "") + "\">\n            <td class=\"js-index js-td-33\">*</td>\n            <td class=\"has-text-primary js-td-33 js-add\" onclick=\"" + NS + ".addNew()\" title=\"Click to add a new row\"><i class=\"fas fa-plus\"></i></td>\n            <td></td>\n            <td colspan=\"8\"></td>\n        </tr>\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (table) {
+                return "\n" + Theme.wrapContent("js-uc-list", table) + "\n";
+            };
+            exports_55("fetchState", fetchState = function (id, ownerNS) {
+                isAddingNewParent = isNaN(id);
+                callerNS = ownerNS || callerNS;
+                isNew = false;
+                return App.POST("/commitcbeff/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                    fetchedState = Misc.clone(state);
+                    key = {};
+                });
+            });
+            exports_55("preRender", preRender = function () {
+            });
+            exports_55("render", render = function () {
+                if (isAddingNewParent)
+                    return "";
+                var editId;
+                var deleteId;
+                state.list.forEach(function (item, index) {
+                    var prevItem = fetchedState.list[index];
+                    item._editing = !Misc.same(item, prevItem);
+                    if (item._editing)
+                        editId = item.id;
+                    if (item._deleting)
+                        deleteId = item.id;
+                });
+                var year = Perm.getCurrentYear(); //or something better
+                var tbody = state.list.reduce(function (html, item, index) {
+                    var rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, editId, deleteId, rowNumber);
+                }, "");
+                var table = tableTemplate(tbody, editId, deleteId);
+                return pageTemplate(table);
+            });
+            exports_55("postRender", postRender = function () {
+            });
+            exports_55("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.list.forEach(function (item) {
+                    var id = item.id;
+                    item.year = Misc.fromInputNumber(NS + "_year_" + id, item.year);
+                    item.regionluid = Misc.fromInputNumber(NS + "_regionluid_" + id, item.regionluid);
+                    item.details = Misc.fromInputTextNullable(NS + "_details_" + id, item.details);
+                    item.monthpaid = Misc.fromInputTextNullable(NS + "_monthpaid_" + id, item.monthpaid);
+                    item.paid = Misc.fromInputCheckbox(NS + "_paid_" + id, item.paid);
+                    item.amount = Misc.fromInputNumber(NS + "_amount_" + id, item.amount);
+                    item.comment = Misc.fromInputTextNullable(NS + "_comment_" + id, item.comment);
+                    item.archive = Misc.fromInputCheckbox(NS + "_archive_" + id, item.archive);
+                });
+                return clone;
+            };
+            html5Valid = function () {
+                document.getElementById(callerNS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_55("onchange", onchange = function (input) {
+                state = getFormState();
+                App.render();
+            });
+            exports_55("undo", undo = function () {
+                if (isNew) {
+                    isNew = false;
+                    fetchedState.list.pop();
+                }
+                state = Misc.clone(fetchedState);
+                App.render();
+            });
+            exports_55("addNew", addNew = function () {
+                var url = "/commitcbeff/new";
+                return App.GET(url)
+                    .then(function (payload) {
+                    state.list.push(payload);
+                    fetchedState = Misc.clone(state);
+                    isNew = true;
+                    payload._isNew = true;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_55("create", create = function () {
+                var formState = getFormState();
+                var item = formState.list.find(function (one) { return one._isNew; });
+                if (!html5Valid())
+                    return;
+                App.prepareRender();
+                App.POST("/commitcbeff", Misc.createBlack(item, blackList))
+                    .then(function () {
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_55("save", save = function () {
+                var formState = getFormState();
+                var item = formState.list.find(function (one) { return one._editing; });
+                if (!html5Valid())
+                    return;
+                App.prepareRender();
+                App.PUT("/commitcbeff", Misc.createBlack(item, blackList))
+                    .then(function () {
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_55("selectfordrop", selectfordrop = function (id) {
+                state = Misc.clone(fetchedState);
+                state.list.find(function (one) { return one.id == id; })._deleting = true;
+                App.render();
+            });
+            exports_55("drop", drop = function () {
+                App.prepareRender();
+                var item = state.list.find(function (one) { return one._deleting; });
+                App.DELETE("/commitcbeff", { id: item.id, updated: item.updated })
+                    .then(function () {
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_55("hasChanges", hasChanges = function () {
+                return !Misc.same(fetchedState, state);
+            });
+        }
+    };
+});
 //# sourceMappingURL=app.js.map
