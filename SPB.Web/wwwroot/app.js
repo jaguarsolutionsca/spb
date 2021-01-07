@@ -5645,7 +5645,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 isAddingNewParent = (proprietaireid == "new");
                 callerNS = ownerNS || callerNS;
                 isNew = false;
-                return App.POST("/lot/search/" + proprietaireid, state.pager)
+                return App.POST("/lot/search/proprietaire/" + proprietaireid, state.pager)
                     .then(function (payload) {
                     state = payload;
                     fetchedState = Misc.clone(state);
