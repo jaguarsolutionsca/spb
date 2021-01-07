@@ -5603,7 +5603,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
         execute: function () {
             exports_45("NS", NS = "App_lots2");
             table_id = "lots2_table";
-            blackList = ["_editing", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
+            blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -5645,7 +5645,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 isAddingNewParent = (proprietaireid == "new");
                 callerNS = ownerNS || callerNS;
                 isNew = false;
-                return App.POST("/lot/search/proprietaire/" + proprietaireid, state.pager)
+                return App.POST("/lot/search/" + proprietaireid, state.pager)
                     .then(function (payload) {
                     state = payload;
                     fetchedState = Misc.clone(state);

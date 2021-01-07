@@ -63,17 +63,18 @@ interface IKey {
 }
 
 interface IFilter {
+
 }
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 
-const blackList = ["_editing", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
+const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
 
 
 let key: IKey;
 let state = <IPagedState>{
     list: [],
-    pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: {  } }
+    pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: {} }
 };
 let fetchedState = <IPagedState>{};
 let isNew = false;
@@ -221,7 +222,7 @@ export const fetchState = (proprietaireid: string, ownerNS?: string) => {
     isAddingNewParent = (proprietaireid == "new");
     callerNS = ownerNS || callerNS;
     isNew = false;
-    return App.POST(`/lot/search/proprietaire/${proprietaireid}`, state.pager)
+    return App.POST(`/lot/search/${proprietaireid}`, state.pager)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IPagedState;
