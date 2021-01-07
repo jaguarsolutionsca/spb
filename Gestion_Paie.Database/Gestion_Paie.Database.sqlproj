@@ -1296,13 +1296,6 @@
     <Build Include="dbo\Stored Procedures\spS_Fournisseur_Camion_SelectDisplay.sql" />
     <Build Include="dbo\Stored Procedures\spI_IndexationCalcule_Transporteur.sql" />
     <Build Include="dbo\Stored Procedures\jag_Rapport_Territoire_LotsParSecteur.sql" />
-    <Build Include="dbo\Functions\fun_Lot_Proprietaire_Select.sql" />
-    <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Update.sql" />
-    <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Select.sql" />
-    <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Search.sql" />
-    <Build Include="dbo\Stored Procedures\Lot_Proprietaire_New.sql" />
-    <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Insert.sql" />
-    <Build Include="dbo\Stored Procedures\Lot_Proprietaire_Delete.sql" />
     <Build Include="dbo\Functions\fun_Lot_Select.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Update.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Summary.sql" />
@@ -1311,6 +1304,7 @@
     <Build Include="dbo\Stored Procedures\Lot_New.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Lot_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Lot_Search_ForProprietaire.sql" />
   </ItemGroup>
   <ItemGroup>
     <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac">
