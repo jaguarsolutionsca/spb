@@ -149,3 +149,13 @@ export const fetch_zone = () => {
     }
 }
 export const get_zone = (year: number) => zone;
+
+let region: Lookup.LookupData[];
+export const fetch_region = () => {
+    return function (data: any) {
+        if (region != undefined && region.length > 0)
+            return;
+        return App.GET(`/lookup/by/region`).then(json => { region = json; });
+    }
+}
+export const get_region = (year: number) => region;

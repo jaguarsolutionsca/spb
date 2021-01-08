@@ -53,7 +53,7 @@ interface IFilter {
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 
-const blackList = ["_editing", "_deleting", "_isNew", "totalcount"];
+const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "regionluid_text"];
 
 
 let key: IKey;
@@ -67,7 +67,7 @@ let callerNS: string;
 let isAddingNewParent = false;
 
 
-const trTemplate = (item: IState, editId: number, deleteId: number, rowNumber: number,) => {
+const trTemplate = (item: IState, editId: number, deleteId: number, rowNumber: number, regionluid: string) => {
     let id = item.id;
 
     let tdConfirm = `<td class="js-td-33">&nbsp;</td>`;
@@ -96,7 +96,7 @@ ${tdConfirm}
 
 ${!readonly ? `
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `year_${id}`, item.year, true)}</td>
-    <td class="js-inline-input">${Theme.renderNumberInline(NS, `regionluid_${id}`, item.regionluid, true)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `regionluid_${id}`, regionluid, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `details_${id}`, item.details, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `monthpaid_${id}`, item.monthpaid, 25)}</td>
     <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `paid_${id}`, item.paid)}</td>
@@ -105,7 +105,7 @@ ${!readonly ? `
     <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `archive_${id}`, item.archive)}</td>
 ` : `
     <td>${Misc.toStaticText(item.year)}</td>
-    <td>${Misc.toStaticText(item.regionluid)}</td>
+    <td>${Misc.toStaticText(item.regionluid_text)}</td>
     <td>${Misc.toStaticText(item.details)}</td>
     <td>${Misc.toStaticText(item.monthpaid)}</td>
     <td>${Misc.toStaticCheckbox(item.paid)}</td>
@@ -126,7 +126,7 @@ const tableTemplate = (tbody: string, editId: number, deleteId: number) => {
         <tr>
             <th style="width:99px" colspan="3"></th>
             <th style="width:100px">${i18n("YEAR")}</th>
-            <th style="width:100px">${i18n("REGIONLUID")}</th>
+            <th style="width:100px">${i18n("REGION")}</th>
             <th style="width:100px">${i18n("DETAILS")}</th>
             <th style="width:100px">${i18n("MONTHPAID")}</th>
             <th style="width:100px">${i18n("PAID")}</th>
@@ -165,7 +165,7 @@ export const fetchState = (id: number, ownerNS?: string) => {
             fetchedState = Misc.clone(state) as IPagedState;
             key = {};
         })
-
+        .then(Lookup.fetch_region())
 };
 
 export const preRender = () => {
@@ -185,12 +185,12 @@ export const render = () => {
 
     let year = Perm.getCurrentYear(); //or something better
 
-
+    let lookup_region = Lookup.get_region(year);
 
     const tbody = state.list.reduce((html, item, index) => {
         let rowNumber = Pager.rowNumber(state.pager, index);
-
-        return html + trTemplate(item, editId, deleteId, rowNumber);
+        let regionluid = Theme.renderOptions(lookup_region, item.regionluid, isNew);
+        return html + trTemplate(item, editId, deleteId, rowNumber, regionluid);
     }, "");
 
     const table = tableTemplate(tbody, editId, deleteId);
@@ -209,7 +209,7 @@ const getFormState = () => {
     clone.list.forEach(item => {
         let id = item.id;
         item.year = Misc.fromInputNumber(`${NS}_year_${id}`, item.year);
-        item.regionluid = Misc.fromInputNumber(`${NS}_regionluid_${id}`, item.regionluid);
+        item.regionluid = Misc.fromSelectNumber(`${NS}_regionluid_${id}`, item.regionluid);
         item.details = Misc.fromInputTextNullable(`${NS}_details_${id}`, item.details);
         item.monthpaid = Misc.fromInputTextNullable(`${NS}_monthpaid_${id}`, item.monthpaid);
         item.paid = Misc.fromInputCheckbox(`${NS}_paid_${id}`, item.paid);
