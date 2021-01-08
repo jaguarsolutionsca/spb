@@ -19,15 +19,14 @@ export const NS = "App_accounts";
 
 interface IState {
     uid: number
-    totalCount: number
-    cie_Text: string
+    totalcount: number
+    cie_text: string
     email: string
-    roleLUID_Text: string
-    lastActivity: Date
-    firstName: string
-    lastName: string
-    readyToArchive: boolean
-    year: number
+    roleluid_text: string
+    lastactivity: Date
+    firstname: string
+    lastname: string
+    readytoarchive: boolean
     archive: boolean
 }
 
@@ -53,10 +52,10 @@ let autoArchiveButton = () => {
     return Theme.renderButtonWithConfirm(title, "far fa-lock-open-alt", helpText, onclick, false, false, true);
 };
 
-const filterTemplate = (archive: string, readyToArchive: string) => {
+const filterTemplate = (archive: string, readytoarchive: string) => {
     let filters: string[] = [];
     filters.push(Theme.renderDropdownFilter(NS, "archive", archive, i18n("ARCHIVE")));
-    filters.push(Theme.renderDropdownFilter(NS, "readyToArchive", readyToArchive, i18n("READYTOARCHIVE")));
+    filters.push(Theme.renderDropdownFilter(NS, "readytoarchive", readytoarchive, i18n("READYTOARCHIVE")));
     return filters.join("");
 }
 
@@ -65,11 +64,11 @@ const trTemplate = (item: IState, rowNumber: number) => {
 <tr class="${isSelectedRow(item.uid) ? "is-selected" : ""}" onclick="${NS}.gotoDetail(${item.uid});">
     <td class="js-index">${rowNumber}</td>
     <td>${Misc.toStaticText(item.email)}</td>
-    <td>${Misc.toStaticText(item.firstName)}</td>
-    <td>${Misc.toStaticText(item.lastName)}</td>
-    <td>${Misc.toStaticText(item.roleLUID_Text)}</td>
-    <td>${Misc.toStaticDateTime(item.lastActivity)}</td>
-    <td>${Misc.toStaticCheckbox(item.readyToArchive)}</td>
+    <td>${Misc.toStaticText(item.firstname)}</td>
+    <td>${Misc.toStaticText(item.lastname)}</td>
+    <td>${Misc.toStaticText(item.roleluid_text)}</td>
+    <td>${Misc.toStaticDateTime(item.lastactivity)}</td>
+    <td>${Misc.toStaticCheckbox(item.readytoarchive)}</td>
     <td>${Misc.toStaticCheckbox(item.archive)}</td>
 </tr>`;
 };
@@ -82,11 +81,11 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
         <tr>
             <th></th>
             ${Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("FIRSTNAME"), "firstName", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastName", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ROLEMASK"), "roleLUID_Text", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("LASTACTIVITY"), "lastActivity", "DESC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("READYTOARCHIVE"), "readyToArchive", "DESC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("FIRSTNAME"), "firstname", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastname", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ROLEMASK"), "roleluid_text", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("LASTACTIVITY"), "lastactivity", "DESC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("READYTOARCHIVE"), "readytoarchive", "DESC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC")}
         </tr>
     </thead>
@@ -134,8 +133,9 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
 };
 
 export const fetchState = (id: number) => {
+    console.log(state)
     Router.registerDirtyExit(null);
-    return App.GET(`/account/search/?${Pager.asParams(state.pager)}`)
+    return App.POST("/account/search/", state.pager)
         .then(payload => {
             state = payload;
             key = {};
@@ -153,7 +153,7 @@ export const fetch = (params: string[]) => {
 
 const refresh = () => {
     App.prepareRender(NS, i18n("accounts"));
-    App.GET(`/account/search/?${Pager.asParams(state.pager)}`)
+    App.POST("/account/search/", state.pager)
         .then(payload => {
             state = payload;
         })
@@ -177,9 +177,9 @@ export const render = () => {
     let year = Perm.getCurrentYear();
 
     let archive = Theme.renderNullableBooleanOptionsReverse(state.pager.filter.archive, ["All", i18n("Archived"), i18n("Active")]);
-    let readyToArchive = Theme.renderNullableBooleanOptions(state.pager.filter.readyToArchive, ["All", i18n("Ready"), i18n("Not Ready")]);
+    let readytoarchive = Theme.renderNullableBooleanOptions(state.pager.filter.readyToArchive, ["All", i18n("Ready"), i18n("Not Ready")]);
 
-    const filter = filterTemplate(archive, readyToArchive);
+    const filter = filterTemplate(archive, readytoarchive);
     const search = Pager.searchTemplate(state.pager, NS);
     const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
     const table = tableTemplate(tbody, state.pager);
@@ -235,12 +235,12 @@ export const filter_archive = (element: HTMLSelectElement) => {
     refresh();
 };
 
-export const filter_readyToArchive = (element: HTMLSelectElement) => {
+export const filter_readytoarchive = (element: HTMLSelectElement) => {
     let value = element.options[element.selectedIndex].value;
-    let readyToArchive = (value.length > 0 ? value == "true" : undefined);
-    if (readyToArchive == state.pager.filter.readyToArchive)
+    let readytoarchive = (value.length > 0 ? value == "true" : undefined);
+    if (readytoarchive == state.pager.filter.readyToArchive)
         return;
-    state.pager.filter.readyToArchive = readyToArchive;
+    state.pager.filter.readyToArchive = readytoarchive;
     state.pager.pageNo = 1;
     refresh();
 };

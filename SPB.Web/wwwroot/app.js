@@ -1785,7 +1785,7 @@ System.register("_BaseApp/src/lang/en-CA", [], function (exports_11, context_11)
 });
 System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], function (exports_12, context_12) {
     "use strict";
-    var Misc, NullPager, render, renderStatic, sortableHeaderLink, headerLink, rowNumber, asParams, asDico, searchTemplate;
+    var Misc, NullPager, render, renderStatic, sortableHeaderLink, headerLink, rowNumber, asParams, searchTemplate;
     var __moduleName = context_12 && context_12.id;
     return {
         setters: [
@@ -1860,23 +1860,6 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                     });
                 }
                 return params;
-            });
-            exports_12("asDico", asDico = function (pager) {
-                var dico = {
-                    pageNo: pager.pageNo,
-                    pageSize: pager.pageSize,
-                    sortColumn: pager.sortColumn,
-                    sortDirection: pager.sortDirection,
-                    searchText: pager.searchText
-                };
-                if (pager.filter != undefined) {
-                    Object.keys(pager.filter).forEach(function (key) {
-                        if (pager.filter[key] != undefined) {
-                            dico[key] = pager.filter[key];
-                        }
-                    });
-                }
-                return dico;
             });
             exports_12("searchTemplate", searchTemplate = function (pager, ns, xtra) {
                 return "\n    <div class=\"field\">\n        <label class=\"label\">" + i18n("SEARCH") + "</label>\n        <div class=\"control has-icons-left\" style=\"width:125px;\">\n            <input class=\"input\" type=\"text\" placeholder=\"" + i18n("SEARCH") + "\" value=\"" + Misc.toInputText(pager.searchText) + "\" xonchange=\"" + ns + ".search(this)\" onkeydown=\"if (event.keyCode == 13) " + ns + ".search(event.target)\" " + (xtra || "") + ">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fas fa-search\"></i>\n            </span>\n        </div>\n    </div>";
@@ -3597,7 +3580,7 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
 });
 System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
     "use strict";
-    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone;
+    var App, yearFilter, dateFilter, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone, region, fetch_region, get_region;
     var __moduleName = context_34 && context_34.id;
     return {
         setters: [
@@ -3727,6 +3710,14 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
                 };
             });
             exports_34("get_zone", get_zone = function (year) { return zone; });
+            exports_34("fetch_region", fetch_region = function () {
+                return function (data) {
+                    if (region != undefined && region.length > 0)
+                        return;
+                    return App.GET("/lookup/by/region").then(function (json) { region = json; });
+                };
+            });
+            exports_34("get_region", get_region = function (year) { return region; });
         }
     };
 });
@@ -4358,7 +4349,7 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/layout"], fun
 // File: accounts.ts
 System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout"], function (exports_37, context_37) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, layout_2, NS, key, state, uiSelectedRow, autoArchiveButton, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_archive, filter_readyToArchive, gotoDetail, create, autoArchive;
+    var App, Router, Perm, Misc, Theme, Pager, layout_2, NS, key, state, uiSelectedRow, autoArchiveButton, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_archive, filter_readytoarchive, gotoDetail, create, autoArchive;
     var __moduleName = context_37 && context_37.id;
     return {
         setters: [
@@ -4396,17 +4387,17 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 var onclick = NS + ".autoArchive()";
                 return Theme.renderButtonWithConfirm(title, "far fa-lock-open-alt", helpText, onclick, false, false, true);
             };
-            filterTemplate = function (archive, readyToArchive) {
+            filterTemplate = function (archive, readytoarchive) {
                 var filters = [];
                 filters.push(Theme.renderDropdownFilter(NS, "archive", archive, i18n("ARCHIVE")));
-                filters.push(Theme.renderDropdownFilter(NS, "readyToArchive", readyToArchive, i18n("READYTOARCHIVE")));
+                filters.push(Theme.renderDropdownFilter(NS, "readytoarchive", readytoarchive, i18n("READYTOARCHIVE")));
                 return filters.join("");
             };
             trTemplate = function (item, rowNumber) {
-                return "\n<tr class=\"" + (isSelectedRow(item.uid) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail(" + item.uid + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.firstName) + "</td>\n    <td>" + Misc.toStaticText(item.lastName) + "</td>\n    <td>" + Misc.toStaticText(item.roleLUID_Text) + "</td>\n    <td>" + Misc.toStaticDateTime(item.lastActivity) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.readyToArchive) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n</tr>";
+                return "\n<tr class=\"" + (isSelectedRow(item.uid) ? "is-selected" : "") + "\" onclick=\"" + NS + ".gotoDetail(" + item.uid + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.email) + "</td>\n    <td>" + Misc.toStaticText(item.firstname) + "</td>\n    <td>" + Misc.toStaticText(item.lastname) + "</td>\n    <td>" + Misc.toStaticText(item.roleluid_text) + "</td>\n    <td>" + Misc.toStaticDateTime(item.lastactivity) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.readytoarchive) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n</tr>";
             };
             tableTemplate = function (tbody, pager) {
-                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FIRSTNAME"), "firstName", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastName", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ROLEMASK"), "roleLUID_Text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTACTIVITY"), "lastActivity", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("READYTOARCHIVE"), "readyToArchive", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("EMAIL"), "email", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("FIRSTNAME"), "firstname", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastname", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ROLEMASK"), "roleluid_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("LASTACTIVITY"), "lastactivity", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("READYTOARCHIVE"), "readytoarchive", "DESC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
             };
             pageTemplate = function (pager, table, tab, warning, dirty) {
                 var readonly = false;
@@ -4415,8 +4406,9 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_2.icon + "\"></i> " + i18n("All accounts") + "</div>\n            <div class=\"subtitle\">" + i18n("List of accounts") + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderListActionButtons2(NS, i18n("Add New"), buttons)) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
             exports_37("fetchState", fetchState = function (id) {
+                console.log(state);
                 Router.registerDirtyExit(null);
-                return App.GET("/account/search/?" + Pager.asParams(state.pager))
+                return App.POST("/account/search/", state.pager)
                     .then(function (payload) {
                     state = payload;
                     key = {};
@@ -4432,7 +4424,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
             });
             refresh = function () {
                 App.prepareRender(NS, i18n("accounts"));
-                App.GET("/account/search/?" + Pager.asParams(state.pager))
+                App.POST("/account/search/", state.pager)
                     .then(function (payload) {
                     state = payload;
                 })
@@ -4454,8 +4446,8 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 }, "");
                 var year = Perm.getCurrentYear();
                 var archive = Theme.renderNullableBooleanOptionsReverse(state.pager.filter.archive, ["All", i18n("Archived"), i18n("Active")]);
-                var readyToArchive = Theme.renderNullableBooleanOptions(state.pager.filter.readyToArchive, ["All", i18n("Ready"), i18n("Not Ready")]);
-                var filter = filterTemplate(archive, readyToArchive);
+                var readytoarchive = Theme.renderNullableBooleanOptions(state.pager.filter.readyToArchive, ["All", i18n("Ready"), i18n("Not Ready")]);
+                var filter = filterTemplate(archive, readytoarchive);
                 var search = Pager.searchTemplate(state.pager, NS);
                 var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 var table = tableTemplate(tbody, state.pager);
@@ -4504,12 +4496,12 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_37("filter_readyToArchive", filter_readyToArchive = function (element) {
+            exports_37("filter_readytoarchive", filter_readytoarchive = function (element) {
                 var value = element.options[element.selectedIndex].value;
-                var readyToArchive = (value.length > 0 ? value == "true" : undefined);
-                if (readyToArchive == state.pager.filter.readyToArchive)
+                var readytoarchive = (value.length > 0 ? value == "true" : undefined);
+                if (readytoarchive == state.pager.filter.readyToArchive)
                     return;
-                state.pager.filter.readyToArchive = readyToArchive;
+                state.pager.filter.readyToArchive = readytoarchive;
                 state.pager.pageNo = 1;
                 refresh();
             });
@@ -4534,7 +4526,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
 // File: account.ts
 System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/auth", "src/admin/lookupdata", "src/admin/layout"], function (exports_38, context_38) {
     "use strict";
-    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, blackList, key, state, fetchedState, isNew, isDirty, emailSubject, emailBody, block_account, block_profile, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
+    var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, emailSubject, emailBody, block_account, block_profile, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
     var __moduleName = context_38 && context_38.id;
     return {
         setters: [
@@ -4562,37 +4554,37 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         ],
         execute: function () {
             exports_38("NS", NS = "App_account");
-            blackList = ["cie_Text", "roleLUID_Text", "resetGuid", "created", "updatedBy", "by", "profileJson", "xtra"];
+            blackList = ["cie_text", "roleluid_text", "resetguid", "created", "updatedby", "by", "profileJson", "xtra"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
             block_account = function (item, roleList) {
-                var roleLUID = Theme.renderRadios(NS, "roleLUID", Lookup.authrole, state.roleLUID, false);
+                var roleluid = Theme.renderRadios(NS, "roleluid", Lookup.authrole, state.roleluid, false);
                 var canCreateFullAccount = true; //Perm.canCreateFullAccount();
-                return "\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + (canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n("USEREALEMAIL_HELP_" + item.useRealEmail)) : "") + "\n\n" + (item.useRealEmail ? "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, { required: true, size: "js-width-50" }) + "\n    " + (!isNew ? "\n        <div class=\"field is-horizontal\">\n            <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n            <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n        </div>\n    " : "") + "\n" : "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("USERNAME"), 50, { required: true, size: "js-width-50" }) + "\n    " + Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, { required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true }) + "\n") + "\n\n    " + Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true) + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiry), i18n("RESETEXPIRY")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivity), i18n("LASTACTIVITY")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    " + Theme.renderRadioField(roleLUID, i18n("ROLELUID")) + "\n    " + Theme.renderNumberField(NS, "archiveDays", item.archiveDays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n";
+                return "\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + (canCreateFullAccount ? Theme.renderCheckboxField(NS, "userealemail", item.userealemail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n("USEREALEMAIL_HELP_" + item.userealemail)) : "") + "\n\n" + (item.userealemail ? "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, { required: true, size: "js-width-50" }) + "\n    " + (!isNew ? "\n        <div class=\"field is-horizontal\">\n            <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n            <div class=\"field-body\"><span><a href=\"mailto:" + item.email + "\"><i class=\"far fa-envelope\"></i> " + i18n("SEND EMAIL TO") + " " + item.email + "</a></span></div>\n        </div>\n    " : "") + "\n" : "\n    " + Theme.renderTextField2(NS, "email", item.email, i18n("USERNAME"), 50, { required: true, size: "js-width-50" }) + "\n    " + Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, { required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true }) + "\n") + "\n\n    " + Theme.renderTextField(NS, "firstname", item.firstname, i18n("FIRSTNAME"), 50, true) + "\n    " + Theme.renderTextField(NS, "lastname", item.lastname, i18n("LASTNAME"), 50, true) + "\n\n" + (!isNew ? "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.resetexpiry), i18n("RESETEXPIRY")) + "\n    " + Theme.renderStaticField(Misc.toStaticDateTime(item.lastactivity), i18n("LASTACTIVITY")) + "\n    <div class=\"field is-horizontal\">\n        <div class=\"field-label\"><label class=\"label\">&nbsp;</label></div>\n        <div class=\"field-body\">" + resetPasswordButton(item) + "</div>\n    </div>\n" : "") + "\n    </div>\n    <div class=\"column\">\n    " + Theme.renderNumberField(NS, "currentyear", item.currentyear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season") + "\n    " + Theme.renderRadioField(roleluid, i18n("ROLELUID")) + "\n    " + Theme.renderNumberField(NS, "archivedays", item.archivedays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived") + "\n" + (!isNew ? "\n    " + Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled") + "\n" : "") + "\n    </div>\n    </div>\n";
             };
-            block_profile = function (profile, sortOrderKeysID) {
-                return "\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + Theme.renderTextField(NS, "profile.AcrobatPath", profile.AcrobatPath, "Chemin d'accès à Acrobat Reader", 100, false) + "\n    " + Theme.renderDropdownField(NS, "profile.FactureSortType", sortOrderKeysID, "Ordre de tri des factures (croissant)") + "\n    </div>\n    </div>\n";
+            block_profile = function (item, sortOrderKeysID) {
+                return "\n    <div class=\"columns js-2-columns\">\n    <div class=\"column\">\n    " + Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, "Chemin d'accès à Acrobat Reader", 100, false) + "\n    " + Theme.renderDropdownField(NS, "facturesorttype", sortOrderKeysID, "Ordre de tri des factures (croissant)") + "\n    </div>\n    </div>\n";
             };
             formTemplate = function (item, roleList, sortOrderKeysID) {
-                return "\n<div class=\"columns\">\n    <div class=\"column is-8 is-offset-2\">\n        " + Theme.wrapFieldset("Compte", block_account(item, roleList)) + "\n        " + Theme.wrapFieldset("Profile", block_profile(item.profile, sortOrderKeysID)) + "\n    </div>\n</div>\n\n    " + Theme.renderBlame(item, isNew) + "\n";
+                return "\n<div class=\"columns\">\n    <div class=\"column is-8 is-offset-2\">\n        " + Theme.wrapFieldset("Compte", block_account(item, roleList)) + "\n        " + Theme.wrapFieldset("Profile", block_profile(item, sortOrderKeysID)) + "\n    </div>\n</div>\n\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             resetPasswordButton = function (item) {
                 var title;
                 var helpText;
                 var onclick;
-                if (item.canResetPassword) {
+                if (item.canresetpassword) {
                     title = i18n("Reset Password");
                     helpText = i18n("<p><b>Note:</b> This will prevent the user from login until the user re-enters a new password.</p><br><p>An email will be sent to the user with a link to do so.</p>");
                     onclick = NS + ".resetPassword()";
                 }
-                if (item.canCreateInvitation) {
+                if (item.cancreateinvitation) {
                     title = i18n("Create Invitation");
                     helpText = i18n("<p>Create an invitation for this user to join OpsFMS.</p><br><p>An email will be sent to the user with a link to do so.</p>");
                     onclick = NS + ".createInvitation()";
                 }
-                if (item.canExtendInvitation) {
+                if (item.canextendinvitation) {
                     title = i18n("Extend Invitation");
                     helpText = i18n("Re-invite this user to OpsFMS because he/she didn't go through the process before the <b>Password Reset Expiry</b>.</p><br><p>An email will be sent to the user with a link to do so.</p>");
                     onclick = NS + ".createInvitation()";
@@ -4608,7 +4600,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var readonly = !canUpdate();
                 var buttons = [];
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_3.icon + "\"></i> <span>" + (isNew ? i18n("New Account") : item.xtra && item.xtra.title) + "</span></div>\n            <div class=\"subtitle\">" + (isNew ? i18n("Editing New account") : i18n("Editing account Details")) + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, "#/admin/account/new", buttons)) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_3.icon + "\"></i> <span>" + (isNew ? i18n("New Account") : xtra && xtra.title) + "</span></div>\n            <div class=\"subtitle\">" + (isNew ? i18n("Editing New account") : i18n("Editing account Details")) + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, "#/admin/account/new", buttons)) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
@@ -4624,8 +4616,9 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 var url = "/account/" + (isNew ? "new" : uid);
                 return App.GET(url)
                     .then(function (payload) {
-                    state = payload;
+                    state = payload.item;
                     fetchedState = Misc.clone(state);
+                    xtra = payload.xtra;
                     key = { uid: uid };
                 })
                     .then(Lookup.fetch_authrole())
@@ -4646,12 +4639,12 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     return App.fatalErrorTemplate();
                 if (state == undefined || Object.keys(state).length == 0)
                     return App.warningTemplate() || App.unexpectedTemplate();
-                var year = state.currentYear;
+                var year = state.currentyear;
                 var lookup_sortOrderKeys = Lookup.get_sortOrderKeys(year);
-                var sortOrderKeysID = Theme.renderOptions(lookup_sortOrderKeys, state.profile.FactureSortType, false);
+                var sortOrderKeysID = Theme.renderOptions(lookup_sortOrderKeys, state.facturesorttype, false);
                 var form = formTemplate(state, Lookup.authrole, sortOrderKeysID);
                 emailBody = undefined;
-                var tab = layout_3.tabTemplate(state.uid, state.xtra);
+                var tab = layout_3.tabTemplate(state.uid, xtra);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -4659,25 +4652,25 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             exports_38("postRender", postRender = function () {
                 if (!inContext())
                     return;
-                App.setPageTitle(isNew ? i18n("New account") : state.xtra.title);
+                App.setPageTitle(isNew ? i18n("New account") : xtra.title);
             });
             exports_38("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
                 var clone = Misc.clone(state);
-                clone.useRealEmail = Misc.fromInputCheckbox(NS + "_useRealEmail", state.useRealEmail);
+                clone.userealemail = Misc.fromInputCheckbox(NS + "_userealemail", state.userealemail);
                 clone.email = Misc.fromInputText(NS + "_email", state.email);
                 clone.password = Misc.fromInputText(NS + "_password", state.password);
-                clone.firstName = Misc.fromInputText(NS + "_firstName", state.firstName);
-                clone.lastName = Misc.fromInputText(NS + "_lastName", state.lastName);
-                clone.currentYear = Misc.fromInputNumber(NS + "_currentYear", state.currentYear);
-                clone.roleLUID = Misc.fromRadioNumber(NS + "_roleLUID", state.roleLUID);
-                clone.archiveDays = Misc.fromInputNumberNullable(NS + "_archiveDays", state.archiveDays);
+                clone.firstname = Misc.fromInputText(NS + "_firstname", state.firstname);
+                clone.lastname = Misc.fromInputText(NS + "_lastname", state.lastname);
+                clone.currentyear = Misc.fromInputNumber(NS + "_currentyear", state.currentyear);
+                clone.roleluid = Misc.fromRadioNumber(NS + "_roleluid", state.roleluid);
+                clone.archivedays = Misc.fromInputNumberNullable(NS + "_archivedays", state.archivedays);
                 clone.archive = Misc.fromInputCheckbox(NS + "_archive", state.archive);
                 //
-                clone.profile.AcrobatPath = Misc.fromInputText(NS + "_profile.AcrobatPath", state.profile.AcrobatPath);
-                clone.profile.FactureSortType = Misc.fromSelectNumber(NS + "_profile.FactureSortType", state.profile.FactureSortType);
+                clone.acrobatpath = Misc.fromInputText(NS + "_acrobatpath", state.acrobatpath);
+                clone.facturesorttype = Misc.fromSelectNumber(NS + "_facturesorttype", state.facturesorttype);
                 return clone;
             };
             valid = function (formState) {
@@ -6843,9 +6836,9 @@ System.register("src/app", ["src/main"], function (exports_54, context_54) {
     };
 });
 // File: commitcbeff.ts
-System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager"], function (exports_55, context_55) {
+System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_55, context_55) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
     var __moduleName = context_55 && context_55.id;
     return {
         setters: [
@@ -6866,12 +6859,15 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
             },
             function (Pager_6) {
                 Pager = Pager_6;
+            },
+            function (Lookup_9) {
+                Lookup = Lookup_9;
             }
         ],
         execute: function () {
             exports_55("NS", NS = "App_commitcbeff");
             table_id = "commitcbeff_table";
-            blackList = ["_editing", "_deleting", "_isNew", "totalcount"];
+            blackList = ["_editing", "_deleting", "_isNew", "totalcount", "regionluid_text"];
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 1000, sortColumn: "ID", sortDirection: "ASC", filter: { year: undefined, regionluid: undefined } }
@@ -6879,7 +6875,7 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
             fetchedState = {};
             isNew = false;
             isAddingNewParent = false;
-            trTemplate = function (item, editId, deleteId, rowNumber) {
+            trTemplate = function (item, editId, deleteId, rowNumber, regionluid) {
                 var id = item.id;
                 var tdConfirm = "<td class=\"js-td-33\">&nbsp;</td>";
                 if (item._editing)
@@ -6900,11 +6896,11 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                     classList.push("js-new");
                 if (readonly)
                     classList.push("js-readonly");
-                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n\n" + (markDeletion ? "<td onclick=\"" + NS + ".selectfordrop(" + id + ")\" class=\"has-text-danger js-td-33 js-drop\" title=\"Click to mark for deletion\"><i class='fas fa-times'></i></td>" : "") + "\n" + (clickUndo ? "<td onclick=\"" + NS + ".undo()\" class=\"has-text-primary js-td-33\" title=\"Click to undo\"><i class='fa fa-undo'></i></td>" : "") + "\n" + tdConfirm + "\n\n" + (!readonly ? "\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "year_" + id, item.year, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "regionluid_" + id, item.regionluid, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "details_" + id, item.details, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "monthpaid_" + id, item.monthpaid, 25) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "paid_" + id, item.paid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "amount_" + id, item.amount, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "comment_" + id, item.comment, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "archive_" + id, item.archive) + "</td>\n" : "\n    <td>" + Misc.toStaticText(item.year) + "</td>\n    <td>" + Misc.toStaticText(item.regionluid) + "</td>\n    <td>" + Misc.toStaticText(item.details) + "</td>\n    <td>" + Misc.toStaticText(item.monthpaid) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.paid) + "</td>\n    <td>" + Misc.toStaticText(item.amount) + "</td>\n    <td>" + Misc.toStaticText(item.comment) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n") + "\n</tr>";
+                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n\n" + (markDeletion ? "<td onclick=\"" + NS + ".selectfordrop(" + id + ")\" class=\"has-text-danger js-td-33 js-drop\" title=\"Click to mark for deletion\"><i class='fas fa-times'></i></td>" : "") + "\n" + (clickUndo ? "<td onclick=\"" + NS + ".undo()\" class=\"has-text-primary js-td-33\" title=\"Click to undo\"><i class='fa fa-undo'></i></td>" : "") + "\n" + tdConfirm + "\n\n" + (!readonly ? "\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "year_" + id, item.year, true) + "</td>\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "regionluid_" + id, regionluid, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "details_" + id, item.details, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "monthpaid_" + id, item.monthpaid, 25) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "paid_" + id, item.paid) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "amount_" + id, item.amount, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "comment_" + id, item.comment, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderCheckboxInline(NS, "archive_" + id, item.archive) + "</td>\n" : "\n    <td>" + Misc.toStaticText(item.year) + "</td>\n    <td>" + Misc.toStaticText(item.regionluid_text) + "</td>\n    <td>" + Misc.toStaticText(item.details) + "</td>\n    <td>" + Misc.toStaticText(item.monthpaid) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.paid) + "</td>\n    <td>" + Misc.toStaticText(item.amount) + "</td>\n    <td>" + Misc.toStaticText(item.comment) + "</td>\n    <td>" + Misc.toStaticCheckbox(item.archive) + "</td>\n") + "\n</tr>";
             };
             tableTemplate = function (tbody, editId, deleteId) {
                 var disableAddNew = (deleteId != undefined || editId != undefined || isNew);
-                return "\n<div id=\"" + table_id + "\" class=\"table-container\">\n<table class=\"table is-hoverable js-inline\" style=\"width: 100px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            <th style=\"width:99px\" colspan=\"3\"></th>\n            <th style=\"width:100px\">" + i18n("YEAR") + "</th>\n            <th style=\"width:100px\">" + i18n("REGIONLUID") + "</th>\n            <th style=\"width:100px\">" + i18n("DETAILS") + "</th>\n            <th style=\"width:100px\">" + i18n("MONTHPAID") + "</th>\n            <th style=\"width:100px\">" + i18n("PAID") + "</th>\n            <th style=\"width:100px\">" + i18n("AMOUNT") + "</th>\n            <th style=\"width:100px\">" + i18n("COMMENT") + "</th>\n            <th style=\"width:100px\">" + i18n("ARCHIVE") + "</th>\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n        <tr class=\"js-insert-row " + (disableAddNew ? "js-disabled" : "") + "\">\n            <td class=\"js-index js-td-33\">*</td>\n            <td class=\"has-text-primary js-td-33 js-add\" onclick=\"" + NS + ".addNew()\" title=\"Click to add a new row\"><i class=\"fas fa-plus\"></i></td>\n            <td></td>\n            <td colspan=\"8\"></td>\n        </tr>\n    </tbody>\n</table>\n</div>\n";
+                return "\n<div id=\"" + table_id + "\" class=\"table-container\">\n<table class=\"table is-hoverable js-inline\" style=\"width: 100px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            <th style=\"width:99px\" colspan=\"3\"></th>\n            <th style=\"width:100px\">" + i18n("YEAR") + "</th>\n            <th style=\"width:100px\">" + i18n("REGION") + "</th>\n            <th style=\"width:100px\">" + i18n("DETAILS") + "</th>\n            <th style=\"width:100px\">" + i18n("MONTHPAID") + "</th>\n            <th style=\"width:100px\">" + i18n("PAID") + "</th>\n            <th style=\"width:100px\">" + i18n("AMOUNT") + "</th>\n            <th style=\"width:100px\">" + i18n("COMMENT") + "</th>\n            <th style=\"width:100px\">" + i18n("ARCHIVE") + "</th>\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n        <tr class=\"js-insert-row " + (disableAddNew ? "js-disabled" : "") + "\">\n            <td class=\"js-index js-td-33\">*</td>\n            <td class=\"has-text-primary js-td-33 js-add\" onclick=\"" + NS + ".addNew()\" title=\"Click to add a new row\"><i class=\"fas fa-plus\"></i></td>\n            <td></td>\n            <td colspan=\"8\"></td>\n        </tr>\n    </tbody>\n</table>\n</div>\n";
             };
             pageTemplate = function (table) {
                 return "\n" + Theme.wrapContent("js-uc-list", table) + "\n";
@@ -6918,7 +6914,8 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                     state = payload;
                     fetchedState = Misc.clone(state);
                     key = {};
-                });
+                })
+                    .then(Lookup.fetch_region());
             });
             exports_55("preRender", preRender = function () {
             });
@@ -6936,9 +6933,11 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                         deleteId = item.id;
                 });
                 var year = Perm.getCurrentYear(); //or something better
+                var lookup_region = Lookup.get_region(year);
                 var tbody = state.list.reduce(function (html, item, index) {
                     var rowNumber = Pager.rowNumber(state.pager, index);
-                    return html + trTemplate(item, editId, deleteId, rowNumber);
+                    var regionluid = Theme.renderOptions(lookup_region, item.regionluid, isNew);
+                    return html + trTemplate(item, editId, deleteId, rowNumber, regionluid);
                 }, "");
                 var table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
@@ -6953,7 +6952,7 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 clone.list.forEach(function (item) {
                     var id = item.id;
                     item.year = Misc.fromInputNumber(NS + "_year_" + id, item.year);
-                    item.regionluid = Misc.fromInputNumber(NS + "_regionluid_" + id, item.regionluid);
+                    item.regionluid = Misc.fromSelectNumber(NS + "_regionluid_" + id, item.regionluid);
                     item.details = Misc.fromInputTextNullable(NS + "_details_" + id, item.details);
                     item.monthpaid = Misc.fromInputTextNullable(NS + "_monthpaid_" + id, item.monthpaid);
                     item.paid = Misc.fromInputCheckbox(NS + "_paid_" + id, item.paid);

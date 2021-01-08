@@ -13,8 +13,11 @@
     [Created]     DATETIME       CONSTRAINT [DF_Lookup_Created] DEFAULT (getdate()) NOT NULL,
     [Updated]     DATETIME       CONSTRAINT [DF_Lookup_Updated] DEFAULT (getdate()) NOT NULL,
     [UpdatedBy]   INT            CONSTRAINT [DF_Lookup_UpdatedBy] DEFAULT ((0)) NOT NULL,
-    CONSTRAINT [PK_Lookup] PRIMARY KEY CLUSTERED ([ID] ASC)
+    CONSTRAINT [PK_Lookup] PRIMARY KEY CLUSTERED ([ID] ASC),
+    CONSTRAINT [FK_Lookup_Company] FOREIGN KEY ([CIE]) REFERENCES [app].[Company] ([CIE])
 );
+
+
 
 
 

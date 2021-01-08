@@ -18,21 +18,18 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public class AccountController : _CoreController
     {
-        [HttpGet("search")]
-        public PagedList<Account_Search, Account_Search_Filter> Search(bool? archive, bool? readyToArchive, int pn, int ps, string sc, string sd, string st)
+        [HttpPost("search")]
+        public object Search([FromBody] Dico pager)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            var pager = new Pager<Account_Search_Filter>(pn, ps, sc, sd, st);
-            pager.filter.archive = archive;
-            pager.filter.readyToArchive = readyToArchive;
             return app.Account_Search(pager);
         }
 
         [HttpGet("{uid}")]
-        public Account_Full Select(int uid)
+        public object Select(int uid)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            return app.Account_Select(uid, buildUIRouterUrl("accept-invitation/{guid}"));
+            return app.Account_Select(uid);
         }
 
         [HttpGet("new")]

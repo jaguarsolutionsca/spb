@@ -11,12 +11,17 @@ import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "./lookupdata"
 import * as Perm from "../permission"
 import * as Layout from "./layout"
-import { tabTemplate, icon, prepareMenu } from "./layout"
+import { tabTemplate, icon, ISummary, prepareMenu } from "./layout"
 
 declare const i18n: any;
 
 
 export const NS = "App_account";
+
+interface IPayload {
+    item: IState
+    xtra: ISummary
+}
 
 interface IKey {
     uid: number
@@ -24,62 +29,58 @@ interface IKey {
 
 interface IState {
     uid: number
-    xtra: any
     cie: number
-    cie_Text: string
+    cie_text: string
     email: string
     password: string
-    roleLUID: number
-    roleLUID_Text: string
-    roleMask: number
-    isSupport: boolean
-    resetGuid: string
-    resetExpiry: Date
-    lastActivity: Date
-    isAdminReset: boolean
-    firstName: string
-    lastName: string
-    useRealEmail: boolean
-    archiveDays: number
-    readyToArchive: boolean
-    currentYear: number
-    profile: IProfile
+    roleluid: number
+    roleluid_text: string
+    rolemask: number
+    issupport: boolean
+    resetguid: string
+    resetexpiry: Date
+    lastactivity: Date
+    isadminreset: boolean
+    firstname: string
+    lastname: string
+    userealemail: boolean
+    archivedays: number
+    readytoarchive: boolean
+    currentyear: number
     comment: string
     archive: boolean
     created: Date
     updated: Date
-    updatedBy: number
+    updatedby: number
     by: string
+    canextendinvitation: boolean
+    canresetpassword: boolean
+    cancreateinvitation: boolean
     //
-    canExtendInvitation: boolean
-    canResetPassword: boolean
-    canCreateInvitation: boolean
+    acrobatpath: string
+    autresrapportsprintermarginbottom: number
+    autresrapportsprintermarginleft: number
+    autresrapportsprintermarginright: number
+    autresrapportsprintermargintop: number
+    excellanguage: string
+    factureformat: number
+    facturesorttype: number
+    imprimanteautresrapports: string
+    imprimantedepermis: string
+    municipalitesorttype: number
+    proprietairesorttype: number
+    signaturepath: string
+    signatureprint: boolean
+    transporteursorttype: number
 }
 
-interface IProfile {
-    AcrobatPath: string
-    AutresRapportsPrinterMarginBottom: number
-    AutresRapportsPrinterMarginLeft: number
-    AutresRapportsPrinterMarginRight: number
-    AutresRapportsPrinterMarginTop: number
-    ExcelLanguage: string
-    FactureFormat: number
-    FactureSortType: number
-    ImprimanteAutresRapports: string
-    ImprimanteDePermis: string
-    MunicipaliteSortType: number
-    ProprietaireSortType: number
-    SignaturePath: string
-    SignaturePrint: boolean
-    TransporteurSortType: number
-}
-
-const blackList = ["cie_Text", "roleLUID_Text", "resetGuid", "created", "updatedBy", "by", "profileJson", "xtra"];
+const blackList = ["cie_text", "roleluid_text", "resetguid", "created", "updatedby", "by", "profileJson", "xtra"];
 
 
 let key: IKey;
 let state = <IState>{};
 let fetchedState = <IState>{};
+let xtra: ISummary;
 let isNew = false;
 let isDirty = false;
 let emailSubject: string;
@@ -88,16 +89,16 @@ let emailBody: string;
 
 const block_account = (item: IState, roleList: Lookup.LookupData[]) => {
 
-    let roleLUID = Theme.renderRadios(NS, "roleLUID", Lookup.authrole, state.roleLUID, false);
+    let roleluid = Theme.renderRadios(NS, "roleluid", Lookup.authrole, state.roleluid, false);
 
     let canCreateFullAccount = true;//Perm.canCreateFullAccount();
 
     return `
     <div class="columns js-2-columns">
     <div class="column">
-    ${canCreateFullAccount ? Theme.renderCheckboxField(NS, "useRealEmail", item.useRealEmail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n(`USEREALEMAIL_HELP_${item.useRealEmail}`)) : ""}
+    ${canCreateFullAccount ? Theme.renderCheckboxField(NS, "userealemail", item.userealemail, i18n("USEREALEMAIL"), i18n("USEREALEMAIL_TEXT"), i18n(`USEREALEMAIL_HELP_${item.userealemail}`)) : ""}
 
-${item.useRealEmail ? `
+${item.userealemail ? `
     ${Theme.renderTextField2(NS, "email", item.email, i18n("EMAIL"), 50, <Theme.IOptText>{ required: true, size: "js-width-50" })}
     ${!isNew ? `
         <div class="field is-horizontal">
@@ -110,12 +111,12 @@ ${item.useRealEmail ? `
     ${Theme.renderTextField2(NS, "password", item.password, i18n("PASSWORD"), 50, <Theme.IOptText>{ required: isNew, size: "js-width-50", help: !isNew ? i18n("PASSWORD_HELP") : undefined, noautocomplete: true })}
 `}
 
-    ${Theme.renderTextField(NS, "firstName", item.firstName, i18n("FIRSTNAME"), 50, true)}
-    ${Theme.renderTextField(NS, "lastName", item.lastName, i18n("LASTNAME"), 50, true)}
+    ${Theme.renderTextField(NS, "firstname", item.firstname, i18n("FIRSTNAME"), 50, true)}
+    ${Theme.renderTextField(NS, "lastname", item.lastname, i18n("LASTNAME"), 50, true)}
 
 ${!isNew ? `
-    ${Theme.renderStaticField(Misc.toStaticDateTime(item.resetExpiry), i18n("RESETEXPIRY"))}
-    ${Theme.renderStaticField(Misc.toStaticDateTime(item.lastActivity), i18n("LASTACTIVITY"))}
+    ${Theme.renderStaticField(Misc.toStaticDateTime(item.resetexpiry), i18n("RESETEXPIRY"))}
+    ${Theme.renderStaticField(Misc.toStaticDateTime(item.lastactivity), i18n("LASTACTIVITY"))}
     <div class="field is-horizontal">
         <div class="field-label"><label class="label">&nbsp;</label></div>
         <div class="field-body">${resetPasswordButton(item)}</div>
@@ -123,9 +124,9 @@ ${!isNew ? `
 ` : ``}
     </div>
     <div class="column">
-    ${Theme.renderNumberField(NS, "currentYear", item.currentYear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season")}
-    ${Theme.renderRadioField(roleLUID, i18n("ROLELUID"))}
-    ${Theme.renderNumberField(NS, "archiveDays", item.archiveDays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived")}
+    ${Theme.renderNumberField(NS, "currentyear", item.currentyear, i18n("CURRENTYEAR"), true, "js-width-25", "User can only enter data for this fire season")}
+    ${Theme.renderRadioField(roleluid, i18n("ROLELUID"))}
+    ${Theme.renderNumberField(NS, "archivedays", item.archivedays, i18n("ARCHIVEDAYS"), false, "js-width-25", "Duration in days after which an inactive account is archived")}
 ${!isNew ? `
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"), "Disable Account", "User cannot sign-in to OpsFMS when the account is disabled")}
 ` : ``}
@@ -134,12 +135,12 @@ ${!isNew ? `
 `;
 }
 
-const block_profile = (profile: IProfile, sortOrderKeysID: string) => {
+const block_profile = (item: IState, sortOrderKeysID: string) => {
     return `
     <div class="columns js-2-columns">
     <div class="column">
-    ${Theme.renderTextField(NS, "profile.AcrobatPath", profile.AcrobatPath, "Chemin d'accès à Acrobat Reader", 100, false)}
-    ${Theme.renderDropdownField(NS, "profile.FactureSortType", sortOrderKeysID, "Ordre de tri des factures (croissant)")}
+    ${Theme.renderTextField(NS, "acrobatpath", item.acrobatpath, "Chemin d'accès à Acrobat Reader", 100, false)}
+    ${Theme.renderDropdownField(NS, "facturesorttype", sortOrderKeysID, "Ordre de tri des factures (croissant)")}
     </div>
     </div>
 `;
@@ -150,7 +151,7 @@ const formTemplate = (item: IState, roleList: Lookup.LookupData[], sortOrderKeys
 <div class="columns">
     <div class="column is-8 is-offset-2">
         ${Theme.wrapFieldset("Compte", block_account(item, roleList))}
-        ${Theme.wrapFieldset("Profile", block_profile(item.profile, sortOrderKeysID))}
+        ${Theme.wrapFieldset("Profile", block_profile(item, sortOrderKeysID))}
     </div>
 </div>
 
@@ -163,19 +164,19 @@ let resetPasswordButton = (item: IState) => {
     let helpText: string;
     let onclick: string;
 
-    if (item.canResetPassword) {
+    if (item.canresetpassword) {
         title = i18n("Reset Password");
         helpText = i18n("<p><b>Note:</b> This will prevent the user from login until the user re-enters a new password.</p><br><p>An email will be sent to the user with a link to do so.</p>");
         onclick = `${NS}.resetPassword()`;
     }
 
-    if (item.canCreateInvitation) {
+    if (item.cancreateinvitation) {
         title = i18n("Create Invitation");
         helpText = i18n("<p>Create an invitation for this user to join OpsFMS.</p><br><p>An email will be sent to the user with a link to do so.</p>");
         onclick = `${NS}.createInvitation()`;
     }
 
-    if (item.canExtendInvitation) {
+    if (item.canextendinvitation) {
         title = i18n("Extend Invitation");
         helpText = i18n("Re-invite this user to OpsFMS because he/she didn't go through the process before the <b>Password Reset Expiry</b>.</p><br><p>An email will be sent to the user with a link to do so.</p>");
         onclick = `${NS}.createInvitation()`;
@@ -204,7 +205,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${icon}"></i> <span>${isNew ? i18n("New Account") : item.xtra && item.xtra.title}</span></div>
+            <div class="title"><i class="${icon}"></i> <span>${isNew ? i18n("New Account") : xtra && xtra.title}</span></div>
             <div class="subtitle">${isNew ? i18n("Editing New account") : i18n("Editing account Details")}</div>
         </div>
         <div>
@@ -242,9 +243,10 @@ export const fetchState = (uid: number) => {
     clearState();
     let url = `/account/${isNew ? "new" : uid}`;
     return App.GET(url)
-        .then(payload => {
-            state = payload;
+        .then((payload: IPayload) => {
+            state = payload.item;
             fetchedState = Misc.clone(state) as IState;
+            xtra = payload.xtra;
             key = <IKey>{ uid };
         })
         .then(Lookup.fetch_authrole())
@@ -266,16 +268,16 @@ export const render = () => {
     if (state == undefined || Object.keys(state).length == 0)
         return App.warningTemplate() || App.unexpectedTemplate();
 
-    let year = state.currentYear;
+    let year = state.currentyear;
 
     let lookup_sortOrderKeys = Lookup.get_sortOrderKeys(year);
 
-    let sortOrderKeysID = Theme.renderOptions(lookup_sortOrderKeys, state.profile.FactureSortType, false);
+    let sortOrderKeysID = Theme.renderOptions(lookup_sortOrderKeys, state.facturesorttype, false);
 
     const form = formTemplate(state, Lookup.authrole, sortOrderKeysID);
     emailBody = undefined;
 
-    const tab = tabTemplate(state.uid, state.xtra);
+    const tab = tabTemplate(state.uid, xtra);
     const dirty = dirtyTemplate();
     const warning = App.warningTemplate();
     return pageTemplate(state, form, tab, warning, dirty);
@@ -284,7 +286,7 @@ export const render = () => {
 export const postRender = () => {
     if (!inContext()) return;
 
-    App.setPageTitle(isNew ? i18n("New account") : state.xtra.title);
+    App.setPageTitle(isNew ? i18n("New account") : xtra.title);
 };
 
 export const inContext = () => {
@@ -293,18 +295,18 @@ export const inContext = () => {
 
 const getFormState = () => {
     let clone = Misc.clone(state) as IState;
-    clone.useRealEmail = Misc.fromInputCheckbox(`${NS}_useRealEmail`, state.useRealEmail);
+    clone.userealemail = Misc.fromInputCheckbox(`${NS}_userealemail`, state.userealemail);
     clone.email = Misc.fromInputText(`${NS}_email`, state.email);
     clone.password = Misc.fromInputText(`${NS}_password`, state.password);
-    clone.firstName = Misc.fromInputText(`${NS}_firstName`, state.firstName);
-    clone.lastName = Misc.fromInputText(`${NS}_lastName`, state.lastName);
-    clone.currentYear = Misc.fromInputNumber(`${NS}_currentYear`, state.currentYear);
-    clone.roleLUID = Misc.fromRadioNumber(`${NS}_roleLUID`, state.roleLUID);
-    clone.archiveDays = Misc.fromInputNumberNullable(`${NS}_archiveDays`, state.archiveDays);
+    clone.firstname = Misc.fromInputText(`${NS}_firstname`, state.firstname);
+    clone.lastname = Misc.fromInputText(`${NS}_lastname`, state.lastname);
+    clone.currentyear = Misc.fromInputNumber(`${NS}_currentyear`, state.currentyear);
+    clone.roleluid = Misc.fromRadioNumber(`${NS}_roleluid`, state.roleluid);
+    clone.archivedays = Misc.fromInputNumberNullable(`${NS}_archivedays`, state.archivedays);
     clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
     //
-    clone.profile.AcrobatPath = Misc.fromInputText(`${NS}_profile.AcrobatPath`, state.profile.AcrobatPath);
-    clone.profile.FactureSortType = Misc.fromSelectNumber(`${NS}_profile.FactureSortType`, state.profile.FactureSortType);
+    clone.acrobatpath = Misc.fromInputText(`${NS}_acrobatpath`, state.acrobatpath);
+    clone.facturesorttype = Misc.fromSelectNumber(`${NS}_facturesorttype`, state.facturesorttype);
     return clone;
 };
 

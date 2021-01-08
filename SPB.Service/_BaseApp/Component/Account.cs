@@ -40,100 +40,6 @@ namespace BaseApp.DAL
 
     internal partial class Repo
     {
-        public DTO.PagedList<DTO.Account_Search, DTO.Account_Search_Filter> spAccount_List(DTO.Pager<DTO.Account_Search_Filter> pagerData)
-        {
-            var pagedList = new DTO.PagedList<DTO.Account_Search, DTO.Account_Search_Filter>();
-            pagedList.pager = pagerData;
-
-            var list = queryList<DTO.Account_Search>("app.Account_List", KVList.Build()
-                .Add("@archive", pagerData.filter.archive)
-                .Add("@readyToArchive", pagerData.filter.readyToArchive)
-                );
-            list.ForEach(one => one.Decrypt(crypto));
-
-            if (!string.IsNullOrEmpty(pagerData.searchText))
-            {
-                var search = pagerData.searchText.ToLower();
-                list = list.Where(one => {
-                    return one.email.ToLower().Contains(search) ||
-                        one.firstName.ToLower().Contains(search) ||
-                        one.lastName.ToLower().Contains(search);
-                }).ToList();
-            }
-
-            foreach (var entity in list)
-            {
-                entity.totalCount = list.Count;
-            }
-
-            if (!string.IsNullOrEmpty(pagedList.pager.sortColumn))
-            {
-                var sortBy = pagedList.pager.sortColumn.ToLower();
-                var ascending = string.Compare(pagedList.pager.sortDirection ?? "ASC", "ASC", true) == 0;
-                switch (sortBy)
-                {
-                    case "email":
-                        list.Sort((a, b) => ascending ?
-                            string.Compare(a.email, b.email, true) :
-                            string.Compare(b.email, a.email, true));
-                        break;
-
-                    case "firstname":
-                        list.Sort((a, b) => ascending ?
-                            string.Compare(a.firstName, b.firstName, true) :
-                            string.Compare(b.firstName, a.firstName, true));
-                        break;
-
-                    case "lastname":
-                        list.Sort((a, b) => ascending ?
-                            string.Compare(a.lastName, b.lastName, true) :
-                            string.Compare(b.lastName, a.lastName, true));
-                        break;
-
-                    case "roleluid_text":
-                        list.Sort((a, b) => ascending ?
-                            string.Compare(a.roleLUID_Text, b.roleLUID_Text, true) :
-                            string.Compare(b.roleLUID_Text, a.roleLUID_Text, true));
-                        break;
-
-                    case "archive":
-                        list.Sort((a, b) => ascending ?
-                            (a.archive ? 1 : 0) - (b.archive ? 1 : 0) :
-                            (b.archive ? 1 : 0) - (a.archive ? 1 : 0));
-                        break;
-
-                    case "readytoarchive":
-                        list.Sort((a, b) => ascending ?
-                            (a.readyToArchive ? 1 : 0) - (b.readyToArchive ? 1 : 0) :
-                            (b.readyToArchive ? 1 : 0) - (a.readyToArchive ? 1 : 0));
-                        break;
-
-                    //case "haspendingemail":
-                    //    list.Sort((a, b) => ascending ?
-                    //        (a.hasPendingEmail ? 1 : 0) - (b.hasPendingEmail ? 1 : 0) :
-                    //        (b.hasPendingEmail ? 1 : 0) - (a.hasPendingEmail ? 1 : 0));
-                    //    break;
-
-                    case "lastactivity":
-                        list.Sort((a, b) => ascending ?
-                            DateTime.Compare(a.lastActivity ?? DateTime.MinValue, b.lastActivity ?? DateTime.MinValue) :
-                            DateTime.Compare(b.lastActivity ?? DateTime.MinValue, a.lastActivity ?? DateTime.MinValue));
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            pagedList.list = list
-                .Skip((pagedList.pager.pageNo - 1) * pagedList.pager.pageSize)
-                .Take(pagedList.pager.pageSize)
-                .ToList();
-
-            pagedList.pager.rowCount = (pagedList.list.Count > 0 ? pagedList.list[0].totalCount : 0);
-            return pagedList;
-        }
-
         public DTO.Account_Full spAccount_Select(int uid)
         {
             return queryEntity<DTO.Account_Full>("app.Account_Select", "@uid", uid)?
@@ -362,8 +268,8 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        PagedList<Account_Search, Account_Search_Filter> Account_Search(Pager<Account_Search_Filter> pagerData);
-        Account_Full Account_Select(int uid, string url);
+        object Account_Search(Dico pager);
+        object Account_Select(int uid);
         Account_Full Account_New(int cie);
         Account_PK Account_Insert(UTO.Account_Insert uto, string url);
         void Account_Update(UTO.Account_Update uto);
@@ -375,20 +281,128 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        public PagedList<Account_Search, Account_Search_Filter> Account_Search(Pager<Account_Search_Filter> pagerData)
+        public object Account_Search(Dico pager)
         {
-            return repo.spAccount_List(pagerData);
+            pager = pager.ReviveUTO(flatten: false);
+            var pn = pager.Parse<int>("pageNo");
+            var ps = pager.Parse<int>("pageSize");
+            var sc = pager.Parse<string>("sortColumn");
+            var sd = pager.Parse<string>("sortDirection");
+            var txt = pager.Parse<string>("searchText");
+
+            var filter = pager["filter"] as Dico;
+            var parameters = KVList.Build(filter);
+            var list = repo.queryDicoList("app.Account_List", parameters, uid: true);
+
+            list.ForEach(one =>
+            {
+                one["email"] = repo.crypto.Decrypt(one.Parse<string>("email"));
+                one["firstname"] = repo.crypto.Decrypt(one.Parse<string>("firstname"));
+                one["lastname"] = repo.crypto.Decrypt(one.Parse<string>("lastname"));
+                one["by"] = repo.crypto.Decrypt(one.Parse<string>("by"));
+            });
+
+            if (!string.IsNullOrEmpty(txt))
+            {
+                var search = txt.ToLower();
+                list = list.Where(one => {
+                    var email = one.Parse<string>("email");
+                    var firstName = one.Parse<string>("firstName");
+                    var lastName = one.Parse<string>("lastName");
+                    return email.ToLower().Contains(search) ||
+                        firstName.ToLower().Contains(search) ||
+                        lastName.ToLower().Contains(search);
+                }).ToList();
+            }
+
+            list.ForEach(one => one["totalcount"] = list.Count);
+            pager["rowCount"] = list.Count;
+
+            if (!string.IsNullOrEmpty(sc))
+            {
+                var sortBy = sc.ToLower();
+                var ascending = string.Compare(sd ?? "ASC", "ASC", true) == 0;
+                switch (sortBy)
+                {
+                    case "email":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.Parse<string>("email"), b.Parse<string>("email"), true) :
+                            string.Compare(b.Parse<string>("email"), a.Parse<string>("email"), true));
+                        break;
+
+                    case "firstname":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.Parse<string>("firstname"), b.Parse<string>("firstname"), true) :
+                            string.Compare(b.Parse<string>("firstname"), a.Parse<string>("firstname"), true));
+                        break;
+
+                    case "lastname":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.Parse<string>("lastname"), b.Parse<string>("lastname"), true) :
+                            string.Compare(b.Parse<string>("lastname"), a.Parse<string>("lastname"), true));
+                        break;
+
+                    case "roleluid_text":
+                        list.Sort((a, b) => ascending ?
+                            string.Compare(a.Parse<string>("roleluid_text"), b.Parse<string>("roleluid_text"), true) :
+                            string.Compare(b.Parse<string>("roleluid_text"), a.Parse<string>("roleluid_text"), true));
+                        break;
+
+                    case "archive":
+                        list.Sort((a, b) => ascending ?
+                            (a.Parse<bool>("archive") ? 1 : 0) - (b.Parse<bool>("archive") ? 1 : 0) :
+                            (b.Parse<bool>("archive") ? 1 : 0) - (a.Parse<bool>("archive") ? 1 : 0));
+                        break;
+
+                    case "readytoarchive":
+                        list.Sort((a, b) => ascending ?
+                            (a.Parse<bool>("readytoarchive") ? 1 : 0) - (b.Parse<bool>("readytoarchive") ? 1 : 0) :
+                            (b.Parse<bool>("readytoarchive") ? 1 : 0) - (a.Parse<bool>("readytoarchive") ? 1 : 0));
+                        break;
+
+                    case "lastactivity":
+                        list.Sort((a, b) => ascending ?
+                            DateTime.Compare(a.ParseDateTime("lastactivity") ?? DateTime.MinValue, b.ParseDateTime("lastactivity") ?? DateTime.MinValue) :
+                            DateTime.Compare(b.ParseDateTime("lastactivity") ?? DateTime.MinValue, a.ParseDateTime("lastactivity") ?? DateTime.MinValue));
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            list = list
+                .Skip((pn - 1) * ps)
+                .Take(ps)
+                .ToList();
+
+            return new
+            {
+                list = list,
+                pager = pager,
+                xtra = (object)null
+            };
         }
 
-        public Account_Full Account_Select(int uid, string url)
+        public object Account_Select(int uid)
         {
-            var item = repo.spAccount_Select(uid);
-            var xtra = repo.spAccount_Summary(uid);
-            item.xtra = xtra;
-            item.canExtendInvitation = (item.resetGuid != null && item.resetExpiry != null && item.resetExpiry < DateTime.UtcNow && item.lastActivity == null && !item.archive);
-            item.canResetPassword = (item.resetGuid != null && item.resetExpiry != null && item.lastActivity != null && !item.archive);
-            item.canCreateInvitation = (item.resetGuid == null && item.resetExpiry == null && item.lastActivity == null && item.archive);
-            return item;
+            var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
+
+            item["email"] = repo.crypto.Decrypt(item.Parse<string>("email"));
+            item["firstname"] = repo.crypto.Decrypt(item.Parse<string>("firstname"));
+            item["lastname"] = repo.crypto.Decrypt(item.Parse<string>("lastname"));
+            item["by"] = repo.crypto.Decrypt(item.Parse<string>("by"));
+
+            //    .Deserialize();
+
+            var xtra = repo.queryDico("app.Account_Summary", "@uid", uid);
+            xtra["title"] = repo.crypto.Decrypt(xtra.Parse<string>("title"));
+
+            return new
+            {
+                item = item,
+                xtra = xtra
+            };
         }
 
         public Account_Full Account_New(int cie)

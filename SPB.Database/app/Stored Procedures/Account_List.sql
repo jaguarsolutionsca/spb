@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [app].[Account_List]
 (
+	@_uid int = NULL,
 	@cie int = NULL,
     @Archive bit = NULL,
     @ReadyToArchive bit = NULL
@@ -9,7 +10,7 @@ BEGIN
 SET NOCOUNT ON
 ;
 
---DECLARE @IsSupport bit = app.UserIs_Support(@uid);
+--DECLARE @IsSupport bit = app.UserIs_Support(@_uid);
 
 SELECT * 
 FROM app.Account_Full

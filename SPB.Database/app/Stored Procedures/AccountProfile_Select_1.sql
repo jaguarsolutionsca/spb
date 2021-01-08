@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [app].[AccountProfile_Select]
 (
+	@_uid int,
 	@uid int
 )
 AS
@@ -12,12 +13,10 @@ SELECT @columns = COALESCE(@columns + ',', '') + QUOTENAME([Description]) FROM a
 
 DECLARE @query AS nvarchar(MAX) =
 '
-SELECT
-(
-	SELECT * FROM (SELECT [Name], ISNULL([Value],'''') [Value] FROM Gestion_Paie.dbo.jag_ProfileSettings WHERE ProfileID = '+ CAST(@uid as varchar(8)) +') t1
-	PIVOT (MAX([Value]) FOR [Name] IN (' + @columns  + ')) t2
-	FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-) AS [account_profile]
+SELECT * FROM (
+	SELECT [Name], ISNULL([Value],'''') [Value] FROM Gestion_Paie.dbo.jag_ProfileSettings WHERE ProfileID = '+ CAST(@uid as varchar(8)) +'
+) t1
+PIVOT (MAX([Value]) FOR [Name] IN (' + @columns  + ')) t2
 ';
 
 EXEC sp_executesql @query;

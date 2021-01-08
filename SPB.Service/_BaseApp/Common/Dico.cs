@@ -12,7 +12,7 @@ namespace BaseApp.Common
     {
         private static Regex regex = new Regex(@"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}");
 
-        public Dico ReviveUTO(string[] whitelist = null, string[] blacklist = null)
+        public Dico ReviveUTO(string[] whitelist = null, string[] blacklist = null, bool flatten = true)
         {
             var dico = new Dico();
             foreach (var key in this.Keys)
@@ -49,9 +49,21 @@ namespace BaseApp.Common
                 {
                     var json = obj.Value.ToString();
                     var obj2 = JsonSerializer.Deserialize<Dico>(json).ReviveUTO(whitelist, blacklist);
-                    foreach (var key2 in obj2.Keys)
+                    if (flatten)
                     {
-                        dico.Add(key2, obj2[key2]);
+                        foreach (var key2 in obj2.Keys)
+                        {
+                            dico.Add(key2, obj2[key2]);
+                        }
+                    }
+                    else
+                    {
+                        var dico2 = new Dico();
+                        dico.Add(key, dico2);
+                        foreach (var key2 in obj2.Keys)
+                        {
+                            dico2.Add(key2, obj2[key2]);
+                        }
                     }
                 }
                 else
@@ -115,6 +127,15 @@ namespace BaseApp.Common
             return dico;
         }
 
+        public Dico TrimKeys(string[] keys)
+        {
+            foreach (var key in keys)
+            {
+                this.Remove(key);
+            }
+            return this;
+        }
+
         public Dico TrimRowCount()
         {
             this.Remove("rowCount");
@@ -167,6 +188,34 @@ namespace BaseApp.Common
             }
             json = null;
             return dico;
+        }
+
+        internal T Parse<T>(string key)
+        {
+            T entity = default;
+
+            if (!this.ContainsKey(key))
+                return entity;
+
+            var value = this[key];
+            if (value == null)
+                return entity;
+
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        internal DateTime? ParseDateTime(string key)
+        {
+            var entity = new DateTime?();
+
+            if (!this.ContainsKey(key))
+                return entity;
+
+            var value = this[key];
+            if (value == null)
+                return entity;
+
+            return (DateTime)value;
         }
     }
 }

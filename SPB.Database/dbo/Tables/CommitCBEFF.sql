@@ -11,6 +11,9 @@
     [Created]    DATETIME      NOT NULL,
     [Updated]    DATETIME      NOT NULL,
     [UpdatedBy]  INT           NOT NULL,
-    CONSTRAINT [PK_CommitCBEFF] PRIMARY KEY CLUSTERED ([ID] ASC)
+    CONSTRAINT [PK_CommitCBEFF] PRIMARY KEY CLUSTERED ([ID] ASC),
+    CONSTRAINT [FK_CommitCBEFF_Lookup] FOREIGN KEY ([RegionLUID]) REFERENCES [app].[Lookup] ([ID])
 );
+
+
 
