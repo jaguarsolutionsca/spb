@@ -6,170 +6,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
-namespace BaseApp.DAL
-{
-    using BaseApp.Common;
-    using System.Data;
-    using System.Data.SqlClient;
-    using System.Linq;
-
-    public class Account_Insert : UTO.Account_Insert
-    {
-        public Guid? resetGuid { get; set; }
-        public DateTime? resetExpiry { get; set; }
-        public int updatedBy { get; set; }
-
-        internal Account_Insert ToLocalTime()
-        {
-            return this;
-        }
-    }
-
-    public class Account_Update : UTO.Account_Update
-    {
-        public Guid? resetGuid { get; set; }
-        public DateTime? resetExpiry { get; set; }
-
-        public Account_Update ToLocalTime()
-        {
-            resetExpiry = resetExpiry?.ToLocalTime();
-            updated = updated.ToLocalTime();
-            return this;
-        }
-    }
-
-    internal partial class Repo
-    {
-        public DTO.Account_Full spAccount_Select(int uid)
-        {
-            return queryEntity<DTO.Account_Full>("app.Account_Select", "@uid", uid)?
-                .Decrypt(crypto)
-                .Deserialize();
-        }
-
-        public DTO.Account_Full spAccount_New(int cie)
-        {
-            return queryEntity<DTO.Account_Full>("app.Account_New", "@cie", cie)
-                .Decrypt(crypto)
-                .Deserialize();
-        }
-
-        public int spAccount_Insert(Account_Insert entity)
-        {
-            entity.Serialize();
-            entity.Encrypt(crypto);
-            entity.ToLocalTime();
-            return queryScalar<int>("app.Account_Insert", KVList.Build<Account_Insert>(entity));
-        }
-
-        public void spAccount_Update(Account_Update entity)
-        {
-            entity.Serialize();
-            entity.Encrypt(crypto);
-            entity.ToLocalTime();
-            queryNonQuery("app.Account_Update", KVList.Build<Account_Update>(entity));
-        }
-
-        public void spAccount_Delete(int uid, DateTime updated)
-        {
-            queryNonQuery("app.Account_Delete", KVList.Build()
-                .Add("@uid", uid)
-                .Add("@updated", updated.ToLocalTime())
-                );
-        }
-
-        public DTO.Account_Summary spAccount_Summary(int uid)
-        {
-            var summary = queryEntity<DTO.Account_Summary>("app.Account_Summary", "@uid", uid);
-            summary.title = crypto.Decrypt(summary.title);
-            return summary;
-        }
-    }
-}
-
 namespace BaseApp.DTO
 {
-    public class Account_Search : Account_PK
-    {
-        public int totalCount { get; set; }
-        public string cie_Text { get; set; }
-        public string email { get; set; }
-        public string roleLUID_Text { get; set; }
-        public DateTime? lastActivity { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public bool readyToArchive { get; set; }
-        public int year { get; set; }
-        public bool archive { get; set; }
-
-        internal Account_Search Decrypt(Common.Crypto crypto)
-        {
-            email = crypto.Decrypt(email);
-            firstName = crypto.Decrypt(firstName);
-            lastName = crypto.Decrypt(lastName);
-            return this;
-        }
-    }
-
-    public class Account_Search_FK
+    public class Account_Basic
     {
         public int uid { get; set; }
-        public int? cie { get; set; }
-    }
-
-    public class Account_Search_Filter : Account_Search_FK
-    {
-        public bool? archive { get; set; }
-        public bool? readyToArchive { get; set; }
-    }
-
-    public class Account_Full : Account_PK
-    {
-        public object xtra { get; set; }
         public int cie { get; set; }
         public string cie_Text { get; set; }
         public string email { get; set; }
-        public string password { get; set; }
-        public int roleLUID { get; set; }
-        public string roleLUID_Text { get; set; }
-        public int roleMask { get; set; }
-        public bool isSupport { get; set; }
-        public Guid? resetGuid { get; set; }
-        public DateTime? resetExpiry { get; set; }
-        public DateTime? lastActivity { get; set; }
-        public bool isAdminReset { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
-        public bool useRealEmail { get; set; }
-        public int? archiveDays { get; set; }
-        public bool readyToArchive { get; set; }
-        public int currentYear { get; set; }
-        public Dictionary<string, object> profile { get; set; }
-        public string profileJson { get; set; }
-        public string comment { get; set; }
+        public int roleMask { get; set; }
+        public bool isSupport { get; set; }
         public bool archive { get; set; }
-        public DateTime created { get; set; }
-        public DateTime updated { get; set; }
-        public int updatedBy { get; set; }
-        public string by { get; set; }
-        //
-        public bool canExtendInvitation { get; set; }
-        public bool canResetPassword { get; set; }
-        public bool canCreateInvitation { get; set; }
 
-        internal Account_Full Deserialize()
-        {
-            profile = Dico.Deserialize(profileJson);
-            profileJson = null;
-            return this;
-        }
-
-        internal Account_Full Decrypt(Common.Crypto crypto)
+        internal Account_Basic Decrypt(Common.Crypto crypto)
         {
             email = crypto.Decrypt(email);
             firstName = crypto.Decrypt(firstName);
             lastName = crypto.Decrypt(lastName);
-            by = crypto.Decrypt(by);
             return this;
         }
     }
@@ -177,84 +32,6 @@ namespace BaseApp.DTO
     public class Account_PK
     {
         public int uid { get; set; }
-    }
-
-    public class Account_Summary
-    {
-        public string title { get; set; }
-        public int fileCount { get; set; }
-    }
-}
-
-namespace BaseApp.UTO
-{
-    public class Account_Insert
-    {
-        public int cie { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public int roleLUID { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public bool useRealEmail { get; set; }
-        public int? archiveDays { get; set; }
-        public int currentYear { get; set; }
-        public Dictionary<string, object> profile { get; set; }
-        public string profileJson { get; set; }
-        public string comment { get; set; }
-        public bool archive { get; set; }
-
-        internal void Validate()
-        {
-            if (!email.Contains("@"))
-                throw new Common.ValidationException("Email requires an '@' character");
-
-            if (email.Length > 50)
-                throw new Common.ValidationException("Email is too long (max length = 50)");
-
-            if (firstName.Length > 50)
-                throw new Common.ValidationException("FirstName is too long (max length = 50)");
-
-            if (lastName.Length > 50)
-                throw new Common.ValidationException("LastName is too long (max length = 50)");
-        }
-
-        internal Account_Insert Serialize()
-        {
-            profileJson = null;
-            if (profile != null)
-                profileJson = JsonSerializer.Serialize(profile);
-
-            profile = null;
-            return this;
-        }
-
-        internal Account_Insert Encrypt(Common.Crypto crypto)
-        {
-            email = crypto.Encrypt(email);
-            firstName = crypto.Encrypt(firstName);
-            lastName = crypto.Encrypt(lastName);
-            return this;
-        }
-    }
-
-    internal interface IAccount_UpdateLock
-    {
-        public int uid { get; set; }
-        public DateTime updated { get; set; }
-    }
-
-    public class Account_UpdateLock : IAccount_UpdateLock
-    {
-        public int uid { get; set; }
-        public DateTime updated { get; set; }
-    }
-
-    public class Account_Update : Account_Insert, IAccount_UpdateLock
-    {
-        public int uid { get; set; }
-        public DateTime updated { get; set; }
-        public int updatedBy { get; set; }
     }
 }
 
@@ -270,10 +47,10 @@ namespace BaseApp.Service
     {
         object Account_Search(Dico pager);
         object Account_Select(int uid);
-        Account_Full Account_New(int cie);
-        Account_PK Account_Insert(UTO.Account_Insert uto, string url);
-        void Account_Update(UTO.Account_Update uto);
-        void Account_Delete(int id, DateTime concurrencyUtc);
+        object Account_New(int cie);
+        object Account_Insert(Dico uto, string url);
+        void Account_Update(Dico uto);
+        void Account_Delete(Dico key);
         void Auto_Archive(int cie);
         void Reset_PasswordBy_Admin(int uid, string url);
         void Create_Invitation(int uid, string url);
@@ -393,8 +170,6 @@ namespace BaseApp.Service
             item["lastname"] = repo.crypto.Decrypt(item.Parse<string>("lastname"));
             item["by"] = repo.crypto.Decrypt(item.Parse<string>("by"));
 
-            //    .Deserialize();
-
             var xtra = repo.queryDico("app.Account_Summary", "@uid", uid);
             xtra["title"] = repo.crypto.Decrypt(xtra.Parse<string>("title"));
 
@@ -405,90 +180,154 @@ namespace BaseApp.Service
             };
         }
 
-        public Account_Full Account_New(int cie)
+        public object Account_New(int cie)
         {
-            var item = repo.spAccount_New(cie);
-            return item;
+            var item = repo.queryDico("app.Account_New", "@cie", cie, uid: true).ReviveDTO();
+            item["by"] = repo.crypto.Decrypt(item.Parse<string>("by"));
+
+            return new
+            {
+                item = item,
+                xtra = (object)null
+            };
         }
 
-        public Account_PK Account_Insert(UTO.Account_Insert uto, string url)
+        public object Account_Insert(Dico uto, string url)
         {
+            uto.TrimKeys(new string[] { "uid", "cie_text", "roleluid_text", "rolemask", "resetguid", "resetexpiry", "issupport", "lastactivity", "isadminreset", "readytoarchive", "canextendinvitation", "canresetpassword", "cancreateinvitation", "created", "updated", "updatedby", "by" });
+
+            var appProps = new string[] { "cie", "email", "password", "roleluid", "firstname", "lastname", "userealemail", "archivedays", "currentyear", "comment", "archive" };
+            var appUTO = uto.ReviveUTO(whitelist: appProps);
+            var dboUTO = uto.ReviveUTO(blacklist: appProps);
+
+            appUTO.Add("profileJson", Dico.Serialize(dboUTO));
+
+            var archive = appUTO.Parse<bool>("archive");
+            var email = appUTO.Parse<string>("email");
+            var firstname = appUTO.Parse<string>("firstname");
+            var lastname = appUTO.Parse<string>("lastname");
+            var cie = appUTO.Parse<int>("cie");
+            email = sanitizeEmail(email);
+
+            appUTO["email"] = repo.crypto.Encrypt(email);
+            appUTO["firstname"] = repo.crypto.Encrypt(firstname);
+            appUTO["lastname"] = repo.crypto.Encrypt(lastname);
+
+
+            if (!email.Contains("@"))
+                throw new ValidationException("Email requires an '@' character");
+
+            if (email.Length > 50)
+                throw new ValidationException("Email is too long (max length = 50)");
+
+            if (firstname.Length > 50)
+                throw new ValidationException("First name is too long (max length = 50)");
+
+            if (lastname.Length > 50)
+                throw new ValidationException("Last name is too long (max length = 50)");
+
+
             int uid;
-            var entity = Common.Mapper.mapTo<UTO.Account_Insert, DAL.Account_Insert>(uto);
-
-            var email = sanitizeEmail(entity.email);
-            entity.email = email;
-            entity.Validate();
-
-            if (entity.useRealEmail)
+            if (appUTO.Parse<bool>("userealemail"))
             {
-                entity.resetGuid = Guid.NewGuid();
-                entity.resetExpiry = DateTime.Now.AddDays(14);
-                entity.updatedBy = user.Get_UID();
-                uid = repo.spAccount_Insert(entity);
+                var resetGuid = Guid.NewGuid();
+                appUTO["resetGuid"] = resetGuid;
+                appUTO["resetExpiry"] = DateTime.Now.AddDays(7); // one week from now
 
-                var account = repo.Account_SelectBy_Email(email, entity.cie);
-                var company = account.cie_Text;
+                uid = repo.queryScalar<int>("app.Account_Insert", KVList.Build(appUTO), uid: true);
+
+                var query = "app.Account_SelectBy_Email";
+                var parameters = new KVList()
+                    .Add("@email", appUTO["email"])
+                    .Add("@cie", cie);
+                var account = repo.queryDico(query, parameters);
+                var company = appUTO.Parse<string>("company_text");
 
                 url = url.Replace("{company}", company);
-                url = url.Replace("{guid}", entity.resetGuid.ToString());
+                url = url.Replace("{guid}", resetGuid.ToString());
 
                 var emailFields = EmailFields.Build_Invitation(url);
                 SendEmail(email, emailFields.subject, emailFields.bodyText);
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(entity.password))
-                    entity.password = get_PasswordHash(entity.password);
+                var password = appUTO.Parse<string>("password");
+
+                if (!string.IsNullOrWhiteSpace(password))
+                    password = get_PasswordHash(password);
                 else
                     throw new ValidationException("The password cannot be empty");
 
-                validate_PasswordHash(entity.password);
+                validate_PasswordHash(password);
 
-                entity.updatedBy = user.Get_UID();
-                uid = repo.spAccount_Insert(entity);
+                uid = repo.queryScalar<int>("app.Account_Insert", KVList.Build(appUTO), uid: true);
             }
 
-            return new Account_PK { uid = uid };
+            return new
+            {
+                uid = uid
+            };
         }
 
-        public void Account_Update(UTO.Account_Update uto)
+        public void Account_Update(Dico uto)
         {
-            var entity = Common.Mapper.mapTo<UTO.Account_Update, DAL.Account_Update>(uto);
+            uto.TrimKeys(new string[] { "cie_text", "roleluid_text", "rolemask", "resetguid", "resetexpiry", "issupport", "lastactivity", "isadminreset", "readytoarchive", "canextendinvitation", "canresetpassword", "cancreateinvitation", "created", "updatedby", "by" });
 
-            if (entity.uid == 1 && user.Get_UID() != 1)
+            var appProps = new string[] { "uid", "cie", "email", "password", "roleluid", "firstname", "lastname", "userealemail", "archivedays", "currentyear", "comment", "archive", "updated" };
+            var appUTO = uto.ReviveUTO(whitelist: appProps);
+            var dboUTO = uto.ReviveUTO(blacklist: appProps);
+
+            appUTO.Add("profileJson", Dico.Serialize(dboUTO));
+
+            var uid = appUTO.Parse<int>("uid");
+            var archive = appUTO.Parse<bool>("archive");
+            var email = appUTO.Parse<string>("email");
+            var firstname = appUTO.Parse<string>("firstname");
+            var lastname = appUTO.Parse<string>("lastname");
+            email = sanitizeEmail(email);
+
+            appUTO["email"] = repo.crypto.Encrypt(email);
+            appUTO["firstname"] = repo.crypto.Encrypt(firstname);
+            appUTO["lastname"] = repo.crypto.Encrypt(lastname);
+
+
+            if (uid == 0 && user.Get_UID() != 0)
                 throw new ValidationException("Only the administrator can update this account!");
 
-            if (entity.uid == user.Get_UID() && entity.archive)
+            if (uid == user.Get_UID() && archive)
                 throw new ValidationException("You cannot archive your own account!");
 
-            entity.email = sanitizeEmail(entity.email);
-            entity.Validate();
-            if (!entity.useRealEmail)
+            if (!email.Contains("@"))
+                throw new ValidationException("Email requires an '@' character");
+
+            if (email.Length > 50)
+                throw new ValidationException("Email is too long (max length = 50)");
+
+            if (firstname.Length > 50)
+                throw new ValidationException("First name is too long (max length = 50)");
+
+            if (lastname.Length > 50)
+                throw new ValidationException("Last name is too long (max length = 50)");
+
+
+            if (!appUTO.Parse<bool>("userealemail"))
             {
-                if (!string.IsNullOrWhiteSpace(entity.password))
-                    entity.password = get_PasswordHash(entity.password);
+                var password = appUTO.Parse<string>("password");
+
+                if (!string.IsNullOrWhiteSpace(password))
+                    password = get_PasswordHash(password);
                 else
                     throw new ValidationException("The password cannot be empty");
 
-                validate_PasswordHash(entity.password);
-
-                entity.resetGuid = null;
-                entity.resetExpiry = null;
+                validate_PasswordHash(password);
             }
-            entity.updatedBy = user.Get_UID();
-            repo.spAccount_Update(entity);
+
+            repo.queryNonQuery("app.Account_Update", KVList.Build(appUTO), uid: true);
         }
 
-        public void Account_Delete(int uid, DateTime concurrencyUtc)
+        public void Account_Delete(Dico key)
         {
-            if (uid == SupportUID && user.Get_UID() != SupportUID)
-                throw new ValidationException("You cannot delete the support account!");
-
-            if (uid == user.Get_UID())
-                throw new ValidationException("You cannot delete your own account!");
-
-            repo.spAccount_Delete(uid, concurrencyUtc);
+            repo.queryNonQuery("app.Account_Delete", KVList.Build(key.ReviveUTO()), uid: true);
         }
 
         public void Auto_Archive(int cie)
@@ -496,16 +335,27 @@ namespace BaseApp.Service
             repo.queryNonQuery("app.Account_AutoArchive", "@cie", cie);
         }
 
+        void Account_ResetPassword(string email, Guid guid, DateTime expiry, bool forcedReset = false, bool unArchive = false)
+        {
+            repo.queryNonQuery("app.Account_ResetPassword", new KVList()
+                .Add("@email", repo.crypto.Encrypt(email))
+                .Add("@guid", guid)
+                .Add("@expiry", expiry)
+                .Add("@isAdminReset", forcedReset)
+                .Add("@unArchive", unArchive));
+        }
+
         public void Reset_PasswordBy_Admin(int uid, string url)
         {
-            if (uid == 1 && user.Get_UID() != 1)
+            if (uid == 0 && user.Get_UID() != 0)
                 throw new ValidationException("Only the administrator can reset his password!");
 
-            var email = repo.spAccount_Select(uid).email;
+            var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
+            var email = repo.crypto.Decrypt(item.Parse<string>("email"));
 
             var guid = Guid.NewGuid();
             var expiry = DateTime.Now.AddDays(7);
-            repo.Account_ResetPassword(email, guid, expiry, forcedReset: true, unArchive: true);
+            Account_ResetPassword(email, guid, expiry, forcedReset: true, unArchive: true);
 
             url = url.Replace("{guid}", guid.ToString());
 
@@ -515,11 +365,12 @@ namespace BaseApp.Service
 
         public void Create_Invitation(int uid, string url)
         {
-            var email = repo.spAccount_Select(uid).email;
+            var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
+            var email = repo.crypto.Decrypt(item.Parse<string>("email"));
 
             var guid = Guid.NewGuid();
             var expiry = DateTime.Now.AddDays(7);
-            repo.Account_ResetPassword(email, guid, expiry, unArchive: true);
+            Account_ResetPassword(email, guid, expiry, unArchive: true);
 
             url = url.Replace("{guid}", guid.ToString());
             var emailFields = EmailFields.Build_Invitation(url);

@@ -1,6 +1,5 @@
 ﻿CREATE PROCEDURE [app].[AccountProfile_Select]
 (
-	@_uid int,
 	@uid int
 )
 AS

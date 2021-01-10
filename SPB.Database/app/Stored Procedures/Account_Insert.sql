@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [app].[Account_Insert]
 (
+	@_uid int,
 	@CIE int,
     @Email nvarchar(128),
 	@Password nvarchar(50) NULL,
@@ -11,11 +12,9 @@
 	@UseRealEmail bit,
 	@ArchiveDays int NULL,
 	@CurrentYear int NULL,
-	@Profile char(1) NULL, -- not used, but required!
-	@ProfileJson nvarchar(MAX), -- '{"AcrobatPath":"123","AutresRapportsPrinterMarginBottom":"3","AutresRapportsPrinterMarginLeft":"40"}'
 	@Comment nvarchar(1024),
     @Archive bit,
-    @UpdatedBy int
+	@ProfileJson nvarchar(MAX)
 )
 AS
 BEGIN
@@ -50,11 +49,11 @@ VALUES (
 	@Archive,
 	GETDATE(),
 	GETDATE(),
-	@UpdatedBy
+	@_uid
 );
 DECLARE @uid int = (SELECT CAST(SCOPE_IDENTITY() as int));
 
-EXEC app.AccountProfile_Insert @uid = @uid, @json = @Profile;
+EXEC app.AccountProfile_Insert @uid = @uid, @json = @ProfileJson;
 
 SELECT @uid;
 END

@@ -11,16 +11,10 @@ using BaseApp.Common;
 using BaseApp.DTO;
 using BaseApp.Service;
 using BaseApp.Web.Models;
+using BaseApp.UTO;
 
 namespace BaseApp.Web.Models
 {
-    public class LoginModel
-    {
-        public string email { get; set; }
-        public string password { get; set; }
-        public int cie { get; set; }
-    }
-
     public class AuthorizationData
     {
         public string token { get; set; }
@@ -38,9 +32,9 @@ namespace BaseApp.Web.Controllers
     public partial class AuthController : _CoreController
     {
         [HttpPost("signin")]
-        public AuthorizationData Signin([FromBody]LoginModel model)
+        public AuthorizationData Signin([FromBody]LoginModel uto)
         {
-            var usercaps = app.AppLogin(model.email, model.password, model.cie);
+            var usercaps = app.AppLogin(uto.email, uto.password, uto.cie);
             return populateAuthorizationData(usercaps);
         }
 
@@ -51,23 +45,23 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpPost("invited")]
-        public AuthorizationData Invited([FromBody] LoginModel model)
+        public AuthorizationData Invited([FromBody] LoginModel uto)
         {
-            app.Save_Password(model.email, model.password);
-            return Signin(model);
+            app.Save_Password(uto.email, uto.password);
+            return Signin(uto);
         }
 
         [HttpPost("resetted")]
-        public AuthorizationData Resetted([FromBody] LoginModel model)
+        public AuthorizationData Resetted([FromBody] LoginModel uto)
         {
-            app.Save_Password(model.email, model.password);
-            return Signin(model);
+            app.Save_Password(uto.email, uto.password);
+            return Signin(uto);
         }
 
         [HttpPost("request-password-reset")]
-        public ActionResult RequestPasswordReset([FromBody] LoginModel model)
+        public ActionResult RequestPasswordReset([FromBody] LoginModel uto)
         {
-            app.Reset_Password(model.email, buildUIRouterUrl("reset-password/{guid}"), model.cie);
+            app.Reset_Password(uto.email, buildUIRouterUrl("reset-password/{guid}"), uto.cie);
             return NoContent();
         }
 

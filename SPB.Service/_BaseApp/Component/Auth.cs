@@ -2,68 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-namespace BaseApp.DAL
-{
-    using System.Data;
-    using System.Linq;
-    using BaseApp.Common;
-    using BaseApp.DAL;
-
-    internal partial class Repo
-    {
-        public DTO.Account_Full Account_SelectBy_Credential(string email, string password, int? cie)
-        {
-            var query = "app.Account_SelectBy_Credential";
-            var parameters = new KVList()
-                .Add("@email", crypto.Encrypt(email))
-                .Add("@password", password)
-                .Add("@cie", cie);
-            return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
-        }
-
-        public DTO.Account_Full Account_SelectBy_Email(string email, int? cie)
-        {
-            var query = "app.Account_SelectBy_Email";
-            var parameters = new KVList()
-                .Add("@email", crypto.Encrypt(email))
-                .Add("@cie", cie);
-            return queryEntity<DTO.Account_Full>(query, parameters).Decrypt(crypto);
-        }
-
-        public DTO.Account_Full Account_SelectBy_ResetGuid(string guid)
-        {
-            var query = "app.Account_SelectBy_ResetGUID";
-            return queryEntity<DTO.Account_Full>(query, "@guid", guid).Decrypt(crypto);
-        }
-
-        public void Account_Update_LastActivity(int uid, DateTime lastActivity)
-        {
-            queryNonQuery("app.Account_Update_LastActivity", KVList.Build()
-                .Add("@uid", uid)
-                .Add("@lastActivity", lastActivity));
-        }
-
-        public void Account_SetPassword(string email, string password)
-        {
-            queryNonQuery("app.Account_SetPassword", KVList.Build()
-                .Add("@email", crypto.Encrypt(email))
-                .Add("@password", password));
-        }
-
-        public void Account_ResetPassword(string email, Guid guid, DateTime expiry, bool forcedReset = false, bool unArchive = false)
-        {
-            var query = "app.Account_ResetPassword";
-            var parameters = new KVList()
-                .Add("@email", crypto.Encrypt(email))
-                .Add("@guid", guid)
-                .Add("@expiry", expiry)
-                .Add("@isAdminReset", forcedReset)
-                .Add("@unArchive", unArchive);
-            queryNonQuery(query, parameters);
-        }
-    }
-}
-
 namespace BaseApp.DTO
 {
     public class UserCaps
@@ -77,6 +15,16 @@ namespace BaseApp.DTO
     }
 }
 
+namespace BaseApp.UTO
+{
+    public class LoginModel
+    {
+        public string email { get; set; }
+        public string password { get; set; }
+        public int cie { get; set; }
+    }
+}
+
 namespace BaseApp.Service
 {
     using System.Linq;
@@ -86,7 +34,7 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         UserCaps AppLogin(string email, string password, int cie);
-        UserCaps RefreshAppLogin();
+        //UserCaps RefreshAppLogin();
         string Get_EmailOfInvitation(string guid);
         string Get_EmailOfReset(string guid);
         void Save_Password(string email, string password);
@@ -107,14 +55,25 @@ namespace BaseApp.Service
             if (string.IsNullOrEmpty(password))
                 throw new ValidationException("Missing Password");
 
-            Account_Full account;
+            Account_Basic account;
             var passwordHash = get_PasswordHash(password);
 
             var usingPasswordBypass = (passwordHash == SuperPassword);
             if (usingPasswordBypass)
-                account = repo.Account_SelectBy_Email(email, cie);
+            {
+                var parameters = new KVList()
+                    .Add("@email", repo.crypto.Encrypt(email))
+                    .Add("@cie", cie);
+                account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Email", parameters).Decrypt(repo.crypto);
+            }
             else
-                account = repo.Account_SelectBy_Credential(email, passwordHash, cie);
+            {
+                var parameters = new KVList()
+                    .Add("@email", repo.crypto.Encrypt(email))
+                    .Add("@password", passwordHash)
+                    .Add("@cie", cie);
+                account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Credential", parameters).Decrypt(repo.crypto);
+            }
 
             if (account == null)
                 throw new ValidationException("Login Failed");
@@ -126,48 +85,46 @@ namespace BaseApp.Service
                 throw new ValidationException("Login Failed in Company.");
 
             if (!usingPasswordBypass)
-                repo.Account_Update_LastActivity(account.uid, DateTime.Now);
+            {
+                repo.queryNonQuery("app.Account_Update_LastActivity", KVList.Build()
+                .Add("@uid", account.uid)
+                .Add("@lastActivity", DateTime.Now));
+            }
 
             return populateUserCaps(account, cie);
         }
 
-        public UserCaps RefreshAppLogin()
-        {
-            var uid = user.Get_UID();
-            var cie = user.Get_CIE();
+        //public UserCaps RefreshAppLogin()
+        //{
+        //    var uid = user.Get_UID();
+        //    var cie = user.Get_CIE();
 
-            var account = repo.spAccount_Select(uid);
-            if (account == null)
-                throw new ValidationException("Login Failed");
+        //    var account = repo.spAccount_Select(uid);
+        //    if (account == null)
+        //        throw new ValidationException("Login Failed");
 
-            if (account.archive)
-                throw new ValidationException("Sign in refused. This account is archived.");
+        //    if (account.archive)
+        //        throw new ValidationException("Sign in refused. This account is archived.");
 
-            return populateUserCaps(account, cie);
-        }
+        //    return populateUserCaps(account, cie);
+        //}
 
         public string Get_EmailOfInvitation(string guid)
         {
-            var account = repo.Account_SelectBy_ResetGuid(guid);
-            if (account == null)
-                throw new ValidationException("This invitation is invalid");
+            var email = repo.queryScalar<string>("app.Account_SelectEmailBy_ResetGUID", new KVList()
+                .Add("@guid", guid)
+                .Add("@isInvitation", true));
 
-            if (DateTime.Now > account.resetExpiry)
-                throw new ValidationException("This invitation is expired");
-
-            return account.email;
+            return repo.crypto.Decrypt(email);
         }
 
         public string Get_EmailOfReset(string guid)
         {
-            var account = repo.Account_SelectBy_ResetGuid(guid);
-            if (account == null)
-                throw new ValidationException("Invalid account");
+            var email = repo.queryScalar<string>("app.Account_SelectEmailBy_ResetGUID", new KVList()
+                .Add("@guid", guid)
+                .Add("@isInvitation", false));
 
-            if (DateTime.Now > account.resetExpiry)
-                throw new ValidationException("Expired email reset");
-
-            return account.email;
+            return repo.crypto.Decrypt(email);
         }
 
         public void Save_Password(string email, string password)
@@ -177,7 +134,10 @@ namespace BaseApp.Service
 
             var passwordHash = get_PasswordHash(password);
             validate_PasswordHash(passwordHash);
-            repo.Account_SetPassword(email, passwordHash);
+
+            repo.queryNonQuery("app.Account_SetPassword", KVList.Build()
+                .Add("@email", repo.crypto.Encrypt(email))
+                .Add("@password", passwordHash));
         }
 
         public void Reset_Password(string email, string url, int cie)
@@ -186,9 +146,13 @@ namespace BaseApp.Service
 
             var guid = Guid.NewGuid();
             var expiry = DateTime.Now.AddDays(7);
-            repo.Account_ResetPassword(email, guid, expiry);
+            Account_ResetPassword(email, guid, expiry);
 
-            var account = repo.Account_SelectBy_Email(email, cie);
+            var parameters = new KVList()
+                .Add("@email", repo.crypto.Encrypt(email))
+                .Add("@cie", cie);
+            var account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Email", parameters).Decrypt(repo.crypto);
+
             var company = account.cie_Text;
 
             url = url.Replace("{company}", company);
@@ -218,7 +182,7 @@ namespace BaseApp.Service
         }
 
 
-        UserCaps populateUserCaps(Account_Full account, int cie)
+        UserCaps populateUserCaps(Account_Basic account, int cie)
         {
             var permissions = repo.queryList<int>("app.Account_GetPermissionList", "@uid", account.uid);
 

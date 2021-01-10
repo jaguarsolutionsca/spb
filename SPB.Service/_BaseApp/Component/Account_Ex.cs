@@ -76,7 +76,7 @@ namespace BaseApp.Service
             var line1 = "Réparons ce problème de mot de passe!";
             var line2 = "Cliquez ce lien pour créer un nouveau mot de passe:";
             var line3 = "Ce lien est valide pour une durée de une semaine.";
-            var line4 = "NOTE: Vous n'avez qu'à ignorer ce courriel si vous n'avez pas demandé ce courriel";
+            var line4 = "NOTE: Ignorez ce courriel si vous n'avez pas demandé un nouveau mot de passe";
 
             var subject = $"Demande de nouveau mot de passe";
             var bodyHtml = $@"

@@ -1,23 +1,20 @@
 ﻿CREATE PROCEDURE [app].[Account_Update]
 (
+	@_uid int,
     @UID int,
 	@CIE int,
     @Email nvarchar(128),
 	@Password nvarchar(50) NULL,
 	@RoleLUID int,
-    @ResetGuid uniqueidentifier NULL,
-    @ResetExpiry datetime NULL,
     @FirstName nvarchar(128),
     @LastName nvarchar(128),
 	@UseRealEmail bit,
 	@ArchiveDays int NULL,
 	@CurrentYear int NULL,
-	@Profile char(1) NULL, -- not used, but required!
-	@ProfileJson nvarchar(MAX), -- '[{"key":"AcrobatPath","value":"cheval"},{"key":"ExcelLanguage","value":"Français"}]'
 	@Comment nvarchar(1024),
     @Archive bit,
     @Updated datetime,
-    @UpdatedBy int
+	@ProfileJson nvarchar(MAX)
 )
 AS
 BEGIN
@@ -47,9 +44,8 @@ SET
 	[Email] = @email,
 	[Password] = CASE WHEN @UseRealEmail = 0 THEN ISNULL(@Password, Password) ELSE Password END,
 	[RoleLUID] = @RoleLUID,
-	[ResetGuid] = @ResetGuid,
-	[ResetExpiry] = @ResetExpiry,
-	--[IsAdminReset] = @IsAdminReset, --never updated here
+	[ResetGuid] = CASE WHEN @UseRealEmail = 0 THEN NULL ELSE ResetGuid END,
+	[ResetExpiry] = CASE WHEN @UseRealEmail = 0 THEN NULL ELSE ResetExpiry END,
 	[FirstName] = @FirstName,
 	[LastName] = @LastName,
 	[UseRealEmail] = @UseRealEmail,
@@ -57,8 +53,8 @@ SET
 	[CurrentYear] = @CurrentYear,
 	[Comment] = @Comment,
 	[Archive] = @Archive,
-	[Updated] = GETDATE(),
-	[UpdatedBy] = @UpdatedBy
+	[Updated] = GETDATE(),			created = @Updated,
+	[UpdatedBy] = @_uid
 WHERE UID = @uid
 ;
 

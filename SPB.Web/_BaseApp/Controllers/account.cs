@@ -33,7 +33,7 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpGet("new")]
-        public Account_Full New()
+        public object New()
         {
             app.RequirePermission(Perm.Accounts_Edit);
             var cie = User.Get_CIE();
@@ -41,14 +41,14 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpPost]
-        public Account_PK Insert([FromBody] Account_Insert uto)
+        public object Insert([FromBody] Dico uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             return app.Account_Insert(uto, buildUIRouterUrl("accept-invitation/{guid}"));
         }
 
         [HttpPut]
-        public ActionResult Update([FromBody] Account_Update uto)
+        public ActionResult Update([FromBody] Dico uto)
         {
             app.RequirePermission(Perm.Accounts_Edit);
             app.Account_Update(uto);
@@ -56,10 +56,10 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete([FromBody] Account_UpdateLock key)
+        public ActionResult Delete([FromBody] Dico key)
         {
             app.RequirePermission(Perm.Accounts_Edit);
-            app.Account_Delete(key.uid, key.updated);
+            app.Account_Delete(key);
             return NoContent();
         }
 
@@ -79,12 +79,12 @@ namespace BaseApp.Web.Controllers
             return NoContent();
         }
 
-        [HttpPost("refresh")]
-        public AuthorizationData Refresh()
-        {
-            var usercaps = app.RefreshAppLogin();
-            return populateAuthorizationData(usercaps);
-        }
+        //[HttpPost("refresh")]
+        //public AuthorizationData Refresh()
+        //{
+        //    var usercaps = app.RefreshAppLogin();
+        //    return populateAuthorizationData(usercaps);
+        //}
 
         [HttpGet("role")]
         public List<Lookup> Lookup_Role()

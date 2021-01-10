@@ -405,9 +405,9 @@ namespace BaseApp.Service
             object xtra = null;
             switch (tableName)
             {
-                case "account":
-                    xtra = repo.spAccount_Summary(tableID);
-                    break;
+                //case "account":
+                //    xtra = repo.spAccount_Summary(tableID);
+                //    break;
                 default:
                     break;
             }

@@ -12,12 +12,10 @@ SELECT @columns = COALESCE(@columns + ',', '') + QUOTENAME([Description]) FROM a
 
 DECLARE @query AS nvarchar(MAX) =
 '
-SELECT
-(
-	SELECT * FROM (SELECT [Description], '''' [Value] FROM app.Lookup WHERE Groupe = ''PROFILE.KEY'') t1
-	PIVOT (MAX([Value]) FOR [Description] IN (' + @columns  + ')) t2
-	FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-) AS [account_profile]
+SELECT * FROM (
+	SELECT [Description], '''' [Value] FROM app.Lookup WHERE Groupe = ''PROFILE.KEY''
+) t1
+PIVOT (MAX([Value]) FOR [Description] IN (' + @columns  + ')) t2
 ';
 
 EXEC sp_executesql @query;

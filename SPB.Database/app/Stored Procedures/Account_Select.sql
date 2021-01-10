@@ -10,6 +10,6 @@ SET NOCOUNT ON
 
 SELECT * FROM app.Account_Full WHERE UID = @uid;
 
-EXEC app.AccountProfile_Select @_uid=@_uid, @uid=@uid;
+EXEC app.AccountProfile_Select @uid=@uid;
 
 END

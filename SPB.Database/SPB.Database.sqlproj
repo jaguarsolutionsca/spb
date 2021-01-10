@@ -102,7 +102,6 @@
     <Build Include="app\Stored Procedures\Account_GetPermissionList.sql" />
     <Build Include="app\Stored Procedures\Account_Update_LastActivity.sql" />
     <Build Include="app\Stored Procedures\Account_SetPassword.sql" />
-    <Build Include="app\Stored Procedures\Account_SelectBy_ResetGUID.sql" />
     <Build Include="app\Stored Procedures\Account_ResetPassword.sql" />
     <Build Include="app\Stored Procedures\Account_AutoArchive.sql" />
     <Build Include="app\Views\Account_Full.sql" />
@@ -147,6 +146,7 @@
     <Build Include="dbo\Stored Procedures\CommitCBEFF_New.sql" />
     <Build Include="dbo\Stored Procedures\CommitCBEFF_Insert.sql" />
     <Build Include="dbo\Stored Procedures\CommitCBEFF_Delete.sql" />
+    <Build Include="app\Stored Procedures\Account_SelectEmailBy_ResetGUID.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
