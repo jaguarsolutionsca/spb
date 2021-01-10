@@ -61,18 +61,18 @@ namespace BaseApp.Service
             var usingPasswordBypass = (passwordHash == SuperPassword);
             if (usingPasswordBypass)
             {
-                var parameters = new KVList()
-                    .Add("@email", repo.crypto.Encrypt(email))
-                    .Add("@cie", cie);
-                account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Email", parameters).Decrypt(repo.crypto);
+                account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Email", new KVList()
+                    .Add("@email", crypto.Encrypt(email))
+                    .Add("@cie", cie))
+                .Decrypt(crypto);
             }
             else
             {
-                var parameters = new KVList()
-                    .Add("@email", repo.crypto.Encrypt(email))
+                account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Credential", new KVList()
+                    .Add("@email", crypto.Encrypt(email))
                     .Add("@password", passwordHash)
-                    .Add("@cie", cie);
-                account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Credential", parameters).Decrypt(repo.crypto);
+                    .Add("@cie", cie))
+                .Decrypt(crypto);
             }
 
             if (account == null)
@@ -87,8 +87,8 @@ namespace BaseApp.Service
             if (!usingPasswordBypass)
             {
                 repo.queryNonQuery("app.Account_Update_LastActivity", KVList.Build()
-                .Add("@uid", account.uid)
-                .Add("@lastActivity", DateTime.Now));
+                    .Add("@uid", account.uid)
+                    .Add("@lastActivity", DateTime.Now));
             }
 
             return populateUserCaps(account, cie);
@@ -115,7 +115,7 @@ namespace BaseApp.Service
                 .Add("@guid", guid)
                 .Add("@isInvitation", true));
 
-            return repo.crypto.Decrypt(email);
+            return crypto.Decrypt(email);
         }
 
         public string Get_EmailOfReset(string guid)
@@ -124,7 +124,7 @@ namespace BaseApp.Service
                 .Add("@guid", guid)
                 .Add("@isInvitation", false));
 
-            return repo.crypto.Decrypt(email);
+            return crypto.Decrypt(email);
         }
 
         public void Save_Password(string email, string password)
@@ -136,7 +136,7 @@ namespace BaseApp.Service
             validate_PasswordHash(passwordHash);
 
             repo.queryNonQuery("app.Account_SetPassword", KVList.Build()
-                .Add("@email", repo.crypto.Encrypt(email))
+                .Add("@email", crypto.Encrypt(email))
                 .Add("@password", passwordHash));
         }
 
@@ -148,10 +148,10 @@ namespace BaseApp.Service
             var expiry = DateTime.Now.AddDays(7);
             Account_ResetPassword(email, guid, expiry);
 
-            var parameters = new KVList()
-                .Add("@email", repo.crypto.Encrypt(email))
-                .Add("@cie", cie);
-            var account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Email", parameters).Decrypt(repo.crypto);
+            var account = repo.queryEntity<Account_Basic>("app.Account_SelectBy_Email", new KVList()
+                .Add("@email", crypto.Encrypt(email))
+                .Add("@cie", cie))
+            .Decrypt(crypto);
 
             var company = account.cie_Text;
 

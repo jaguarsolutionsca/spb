@@ -68,15 +68,14 @@ namespace BaseApp.Service
             var txt = pager.Parse<string>("searchText");
 
             var filter = pager["filter"] as Dico;
-            var parameters = KVList.Build(filter);
-            var list = repo.queryDicoList("app.Account_List", parameters, uid: true);
+            var list = repo.queryDicoList("app.Account_List", KVList.Build(filter), uid: true);
 
             list.ForEach(one =>
             {
-                one["email"] = repo.crypto.Decrypt(one.Parse<string>("email"));
-                one["firstname"] = repo.crypto.Decrypt(one.Parse<string>("firstname"));
-                one["lastname"] = repo.crypto.Decrypt(one.Parse<string>("lastname"));
-                one["by"] = repo.crypto.Decrypt(one.Parse<string>("by"));
+                one["email"] = crypto.Decrypt(one.Parse<string>("email"));
+                one["firstname"] = crypto.Decrypt(one.Parse<string>("firstname"));
+                one["lastname"] = crypto.Decrypt(one.Parse<string>("lastname"));
+                one["by"] = crypto.Decrypt(one.Parse<string>("by"));
             });
 
             if (!string.IsNullOrEmpty(txt))
@@ -165,13 +164,13 @@ namespace BaseApp.Service
         {
             var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
 
-            item["email"] = repo.crypto.Decrypt(item.Parse<string>("email"));
-            item["firstname"] = repo.crypto.Decrypt(item.Parse<string>("firstname"));
-            item["lastname"] = repo.crypto.Decrypt(item.Parse<string>("lastname"));
-            item["by"] = repo.crypto.Decrypt(item.Parse<string>("by"));
+            item["email"] = crypto.Decrypt(item.Parse<string>("email"));
+            item["firstname"] = crypto.Decrypt(item.Parse<string>("firstname"));
+            item["lastname"] = crypto.Decrypt(item.Parse<string>("lastname"));
+            item["by"] = crypto.Decrypt(item.Parse<string>("by"));
 
             var xtra = repo.queryDico("app.Account_Summary", "@uid", uid);
-            xtra["title"] = repo.crypto.Decrypt(xtra.Parse<string>("title"));
+            xtra["title"] = crypto.Decrypt(xtra.Parse<string>("title"));
 
             return new
             {
@@ -183,7 +182,7 @@ namespace BaseApp.Service
         public object Account_New(int cie)
         {
             var item = repo.queryDico("app.Account_New", "@cie", cie, uid: true).ReviveDTO();
-            item["by"] = repo.crypto.Decrypt(item.Parse<string>("by"));
+            item["by"] = crypto.Decrypt(item.Parse<string>("by"));
 
             return new
             {
@@ -209,9 +208,9 @@ namespace BaseApp.Service
             var cie = appUTO.Parse<int>("cie");
             email = sanitizeEmail(email);
 
-            appUTO["email"] = repo.crypto.Encrypt(email);
-            appUTO["firstname"] = repo.crypto.Encrypt(firstname);
-            appUTO["lastname"] = repo.crypto.Encrypt(lastname);
+            appUTO["email"] = crypto.Encrypt(email);
+            appUTO["firstname"] = crypto.Encrypt(firstname);
+            appUTO["lastname"] = crypto.Encrypt(lastname);
 
 
             if (!email.Contains("@"))
@@ -236,11 +235,10 @@ namespace BaseApp.Service
 
                 uid = repo.queryScalar<int>("app.Account_Insert", KVList.Build(appUTO), uid: true);
 
-                var query = "app.Account_SelectBy_Email";
-                var parameters = new KVList()
+                var account = repo.queryDico("app.Account_SelectBy_Email", new KVList()
                     .Add("@email", appUTO["email"])
-                    .Add("@cie", cie);
-                var account = repo.queryDico(query, parameters);
+                    .Add("@cie", cie));
+
                 var company = appUTO.Parse<string>("company_text");
 
                 url = url.Replace("{company}", company);
@@ -286,9 +284,9 @@ namespace BaseApp.Service
             var lastname = appUTO.Parse<string>("lastname");
             email = sanitizeEmail(email);
 
-            appUTO["email"] = repo.crypto.Encrypt(email);
-            appUTO["firstname"] = repo.crypto.Encrypt(firstname);
-            appUTO["lastname"] = repo.crypto.Encrypt(lastname);
+            appUTO["email"] = crypto.Encrypt(email);
+            appUTO["firstname"] = crypto.Encrypt(firstname);
+            appUTO["lastname"] = crypto.Encrypt(lastname);
 
 
             if (uid == 0 && user.Get_UID() != 0)
@@ -338,7 +336,7 @@ namespace BaseApp.Service
         void Account_ResetPassword(string email, Guid guid, DateTime expiry, bool forcedReset = false, bool unArchive = false)
         {
             repo.queryNonQuery("app.Account_ResetPassword", new KVList()
-                .Add("@email", repo.crypto.Encrypt(email))
+                .Add("@email", crypto.Encrypt(email))
                 .Add("@guid", guid)
                 .Add("@expiry", expiry)
                 .Add("@isAdminReset", forcedReset)
@@ -351,7 +349,7 @@ namespace BaseApp.Service
                 throw new ValidationException("Only the administrator can reset his password!");
 
             var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
-            var email = repo.crypto.Decrypt(item.Parse<string>("email"));
+            var email = crypto.Decrypt(item.Parse<string>("email"));
 
             var guid = Guid.NewGuid();
             var expiry = DateTime.Now.AddDays(7);
@@ -366,7 +364,7 @@ namespace BaseApp.Service
         public void Create_Invitation(int uid, string url)
         {
             var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
-            var email = repo.crypto.Decrypt(item.Parse<string>("email"));
+            var email = crypto.Decrypt(item.Parse<string>("email"));
 
             var guid = Guid.NewGuid();
             var expiry = DateTime.Now.AddDays(7);

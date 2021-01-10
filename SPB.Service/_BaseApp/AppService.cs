@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BaseApp.Service
 {
+    using BaseApp.Common;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using System.Security.Claims;
@@ -22,12 +23,14 @@ namespace BaseApp.Service
         internal ILogger log;
         internal IConfiguration config;
         internal ClaimsPrincipal user;
+        internal Crypto crypto;
 
         public AppService(ILogger<object> logger, IConfiguration config, IPrincipal user)
         {
             this.log = logger;
             this.config = config;
             this.user = user as ClaimsPrincipal;
+            this.crypto = new Crypto(CryptoKey);
 
             var connString = config.GetConnectionString("DefaultConnection");
             repo = new DAL.Repo(logger, connString, CryptoKey, user);
