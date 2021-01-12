@@ -1,6 +1,5 @@
 ﻿using BaseApp.Common;
 using BaseApp.DTO;
-using BaseApp.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,11 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FMS.Web.Controllers
+namespace BaseApp.Web.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-
     public partial class LookupController : _CoreController
     {
         //[HttpGet("lutGroup")]

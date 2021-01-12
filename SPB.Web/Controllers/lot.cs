@@ -2,7 +2,6 @@
 
 using BaseApp.Common;
 using BaseApp.Service;
-using BaseApp.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BaseAppCore.Controllers
+namespace BaseApp.Web.Controllers
 {
     [Route("api/[controller]")]
     [Authorize, ApiController]

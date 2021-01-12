@@ -1748,7 +1748,7 @@ System.register("_BaseApp/src/main", ["_BaseApp/src/core/app", "_BaseApp/src/cor
 });
 System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_10, context_10) {
     "use strict";
-    var App, authrole, fetch_authrole;
+    var App, authrole, fetch_authrole, lutGroup, fetch_lutGroup;
     var __moduleName = context_10 && context_10.id;
     return {
         setters: [
@@ -1762,6 +1762,13 @@ System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], func
                     if (authrole != undefined && authrole.length > 0)
                         return;
                     return App.GET("/account/role").then(function (json) { exports_10("authrole", authrole = json); });
+                };
+            });
+            exports_10("fetch_lutGroup", fetch_lutGroup = function () {
+                return function (data) {
+                    if (lutGroup != undefined && lutGroup.length > 0)
+                        return;
+                    return App.GET("/lookup/lutGroup").then(function (json) { exports_10("lutGroup", lutGroup = json); });
                 };
             });
         }
@@ -3590,7 +3597,9 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (lookupdata_1_1) {
                 exports_34({
                     "fetch_authrole": lookupdata_1_1["fetch_authrole"],
-                    "authrole": lookupdata_1_1["authrole"]
+                    "authrole": lookupdata_1_1["authrole"],
+                    "fetch_lutGroup": lookupdata_1_1["fetch_lutGroup"],
+                    "lutGroup": lookupdata_1_1["lutGroup"]
                 });
             }
         ],
@@ -7035,6 +7044,350 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
             });
             exports_55("hasChanges", hasChanges = function () {
                 return !Misc.same(fetchedState, state);
+            });
+        }
+    };
+});
+// File: lookup.ts
+System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/layout"], function (exports_56, context_56) {
+    "use strict";
+    var App, Router, Misc, Theme, layout_11, NS, key, state, fetchedState, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_56 && context_56.id;
+    return {
+        setters: [
+            function (App_25) {
+                App = App_25;
+            },
+            function (Router_18) {
+                Router = Router_18;
+            },
+            function (Misc_23) {
+                Misc = Misc_23;
+            },
+            function (Theme_12) {
+                Theme = Theme_12;
+            },
+            function (layout_11_1) {
+                layout_11 = layout_11_1;
+            }
+        ],
+        execute: function () {
+            exports_56("NS", NS = "App_Lookup");
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            formTemplate = function (item) {
+                return "\n<style>#" + NS + "_value3 { font-family: monospace; }</style>\n    " + Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true, "js-width-50") + "\n    " + Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 9, false, "js-width-10") + "\n    " + Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50, false, "js-width-50") + "\n    " + Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50, false, "js-width-50") + "\n    " + Theme.renderTextareaField(NS, "value3", item.value3, i18n("VALUE3"), 1024, false, null, 5) + "\n    " + Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), false, "js-width-10") + "\n    " + Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED"), false, "js-width-10") + "\n    " + Theme.renderNumberField(NS, "sortOrder", item.sortOrder, i18n("SORTORDER")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+            };
+            pageTemplate = function (item, form, tab, warning, dirty) {
+                var readonly = false;
+                var buttons = [];
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_11.icon + "\"></i> <span>" + (isNew ? i18n("(new)") : item.xtra && item.xtra.title) + "</span></div>\n            <div class=\"subtitle\">" + (isNew ? i18n("Editing New Entry") : i18n("Editing Entry Details")) + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, "#/admin/lookup/new/" + state.groupe, buttons)) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+            };
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            clearState = function () {
+                state = {};
+            };
+            exports_56("fetchState", fetchState = function (id, groupe) {
+                isNew = isNaN(id);
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
+                clearState();
+                var url = "/lookup/" + (isNew ? "new/" + groupe : id);
+                return App.GET(url)
+                    .then(function (payload) {
+                    state = payload;
+                    fetchedState = Misc.clone(state);
+                    key = { id: id };
+                });
+            });
+            exports_56("fetch", fetch = function (params) {
+                var id = +params[0];
+                var groupe = (params.length > 1 ? params[1] : null);
+                App.prepareRender(NS, i18n("Lookup"));
+                layout_11.prepareMenu();
+                fetchState(id, groupe)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_56("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var form = formTemplate(state);
+                var tab = layout_11.tabTemplate(state.id, null); //state.groupe.toLowerCase());
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_56("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+                App.setPageTitle(state.xtra.title + " : " + (isNew ? i18n("New Entry") : ""));
+            });
+            inContext = function () {
+                return App.inContext(NS);
+            };
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.id = Misc.fromInputNumber("App_Lookup_id", state.id);
+                clone.groupe = Misc.fromInputText("App_Lookup_groupe", state.groupe);
+                clone.code = Misc.fromInputTextNullable("App_Lookup_code", state.code);
+                clone.description = Misc.fromInputText("App_Lookup_description", state.description);
+                clone.value1 = Misc.fromInputTextNullable("App_Lookup_value1", state.value1);
+                clone.value2 = Misc.fromInputTextNullable("App_Lookup_value2", state.value2);
+                clone.value3 = Misc.fromInputTextNullable("App_Lookup_value3", state.value3);
+                clone.started = Misc.fromInputNumber("App_Lookup_started", state.started);
+                clone.ended = Misc.fromInputNumberNullable("App_Lookup_ended", state.ended);
+                clone.sortOrder = Misc.fromInputNumberNullable("App_Lookup_sortOrder", state.sortOrder);
+                clone.archive = Misc.fromInputCheckbox("App_Lookup_archive", state.archive);
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById("App_Lookup_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_56("onchange", onchange = function (input) {
+                state = getFormState();
+                App.render();
+            });
+            exports_56("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_56("create", create = function () {
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/lookup", formState)
+                    .then(function (payload) {
+                    var newkey = payload;
+                    Misc.toastSuccessSave();
+                    Router.goto("#/admin/lookup/" + newkey.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_56("save", save = function (done) {
+                if (done === void 0) { done = false; }
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/lookup", formState)
+                    .then(function (_) {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto("#/admin/lookups/" + state.groupe.toLowerCase(), 100);
+                    else
+                        Router.goto("#/admin/lookup/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_56("drop", drop = function () {
+                key.updatedUtc = state.updatedUtc;
+                App.prepareRender();
+                App.DELETE("/lookup", key)
+                    .then(function (_) {
+                    var groupe = state.groupe;
+                    clearState();
+                    Router.goto("#/admin/lookups/" + groupe, 250);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = function () {
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
+// File: lookups.ts
+System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout", "src/admin/lookupdata"], function (exports_57, context_57) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, layout_12, Lookup, NS, key, state, uiSelectedRow, currentYear, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_groupID, filter_year, gotoDetail, create;
+    var __moduleName = context_57 && context_57.id;
+    return {
+        setters: [
+            function (App_26) {
+                App = App_26;
+            },
+            function (Router_19) {
+                Router = Router_19;
+            },
+            function (Perm_11) {
+                Perm = Perm_11;
+            },
+            function (Misc_24) {
+                Misc = Misc_24;
+            },
+            function (Theme_13) {
+                Theme = Theme_13;
+            },
+            function (Pager_7) {
+                Pager = Pager_7;
+            },
+            function (layout_12_1) {
+                layout_12 = layout_12_1;
+            },
+            function (Lookup_10) {
+                Lookup = Lookup_10;
+            }
+        ],
+        execute: function () {
+            exports_57("NS", NS = "App_Lookups");
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { groupe: undefined, year: Perm.getCurrentYear() } }
+            };
+            currentYear = new Date().getFullYear();
+            filterTemplate = function (groupID, year) {
+                var filters = [];
+                filters.push(Theme.renderDropdownFilter(NS, "groupID", groupID, i18n("LOOKUP")));
+                filters.push(Theme.renderNumberFilter(NS, "year", year, i18n("YEAR")));
+                return filters.join("");
+            };
+            trTemplate = function (item, rowNumber) {
+                var _a;
+                var obsolete = item.ended != undefined && item.ended < ((_a = state.pager.filter.year) !== null && _a !== void 0 ? _a : currentYear);
+                var classes = [];
+                if (isSelectedRow(item.id))
+                    classes.push("is-selected");
+                if (obsolete)
+                    classes.push("has-text-grey-light");
+                return "\n<tr class=\"" + classes.join(" ") + "\" onclick=\"App_Lookups.gotoDetail(" + item.id + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.description) + "</td>\n    <td>" + Misc.toStaticText(item.code) + "</td>\n    <td>" + Misc.toStaticText(item.value1) + "</td>\n    <td>" + Misc.toStaticText(item.value2) + "</td>\n    <td>" + Misc.toStaticText(item.value3) + "</td>\n    <td>" + Misc.toStaticText(item.started) + "</td>\n    <td>" + Misc.toStaticText(item.ended) + "</td>\n    <td>" + Misc.toStaticText(item.sortOrder) + "</td>\n</tr>";
+            };
+            tableTemplate = function (tbody, pager) {
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortOrder", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (xtra, pager, table, tab, warning, dirty) {
+                var readonly = false;
+                var actions = Theme.renderListActionButtons2(NS, i18n("Add New"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n                <div class=\"title\"><i class=\"" + layout_12.icon + "\"></i> " + i18n("Code Table:") + " " + xtra.title + "</div>\n                <div class=\"subtitle\">" + i18n("List of All Entries") + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+            };
+            exports_57("fetchState", fetchState = function (groupe) {
+                Router.registerDirtyExit(null);
+                state.pager.filter.groupe = groupe;
+                return App.GET("/lookup/?" + Pager.asParams(state.pager))
+                    .then(function (payload) {
+                    state = payload;
+                    key = {};
+                })
+                    .then(Lookup.fetch_lutGroup());
+            });
+            exports_57("fetch", fetch = function (params) {
+                var groupe = params[0];
+                App.prepareRender(NS, i18n("Lookups"));
+                layout_12.prepareMenu();
+                fetchState(groupe)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            refresh = function () {
+                App.prepareRender(NS, i18n("Lookups"));
+                App.GET("/lookup/?" + Pager.asParams(state.pager))
+                    .then(function (payload) {
+                    state = payload;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            };
+            exports_57("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var warning = App.warningTemplate();
+                var dirty = "";
+                var tbody = state.list.reduce(function (html, item, index) {
+                    var rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, rowNumber);
+                }, "");
+                var groupID = Theme.renderOptions(Lookup.lutGroup, state.pager.filter.groupe, false);
+                var filter = filterTemplate(groupID, state.pager.filter.year);
+                var pager = Pager.render(state.pager, NS, [20, 50], null, filter);
+                var table = tableTemplate(tbody, state.pager);
+                var tab = layout_12.tabTemplate(null, null);
+                return pageTemplate(null, pager, table, tab, dirty, warning);
+            });
+            exports_57("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+            });
+            inContext = function () {
+                return App.inContext(NS);
+            };
+            setSelectedRow = function (id) {
+                if (uiSelectedRow == undefined)
+                    uiSelectedRow = { id: id };
+                uiSelectedRow.id = id;
+            };
+            isSelectedRow = function (id) {
+                if (uiSelectedRow == undefined)
+                    return false;
+                return (uiSelectedRow.id == id);
+            };
+            exports_57("goto", goto = function (pageNo, pageSize) {
+                state.pager.pageNo = pageNo;
+                state.pager.pageSize = pageSize;
+                refresh();
+            });
+            exports_57("sortBy", sortBy = function (columnName, direction) {
+                state.pager.pageNo = 1;
+                state.pager.sortColumn = columnName;
+                state.pager.sortDirection = direction;
+                refresh();
+            });
+            exports_57("search", search = function (element) {
+                state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_57("filter_groupID", filter_groupID = function (element) {
+                var value = element.options[element.selectedIndex].value;
+                var groupe = (value.length > 0 ? value : undefined);
+                if (groupe == state.pager.filter.groupe)
+                    return;
+                Router.goto("#/admin/lookups/" + groupe);
+            });
+            exports_57("filter_year", filter_year = function (element) {
+                var value = element.value;
+                var year = (value.length > 0 ? +value : undefined);
+                if (year == state.pager.filter.year)
+                    return;
+                state.pager.filter.year = year;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_57("gotoDetail", gotoDetail = function (id) {
+                setSelectedRow(id);
+                Router.goto("#/admin/lookup/" + id);
+            });
+            exports_57("create", create = function () {
+                Router.goto("#/admin/lookup/new/" + state.pager.filter.groupe);
             });
         }
     };

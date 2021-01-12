@@ -26,3 +26,12 @@ export const fetch_authrole = () => {
         return App.GET(`/account/role`).then(json => { authrole = json; });
     }
 }
+
+export let lutGroup: LookupData[];
+export const fetch_lutGroup = () => {
+    return function (data: any) {
+        if (lutGroup != undefined && lutGroup.length > 0)
+            return;
+        return App.GET(`/lookup/lutGroup`).then(json => { lutGroup = json; });
+    }
+}

@@ -34,7 +34,7 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         UserCaps AppLogin(string email, string password, int cie);
-        //UserCaps RefreshAppLogin();
+        UserCaps RefreshAppLogin();
         string Get_EmailOfInvitation(string guid);
         string Get_EmailOfReset(string guid);
         void Save_Password(string email, string password);
@@ -94,20 +94,20 @@ namespace BaseApp.Service
             return populateUserCaps(account, cie);
         }
 
-        //public UserCaps RefreshAppLogin()
-        //{
-        //    var uid = user.Get_UID();
-        //    var cie = user.Get_CIE();
+        public UserCaps RefreshAppLogin()
+        {
+            var uid = user.Get_UID();
+            var cie = user.Get_CIE();
 
-        //    var account = repo.spAccount_Select(uid);
-        //    if (account == null)
-        //        throw new ValidationException("Login Failed");
+            var account = repo.queryEntity<Account_Basic>("app.Account_Select", "@uid", uid, uid: true);
+            if (account == null)
+                throw new ValidationException("Login Failed");
 
-        //    if (account.archive)
-        //        throw new ValidationException("Sign in refused. This account is archived.");
+            if (account.archive)
+                throw new ValidationException("Sign in refused. This account is archived.");
 
-        //    return populateUserCaps(account, cie);
-        //}
+            return populateUserCaps(account, cie);
+        }
 
         public string Get_EmailOfInvitation(string guid)
         {
@@ -164,9 +164,7 @@ namespace BaseApp.Service
 
         public List<Lookup> Account_GetRoleLookup(int uid)
         {
-            var list = repo.queryList<Lookup>("app.Account_GetRoleLookup", "@uid", uid);
-
-            return list;
+            return repo.queryList<Lookup>("app.Account_GetRoleLookup", "@uid", uid);
         }
 
 

@@ -1,14 +1,13 @@
 ﻿
-namespace LiveCore.Web.Controllers
-{
-    using BaseApp.Web.Controllers;
-    using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 
-    [ApiController]
+namespace BaseApp.Web.Controllers
+{
     [Route("api/[controller]")]
+    [ApiController]
     public class PortalBagController : _CoreController
     {
         [HttpGet]

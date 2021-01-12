@@ -1,4 +1,6 @@
-﻿using BaseApp.DTO;
+﻿// File: controllers/lookup.cs
+
+using BaseApp.Common;
 using BaseApp.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,48 +15,49 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public partial class LookupController : _CoreController
     {
-        /*
-        [HttpGet]
-        public PagedList<Lookup_Search, Lookup_Search_Filter> Search(string groupe, int? year, int pn, int ps, string sc, string sd, string st)
+        [HttpPost("search")]
+        public object Search([FromBody] Dico pager)
         {
-            var pager = new Pager<Lookup_Search_Filter>(pn, ps, sc, sd, st);
-            pager.filter.groupe = groupe;
-            pager.filter.year = year;
-            return app.Search_Lookup(pager);
+            //app.RequirePermission(Perm.Lookup_Edit);
+            return app.Lookup_Search(pager);
         }
 
         [HttpGet("{id}")]
-        public Lookup_Detail Get(int id)
+        public object Select(int id)
         {
-            return app.Get_Lookup(id);
+            //app.RequirePermission(Perm.Lookup_Edit);
+            return app.Lookup_Select(id);
         }
 
-        [HttpGet("new/{groupe}")]
-        public Lookup_Detail GetNew(string groupe)
+        [HttpGet("new")]
+        public object New()
         {
-            return app.GetNew_Lookup(groupe);
+            //app.RequirePermission(Perm.Lookup_Edit);
+            return app.Lookup_New();
         }
 
         [HttpPost]
-        public Lookup_Detail_PK Create([FromBody] Lookup_Model model)
+        public object Insert([FromBody] Dico uto)
         {
-            return app.Create_Lookup(model);
+            //app.RequirePermission(Perm.Lookup_Edit);
+            return app.Lookup_Insert(uto);
         }
 
         [HttpPut]
-        public ActionResult Update([FromBody] Lookup_Model model)
+        public ActionResult Update([FromBody] Dico uto)
         {
-            app.Update_Lookup(model);
+            //app.RequirePermission(Perm.Lookup_Edit);
+            app.Lookup_Update(uto);
             return NoContent();
         }
 
         [HttpDelete]
-        public ActionResult Delete([FromBody] Lookup_Detail_PK key)
+        public ActionResult Delete([FromBody] Dico key)
         {
-            app.Delete_Lookup(key.id, key.updatedUtc);
+            //app.RequirePermission(Perm.Lookup_Edit);
+            app.Lookup_Delete(key);
             return NoContent();
         }
-        */
 
 
         //
