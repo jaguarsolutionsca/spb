@@ -11,6 +11,17 @@ const yearFilter = (one: Lookup.LookupData, year: number) => year >= one.started
 const dateFilter = (one: Lookup.LookupData, date: Date) => date >= one.started && (one.ended == undefined || date <= one.ended);
 
 
+
+let cIE: Lookup.LookupData[];
+export const fetch_cIE = () => {
+    return function (data: any) {
+        if (cIE != undefined && cIE.length > 0)
+            return;
+        return App.GET(`/lookup/by/cie`).then(json => { cIE = json; });
+    }
+}
+export const get_cIE = (year: number) => cIE;
+
 let sortOrderKeys: Lookup.LookupData[];
 export const fetch_sortOrderKeys = () => {
     return function (data: any) {

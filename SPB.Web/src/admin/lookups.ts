@@ -8,30 +8,31 @@ import * as Perm from "../permission"
 import * as Misc from "../../_BaseApp/src/lib-ts/misc"
 import * as Theme from "../../_BaseApp/src/theme/theme"
 import * as Pager from "../../_BaseApp/src/theme/pager"
-import { tabTemplate, icon, prepareMenu } from "./layout"
+import { tabTemplate, icon, prepareMenu, buildTitle, buildSubtitle } from "./layout1"
 import * as Lookup from "./lookupdata"
 
 declare const i18n: any;
 
 
-export const NS = "App_Lookups";
+export const NS = "App_lookups";
 
 interface IState {
-    totalCount: number
+    totalcount: number
     id: number
+    cie: number
+    cie_text: string
     groupe: string
     code: string
     description: string
     value1: string
     value2: string
     value3: string
-    started: string
-    ended?: number
-    sortOrder: number
-    archive: boolean
-    createdUtc: Date
-    updatedUtc: Date
-    updatedBy: number
+    started: number
+    ended: number
+    sortorder: number
+    created: Date
+    updated: Date
+    updatedby: number
     by: string
 }
 
@@ -44,13 +45,17 @@ interface IFilter {
     year: number
 }
 
+
+
 let key: IKey;
 let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
     pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { groupe: undefined, year: Perm.getCurrentYear() } }
 };
+let xtra: any;
 let uiSelectedRow: { id: number };
 let currentYear = new Date().getFullYear();
+
 
 
 const filterTemplate = (groupID: string, year: number) => {
@@ -68,8 +73,11 @@ const trTemplate = (item: IState, rowNumber: number) => {
     if (obsolete) classes.push("has-text-grey-light");
 
     return `
-<tr class="${classes.join(" ")}" onclick="App_Lookups.gotoDetail(${item.id});">
+<tr class="${classes.join(" ")}" onclick="${NS}.gotoDetail(${item.id});">
     <td class="js-index">${rowNumber}</td>
+    <td>${Misc.toStaticText(item.id)}</td>
+    <td>${Misc.toStaticText(item.cie_text)}</td>
+    <td>${Misc.toStaticText(item.groupe)}</td>
     <td>${Misc.toStaticText(item.description)}</td>
     <td>${Misc.toStaticText(item.code)}</td>
     <td>${Misc.toStaticText(item.value1)}</td>
@@ -77,7 +85,7 @@ const trTemplate = (item: IState, rowNumber: number) => {
     <td>${Misc.toStaticText(item.value3)}</td>
     <td>${Misc.toStaticText(item.started)}</td>
     <td>${Misc.toStaticText(item.ended)}</td>
-    <td>${Misc.toStaticText(item.sortOrder)}</td>
+    <td>${Misc.toStaticText(item.sortorder)}</td>
 </tr>`;
 };
 
@@ -88,6 +96,9 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
     <thead>
         <tr>
             <th></th>
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC")}
@@ -95,7 +106,7 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortOrder", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC")}
         </tr>
     </thead>
     <tbody>
@@ -106,10 +117,15 @@ const tableTemplate = (tbody: string, pager: Pager.IPager<IFilter>) => {
 `;
 };
 
-const pageTemplate = (xtra, pager: string, table: string, tab: string, warning: string, dirty: string) => {
+const pageTemplate = (pager: string, table: string, tab: string, warning: string, dirty: string) => {
     let readonly = false;
 
-    let actions = Theme.renderListActionButtons2(NS, i18n("Add New"));
+    let buttons: string[] = [];
+    buttons.push(Theme.buttonAddNew(NS, "#/lookup/new", i18n("Add New")));
+    let actions = Theme.renderButtons(buttons);
+
+    let title = buildTitle(xtra, `${i18n("Code Table:")} ${xtra.title}`);
+    let subtitle = buildSubtitle(xtra, i18n("List of All Entries"));
 
     return `
 <form onsubmit="return false;">
@@ -119,8 +135,8 @@ const pageTemplate = (xtra, pager: string, table: string, tab: string, warning: 
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-                <div class="title"><i class="${icon}"></i> ${i18n("Code Table:")} ${xtra.title}</div>
-                <div class="subtitle">${i18n("List of All Entries")}</div>
+            <div class="title"><i class="${icon}"></i> <span>${title}</span></div>
+            <div class="subtitle">${subtitle}</div>
         </div>
         <div>
             ${Theme.wrapContent("js-uc-actions", actions)}
@@ -143,9 +159,10 @@ const pageTemplate = (xtra, pager: string, table: string, tab: string, warning: 
 export const fetchState = (groupe: string) => {
     Router.registerDirtyExit(null);
     state.pager.filter.groupe = groupe;
-    return App.GET(`/lookup/?${Pager.asParams(state.pager)}`)
+    return App.POST("/lookup/search", state.pager)
         .then(payload => {
             state = payload;
+            xtra = payload.xtra;
             key = {};
         })
         .then(Lookup.fetch_lutGroup())
@@ -153,7 +170,7 @@ export const fetchState = (groupe: string) => {
 
 export const fetch = (params: string[]) => {
     let groupe = params[0];
-    App.prepareRender(NS, i18n("Lookups"));
+    App.prepareRender(NS, i18n("lookups"));
     prepareMenu();
     fetchState(groupe)
         .then(App.render)
@@ -161,8 +178,8 @@ export const fetch = (params: string[]) => {
 };
 
 const refresh = () => {
-    App.prepareRender(NS, i18n("Lookups"));
-    App.GET(`/lookup/?${Pager.asParams(state.pager)}`)
+    App.prepareRender(NS, i18n("lookups"));
+    App.POST("/lookup/search", state.pager)
         .then(payload => {
             state = payload;
         })
@@ -190,14 +207,14 @@ export const render = () => {
     const table = tableTemplate(tbody, state.pager);
 
     const tab = tabTemplate(null, null);
-    return pageTemplate(null, pager, table, tab, dirty, warning);
+    return pageTemplate(pager, table, tab, dirty, warning);
 };
 
 export const postRender = () => {
     if (!inContext()) return;
 };
 
-const inContext = () => {
+export const inContext = () => {
     return App.inContext(NS);
 };
 
