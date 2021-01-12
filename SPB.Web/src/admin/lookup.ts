@@ -4,24 +4,34 @@
 
 import * as App from "../../_BaseApp/src/core/app"
 import * as Router from "../../_BaseApp/src/core/router"
-import * as Perm from "../permission"
 import * as Misc from "../../_BaseApp/src/lib-ts/misc"
 import * as Theme from "../../_BaseApp/src/theme/theme"
-import { tabTemplate, icon, prepareMenu } from "./layout"
+import { Calendar } from "../../_BaseApp/src/theme/calendar"
+import { Autocomplete } from "../../_BaseApp/src/theme/autocomplete"
+import * as Pager from "../../_BaseApp/src/theme/pager"
+import * as Auth from "../../_BaseApp/src/auth"
+import * as Lookup from "../admin/lookupdata"
+import * as Perm from "../permission"
+import { tabTemplate, icon, prepareMenu, ISummary, buildTitle, buildSubtitle } from "./layout1"
 
 declare const i18n: any;
 
 
-export const NS = "App_Lookup";
+export const NS = "App_lookup";
+
+interface IPayload {
+    item: IState
+    xtra: ISummary
+}
 
 interface IKey {
     id: number
-    updatedUtc: Date
 }
 
 interface IState {
-    xtra: any
     id: number
+    cie: number
+    cie_text: string
     groupe: string
     code: string
     description: string
@@ -30,42 +40,64 @@ interface IState {
     value3: string
     started: number
     ended: number
-    sortOrder: number
-    archive: boolean
-    createdUtc: Date
-    updatedUtc: Date
-    updatedBy: number
+    sortorder: number
+    created: Date
+    updated: Date
+    updatedby: number
     by: string
 }
 
 
 
+const blackList = ["cie_text"];
+
 let key: IKey;
 let state = <IState>{};
 let fetchedState = <IState>{};
+let xtra: ISummary;
 let isNew = false;
 let isDirty = false;
 
 
-const formTemplate = (item: IState, ) => {
+
+const formTemplate = (item: IState, cie: string) => {
+
     return `
-<style>#${NS}_value3 { font-family: monospace; }</style>
-    ${Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true, "js-width-50")}
-    ${Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 9, false, "js-width-10")}
-    ${Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50, false, "js-width-50")}
-    ${Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50, false, "js-width-50")}
-    ${Theme.renderTextareaField(NS, "value3", item.value3, i18n("VALUE3"), 1024, false, null, 5)}
-    ${Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), false, "js-width-10")}
-    ${Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED"), false, "js-width-10")}
-    ${Theme.renderNumberField(NS, "sortOrder", item.sortOrder, i18n("SORTORDER"))}
+
+    ${Theme.renderDropdownField(NS, "cie", cie, i18n("CIE"))}
+    ${Theme.renderTextField(NS, "groupe", item.groupe, i18n("GROUPE"), 12, true)}
+    ${Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 12)}
+    ${Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true)}
+    ${Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50)}
+    ${Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50)}
+    ${Theme.renderTextField(NS, "value3", item.value3, i18n("VALUE3"), 1024)}
+    ${Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), true)}
+    ${Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED"))}
+    ${Theme.renderNumberField(NS, "sortorder", item.sortorder, i18n("SORTORDER"))}
     ${Theme.renderBlame(item, isNew)}
 `;
 };
 
+
 const pageTemplate = (item: IState, form: string, tab: string, warning: string, dirty: string) => {
-    let readonly = false;
+    let canEdit = true;
+    let readonly = !canEdit;
+
+    let canInsert = canEdit && isNew; // && Perm.hasLookup_CanAddLookup;
+    let canDelete = canEdit && !canInsert; // && Perm.hasLookup_CanDeleteLookup;
+    let canAdd = canEdit && !canInsert; // && Perm.hasLookup_CanAddLookup;
+    let canUpdate = canEdit && !isNew;
 
     let buttons: string[] = [];
+    buttons.push(Theme.buttonCancel(NS));
+    if (canInsert) buttons.push(Theme.buttonInsert(NS));
+    if (canDelete) buttons.push(Theme.buttonDelete(NS));
+    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new"));
+    if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
+    let actions = Theme.renderButtons(buttons);
+
+    let title = buildTitle(xtra, !isNew ? i18n("lookup Details") : i18n("New lookup"));
+    let subtitle = buildSubtitle(xtra, i18n("lookup subtitle"));
 
     return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
@@ -75,11 +107,11 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${icon}"></i> <span>${isNew ? i18n("(new)") : item.xtra && item.xtra.title}</span></div>
-            <div class="subtitle">${isNew ? i18n("Editing New Entry") : i18n("Editing Entry Details")}</div>
+            <div class="title"><i class="${icon}"></i> <span>${title}</span></div>
+            <div class="subtitle">${subtitle}</div>
         </div>
         <div>
-            ${Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, `#/admin/lookup/new/${state.groupe}`, buttons))}
+            ${Theme.wrapContent("js-uc-actions", actions)}
             ${Theme.renderBlame(item, isNew)}
         </div>
     </div>
@@ -102,31 +134,27 @@ const dirtyTemplate = () => {
     return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
 }
 
-const clearState = () => {
-    state = <IState>{};
-};
-
 export const fetchState = (id: number, groupe?: string) => {
     isNew = isNaN(id);
     isDirty = false;
     Router.registerDirtyExit(dirtyExit);
-    clearState();
-    let url = `/lookup/${isNew ? `new/${groupe}` : id}`;
-    return App.GET(url)
-        .then(payload => {
-            state = payload;
+    return App.GET(`/lookup/${isNew ? `new/${groupe}` : id}`)
+        .then((payload: IPayload) => {
+            state = payload.item;
             fetchedState = Misc.clone(state) as IState;
+            xtra = payload.xtra;
             key = <IKey>{ id };
 
 
         })
+        .then(Lookup.fetch_cIE())
 
 };
 
 export const fetch = (params: string[]) => {
     let id = +params[0];
     let groupe = (params.length > 1 ? params[1] : null);
-    App.prepareRender(NS, i18n("Lookup"));
+    App.prepareRender(NS, i18n("lookup"));
     prepareMenu();
     fetchState(id, groupe)
         .then(App.render)
@@ -139,11 +167,16 @@ export const render = () => {
     if (state == undefined || Object.keys(state).length == 0)
         return App.warningTemplate() || App.unexpectedTemplate();
 
+    let year = Perm.getCurrentYear(); //or something better
+
+    let lookup_cIE = Lookup.get_cIE(year);
+
+    let cie = Theme.renderOptions(lookup_cIE, state.cie, true);
 
 
-    const form = formTemplate(state);
+    const form = formTemplate(state, cie);
 
-    const tab = tabTemplate(state.id, null); //state.groupe.toLowerCase());
+    const tab = tabTemplate(state.id, state.groupe.toLowerCase());
     const dirty = dirtyTemplate();
     const warning = App.warningTemplate();
     return pageTemplate(state, form, tab, warning, dirty);
@@ -152,26 +185,27 @@ export const render = () => {
 export const postRender = () => {
     if (!inContext()) return;
 
-    App.setPageTitle(`${state.xtra.title} : ${isNew ? i18n("New Entry") : ""}`);
+
+
+    App.setPageTitle(isNew ? i18n("New lookup") : xtra.title);
 };
 
-const inContext = () => {
+export const inContext = () => {
     return App.inContext(NS);
 };
 
 const getFormState = () => {
     let clone = Misc.clone(state) as IState;
-    clone.id = Misc.fromInputNumber("App_Lookup_id", state.id);
-    clone.groupe = Misc.fromInputText("App_Lookup_groupe", state.groupe);
-    clone.code = Misc.fromInputTextNullable("App_Lookup_code", state.code);
-    clone.description = Misc.fromInputText("App_Lookup_description", state.description);
-    clone.value1 = Misc.fromInputTextNullable("App_Lookup_value1", state.value1);
-    clone.value2 = Misc.fromInputTextNullable("App_Lookup_value2", state.value2);
-    clone.value3 = Misc.fromInputTextNullable("App_Lookup_value3", state.value3);
-    clone.started = Misc.fromInputNumber("App_Lookup_started", state.started);
-    clone.ended = Misc.fromInputNumberNullable("App_Lookup_ended", state.ended);
-    clone.sortOrder = Misc.fromInputNumberNullable("App_Lookup_sortOrder", state.sortOrder);
-    clone.archive = Misc.fromInputCheckbox("App_Lookup_archive", state.archive);
+    clone.cie = Misc.fromSelectNumber(`${NS}_cie`, state.cie);
+    clone.groupe = Misc.fromInputText(`${NS}_groupe`, state.groupe);
+    clone.code = Misc.fromInputTextNullable(`${NS}_code`, state.code);
+    clone.description = Misc.fromInputText(`${NS}_description`, state.description);
+    clone.value1 = Misc.fromInputTextNullable(`${NS}_value1`, state.value1);
+    clone.value2 = Misc.fromInputTextNullable(`${NS}_value2`, state.value2);
+    clone.value3 = Misc.fromInputTextNullable(`${NS}_value3`, state.value3);
+    clone.started = Misc.fromInputNumber(`${NS}_started`, state.started);
+    clone.ended = Misc.fromInputNumberNullable(`${NS}_ended`, state.ended);
+    clone.sortorder = Misc.fromInputNumberNullable(`${NS}_sortorder`, state.sortorder);
     return clone;
 };
 
@@ -181,7 +215,7 @@ const valid = (formState: IState): boolean => {
 };
 
 const html5Valid = (): boolean => {
-    document.getElementById("App_Lookup_dummy_submit").click();
+    document.getElementById(`${NS}_dummy_submit`).click();
     let form = document.getElementsByTagName("form")[0];
     form.classList.add("js-error");
     return form.checkValidity();
@@ -201,7 +235,7 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.POST("/lookup", formState)
+    App.POST("/lookup", Misc.createBlack(formState, blackList))
         .then(payload => {
             let newkey = <IKey>payload;
             Misc.toastSuccessSave();
@@ -215,11 +249,11 @@ export const save = (done = false) => {
     if (!html5Valid()) return;
     if (!valid(formState)) return App.render();
     App.prepareRender();
-    App.PUT("/lookup", formState)
+    App.PUT("/lookup", Misc.createBlack(formState, blackList))
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
-                Router.goto(`#/admin/lookups/${state.groupe.toLowerCase()}`, 100);
+                Router.goto(`#/admin/lookups/`, 100);
             else
                 Router.goto(`#/admin/lookup/${key.id}`, 10);
         })
@@ -227,13 +261,12 @@ export const save = (done = false) => {
 }
 
 export const drop = () => {
-    key.updatedUtc = state.updatedUtc;
+    (<any>key).updated = state.updated;
     App.prepareRender();
     App.DELETE("/lookup", key)
         .then(_ => {
-            let groupe = state.groupe;
-            clearState();
-            Router.goto(`#/admin/lookups/${groupe}`, 250);
+
+            Router.goto(`#/admin/lookups/`, 250);
         })
         .catch(App.render);
 }

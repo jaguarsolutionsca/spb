@@ -3772,7 +3772,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                                 links: [
                                     { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
                                     { name: "Matrice de sécurité", },
-                                    { name: "Gestion des tables", },
+                                    { name: "Gestion des tables", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
                                     { name: "Gestion des périodes", },
                                 ],
                                 merge: "start"
@@ -5320,82 +5320,10 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         }
     };
 });
-System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/companys", "src/admin/company"], function (exports_42, context_42) {
-    "use strict";
-    var Router, accounts, account, companys, company, startup, render, postRender;
-    var __moduleName = context_42 && context_42.id;
-    return {
-        setters: [
-            function (Router_9) {
-                Router = Router_9;
-            },
-            function (accounts_1) {
-                accounts = accounts_1;
-            },
-            function (account_1) {
-                account = account_1;
-            },
-            function (companys_1) {
-                companys = companys_1;
-            },
-            function (company_1) {
-                company = company_1;
-            }
-        ],
-        execute: function () {
-            //import * as DataFiles from "./datafiles"
-            //import * as DataFile from "./datafile"
-            //import * as Lookups from "./lookups"
-            //import * as Lookup from "./lookup"
-            //
-            // Global references to application objects
-            // These must match the "NS" values defined in modules
-            // Mainly used for event handlers
-            //
-            window.App_accounts = accounts;
-            window.App_account = account;
-            //(<any>window).App_profile = profile;
-            window.App_companys = companys;
-            window.App_company = company;
-            //(<any>window).App_DataFiles = DataFiles;
-            //(<any>window).App_DataFile = DataFile;
-            //(<any>window).App_Lookups = Lookups;
-            //(<any>window).App_Lookup = Lookup;
-            exports_42("startup", startup = function () {
-                Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
-                Router.addRoute("^#/admin/account/(.*)$", account.fetch);
-                Router.addRoute("^#/admin/companys/?(.*)?$", companys.fetch);
-                Router.addRoute("^#/admin/company/(.*)$", company.fetch);
-                //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
-                //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
-                //Router.addRoute("^#/admin/lookups/?(.*)$", Lookups.fetch);
-                //Router.addRoute("^#/admin/lookup/(.*)$", Lookup.fetch);
-                //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
-            });
-            exports_42("render", render = function () {
-                return "\n    " + accounts.render() + "\n    " + account.render() + "\n    " + companys.render() + "\n    " + company.render() + "\n";
-                //${DataFiles.render()}
-                //${DataFile.render()}
-                //${Lookups.render()}
-                //${Lookup.render()}
-            });
-            exports_42("postRender", postRender = function () {
-                accounts.postRender();
-                account.postRender();
-                companys.postRender();
-                company.postRender();
-                //DataFiles.postRender();
-                //DataFile.postRender();
-                //Lookups.postRender();
-                //Lookup.postRender();
-            });
-        }
-    };
-});
-System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_43, context_43) {
+System.register("src/admin/layout1", ["_BaseApp/src/core/app", "src/layout"], function (exports_42, context_42) {
     "use strict";
     var App, layout_5, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_43 && context_43.id;
+    var __moduleName = context_42 && context_42.id;
     return {
         setters: [
             function (App_15) {
@@ -5406,44 +5334,38 @@ System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"
             }
         ],
         execute: function () {
-            exports_43("icon", icon = "far fa-user");
-            exports_43("prepareMenu", prepareMenu = function () {
-                layout_5.setOpenedMenu("Fournisseur-Propriétaires");
+            exports_42("icon", icon = "far fa-tasks");
+            exports_42("prepareMenu", prepareMenu = function () {
+                layout_5.setOpenedMenu("Administration-Configuration");
             });
-            exports_43("tabTemplate", tabTemplate = function (id, xtra, isNew) {
-                if (isNew === void 0) { isNew = false; }
-                var isProprietaires = App.inContext("App_proprietaires");
-                var isProprietaire = App.inContext("App_proprietaire");
-                var isFiles = window.location.hash.startsWith("#/files/proprietaire");
-                var isFile = window.location.hash.startsWith("#/file/proprietaire");
-                var showDetail = !isProprietaires;
-                var showFiles = showDetail && xtra;
-                var showFile = isFile;
-                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            exports_42("tabTemplate", tabTemplate = function (id, groupe) {
+                var isLookups = App.inContext(["App_lookups"]);
+                var isLookup = App.inContext(["App_lookup"]);
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isLookups ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/lookups/" + groupe + "\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n\n" + (!isLookups ? "\n        <li " + (isLookup ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/lookup/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Entry Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
             });
-            exports_43("buildTitle", buildTitle = function (xtra, defaultText) {
+            exports_42("buildTitle", buildTitle = function (xtra, defaultText) {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_43("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+            exports_42("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
         }
     };
 });
-// File: proprietaires.ts
-System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_44, context_44) {
+// File: lookups.ts
+System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout1", "src/admin/lookupdata"], function (exports_43, context_43) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_6, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
-    var __moduleName = context_44 && context_44.id;
+    var App, Router, Perm, Misc, Theme, Pager, layout1_1, Lookup, NS, key, state, xtra, uiSelectedRow, currentYear, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_groupID, filter_year, gotoDetail, create;
+    var __moduleName = context_43 && context_43.id;
     return {
         setters: [
             function (App_16) {
                 App = App_16;
             },
-            function (Router_10) {
-                Router = Router_10;
+            function (Router_9) {
+                Router = Router_9;
             },
             function (Perm_4) {
                 Perm = Perm_4;
@@ -5457,15 +5379,499 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             function (Pager_3) {
                 Pager = Pager_3;
             },
+            function (layout1_1_1) {
+                layout1_1 = layout1_1_1;
+            },
             function (Lookup_4) {
                 Lookup = Lookup_4;
+            }
+        ],
+        execute: function () {
+            exports_43("NS", NS = "App_lookups");
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { groupe: undefined, year: Perm.getCurrentYear() } }
+            };
+            currentYear = new Date().getFullYear();
+            filterTemplate = function (groupID, year) {
+                var filters = [];
+                filters.push(Theme.renderDropdownFilter(NS, "groupID", groupID, i18n("LOOKUP")));
+                filters.push(Theme.renderNumberFilter(NS, "year", year, i18n("YEAR")));
+                return filters.join("");
+            };
+            trTemplate = function (item, rowNumber) {
+                var _a;
+                var obsolete = item.ended != undefined && item.ended < ((_a = state.pager.filter.year) !== null && _a !== void 0 ? _a : currentYear);
+                var classes = [];
+                if (isSelectedRow(item.id))
+                    classes.push("is-selected");
+                if (obsolete)
+                    classes.push("has-text-grey-light");
+                return "\n<tr class=\"" + classes.join(" ") + "\" onclick=\"" + NS + ".gotoDetail(" + item.id + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.id) + "</td>\n    <td>" + Misc.toStaticText(item.cie_text) + "</td>\n    <td>" + Misc.toStaticText(item.groupe) + "</td>\n    <td>" + Misc.toStaticText(item.description) + "</td>\n    <td>" + Misc.toStaticText(item.code) + "</td>\n    <td>" + Misc.toStaticText(item.value1) + "</td>\n    <td>" + Misc.toStaticText(item.value2) + "</td>\n    <td>" + Misc.toStaticText(item.value3) + "</td>\n    <td>" + Misc.toStaticText(item.started) + "</td>\n    <td>" + Misc.toStaticText(item.ended) + "</td>\n    <td>" + Misc.toStaticText(item.sortorder) + "</td>\n</tr>";
+            };
+            tableTemplate = function (tbody, pager) {
+                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (pager, table, tab, warning, dirty) {
+                var readonly = false;
+                var buttons = [];
+                buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new/" + key.groupe, i18n("Add New")));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout1_1.buildTitle(xtra, i18n("Code Table:") + " " + xtra.title);
+                var subtitle = layout1_1.buildSubtitle(xtra, i18n("List of All Entries"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout1_1.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+            };
+            exports_43("fetchState", fetchState = function (groupe) {
+                Router.registerDirtyExit(null);
+                state.pager.filter.groupe = groupe;
+                return App.POST("/lookup/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                    xtra = payload.xtra;
+                    key = { groupe: groupe };
+                })
+                    .then(Lookup.fetch_lutGroup());
+            });
+            exports_43("fetch", fetch = function (params) {
+                var groupe = params[0];
+                App.prepareRender(NS, i18n("lookups"));
+                layout1_1.prepareMenu();
+                fetchState(groupe)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            refresh = function () {
+                App.prepareRender(NS, i18n("lookups"));
+                App.POST("/lookup/search", state.pager)
+                    .then(function (payload) {
+                    state = payload;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            };
+            exports_43("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var warning = App.warningTemplate();
+                var dirty = "";
+                var tbody = state.list.reduce(function (html, item, index) {
+                    var rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, rowNumber);
+                }, "");
+                var groupID = Theme.renderOptions(Lookup.lutGroup, state.pager.filter.groupe, false);
+                var filter = filterTemplate(groupID, state.pager.filter.year);
+                var pager = Pager.render(state.pager, NS, [20, 50], null, filter);
+                var table = tableTemplate(tbody, state.pager);
+                var tab = layout1_1.tabTemplate(null, null);
+                return pageTemplate(pager, table, tab, dirty, warning);
+            });
+            exports_43("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+            });
+            exports_43("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            setSelectedRow = function (id) {
+                if (uiSelectedRow == undefined)
+                    uiSelectedRow = { id: id };
+                uiSelectedRow.id = id;
+            };
+            isSelectedRow = function (id) {
+                if (uiSelectedRow == undefined)
+                    return false;
+                return (uiSelectedRow.id == id);
+            };
+            exports_43("goto", goto = function (pageNo, pageSize) {
+                state.pager.pageNo = pageNo;
+                state.pager.pageSize = pageSize;
+                refresh();
+            });
+            exports_43("sortBy", sortBy = function (columnName, direction) {
+                state.pager.pageNo = 1;
+                state.pager.sortColumn = columnName;
+                state.pager.sortDirection = direction;
+                refresh();
+            });
+            exports_43("search", search = function (element) {
+                state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_43("filter_groupID", filter_groupID = function (element) {
+                var value = element.options[element.selectedIndex].value;
+                var groupe = (value.length > 0 ? value : undefined);
+                if (groupe == state.pager.filter.groupe)
+                    return;
+                Router.goto("#/admin/lookups/" + groupe);
+            });
+            exports_43("filter_year", filter_year = function (element) {
+                var value = element.value;
+                var year = (value.length > 0 ? +value : undefined);
+                if (year == state.pager.filter.year)
+                    return;
+                state.pager.filter.year = year;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_43("gotoDetail", gotoDetail = function (id) {
+                setSelectedRow(id);
+                Router.goto("#/admin/lookup/" + id);
+            });
+            exports_43("create", create = function () {
+                Router.goto("#/admin/lookup/new/" + state.pager.filter.groupe);
+            });
+        }
+    };
+});
+// File: lookup.ts
+System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout1"], function (exports_44, context_44) {
+    "use strict";
+    var App, Router, Misc, Theme, Lookup, Perm, layout1_2, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_44 && context_44.id;
+    return {
+        setters: [
+            function (App_17) {
+                App = App_17;
+            },
+            function (Router_10) {
+                Router = Router_10;
+            },
+            function (Misc_18) {
+                Misc = Misc_18;
+            },
+            function (Theme_6) {
+                Theme = Theme_6;
+            },
+            function (Lookup_5) {
+                Lookup = Lookup_5;
+            },
+            function (Perm_5) {
+                Perm = Perm_5;
+            },
+            function (layout1_2_1) {
+                layout1_2 = layout1_2_1;
+            }
+        ],
+        execute: function () {
+            exports_44("NS", NS = "App_lookup");
+            blackList = ["cie_text"];
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            formTemplate = function (item, cie) {
+                return "\n\n    " + Theme.renderDropdownField(NS, "cie", cie, i18n("CIE")) + "\n    " + Theme.renderTextField(NS, "groupe", item.groupe, i18n("GROUPE"), 12, true) + "\n    " + Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 12) + "\n    " + Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true) + "\n    " + Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50) + "\n    " + Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50) + "\n    " + Theme.renderTextField(NS, "value3", item.value3, i18n("VALUE3"), 1024) + "\n    " + Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), true) + "\n    " + Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED")) + "\n    " + Theme.renderNumberField(NS, "sortorder", item.sortorder, i18n("SORTORDER")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+            };
+            pageTemplate = function (item, form, tab, warning, dirty) {
+                var canEdit = true;
+                var readonly = !canEdit;
+                var canInsert = canEdit && isNew; // && Perm.hasLookup_CanAddLookup;
+                var canDelete = canEdit && !canInsert; // && Perm.hasLookup_CanDeleteLookup;
+                var canAdd = canEdit && !canInsert; // && Perm.hasLookup_CanAddLookup;
+                var canUpdate = canEdit && !isNew;
+                var buttons = [];
+                buttons.push(Theme.buttonCancel(NS));
+                if (canInsert)
+                    buttons.push(Theme.buttonInsert(NS));
+                if (canDelete)
+                    buttons.push(Theme.buttonDelete(NS));
+                if (canAdd)
+                    buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new"));
+                if (canUpdate)
+                    buttons.push(Theme.buttonUpdate(NS));
+                var actions = Theme.renderButtons(buttons);
+                var title = layout1_2.buildTitle(xtra, !isNew ? i18n("lookup Details") : i18n("New lookup"));
+                var subtitle = layout1_2.buildSubtitle(xtra, i18n("lookup subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout1_2.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+            };
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            exports_44("fetchState", fetchState = function (id, groupe) {
+                isNew = isNaN(id);
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
+                return App.GET("/lookup/" + (isNew ? "new/" + groupe : id))
+                    .then(function (payload) {
+                    state = payload.item;
+                    fetchedState = Misc.clone(state);
+                    xtra = payload.xtra;
+                    key = { id: id };
+                })
+                    .then(Lookup.fetch_cIE());
+            });
+            exports_44("fetch", fetch = function (params) {
+                var id = +params[0];
+                var groupe = (params.length > 1 ? params[1] : null);
+                App.prepareRender(NS, i18n("lookup"));
+                layout1_2.prepareMenu();
+                fetchState(id, groupe)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_44("render", render = function () {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                var year = Perm.getCurrentYear(); //or something better
+                var lookup_cIE = Lookup.get_cIE(year);
+                var cie = Theme.renderOptions(lookup_cIE, state.cie, true);
+                var form = formTemplate(state, cie);
+                var tab = layout1_2.tabTemplate(state.id, state.groupe.toLowerCase());
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_44("postRender", postRender = function () {
+                if (!inContext())
+                    return;
+                App.setPageTitle(isNew ? i18n("New lookup") : xtra.title);
+            });
+            exports_44("inContext", inContext = function () {
+                return App.inContext(NS);
+            });
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.cie = Misc.fromSelectNumber(NS + "_cie", state.cie);
+                clone.groupe = Misc.fromInputText(NS + "_groupe", state.groupe);
+                clone.code = Misc.fromInputTextNullable(NS + "_code", state.code);
+                clone.description = Misc.fromInputText(NS + "_description", state.description);
+                clone.value1 = Misc.fromInputTextNullable(NS + "_value1", state.value1);
+                clone.value2 = Misc.fromInputTextNullable(NS + "_value2", state.value2);
+                clone.value3 = Misc.fromInputTextNullable(NS + "_value3", state.value3);
+                clone.started = Misc.fromInputNumber(NS + "_started", state.started);
+                clone.ended = Misc.fromInputNumberNullable(NS + "_ended", state.ended);
+                clone.sortorder = Misc.fromInputNumberNullable(NS + "_sortorder", state.sortorder);
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById(NS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_44("onchange", onchange = function (input) {
+                state = getFormState();
+                App.render();
+            });
+            exports_44("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_44("create", create = function () {
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/lookup", Misc.createBlack(formState, blackList))
+                    .then(function (payload) {
+                    var newkey = payload;
+                    Misc.toastSuccessSave();
+                    Router.goto("#/admin/lookup/" + newkey.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_44("save", save = function (done) {
+                if (done === void 0) { done = false; }
+                var formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/lookup", Misc.createBlack(formState, blackList))
+                    .then(function (_) {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto("#/admin/lookups/", 100);
+                    else
+                        Router.goto("#/admin/lookup/" + key.id, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_44("drop", drop = function () {
+                key.updated = state.updated;
+                App.prepareRender();
+                App.DELETE("/lookup", key)
+                    .then(function (_) {
+                    Router.goto("#/admin/lookups/", 250);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = function () {
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
+System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/companys", "src/admin/company", "src/admin/lookups", "src/admin/lookup"], function (exports_45, context_45) {
+    "use strict";
+    var Router, accounts, account, companys, company, lookups, lookup, startup, render, postRender;
+    var __moduleName = context_45 && context_45.id;
+    return {
+        setters: [
+            function (Router_11) {
+                Router = Router_11;
+            },
+            function (accounts_1) {
+                accounts = accounts_1;
+            },
+            function (account_1) {
+                account = account_1;
+            },
+            function (companys_1) {
+                companys = companys_1;
+            },
+            function (company_1) {
+                company = company_1;
+            },
+            function (lookups_1) {
+                lookups = lookups_1;
+            },
+            function (lookup_1) {
+                lookup = lookup_1;
+            }
+        ],
+        execute: function () {
+            //import * as DataFiles from "./datafiles"
+            //import * as DataFile from "./datafile"
+            //
+            // Global references to application objects
+            // These must match the "NS" values defined in modules
+            // Mainly used for event handlers
+            //
+            window.App_accounts = accounts;
+            window.App_account = account;
+            //(<any>window).App_profile = profile;
+            window.App_companys = companys;
+            window.App_company = company;
+            window.App_lookups = lookups;
+            window.App_lookup = lookup;
+            //(<any>window).App_DataFiles = DataFiles;
+            //(<any>window).App_DataFile = DataFile;
+            exports_45("startup", startup = function () {
+                Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
+                Router.addRoute("^#/admin/account/(.*)$", account.fetch);
+                Router.addRoute("^#/admin/companys/?(.*)?$", companys.fetch);
+                Router.addRoute("^#/admin/company/(.*)$", company.fetch);
+                Router.addRoute("^#/admin/lookups/?(.*)$", lookups.fetch);
+                Router.addRoute("^#/admin/lookup/(.*)$", lookup.fetch);
+                //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
+                //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
+                //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
+            });
+            exports_45("render", render = function () {
+                return "\n    " + accounts.render() + "\n    " + account.render() + "\n    " + companys.render() + "\n    " + company.render() + "\n    " + lookups.render() + "\n    " + lookup.render() + "\n";
+                //${DataFiles.render()}
+                //${DataFile.render()}
+            });
+            exports_45("postRender", postRender = function () {
+                accounts.postRender();
+                account.postRender();
+                companys.postRender();
+                company.postRender();
+                lookups.postRender();
+                lookup.postRender();
+                //DataFiles.postRender();
+                //DataFile.postRender();
+            });
+        }
+    };
+});
+System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_46, context_46) {
+    "use strict";
+    var App, layout_6, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var __moduleName = context_46 && context_46.id;
+    return {
+        setters: [
+            function (App_18) {
+                App = App_18;
             },
             function (layout_6_1) {
                 layout_6 = layout_6_1;
             }
         ],
         execute: function () {
-            exports_44("NS", NS = "App_proprietaires");
+            exports_46("icon", icon = "far fa-user");
+            exports_46("prepareMenu", prepareMenu = function () {
+                layout_6.setOpenedMenu("Fournisseur-Propriétaires");
+            });
+            exports_46("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+                if (isNew === void 0) { isNew = false; }
+                var isProprietaires = App.inContext("App_proprietaires");
+                var isProprietaire = App.inContext("App_proprietaire");
+                var isFiles = window.location.hash.startsWith("#/files/proprietaire");
+                var isFile = window.location.hash.startsWith("#/file/proprietaire");
+                var showDetail = !isProprietaires;
+                var showFiles = showDetail && xtra;
+                var showFile = isFile;
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isProprietaires ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaires\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isProprietaire ? "class='is-active'" : "") + ">\n            <a href=\"#/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Proprietaire Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/proprietaire/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+            });
+            exports_46("buildTitle", buildTitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
+            });
+            exports_46("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+                var _a;
+                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
+            });
+        }
+    };
+});
+// File: proprietaires.ts
+System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_47, context_47) {
+    "use strict";
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_7, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
+    var __moduleName = context_47 && context_47.id;
+    return {
+        setters: [
+            function (App_19) {
+                App = App_19;
+            },
+            function (Router_12) {
+                Router = Router_12;
+            },
+            function (Perm_6) {
+                Perm = Perm_6;
+            },
+            function (Misc_19) {
+                Misc = Misc_19;
+            },
+            function (Theme_7) {
+                Theme = Theme_7;
+            },
+            function (Pager_4) {
+                Pager = Pager_4;
+            },
+            function (Lookup_6) {
+                Lookup = Lookup_6;
+            },
+            function (layout_7_1) {
+                layout_7 = layout_7_1;
+            }
+        ],
+        execute: function () {
+            exports_47("NS", NS = "App_proprietaires");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
@@ -5486,11 +5892,11 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 var buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new", i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_6.buildTitle(xtra, i18n("fournisseurs title"));
-                var subtitle = layout_6.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_6.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+                var title = layout_7.buildTitle(xtra, i18n("fournisseurs title"));
+                var subtitle = layout_7.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_7.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_44("fetchState", fetchState = function (id) {
+            exports_47("fetchState", fetchState = function (id) {
                 Router.registerDirtyExit(null);
                 return App.POST("/fournisseur/search", state.pager)
                     .then(function (payload) {
@@ -5501,7 +5907,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(Lookup.fetch_pays())
                     .then(Lookup.fetch_institutionBanquaire());
             });
-            exports_44("fetch", fetch = function (params) {
+            exports_47("fetch", fetch = function (params) {
                 var id = params[0];
                 App.prepareRender(NS, i18n("fournisseurs"));
                 fetchState(id)
@@ -5517,7 +5923,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_44("render", render = function () {
+            exports_47("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5535,14 +5941,14 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 var search = Pager.searchTemplate(state.pager, NS);
                 var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 var table = tableTemplate(tbody, state.pager);
-                var tab = layout_6.tabTemplate(null, null);
+                var tab = layout_7.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_44("postRender", postRender = function () {
+            exports_47("postRender", postRender = function () {
                 if (!inContext())
                     return;
             });
-            exports_44("inContext", inContext = function () {
+            exports_47("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             setSelectedRow = function (id) {
@@ -5555,26 +5961,26 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_44("goto", goto = function (pageNo, pageSize) {
+            exports_47("goto", goto = function (pageNo, pageSize) {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_44("sortBy", sortBy = function (columnName, direction) {
+            exports_47("sortBy", sortBy = function (columnName, direction) {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_44("search", search = function (element) {
+            exports_47("search", search = function (element) {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_44("filter_nom", filter_nom = function (element) {
+            exports_47("filter_nom", filter_nom = function (element) {
                 // TODO (filterDef)
             });
-            exports_44("gotoDetail", gotoDetail = function (id) {
+            exports_47("gotoDetail", gotoDetail = function (id) {
                 setSelectedRow(id);
                 Router.goto("#/proprietaire/" + id);
             });
@@ -5582,36 +5988,36 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
     };
 });
 // File: lots2.ts
-System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_45, context_45) {
+System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_48, context_48) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
-    var __moduleName = context_45 && context_45.id;
+    var __moduleName = context_48 && context_48.id;
     return {
         setters: [
-            function (App_17) {
-                App = App_17;
+            function (App_20) {
+                App = App_20;
             },
-            function (Router_11) {
-                Router = Router_11;
+            function (Router_13) {
+                Router = Router_13;
             },
-            function (Perm_5) {
-                Perm = Perm_5;
+            function (Perm_7) {
+                Perm = Perm_7;
             },
-            function (Misc_18) {
-                Misc = Misc_18;
+            function (Misc_20) {
+                Misc = Misc_20;
             },
-            function (Theme_6) {
-                Theme = Theme_6;
+            function (Theme_8) {
+                Theme = Theme_8;
             },
-            function (Pager_4) {
-                Pager = Pager_4;
+            function (Pager_5) {
+                Pager = Pager_5;
             },
-            function (Lookup_5) {
-                Lookup = Lookup_5;
+            function (Lookup_7) {
+                Lookup = Lookup_7;
             }
         ],
         execute: function () {
-            exports_45("NS", NS = "App_lots2");
+            exports_48("NS", NS = "App_lots2");
             table_id = "lots2_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
             state = {
@@ -5651,7 +6057,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
             pageTemplate = function (table) {
                 return "\n" + Theme.wrapContent("js-uc-list", table) + "\n";
             };
-            exports_45("fetchState", fetchState = function (proprietaireid, ownerNS) {
+            exports_48("fetchState", fetchState = function (proprietaireid, ownerNS) {
                 isAddingNewParent = (proprietaireid == "new");
                 callerNS = ownerNS || callerNS;
                 isNew = false;
@@ -5668,9 +6074,9 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                     .then(Lookup.fetch_entente_paiement())
                     .then(Lookup.fetch_zone());
             });
-            exports_45("preRender", preRender = function () {
+            exports_48("preRender", preRender = function () {
             });
-            exports_45("render", render = function () {
+            exports_48("render", render = function () {
                 if (isAddingNewParent)
                     return "";
                 var editId;
@@ -5703,9 +6109,9 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 var table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
             });
-            exports_45("postRender", postRender = function () {
+            exports_48("postRender", postRender = function () {
             });
-            exports_45("inContext", inContext = function () {
+            exports_48("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -5746,11 +6152,11 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_45("onchange", onchange = function (input) {
+            exports_48("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_45("undo", undo = function () {
+            exports_48("undo", undo = function () {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -5758,7 +6164,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 state = Misc.clone(fetchedState);
                 App.render();
             });
-            exports_45("addNew", addNew = function () {
+            exports_48("addNew", addNew = function () {
                 var url = "/lot/new/" + key.proprietaireid;
                 return App.GET(url)
                     .then(function (payload) {
@@ -5770,7 +6176,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_45("create", create = function () {
+            exports_48("create", create = function () {
                 var formState = getFormState();
                 var item = formState.list.find(function (one) { return one._isNew; });
                 if (!html5Valid())
@@ -5783,7 +6189,7 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 })
                     .catch(App.render);
             });
-            exports_45("save", save = function () {
+            exports_48("save", save = function () {
                 var formState = getFormState();
                 var item = formState.list.find(function (one) { return one._editing; });
                 if (!html5Valid())
@@ -5796,12 +6202,12 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 })
                     .catch(App.render);
             });
-            exports_45("selectfordrop", selectfordrop = function (id) {
+            exports_48("selectfordrop", selectfordrop = function (id) {
                 state = Misc.clone(fetchedState);
                 state.list.find(function (one) { return one.id == id; })._deleting = true;
                 App.render();
             });
-            exports_45("drop", drop = function () {
+            exports_48("drop", drop = function () {
                 App.prepareRender();
                 var item = state.list.find(function (one) { return one._deleting; });
                 App.DELETE("/lot", { id: item.id })
@@ -5811,43 +6217,43 @@ System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src
                 })
                     .catch(App.render);
             });
-            exports_45("hasChanges", hasChanges = function () {
+            exports_48("hasChanges", hasChanges = function () {
                 return !Misc.same(fetchedState, state);
             });
         }
     };
 });
 // File: proprietaire.ts
-System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout", "src/fournisseur/lots2"], function (exports_46, context_46) {
+System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout", "src/fournisseur/lots2"], function (exports_49, context_49) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, layout_7, app_inline2, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, block_address, block_telephone, block_ciel, block_internet, block_autres, block_depotdirect, block_representant, block_camions, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_46 && context_46.id;
+    var App, Router, Misc, Theme, Lookup, layout_8, app_inline2, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, block_address, block_telephone, block_ciel, block_internet, block_autres, block_depotdirect, block_representant, block_camions, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_49 && context_49.id;
     return {
         setters: [
-            function (App_18) {
-                App = App_18;
+            function (App_21) {
+                App = App_21;
             },
-            function (Router_12) {
-                Router = Router_12;
+            function (Router_14) {
+                Router = Router_14;
             },
-            function (Misc_19) {
-                Misc = Misc_19;
+            function (Misc_21) {
+                Misc = Misc_21;
             },
-            function (Theme_7) {
-                Theme = Theme_7;
+            function (Theme_9) {
+                Theme = Theme_9;
             },
-            function (Lookup_6) {
-                Lookup = Lookup_6;
+            function (Lookup_8) {
+                Lookup = Lookup_8;
             },
-            function (layout_7_1) {
-                layout_7 = layout_7_1;
+            function (layout_8_1) {
+                layout_8 = layout_8_1;
             },
             function (app_inline2_1) {
                 app_inline2 = app_inline2_1;
             }
         ],
         execute: function () {
-            exports_46("NS", NS = "App_proprietaire");
+            exports_49("NS", NS = "App_proprietaire");
             blackList = ["paysid_text", "institutionbanquaireid_text"];
             state = {};
             fetchedState = {};
@@ -5903,14 +6309,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS, inline2_dirty));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_7.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
-                var subtitle = layout_7.buildSubtitle(xtra, i18n("fournisseur subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_7.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+                var title = layout_8.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
+                var subtitle = layout_8.buildSubtitle(xtra, i18n("fournisseur subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_8.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_46("fetchState", fetchState = function (id) {
+            exports_49("fetchState", fetchState = function (id) {
                 isNew = (id == "new");
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -5925,14 +6331,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                     .then(Lookup.fetch_institutionBanquaire())
                     .then(function () { return app_inline2.fetchState(id, NS); });
             });
-            exports_46("fetch", fetch = function (params) {
+            exports_49("fetch", fetch = function (params) {
                 var id = params[0];
                 App.prepareRender(NS, i18n("proprietaire"));
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_46("render", render = function () {
+            exports_49("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5947,18 +6353,18 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 app_inline2.preRender();
                 var inline2 = app_inline2.render();
                 var form = formTemplate(state, paysid, institutionbanquaireid, inline2);
-                var tab = layout_7.tabTemplate(state.id, xtra, isNew);
+                var tab = layout_8.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_46("postRender", postRender = function () {
+            exports_49("postRender", postRender = function () {
                 if (!inContext())
                     return;
                 app_inline2.postRender();
                 App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
             });
-            exports_46("inContext", inContext = function () {
+            exports_49("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -6034,14 +6440,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_46("onchange", onchange = function (input) {
+            exports_49("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_46("cancel", cancel = function () {
+            exports_49("cancel", cancel = function () {
                 Router.goBackOrResume(isDirty);
             });
-            exports_46("create", create = function () {
+            exports_49("create", create = function () {
                 var formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -6056,7 +6462,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 })
                     .catch(App.render);
             });
-            exports_46("save", save = function (done) {
+            exports_49("save", save = function (done) {
                 if (done === void 0) { done = false; }
                 var formState = getFormState();
                 if (!html5Valid())
@@ -6074,7 +6480,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 })
                     .catch(App.render);
             });
-            exports_46("drop", drop = function () {
+            exports_49("drop", drop = function () {
                 //(<any>key).updatedUtc = state.updatedUtc;
                 App.prepareRender();
                 App.DELETE("/fournisseur", key)
@@ -6098,14 +6504,14 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
         }
     };
 });
-System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire", "src/fournisseur/lots2"], function (exports_47, context_47) {
+System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire", "src/fournisseur/lots2"], function (exports_50, context_50) {
     "use strict";
     var Router, proprietaires, proprietaire, lots2, startup, render, postRender;
-    var __moduleName = context_47 && context_47.id;
+    var __moduleName = context_50 && context_50.id;
     return {
         setters: [
-            function (Router_13) {
-                Router = Router_13;
+            function (Router_15) {
+                Router = Router_15;
             },
             function (proprietaires_1) {
                 proprietaires = proprietaires_1;
@@ -6126,39 +6532,39 @@ System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fourni
             window[proprietaires.NS] = proprietaires;
             window[proprietaire.NS] = proprietaire;
             window[lots2.NS] = lots2;
-            exports_47("startup", startup = function () {
+            exports_50("startup", startup = function () {
                 Router.addRoute("^#/proprietaires/?(.*)?$", proprietaires.fetch);
                 Router.addRoute("^#/proprietaire/?(.*)?$", proprietaire.fetch);
             });
-            exports_47("render", render = function () {
+            exports_50("render", render = function () {
                 return "\n<div>\n    " + proprietaires.render() + "\n    " + proprietaire.render() + "\n</div>\n";
             });
-            exports_47("postRender", postRender = function () {
+            exports_50("postRender", postRender = function () {
                 proprietaires.postRender();
                 proprietaire.postRender();
             });
         }
     };
 });
-System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_48, context_48) {
+System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_51, context_51) {
     "use strict";
-    var App, layout_8, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_48 && context_48.id;
+    var App, layout_9, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var __moduleName = context_51 && context_51.id;
     return {
         setters: [
-            function (App_19) {
-                App = App_19;
+            function (App_22) {
+                App = App_22;
             },
-            function (layout_8_1) {
-                layout_8 = layout_8_1;
+            function (layout_9_1) {
+                layout_9 = layout_9_1;
             }
         ],
         execute: function () {
-            exports_48("icon", icon = "far fa-user");
-            exports_48("prepareMenu", prepareMenu = function () {
-                layout_8.setOpenedMenu("Territoire-Lots");
+            exports_51("icon", icon = "far fa-user");
+            exports_51("prepareMenu", prepareMenu = function () {
+                layout_9.setOpenedMenu("Territoire-Lots");
             });
-            exports_48("tabTemplate", tabTemplate = function (id, xtra, isNew) {
+            exports_51("tabTemplate", tabTemplate = function (id, xtra, isNew) {
                 if (isNew === void 0) { isNew = false; }
                 var isLots = App.inContext("App_lots");
                 var isLot = App.inContext("App_lot");
@@ -6169,11 +6575,11 @@ System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"]
                 var showFile = isFile;
                 return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isLots ? "class='is-active'" : "") + ">\n            <a href=\"#/lots\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n" + (showDetail ? "\n        <li " + (isLot ? "class='is-active'" : "") + ">\n            <a href=\"#/lot/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Lot Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/lot/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.filecount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li " + (isFile ? "class='is-active'" : "") + ">\n            <a href=\"#/file/lot/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
             });
-            exports_48("buildTitle", buildTitle = function (xtra, defaultText) {
+            exports_51("buildTitle", buildTitle = function (xtra, defaultText) {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_48("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
+            exports_51("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -6181,39 +6587,39 @@ System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"]
     };
 });
 // File: lots.ts
-System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/territoire/layout"], function (exports_49, context_49) {
+System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/territoire/layout"], function (exports_52, context_52) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_9, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
-    var __moduleName = context_49 && context_49.id;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_10, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var __moduleName = context_52 && context_52.id;
     return {
         setters: [
-            function (App_20) {
-                App = App_20;
+            function (App_23) {
+                App = App_23;
             },
-            function (Router_14) {
-                Router = Router_14;
+            function (Router_16) {
+                Router = Router_16;
             },
-            function (Perm_6) {
-                Perm = Perm_6;
+            function (Perm_8) {
+                Perm = Perm_8;
             },
-            function (Misc_20) {
-                Misc = Misc_20;
+            function (Misc_22) {
+                Misc = Misc_22;
             },
-            function (Theme_8) {
-                Theme = Theme_8;
+            function (Theme_10) {
+                Theme = Theme_10;
             },
-            function (Pager_5) {
-                Pager = Pager_5;
+            function (Pager_6) {
+                Pager = Pager_6;
             },
-            function (Lookup_7) {
-                Lookup = Lookup_7;
+            function (Lookup_9) {
+                Lookup = Lookup_9;
             },
-            function (layout_9_1) {
-                layout_9 = layout_9_1;
+            function (layout_10_1) {
+                layout_10 = layout_10_1;
             }
         ],
         execute: function () {
-            exports_49("NS", NS = "App_lots");
+            exports_52("NS", NS = "App_lots");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -6233,11 +6639,11 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                 var buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/lot/new", i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_9.buildTitle(xtra, i18n("lots title"));
-                var subtitle = layout_9.buildSubtitle(xtra, i18n("lots subtitle"));
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_9.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
+                var title = layout_10.buildTitle(xtra, i18n("lots title"));
+                var subtitle = layout_10.buildSubtitle(xtra, i18n("lots subtitle"));
+                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_10.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_49("fetchState", fetchState = function (id) {
+            exports_52("fetchState", fetchState = function (id) {
                 Router.registerDirtyExit(null);
                 return App.POST("/lot/search", state.pager)
                     .then(function (payload) {
@@ -6252,7 +6658,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                     .then(Lookup.fetch_droit_coupe())
                     .then(Lookup.fetch_entente_paiement());
             });
-            exports_49("fetch", fetch = function (params) {
+            exports_52("fetch", fetch = function (params) {
                 var id = +params[0];
                 App.prepareRender(NS, i18n("lots"));
                 fetchState(id)
@@ -6268,7 +6674,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_49("render", render = function () {
+            exports_52("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -6286,14 +6692,14 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                 var search = Pager.searchTemplate(state.pager, NS);
                 var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 var table = tableTemplate(tbody, state.pager);
-                var tab = layout_9.tabTemplate(null, null);
+                var tab = layout_10.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_49("postRender", postRender = function () {
+            exports_52("postRender", postRender = function () {
                 if (!inContext())
                     return;
             });
-            exports_49("inContext", inContext = function () {
+            exports_52("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             setSelectedRow = function (id) {
@@ -6306,23 +6712,23 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_49("goto", goto = function (pageNo, pageSize) {
+            exports_52("goto", goto = function (pageNo, pageSize) {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_49("sortBy", sortBy = function (columnName, direction) {
+            exports_52("sortBy", sortBy = function (columnName, direction) {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_49("search", search = function (element) {
+            exports_52("search", search = function (element) {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_49("gotoDetail", gotoDetail = function (id) {
+            exports_52("gotoDetail", gotoDetail = function (id) {
                 setSelectedRow(id);
                 Router.goto("#/lot/" + id);
             });
@@ -6330,23 +6736,23 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
     };
 });
 // File: lot.ts
-System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_50, context_50) {
+System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_53, context_53) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_1, autocomplete_1, Lookup, Perm, layout_10, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_50 && context_50.id;
+    var App, Router, Misc, Theme, calendar_1, autocomplete_1, Lookup, Perm, layout_11, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_53 && context_53.id;
     return {
         setters: [
-            function (App_21) {
-                App = App_21;
+            function (App_24) {
+                App = App_24;
             },
-            function (Router_15) {
-                Router = Router_15;
+            function (Router_17) {
+                Router = Router_17;
             },
-            function (Misc_21) {
-                Misc = Misc_21;
+            function (Misc_23) {
+                Misc = Misc_23;
             },
-            function (Theme_9) {
-                Theme = Theme_9;
+            function (Theme_11) {
+                Theme = Theme_11;
             },
             function (calendar_1_1) {
                 calendar_1 = calendar_1_1;
@@ -6354,18 +6760,18 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
             function (autocomplete_1_1) {
                 autocomplete_1 = autocomplete_1_1;
             },
-            function (Lookup_8) {
-                Lookup = Lookup_8;
+            function (Lookup_10) {
+                Lookup = Lookup_10;
             },
-            function (Perm_7) {
-                Perm = Perm_7;
+            function (Perm_9) {
+                Perm = Perm_9;
             },
-            function (layout_10_1) {
-                layout_10 = layout_10_1;
+            function (layout_11_1) {
+                layout_11 = layout_11_1;
             }
         ],
         execute: function () {
-            exports_50("NS", NS = "App_lot");
+            exports_53("NS", NS = "App_lot");
             blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
             state = {};
             fetchedState = {};
@@ -6409,14 +6815,14 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_10.buildTitle(xtra, !isNew ? i18n("lot Details") : i18n("New lot"));
-                var subtitle = layout_10.buildSubtitle(xtra, i18n("lot subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_10.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
+                var title = layout_11.buildTitle(xtra, !isNew ? i18n("lot Details") : i18n("New lot"));
+                var subtitle = layout_11.buildSubtitle(xtra, i18n("lot subtitle"));
+                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_11.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
             };
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_50("fetchState", fetchState = function (id) {
+            exports_53("fetchState", fetchState = function (id) {
                 isNew = isNaN(id);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -6437,14 +6843,14 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     .then(Lookup.fetch_droit_coupe())
                     .then(Lookup.fetch_entente_paiement());
             });
-            exports_50("fetch", fetch = function (params) {
+            exports_53("fetch", fetch = function (params) {
                 var id = +params[0];
                 App.prepareRender(NS, i18n("lot"));
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_50("render", render = function () {
+            exports_53("render", render = function () {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -6464,12 +6870,12 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 var entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
                 proprietaireidAutocomplete.pagedList = state_proprietaireid;
                 var form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
-                var tab = layout_10.tabTemplate(state.id, xtra, isNew);
+                var tab = layout_11.tabTemplate(state.id, xtra, isNew);
                 var dirty = dirtyTemplate();
                 var warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_50("postRender", postRender = function () {
+            exports_53("postRender", postRender = function () {
                 if (!inContext())
                     return;
                 contingent_dateCalendar.postRender();
@@ -6477,7 +6883,7 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 entente_paiement_dateCalendar.postRender();
                 App.setPageTitle(isNew ? i18n("New lot") : xtra.title);
             });
-            exports_50("inContext", inContext = function () {
+            exports_53("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -6518,7 +6924,7 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_50("oncalendar", oncalendar = function (id) {
+            exports_53("oncalendar", oncalendar = function (id) {
                 if (contingent_dateCalendar.id == id)
                     contingent_dateCalendar.toggle();
                 if (droit_coupe_dateCalendar.id == id)
@@ -6526,7 +6932,7 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 if (entente_paiement_dateCalendar.id == id)
                     entente_paiement_dateCalendar.toggle();
             });
-            exports_50("onautocomplete", onautocomplete = function (id) {
+            exports_53("onautocomplete", onautocomplete = function (id) {
                 if (proprietaireidAutocomplete.id == id) {
                     state_proprietaireid.pager.searchText = proprietaireidAutocomplete.textValue;
                     App.POST("/fournisseur/search", state_proprietaireid.pager)
@@ -6536,14 +6942,14 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                         .then(App.render);
                 }
             });
-            exports_50("onchange", onchange = function (input) {
+            exports_53("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_50("cancel", cancel = function () {
+            exports_53("cancel", cancel = function () {
                 Router.goBackOrResume(isDirty);
             });
-            exports_50("create", create = function () {
+            exports_53("create", create = function () {
                 var formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -6558,7 +6964,7 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 })
                     .catch(App.render);
             });
-            exports_50("save", save = function (done) {
+            exports_53("save", save = function (done) {
                 if (done === void 0) { done = false; }
                 var formState = getFormState();
                 if (!html5Valid())
@@ -6576,7 +6982,7 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 })
                     .catch(App.render);
             });
-            exports_50("drop", drop = function () {
+            exports_53("drop", drop = function () {
                 //(<any>key).updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/lot", key)
@@ -6598,14 +7004,14 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
         }
     };
 });
-System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territoire/lots", "src/territoire/lot"], function (exports_51, context_51) {
+System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territoire/lots", "src/territoire/lot"], function (exports_54, context_54) {
     "use strict";
     var Router, lots, lot, startup, render, postRender;
-    var __moduleName = context_51 && context_51.id;
+    var __moduleName = context_54 && context_54.id;
     return {
         setters: [
-            function (Router_16) {
-                Router = Router_16;
+            function (Router_18) {
+                Router = Router_18;
             },
             function (lots_1) {
                 lots = lots_1;
@@ -6622,31 +7028,31 @@ System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territo
             //
             window[lots.NS] = lots;
             window[lot.NS] = lot;
-            exports_51("startup", startup = function () {
+            exports_54("startup", startup = function () {
                 Router.addRoute("^#/lots/?(.*)?$", lots.fetch);
                 Router.addRoute("^#/lot/?(.*)?$", lot.fetch);
             });
-            exports_51("render", render = function () {
+            exports_54("render", render = function () {
                 return "\n<div>\n    " + lots.render() + "\n    " + lot.render() + "\n</div>\n";
             });
-            exports_51("postRender", postRender = function () {
+            exports_54("postRender", postRender = function () {
                 lots.postRender();
                 lot.postRender();
             });
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main", "src/territoire/main"], function (exports_52, context_52) {
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/fournisseur/main", "src/territoire/main"], function (exports_55, context_55) {
     "use strict";
     var App, Perm, Main, Home, Admin, Fournisseur, Territoire, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
-    var __moduleName = context_52 && context_52.id;
+    var __moduleName = context_55 && context_55.id;
     return {
         setters: [
-            function (App_22) {
-                App = App_22;
+            function (App_25) {
+                App = App_25;
             },
-            function (Perm_8) {
-                Perm = Perm_8;
+            function (Perm_10) {
+                Perm = Perm_10;
             },
             function (Main_1) {
                 Main = Main_1;
@@ -6665,8 +7071,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             }
         ],
         execute: function () {
-            exports_52("NS", NS = "App_Layout");
-            exports_52("render", render = function () {
+            exports_55("NS", NS = "App_Layout");
+            exports_55("render", render = function () {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
@@ -6674,7 +7080,7 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
                 var menu = menuTemplate(Home.getMenuData());
                 return "\n<div class=\"js-layout " + (Main.state.menuOpened ? "" : "js-close") + "\">\n" + renderHeader() + "\n" + renderAsideMenu(menu) + "\n<section class=\"js-uc-main js-waitable\">\n" + ucMain + "\n</section>\n</div>\n";
             });
-            exports_52("postRender", postRender = function () {
+            exports_55("postRender", postRender = function () {
                 Home.postRender();
                 Admin.postRender();
                 Fournisseur.postRender();
@@ -6720,43 +7126,43 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             isActive = function (ns) {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_52("menuClick", menuClick = function () {
+            exports_55("menuClick", menuClick = function () {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_52("toggle", toggle = function (entry) {
+            exports_55("toggle", toggle = function (entry) {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_52("setOpenedMenu", setOpenedMenu = function (entry) {
+            exports_55("setOpenedMenu", setOpenedMenu = function (entry) {
                 Main.state.subMenu = entry;
             });
-            exports_52("editProfile", editProfile = function () {
+            exports_55("editProfile", editProfile = function () {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_52("toggleProfileMenu", toggleProfileMenu = function (element) {
+            exports_55("toggleProfileMenu", toggleProfileMenu = function (element) {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main", "src/territoire/main"], function (exports_53, context_53) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/fournisseur/main", "src/territoire/main"], function (exports_56, context_56) {
     "use strict";
     var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, FournisseurMain, TerritoireMain, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_53 && context_53.id;
+    var __moduleName = context_56 && context_56.id;
     return {
         setters: [
-            function (App_23) {
-                App = App_23;
+            function (App_26) {
+                App = App_26;
             },
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
             },
-            function (Theme_10) {
-                Theme = Theme_10;
+            function (Theme_12) {
+                Theme = Theme_12;
             },
             function (LatLong_1) {
                 LatLong = LatLong_1;
@@ -6764,8 +7170,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_9) {
-                Perm = Perm_9;
+            function (Perm_11) {
+                Perm = Perm_11;
             },
             function (Layout_2) {
                 Layout = Layout_2;
@@ -6799,7 +7205,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_53("startup", startup = function (hasPublicHomePage) {
+            exports_56("startup", startup = function (hasPublicHomePage) {
                 if (hasPublicHomePage === void 0) { hasPublicHomePage = false; }
                 var main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 var router = main.router;
@@ -6815,18 +7221,18 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                 TerritoireMain.startup();
                 loadUIState();
             });
-            exports_53("loadUIState", loadUIState = function () {
+            exports_56("loadUIState", loadUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
-                exports_53("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_56("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_53("state", state = {
+                    exports_56("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_53("saveUIState", saveUIState = function () {
+            exports_56("saveUIState", saveUIState = function () {
                 var uid = Perm.getUID();
                 var key = (uid != undefined ? "home-state:" + uid : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -6834,10 +7240,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_54, context_54) {
+System.register("src/app", ["src/main"], function (exports_57, context_57) {
     "use strict";
     var main;
-    var __moduleName = context_54 && context_54.id;
+    var __moduleName = context_57 && context_57.id;
     return {
         setters: [
             function (main_1) {
@@ -6853,36 +7259,36 @@ System.register("src/app", ["src/main"], function (exports_54, context_54) {
     };
 });
 // File: commitcbeff.ts
-System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_55, context_55) {
+System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_58, context_58) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
-    var __moduleName = context_55 && context_55.id;
+    var __moduleName = context_58 && context_58.id;
     return {
         setters: [
-            function (App_24) {
-                App = App_24;
+            function (App_27) {
+                App = App_27;
             },
-            function (Router_17) {
-                Router = Router_17;
+            function (Router_19) {
+                Router = Router_19;
             },
-            function (Perm_10) {
-                Perm = Perm_10;
+            function (Perm_12) {
+                Perm = Perm_12;
             },
-            function (Misc_22) {
-                Misc = Misc_22;
+            function (Misc_24) {
+                Misc = Misc_24;
             },
-            function (Theme_11) {
-                Theme = Theme_11;
+            function (Theme_13) {
+                Theme = Theme_13;
             },
-            function (Pager_6) {
-                Pager = Pager_6;
+            function (Pager_7) {
+                Pager = Pager_7;
             },
-            function (Lookup_9) {
-                Lookup = Lookup_9;
+            function (Lookup_11) {
+                Lookup = Lookup_11;
             }
         ],
         execute: function () {
-            exports_55("NS", NS = "App_commitcbeff");
+            exports_58("NS", NS = "App_commitcbeff");
             table_id = "commitcbeff_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "regionluid_text"];
             state = {
@@ -6922,7 +7328,7 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
             pageTemplate = function (table) {
                 return "\n" + Theme.wrapContent("js-uc-list", table) + "\n";
             };
-            exports_55("fetchState", fetchState = function (id, ownerNS) {
+            exports_58("fetchState", fetchState = function (id, ownerNS) {
                 isAddingNewParent = isNaN(id);
                 callerNS = ownerNS || callerNS;
                 isNew = false;
@@ -6934,9 +7340,9 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .then(Lookup.fetch_region());
             });
-            exports_55("preRender", preRender = function () {
+            exports_58("preRender", preRender = function () {
             });
-            exports_55("render", render = function () {
+            exports_58("render", render = function () {
                 if (isAddingNewParent)
                     return "";
                 var editId;
@@ -6959,9 +7365,9 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 var table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
             });
-            exports_55("postRender", postRender = function () {
+            exports_58("postRender", postRender = function () {
             });
-            exports_55("inContext", inContext = function () {
+            exports_58("inContext", inContext = function () {
                 return App.inContext(NS);
             });
             getFormState = function () {
@@ -6985,11 +7391,11 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_55("onchange", onchange = function (input) {
+            exports_58("onchange", onchange = function (input) {
                 state = getFormState();
                 App.render();
             });
-            exports_55("undo", undo = function () {
+            exports_58("undo", undo = function () {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -6997,7 +7403,7 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 state = Misc.clone(fetchedState);
                 App.render();
             });
-            exports_55("addNew", addNew = function () {
+            exports_58("addNew", addNew = function () {
                 var url = "/commitcbeff/new";
                 return App.GET(url)
                     .then(function (payload) {
@@ -7009,7 +7415,7 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_55("create", create = function () {
+            exports_58("create", create = function () {
                 var formState = getFormState();
                 var item = formState.list.find(function (one) { return one._isNew; });
                 if (!html5Valid())
@@ -7022,7 +7428,7 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .catch(App.render);
             });
-            exports_55("save", save = function () {
+            exports_58("save", save = function () {
                 var formState = getFormState();
                 var item = formState.list.find(function (one) { return one._editing; });
                 if (!html5Valid())
@@ -7035,12 +7441,12 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .catch(App.render);
             });
-            exports_55("selectfordrop", selectfordrop = function (id) {
+            exports_58("selectfordrop", selectfordrop = function (id) {
                 state = Misc.clone(fetchedState);
                 state.list.find(function (one) { return one.id == id; })._deleting = true;
                 App.render();
             });
-            exports_55("drop", drop = function () {
+            exports_58("drop", drop = function () {
                 App.prepareRender();
                 var item = state.list.find(function (one) { return one._deleting; });
                 App.DELETE("/commitcbeff", { id: item.id, updated: item.updated })
@@ -7050,410 +7456,8 @@ System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .catch(App.render);
             });
-            exports_55("hasChanges", hasChanges = function () {
+            exports_58("hasChanges", hasChanges = function () {
                 return !Misc.same(fetchedState, state);
-            });
-        }
-    };
-});
-// File: lookup.ts
-System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_56, context_56) {
-    "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_11, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_56 && context_56.id;
-    return {
-        setters: [
-            function (App_25) {
-                App = App_25;
-            },
-            function (Router_18) {
-                Router = Router_18;
-            },
-            function (Misc_23) {
-                Misc = Misc_23;
-            },
-            function (Theme_12) {
-                Theme = Theme_12;
-            },
-            function (Lookup_10) {
-                Lookup = Lookup_10;
-            },
-            function (Perm_11) {
-                Perm = Perm_11;
-            },
-            function (layout_11_1) {
-                layout_11 = layout_11_1;
-            }
-        ],
-        execute: function () {
-            exports_56("NS", NS = "App_lookup");
-            blackList = ["cie_text"];
-            state = {};
-            fetchedState = {};
-            isNew = false;
-            isDirty = false;
-            formTemplate = function (item, cie) {
-                return "\n\n" + (isNew ? "\n" : "\n    " + Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID")) + "\n") + "\n    " + Theme.renderDropdownField(NS, "cie", cie, i18n("CIE")) + "\n    " + Theme.renderTextField(NS, "groupe", item.groupe, i18n("GROUPE"), 12, true) + "\n    " + Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 9) + "\n    " + Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true) + "\n    " + Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50) + "\n    " + Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50) + "\n    " + Theme.renderTextField(NS, "value3", item.value3, i18n("VALUE3"), 1024) + "\n    " + Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), true) + "\n    " + Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED")) + "\n    " + Theme.renderNumberField(NS, "sortorder", item.sortorder, i18n("SORTORDER")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
-            };
-            pageTemplate = function (item, form, tab, warning, dirty) {
-                var canEdit = true;
-                var readonly = !canEdit;
-                var canInsert = canEdit && isNew; // && Perm.hasLookup_CanAddLookup;
-                var canDelete = canEdit && !canInsert; // && Perm.hasLookup_CanDeleteLookup;
-                var canAdd = canEdit && !canInsert; // && Perm.hasLookup_CanAddLookup;
-                var canUpdate = canEdit && !isNew;
-                var buttons = [];
-                buttons.push(Theme.buttonCancel(NS));
-                if (canInsert)
-                    buttons.push(Theme.buttonInsert(NS));
-                if (canDelete)
-                    buttons.push(Theme.buttonDelete(NS));
-                if (canAdd)
-                    buttons.push(Theme.buttonAddNew(NS, "#/lookup/new"));
-                if (canUpdate)
-                    buttons.push(Theme.buttonUpdate(NS));
-                var actions = Theme.renderButtons(buttons);
-                var title = layout_11.buildTitle(xtra, !isNew ? i18n("lookup Details") : i18n("New lookup"));
-                var subtitle = layout_11.buildSubtitle(xtra, i18n("lookup subtitle"));
-                return "\n<form onsubmit=\"return false;\" " + (readonly ? "class='js-readonly'" : "") + ">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_11.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n            " + Theme.renderBlame(item, isNew) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-details", form) + "\n</div>\n</div>\n\n" + Theme.renderModalDelete("modalDelete_" + NS, NS + ".drop()") + "\n\n</form>\n";
-            };
-            dirtyTemplate = function () {
-                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
-            };
-            exports_56("fetchState", fetchState = function (id) {
-                isNew = isNaN(id);
-                isDirty = false;
-                Router.registerDirtyExit(dirtyExit);
-                return App.GET("/lookup/" + (isNew ? "new" : id))
-                    .then(function (payload) {
-                    state = payload.item;
-                    fetchedState = Misc.clone(state);
-                    xtra = payload.xtra;
-                    key = { id: id };
-                })
-                    .then(Lookup.fetch_cIE());
-            });
-            exports_56("fetch", fetch = function (params) {
-                var id = +params[0];
-                App.prepareRender(NS, i18n("lookup"));
-                fetchState(id)
-                    .then(App.render)
-                    .catch(App.render);
-            });
-            exports_56("render", render = function () {
-                if (!inContext())
-                    return "";
-                if (App.fatalError())
-                    return App.fatalErrorTemplate();
-                if (state == undefined || Object.keys(state).length == 0)
-                    return App.warningTemplate() || App.unexpectedTemplate();
-                var year = Perm.getCurrentYear(); //or something better
-                var lookup_cIE = Lookup.get_cIE(year);
-                var cie = Theme.renderOptions(lookup_cIE, state.cie, true);
-                var form = formTemplate(state, cie);
-                var tab = layout_11.tabTemplate(state.id, xtra, isNew);
-                var dirty = dirtyTemplate();
-                var warning = App.warningTemplate();
-                return pageTemplate(state, form, tab, warning, dirty);
-            });
-            exports_56("postRender", postRender = function () {
-                if (!inContext())
-                    return;
-                App.setPageTitle(isNew ? i18n("New lookup") : xtra.title);
-            });
-            exports_56("inContext", inContext = function () {
-                return App.inContext(NS);
-            });
-            getFormState = function () {
-                var clone = Misc.clone(state);
-                clone.cie = Misc.fromSelectNumber(NS + "_cie", state.cie);
-                clone.groupe = Misc.fromInputText(NS + "_groupe", state.groupe);
-                clone.code = Misc.fromInputTextNullable(NS + "_code", state.code);
-                clone.description = Misc.fromInputText(NS + "_description", state.description);
-                clone.value1 = Misc.fromInputTextNullable(NS + "_value1", state.value1);
-                clone.value2 = Misc.fromInputTextNullable(NS + "_value2", state.value2);
-                clone.value3 = Misc.fromInputTextNullable(NS + "_value3", state.value3);
-                clone.started = Misc.fromInputNumber(NS + "_started", state.started);
-                clone.ended = Misc.fromInputNumberNullable(NS + "_ended", state.ended);
-                clone.sortorder = Misc.fromInputNumberNullable(NS + "_sortorder", state.sortorder);
-                return clone;
-            };
-            valid = function (formState) {
-                //if (formState.somefield.length == 0) App.setError("Somefield is required");
-                return App.hasNoError();
-            };
-            html5Valid = function () {
-                document.getElementById(NS + "_dummy_submit").click();
-                var form = document.getElementsByTagName("form")[0];
-                form.classList.add("js-error");
-                return form.checkValidity();
-            };
-            exports_56("onchange", onchange = function (input) {
-                state = getFormState();
-                App.render();
-            });
-            exports_56("cancel", cancel = function () {
-                Router.goBackOrResume(isDirty);
-            });
-            exports_56("create", create = function () {
-                var formState = getFormState();
-                if (!html5Valid())
-                    return;
-                if (!valid(formState))
-                    return App.render();
-                App.prepareRender();
-                App.POST("/lookup", Misc.createBlack(formState, blackList))
-                    .then(function (payload) {
-                    var newkey = payload;
-                    Misc.toastSuccessSave();
-                    Router.goto("#/lookup/" + newkey.id, 10);
-                })
-                    .catch(App.render);
-            });
-            exports_56("save", save = function (done) {
-                if (done === void 0) { done = false; }
-                var formState = getFormState();
-                if (!html5Valid())
-                    return;
-                if (!valid(formState))
-                    return App.render();
-                App.prepareRender();
-                App.PUT("/lookup", Misc.createBlack(formState, blackList))
-                    .then(function (_) {
-                    Misc.toastSuccessSave();
-                    if (done)
-                        Router.goto("#/lookups/", 100);
-                    else
-                        Router.goto("#/lookup/" + key.id, 10);
-                })
-                    .catch(App.render);
-            });
-            exports_56("drop", drop = function () {
-                key.updated = state.updated;
-                App.prepareRender();
-                App.DELETE("/lookup", key)
-                    .then(function (_) {
-                    Router.goto("#/lookups/", 250);
-                })
-                    .catch(App.render);
-            });
-            dirtyExit = function () {
-                isDirty = !Misc.same(fetchedState, getFormState());
-                if (isDirty) {
-                    setTimeout(function () {
-                        state = getFormState();
-                        App.render();
-                    }, 10);
-                }
-                return isDirty;
-            };
-        }
-    };
-});
-System.register("src/admin/layout1", ["_BaseApp/src/core/app", "src/layout"], function (exports_57, context_57) {
-    "use strict";
-    var App, layout_12, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_57 && context_57.id;
-    return {
-        setters: [
-            function (App_26) {
-                App = App_26;
-            },
-            function (layout_12_1) {
-                layout_12 = layout_12_1;
-            }
-        ],
-        execute: function () {
-            exports_57("icon", icon = "far fa-tasks");
-            exports_57("prepareMenu", prepareMenu = function () {
-                layout_12.setOpenedMenu("Administration-Configuration");
-            });
-            exports_57("tabTemplate", tabTemplate = function (id, groupe) {
-                var isLookups = App.inContext(["App_Lookups"]);
-                var isLookup = App.inContext(["App_Lookup"]);
-                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isLookups ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/lookups/" + groupe + "\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("List") + "</span>\n            </a>\n        </li>\n\n" + (!isLookups ? "\n        <li " + (isLookup ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/lookup/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Entry Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
-            });
-            exports_57("buildTitle", buildTitle = function (xtra, defaultText) {
-                var _a;
-                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
-            });
-            exports_57("buildSubtitle", buildSubtitle = function (xtra, defaultText) {
-                var _a;
-                return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
-            });
-        }
-    };
-});
-// File: lookups.ts
-System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout1", "src/admin/lookupdata"], function (exports_58, context_58) {
-    "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, layout1_1, Lookup, NS, key, state, xtra, uiSelectedRow, currentYear, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_groupID, filter_year, gotoDetail, create;
-    var __moduleName = context_58 && context_58.id;
-    return {
-        setters: [
-            function (App_27) {
-                App = App_27;
-            },
-            function (Router_19) {
-                Router = Router_19;
-            },
-            function (Perm_12) {
-                Perm = Perm_12;
-            },
-            function (Misc_24) {
-                Misc = Misc_24;
-            },
-            function (Theme_13) {
-                Theme = Theme_13;
-            },
-            function (Pager_7) {
-                Pager = Pager_7;
-            },
-            function (layout1_1_1) {
-                layout1_1 = layout1_1_1;
-            },
-            function (Lookup_11) {
-                Lookup = Lookup_11;
-            }
-        ],
-        execute: function () {
-            exports_58("NS", NS = "App_lookups");
-            state = {
-                list: [],
-                pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { groupe: undefined, year: Perm.getCurrentYear() } }
-            };
-            currentYear = new Date().getFullYear();
-            filterTemplate = function (groupID, year) {
-                var filters = [];
-                filters.push(Theme.renderDropdownFilter(NS, "groupID", groupID, i18n("LOOKUP")));
-                filters.push(Theme.renderNumberFilter(NS, "year", year, i18n("YEAR")));
-                return filters.join("");
-            };
-            trTemplate = function (item, rowNumber) {
-                var _a;
-                var obsolete = item.ended != undefined && item.ended < ((_a = state.pager.filter.year) !== null && _a !== void 0 ? _a : currentYear);
-                var classes = [];
-                if (isSelectedRow(item.id))
-                    classes.push("is-selected");
-                if (obsolete)
-                    classes.push("has-text-grey-light");
-                return "\n<tr class=\"" + classes.join(" ") + "\" onclick=\"" + NS + ".gotoDetail(" + item.id + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.id) + "</td>\n    <td>" + Misc.toStaticText(item.cie_text) + "</td>\n    <td>" + Misc.toStaticText(item.groupe) + "</td>\n    <td>" + Misc.toStaticText(item.description) + "</td>\n    <td>" + Misc.toStaticText(item.code) + "</td>\n    <td>" + Misc.toStaticText(item.value1) + "</td>\n    <td>" + Misc.toStaticText(item.value2) + "</td>\n    <td>" + Misc.toStaticText(item.value3) + "</td>\n    <td>" + Misc.toStaticText(item.started) + "</td>\n    <td>" + Misc.toStaticText(item.ended) + "</td>\n    <td>" + Misc.toStaticText(item.sortorder) + "</td>\n</tr>";
-            };
-            tableTemplate = function (tbody, pager) {
-                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
-            };
-            pageTemplate = function (pager, table, tab, warning, dirty) {
-                var readonly = false;
-                var buttons = [];
-                buttons.push(Theme.buttonAddNew(NS, "#/lookup/new", i18n("Add New")));
-                var actions = Theme.renderButtons(buttons);
-                var title = layout1_1.buildTitle(xtra, i18n("Code Table:") + " " + xtra.title);
-                var subtitle = layout1_1.buildSubtitle(xtra, i18n("List of All Entries"));
-                return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout1_1.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
-            };
-            exports_58("fetchState", fetchState = function (groupe) {
-                Router.registerDirtyExit(null);
-                state.pager.filter.groupe = groupe;
-                return App.POST("/lookup/search", state.pager)
-                    .then(function (payload) {
-                    state = payload;
-                    xtra = payload.xtra;
-                    key = {};
-                })
-                    .then(Lookup.fetch_lutGroup());
-            });
-            exports_58("fetch", fetch = function (params) {
-                var groupe = params[0];
-                App.prepareRender(NS, i18n("lookups"));
-                layout1_1.prepareMenu();
-                fetchState(groupe)
-                    .then(App.render)
-                    .catch(App.render);
-            });
-            refresh = function () {
-                App.prepareRender(NS, i18n("lookups"));
-                App.POST("/lookup/search", state.pager)
-                    .then(function (payload) {
-                    state = payload;
-                })
-                    .then(App.render)
-                    .catch(App.render);
-            };
-            exports_58("render", render = function () {
-                if (!inContext())
-                    return "";
-                if (App.fatalError())
-                    return App.fatalErrorTemplate();
-                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
-                    return App.warningTemplate() || App.unexpectedTemplate();
-                var warning = App.warningTemplate();
-                var dirty = "";
-                var tbody = state.list.reduce(function (html, item, index) {
-                    var rowNumber = Pager.rowNumber(state.pager, index);
-                    return html + trTemplate(item, rowNumber);
-                }, "");
-                var groupID = Theme.renderOptions(Lookup.lutGroup, state.pager.filter.groupe, false);
-                var filter = filterTemplate(groupID, state.pager.filter.year);
-                var pager = Pager.render(state.pager, NS, [20, 50], null, filter);
-                var table = tableTemplate(tbody, state.pager);
-                var tab = layout1_1.tabTemplate(null, null);
-                return pageTemplate(pager, table, tab, dirty, warning);
-            });
-            exports_58("postRender", postRender = function () {
-                if (!inContext())
-                    return;
-            });
-            exports_58("inContext", inContext = function () {
-                return App.inContext(NS);
-            });
-            setSelectedRow = function (id) {
-                if (uiSelectedRow == undefined)
-                    uiSelectedRow = { id: id };
-                uiSelectedRow.id = id;
-            };
-            isSelectedRow = function (id) {
-                if (uiSelectedRow == undefined)
-                    return false;
-                return (uiSelectedRow.id == id);
-            };
-            exports_58("goto", goto = function (pageNo, pageSize) {
-                state.pager.pageNo = pageNo;
-                state.pager.pageSize = pageSize;
-                refresh();
-            });
-            exports_58("sortBy", sortBy = function (columnName, direction) {
-                state.pager.pageNo = 1;
-                state.pager.sortColumn = columnName;
-                state.pager.sortDirection = direction;
-                refresh();
-            });
-            exports_58("search", search = function (element) {
-                state.pager.searchText = element.value;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_58("filter_groupID", filter_groupID = function (element) {
-                var value = element.options[element.selectedIndex].value;
-                var groupe = (value.length > 0 ? value : undefined);
-                if (groupe == state.pager.filter.groupe)
-                    return;
-                Router.goto("#/admin/lookups/" + groupe);
-            });
-            exports_58("filter_year", filter_year = function (element) {
-                var value = element.value;
-                var year = (value.length > 0 ? +value : undefined);
-                if (year == state.pager.filter.year)
-                    return;
-                state.pager.filter.year = year;
-                state.pager.pageNo = 1;
-                refresh();
-            });
-            exports_58("gotoDetail", gotoDetail = function (id) {
-                setSelectedRow(id);
-                Router.goto("#/admin/lookup/" + id);
-            });
-            exports_58("create", create = function () {
-                Router.goto("#/admin/lookup/new/" + state.pager.filter.groupe);
             });
         }
     };

@@ -162,15 +162,13 @@ namespace BaseApp.Service
 
         public object Account_Select(int uid)
         {
-            var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true).ReviveDTO();
+            var item = repo.queryDico("app.Account_Select", "@uid", uid, uid: true)
+                .ReviveDTO()
+                .Decrypt(crypto, new string[] { "email", "firstname", "lastname", "by" });
 
-            item["email"] = crypto.Decrypt(item.Parse<string>("email"));
-            item["firstname"] = crypto.Decrypt(item.Parse<string>("firstname"));
-            item["lastname"] = crypto.Decrypt(item.Parse<string>("lastname"));
-            item["by"] = crypto.Decrypt(item.Parse<string>("by"));
-
-            var xtra = repo.queryDico("app.Account_Summary", "@uid", uid);
-            xtra["title"] = crypto.Decrypt(xtra.Parse<string>("title"));
+            var xtra = repo.queryDico("app.Account_Summary", "@uid", uid)
+                .ReviveDTO()
+                .Decrypt(crypto, "title");
 
             return new
             {
@@ -181,12 +179,11 @@ namespace BaseApp.Service
 
         public object Account_New(int cie)
         {
-            var item = repo.queryDico("app.Account_New", "@cie", cie, uid: true).ReviveDTO();
-            item["by"] = crypto.Decrypt(item.Parse<string>("by"));
-
             return new
             {
-                item = item,
+                item = repo.queryDico("app.Account_New", "@cie", cie, uid: true)
+                    .ReviveDTO()
+                    .Decrypt(crypto, "by"),
                 xtra = (object)null
             };
         }
@@ -234,11 +231,6 @@ namespace BaseApp.Service
                 appUTO["resetExpiry"] = DateTime.Now.AddDays(7); // one week from now
 
                 uid = repo.queryScalar<int>("app.Account_Insert", KVList.Build(appUTO), uid: true);
-
-                var account = repo.queryDico("app.Account_SelectBy_Email", new KVList()
-                    .Add("@email", appUTO["email"])
-                    .Add("@cie", cie));
-
                 var company = appUTO.Parse<string>("company_text");
 
                 url = url.Replace("{company}", company);

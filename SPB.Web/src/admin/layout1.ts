@@ -18,8 +18,8 @@ export const prepareMenu = () => {
 }
 
 export const tabTemplate = (id: number, groupe: string) => {
-    let isLookups = App.inContext(["App_Lookups"]);
-    let isLookup = App.inContext(["App_Lookup"]);
+    let isLookups = App.inContext(["App_lookups"]);
+    let isLookup = App.inContext(["App_lookup"]);
     return `
 <div class="tabs is-boxed">
     <ul>

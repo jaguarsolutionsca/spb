@@ -37,7 +37,7 @@ interface IState {
 }
 
 interface IKey {
-
+    groupe: string
 }
 
 interface IFilter {
@@ -121,7 +121,7 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
     let readonly = false;
 
     let buttons: string[] = [];
-    buttons.push(Theme.buttonAddNew(NS, "#/lookup/new", i18n("Add New")));
+    buttons.push(Theme.buttonAddNew(NS, `#/admin/lookup/new/${key.groupe}`, i18n("Add New")));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, `${i18n("Code Table:")} ${xtra.title}`);
@@ -163,7 +163,7 @@ export const fetchState = (groupe: string) => {
         .then(payload => {
             state = payload;
             xtra = payload.xtra;
-            key = {};
+            key = { groupe };
         })
         .then(Lookup.fetch_lutGroup())
 };

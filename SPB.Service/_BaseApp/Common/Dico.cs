@@ -10,7 +10,37 @@ namespace BaseApp.Common
 {
     public class Dico : Dictionary<string, object>
     {
+        internal bool revived = false;
+
         private static Regex regex = new Regex(@"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}");
+
+        internal Dico Decrypt(Crypto crypto, string[] keys)
+        {
+            if (!revived)
+                throw new Exception("Dico first needs to be revived before decrypting");
+
+            foreach (var key in keys)
+            {
+                if (this.ContainsKey(key) && this[key] != null)
+                {
+                    this[key] = crypto.Decrypt(this[key].ToString());
+                }
+            }
+            return this;
+        }
+
+        internal Dico Decrypt(Crypto crypto, string key)
+        {
+            if (!revived)
+                throw new Exception("Dico first needs to be revived before decrypting");
+
+            if (this.ContainsKey(key) && this[key] != null)
+            {
+                this[key] = crypto.Decrypt(this[key].ToString());
+            }
+
+            return this;
+        }
 
         public Dico ReviveUTO(string[] whitelist = null, string[] blacklist = null, bool flatten = true)
         {
@@ -71,6 +101,8 @@ namespace BaseApp.Common
                     dico.Add(key, this[key]);
                 }
             }
+
+            dico.revived = true;
             return dico;
         }
 
@@ -124,6 +156,8 @@ namespace BaseApp.Common
                     dico.Add(key, obj);
                 }
             }
+
+            dico.revived = true;
             return dico;
         }
 

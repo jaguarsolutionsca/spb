@@ -2,7 +2,7 @@
     [ID]          INT            IDENTITY (1, 1) NOT NULL,
     [CIE]         INT            NULL,
     [Groupe]      NVARCHAR (12)  NOT NULL,
-    [Code]        NVARCHAR (9)   NULL,
+    [Code]        NVARCHAR (12)  NULL,
     [Description] NVARCHAR (50)  NOT NULL,
     [Value1]      NVARCHAR (50)  NULL,
     [Value2]      NVARCHAR (50)  NULL,
@@ -16,6 +16,8 @@
     CONSTRAINT [PK_Lookup] PRIMARY KEY CLUSTERED ([ID] ASC),
     CONSTRAINT [FK_Lookup_Company] FOREIGN KEY ([CIE]) REFERENCES [app].[Company] ([CIE])
 );
+
+
 
 
 

@@ -74,7 +74,7 @@ export const getMenuData = () => {
                     links: [
                         { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
                         { name: "Matrice de sécurité", },
-                        { name: "Gestion des tables", },
+                        { name: "Gestion des tables", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
                         { name: "Gestion des périodes", },
                     ],
                     merge: "start"

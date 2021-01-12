@@ -4,7 +4,7 @@
     @ID int,
     @CIE int NULL,
     @Groupe nvarchar(12),
-    @Code nvarchar(9) NULL,
+    @Code nvarchar(12) NULL,
     @Description nvarchar(50),
     @Value1 nvarchar(50) NULL,
     @Value2 nvarchar(50) NULL,

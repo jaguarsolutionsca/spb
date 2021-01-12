@@ -13,7 +13,7 @@ namespace BaseApp.Web.Controllers
 {
     [Route("api/[controller]")]
     [Authorize, ApiController]
-    public partial class LookupController : _CoreController
+    public class LookupController : _CoreController
     {
         [HttpPost("search")]
         public object Search([FromBody] Dico pager)
@@ -29,11 +29,11 @@ namespace BaseApp.Web.Controllers
             return app.Lookup_Select(id);
         }
 
-        [HttpGet("new")]
-        public object New()
+        [HttpGet("new/{groupe}")]
+        public object New(string groupe)
         {
             //app.RequirePermission(Perm.Lookup_Edit);
-            return app.Lookup_New();
+            return app.Lookup_New(groupe);
         }
 
         [HttpPost]
@@ -60,14 +60,24 @@ namespace BaseApp.Web.Controllers
         }
 
 
+
+
+        [HttpGet("lutGroup")]
+        public List<Dico> Lookup_LutGroup()
+        {
+            return app.Lookup_LutGroup();
+        }
+
+
+
         //
         // FIXME: Issue with the AuthorizeAttribute and the signout process.
         // The "Not authenticated" message shows up in the Signin form after a signout.
         // This will have to be fixed in the ts files but for the time being we accept non authenticated api calls.
         //
-        [AllowAnonymous]
+       [AllowAnonymous]
         [HttpGet("by/{groupe}")]
-        public List<Common.Dico> Lookup_By(string groupe)
+        public List<Dico> Lookup_By(string groupe)
         {
             return app.Lookup_By(groupe);
         }

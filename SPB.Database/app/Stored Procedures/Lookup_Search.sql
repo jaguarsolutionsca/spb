@@ -5,7 +5,10 @@
     @pageSize int = 25,
     @sortColumn nvarchar(32) = NULL,
     @sortDirection nvarchar(4) = NULL,
-    @searchText nvarchar(32) = NULL
+    @searchText nvarchar(32) = NULL,
+	--
+    @Groupe nvarchar(12) = NULL,
+    @Year int = NULL
 )
 AS
 BEGIN
@@ -18,7 +21,7 @@ DECLARE @returnTable TABLE
     [CIE] int NULL,
     [CIE_Text] nvarchar(50) NULL,
     [Groupe] nvarchar(12) NOT NULL,
-    [Code] nvarchar(9) NULL,
+    [Code] nvarchar(12) NULL,
     [Description] nvarchar(50) NOT NULL,
     [Value1] nvarchar(50) NULL,
     [Value2] nvarchar(50) NULL,
@@ -68,7 +71,12 @@ WHERE
     (pt.Value1 LIKE '%'+@searchText+'%') OR
     (pt.Value2 LIKE '%'+@searchText+'%') OR
     (pt.Value3 LIKE '%'+@searchText+'%')
+) AND
+(
+    ((@Groupe IS NULL) OR (pt.Groupe = @Groupe)) AND
+	((@Year IS NULL) OR (pt.Started <= @Year AND (pt.Ended IS NULL OR pt.Ended >= @Year)))
 )
+
 ORDER BY
     CASE WHEN @sortDirection <> 'ASC' THEN 0  WHEN @sortColumn = 'id' THEN pt.ID END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'groupe' THEN pt.Groupe END ASC,

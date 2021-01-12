@@ -7,6 +7,6 @@ AS
 BEGIN
 SET NOCOUNT ON
 ;
-SELECT * FROM [app].[fun_Lookup_Select] (@ID)
+SELECT * FROM [app].[Lookup_Full] WHERE ID=@id
 ;
 END

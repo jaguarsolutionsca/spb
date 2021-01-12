@@ -146,7 +146,6 @@
     <Build Include="dbo\Stored Procedures\CommitCBEFF_Insert.sql" />
     <Build Include="dbo\Stored Procedures\CommitCBEFF_Delete.sql" />
     <Build Include="app\Stored Procedures\Account_SelectEmailBy_ResetGUID.sql" />
-    <Build Include="app\Functions\fun_Lookup_Select.sql" />
     <Build Include="app\Stored Procedures\Lookup_Update.sql" />
     <Build Include="app\Stored Procedures\Lookup_Summary.sql" />
     <Build Include="app\Stored Procedures\Lookup_Select.sql" />
@@ -154,6 +153,7 @@
     <Build Include="app\Stored Procedures\Lookup_New.sql" />
     <Build Include="app\Stored Procedures\Lookup_Insert.sql" />
     <Build Include="app\Stored Procedures\Lookup_Delete.sql" />
+    <Build Include="app\Views\Lookup_Full.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
