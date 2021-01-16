@@ -49,7 +49,7 @@ interface IState {
 
 
 
-const blackList = ["cie_text"];
+const blackList = ["cie_text", "created", "by"];
 
 let key: IKey;
 let state = <IState>{};
@@ -64,8 +64,7 @@ const formTemplate = (item: IState, cie: string) => {
 
     return `
 
-    ${Theme.renderDropdownField(NS, "cie", cie, i18n("CIE"))}
-    ${Theme.renderTextField(NS, "groupe", item.groupe, i18n("GROUPE"), 12, true)}
+    ${Perm.isSupport() ? Theme.renderDropdownField(NS, "cie", cie, i18n("CIE")) : ""}
     ${Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 12)}
     ${Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true)}
     ${Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50)}
@@ -92,7 +91,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
-    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new"));
+    if (canAdd) buttons.push(Theme.buttonAddNew(NS, `#/admin/lookup/new/${item.groupe.toLowerCase()}`));
     if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
     let actions = Theme.renderButtons(buttons);
 
@@ -253,7 +252,7 @@ export const save = (done = false) => {
         .then(_ => {
             Misc.toastSuccessSave();
             if (done)
-                Router.goto(`#/admin/lookups/`, 100);
+                Router.goto(`#/admin/lookups/${state.groupe.toLowerCase()}`, 100);
             else
                 Router.goto(`#/admin/lookup/${key.id}`, 10);
         })
@@ -266,7 +265,7 @@ export const drop = () => {
     App.DELETE("/lookup", key)
         .then(_ => {
 
-            Router.goto(`#/admin/lookups/`, 250);
+            Router.goto(`#/admin/lookups/${state.groupe.toLowerCase()}`, 250);
         })
         .catch(App.render);
 }

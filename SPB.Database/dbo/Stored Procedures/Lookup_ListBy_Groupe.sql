@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Lookup_ListBy_Groupe]
 (
+	@_uid int,
 	@groupe nvarchar(50),
     @year int = NULL
 )
@@ -90,6 +91,19 @@ ELSE IF @groupe = 'proprietaire'
 	FROM Gestion_Paie.dbo.Fournisseur pt
 	WHERE pt.Actif = 1 AND pt.IsProducteur = 1
 	ORDER BY pt.ID
+
+ELSE IF @groupe = 'cie'
+	SELECT
+		pt.CIE [id],
+		pt.CIE [cie],
+		pt.CIE [code],
+		pt.Name [Description],
+		NULL [value1], NULL [value2], NULL [value3],
+		1950 [started], NULL [ended], NULL [sortOrder], 
+		pt.Archive [disabled]
+	FROM app.Company pt
+	WHERE ((app.UserIs_Support(@_uid) = 1) OR (pt.Archive = 0))
+	ORDER BY pt.Name
 ;
 
 END

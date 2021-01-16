@@ -1748,7 +1748,7 @@ System.register("_BaseApp/src/main", ["_BaseApp/src/core/app", "_BaseApp/src/cor
 });
 System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_10, context_10) {
     "use strict";
-    var App, authrole, fetch_authrole, lutGroup, fetch_lutGroup;
+    var App, authrole, fetch_authrole, lutGroup, fetch_lutGroup, get_lutGroup;
     var __moduleName = context_10 && context_10.id;
     return {
         setters: [
@@ -1768,9 +1768,10 @@ System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], func
                 return function (data) {
                     if (lutGroup != undefined && lutGroup.length > 0)
                         return;
-                    return App.GET("/lookup/lutGroup").then(function (json) { exports_10("lutGroup", lutGroup = json); });
+                    return App.GET("/lookup/lutGroup").then(function (json) { lutGroup = json; });
                 };
             });
+            exports_10("get_lutGroup", get_lutGroup = function (year) { return lutGroup; });
         }
     };
 });
@@ -3553,7 +3554,7 @@ System.register("src/permission", ["_BaseApp/src/auth"], function (exports_33, c
         ],
         execute: function () {
             ROLE_SUPPORT = 1;
-            isSupport = function () { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); };
+            exports_33("isSupport", isSupport = function () { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); });
             hasPermission = function (permid) { return (Auth.getPermissions().indexOf(permid) != -1) || isSupport(); };
             // Block 100
             exports_33("canDoThis", canDoThis = function () { return hasPermission(101); });
@@ -3599,7 +3600,7 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
                     "fetch_authrole": lookupdata_1_1["fetch_authrole"],
                     "authrole": lookupdata_1_1["authrole"],
                     "fetch_lutGroup": lookupdata_1_1["fetch_lutGroup"],
-                    "lutGroup": lookupdata_1_1["lutGroup"]
+                    "get_lutGroup": lookupdata_1_1["get_lutGroup"]
                 });
             }
         ],
@@ -5462,7 +5463,12 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     var rowNumber = Pager.rowNumber(state.pager, index);
                     return html + trTemplate(item, rowNumber);
                 }, "");
-                var groupID = Theme.renderOptions(Lookup.lutGroup, state.pager.filter.groupe, false);
+                var year = Perm.getCurrentYear();
+                var lookup_lutGroup = Lookup.get_lutGroup(year).map(function (one) { return ({
+                    id: one.code.toLowerCase(),
+                    description: one.description
+                }); });
+                var groupID = Theme.renderOptions(lookup_lutGroup, state.pager.filter.groupe, false);
                 var filter = filterTemplate(groupID, state.pager.filter.year);
                 var pager = Pager.render(state.pager, NS, [20, 50], null, filter);
                 var table = tableTemplate(tbody, state.pager);
@@ -5559,13 +5565,13 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
         ],
         execute: function () {
             exports_44("NS", NS = "App_lookup");
-            blackList = ["cie_text"];
+            blackList = ["cie_text", "created", "by"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
             formTemplate = function (item, cie) {
-                return "\n\n    " + Theme.renderDropdownField(NS, "cie", cie, i18n("CIE")) + "\n    " + Theme.renderTextField(NS, "groupe", item.groupe, i18n("GROUPE"), 12, true) + "\n    " + Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 12) + "\n    " + Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true) + "\n    " + Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50) + "\n    " + Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50) + "\n    " + Theme.renderTextField(NS, "value3", item.value3, i18n("VALUE3"), 1024) + "\n    " + Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), true) + "\n    " + Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED")) + "\n    " + Theme.renderNumberField(NS, "sortorder", item.sortorder, i18n("SORTORDER")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
+                return "\n\n    " + (Perm.isSupport() ? Theme.renderDropdownField(NS, "cie", cie, i18n("CIE")) : "") + "\n    " + Theme.renderTextField(NS, "code", item.code, i18n("CODE"), 12) + "\n    " + Theme.renderTextField(NS, "description", item.description, i18n("DESCRIPTION"), 50, true) + "\n    " + Theme.renderTextField(NS, "value1", item.value1, i18n("VALUE1"), 50) + "\n    " + Theme.renderTextField(NS, "value2", item.value2, i18n("VALUE2"), 50) + "\n    " + Theme.renderTextField(NS, "value3", item.value3, i18n("VALUE3"), 1024) + "\n    " + Theme.renderNumberField(NS, "started", item.started, i18n("STARTED"), true) + "\n    " + Theme.renderNumberField(NS, "ended", item.ended, i18n("ENDED")) + "\n    " + Theme.renderNumberField(NS, "sortorder", item.sortorder, i18n("SORTORDER")) + "\n    " + Theme.renderBlame(item, isNew) + "\n";
             };
             pageTemplate = function (item, form, tab, warning, dirty) {
                 var canEdit = true;
@@ -5581,7 +5587,7 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
                 if (canDelete)
                     buttons.push(Theme.buttonDelete(NS));
                 if (canAdd)
-                    buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new"));
+                    buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new/" + item.groupe.toLowerCase()));
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 var actions = Theme.renderButtons(buttons);
@@ -5696,7 +5702,7 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
                     .then(function (_) {
                     Misc.toastSuccessSave();
                     if (done)
-                        Router.goto("#/admin/lookups/", 100);
+                        Router.goto("#/admin/lookups/" + state.groupe.toLowerCase(), 100);
                     else
                         Router.goto("#/admin/lookup/" + key.id, 10);
                 })
@@ -5707,7 +5713,7 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
                 App.prepareRender();
                 App.DELETE("/lookup", key)
                     .then(function (_) {
-                    Router.goto("#/admin/lookups/", 250);
+                    Router.goto("#/admin/lookups/" + state.groupe.toLowerCase(), 250);
                 })
                     .catch(App.render);
             });

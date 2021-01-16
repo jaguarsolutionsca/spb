@@ -7,7 +7,7 @@ export { getEmail, getName, getUID, getRoles, getCurrentYear, refreshLoginData }
 const ROLE_SUPPORT = 1;
 
 
-const isSupport = () => { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); }
+export const isSupport = () => { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); }
 const hasPermission = (permid: number) => { return (Auth.getPermissions().indexOf(permid) != -1) || isSupport(); }
 
 

@@ -200,7 +200,13 @@ export const render = () => {
         return html + trTemplate(item, rowNumber);
     }, "");
 
-    let groupID = Theme.renderOptions(Lookup.lutGroup, state.pager.filter.groupe, false);
+    var year = Perm.getCurrentYear();
+    var lookup_lutGroup = Lookup.get_lutGroup(year).map(one => <Lookup.LookupData>{
+        id: one.code.toLowerCase(),
+        description: one.description
+    });
+
+    let groupID = Theme.renderOptions(lookup_lutGroup, state.pager.filter.groupe, false);
 
     const filter = filterTemplate(groupID, state.pager.filter.year);
     const pager = Pager.render(state.pager, NS, [20, 50], null, filter);

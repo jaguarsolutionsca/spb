@@ -27,7 +27,7 @@ export const fetch_authrole = () => {
     }
 }
 
-export let lutGroup: LookupData[];
+let lutGroup: LookupData[];
 export const fetch_lutGroup = () => {
     return function (data: any) {
         if (lutGroup != undefined && lutGroup.length > 0)
@@ -35,3 +35,4 @@ export const fetch_lutGroup = () => {
         return App.GET(`/lookup/lutGroup`).then(json => { lutGroup = json; });
     }
 }
+export const get_lutGroup = (year: number) => lutGroup;

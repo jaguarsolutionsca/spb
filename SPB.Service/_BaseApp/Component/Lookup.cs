@@ -79,6 +79,7 @@ namespace BaseApp.Service
 
         public object Lookup_Insert(Dico uto)
         {
+            uto.TrimKeys(new string[] { "cie_text", "created", "by" });
             var parameters = KVList.Build(uto.ReviveUTO());
             var id = repo.queryScalar<int>("app.Lookup_Insert", parameters, uid: true);
             return new
@@ -89,6 +90,7 @@ namespace BaseApp.Service
 
         public void Lookup_Update(Dico uto)
         {
+            uto.TrimKeys(new string[] { "cie_text", "created", "by" });
             repo.queryNonQuery("app.Lookup_Update", KVList.Build(uto.ReviveUTO()), uid: true);
         }
 
@@ -107,16 +109,16 @@ namespace BaseApp.Service
         {
             return repo.queryDicoList("app.Lookup_ListBy_Groupe", KVList.Build()
                 .Add("@groupe", groupe)
-                .Add("@year", year)
-                );
+                .Add("@year", year),
+            uid: true);
         }
 
         public List<Dico> Lookup_LutGroup()
         {
             return repo.queryDicoList("app.Lookup_ListBy_Groupe", KVList.Build()
                 .Add("@groupe", "EDIT.LUT")
-                .Add("@year", null)
-                );
+                .Add("@year", null),
+            uid: true);
         }
 
     }
