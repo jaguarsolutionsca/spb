@@ -37,14 +37,14 @@ ELSE IF @groupe = 'compte'
 		pt.ID [id],
 		0 [cie],
 		pt.ID [code],
-		pt.Description,
-		pt.Description [value1],
+		ISNULL(pt.Description + ' ', '') +'['+ CAST(pt.id as nvarchar) +']' [description],
+		cc.Description [value1],
 		NULL [value2], NULL [value3],
 		1950 [started], NULL [ended], NULL [sortOrder], CAST(0 as bit) [disabled]
 	FROM Gestion_Paie.dbo.Compte pt
-	INNER JOIN Gestion_Paie.dbo.CompteCategory cc ON pt.[ID] = CategoryID
+	INNER JOIN Gestion_Paie.dbo.CompteCategory cc ON pt.[CategoryID] = cc.ID
 	WHERE Actif = 1
-	ORDER BY pt.[ID]
+	ORDER BY pt.Description
 
 ELSE IF @groupe = 'autreFournisseur'
 	SELECT

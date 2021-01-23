@@ -8,6 +8,7 @@
     @searchText nvarchar(32) = NULL,
 	--
     @Groupe nvarchar(12) = NULL,
+	@cie int = NULL,
     @Year int = NULL
 )
 AS
@@ -74,6 +75,7 @@ WHERE
 ) AND
 (
     ((@Groupe IS NULL) OR (pt.Groupe = @Groupe)) AND
+    ((@cie IS NULL) OR (pt.CIE = @cie)) AND
 	((@Year IS NULL) OR (pt.Started <= @Year AND (pt.Ended IS NULL OR pt.Ended >= @Year)))
 )
 

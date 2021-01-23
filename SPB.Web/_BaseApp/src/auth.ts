@@ -31,6 +31,7 @@ var loginData = <LoginData>{};
 interface IState {
     email: string
     password: string
+    cie: number
 }
 
 let state = <IState>{};
@@ -301,7 +302,8 @@ export const postRender = () => {
 const getFormState = () => {
     return <IState>{
         email: Misc.fromInputText("App_Auth_email"),
-        password: Misc.fromInputText("App_Auth_password")
+        password: Misc.fromInputText("App_Auth_password"),
+        cie: App.cie
     };
 };
 
@@ -412,6 +414,12 @@ export const getUID = () => {
     if (loginData == undefined || loginData.user == undefined)
         return null;
     return loginData.user.uid;
+}
+
+export const getCie = () => {
+    if (loginData == undefined || loginData.user == undefined)
+        return null;
+    return loginData.user.cie;
 }
 
 export const getCurrentYear = () => {

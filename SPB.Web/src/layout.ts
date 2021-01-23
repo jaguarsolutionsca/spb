@@ -12,6 +12,7 @@ import * as Main from "./main"
 //
 import * as Home from "./home"
 import * as Admin from "./admin/main"
+import * as Support from "./support/main"
 import * as Fournisseur from "./fournisseur/main"
 import * as Territoire from "./territoire/main"
 
@@ -30,6 +31,7 @@ export const render = () => {
     let ucMain = `
 ${Home.render()}
 ${Admin.render()}
+${Support.render()}
 ${Fournisseur.render()}
 ${Territoire.render()}
 `;
@@ -50,6 +52,7 @@ ${ucMain}
 export const postRender = () => {
     Home.postRender();
     Admin.postRender()
+    Support.postRender()
     Fournisseur.postRender()
     Territoire.postRender()
 }

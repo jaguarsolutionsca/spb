@@ -12,7 +12,7 @@ import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
-import { tabTemplate, icon, prepareMenu, ISummary, buildTitle, buildSubtitle } from "./layout1"
+import { tabTemplate, icon, prepareMenu, ISummary, buildTitle, buildSubtitle } from "./layout"
 
 declare const i18n: any;
 
@@ -175,7 +175,7 @@ export const render = () => {
 
     const form = formTemplate(state, cie);
 
-    const tab = tabTemplate(state.id, state.groupe.toLowerCase());
+    const tab = tabTemplate(state.id, /*state.groupe.toLowerCase(),*/ null);
     const dirty = dirtyTemplate();
     const warning = App.warningTemplate();
     return pageTemplate(state, form, tab, warning, dirty);

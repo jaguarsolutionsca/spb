@@ -12,7 +12,7 @@ import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
-import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout2"
+import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout"
 
 declare const i18n: any;
 
@@ -499,7 +499,7 @@ export const fetchState = (cie: number) => {
 };
 
 export const fetch = (params: string[]) => {
-    let cie = +params[0];
+    let cie = Perm.getCie(params);
     App.prepareRender(NS, i18n("company"));
     fetchState(cie)
         .then(App.render)

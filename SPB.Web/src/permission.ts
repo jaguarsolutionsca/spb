@@ -2,14 +2,24 @@
 
 import * as Auth from "../_BaseApp/src/auth"
 export { getEmail, getName, getUID, getRoles, getCurrentYear, refreshLoginData } from "../_BaseApp/src/auth"
+import { cie } from "../_BaseApp/src/core/app"
 
 
 const ROLE_SUPPORT = 1;
+let default_cie: number;
 
 
 export const isSupport = () => { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); }
 const hasPermission = (permid: number) => { return (Auth.getPermissions().indexOf(permid) != -1) || isSupport(); }
 
+
+// Default cie
+export const getCie = (params: string[]) => {
+    if (isSupport() && params && params.length && params[0].startsWith("?cie="))
+        default_cie = +params[0].substr(5);
+
+    return default_cie ?? cie;
+}
 
 // Block 100
 export const canDoThis = () => hasPermission(101);

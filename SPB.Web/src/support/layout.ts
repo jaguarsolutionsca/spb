@@ -32,14 +32,14 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
 <div class="tabs is-boxed">
     <ul>
         <li ${isCompanys ? "class='is-active'" : ""}>
-            <a href="#/admin/companys">
+            <a href="#/support/companys">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
                 <span>${i18n("List")}</span>
             </a>
         </li>
 ${showDetail ? `
         <li ${isCompany ? "class='is-active'" : ""}>
-            <a href="#/admin/company/${id}">
+            <a href="#/support/company/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
                 <span>${i18n("Company Details")}</span>
             </a>

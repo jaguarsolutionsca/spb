@@ -8,7 +8,7 @@ import * as Perm from "../permission"
 import * as Misc from "../../_BaseApp/src/lib-ts/misc"
 import * as Theme from "../../_BaseApp/src/theme/theme"
 import * as Pager from "../../_BaseApp/src/theme/pager"
-import { tabTemplate, icon, prepareMenu, buildTitle, buildSubtitle } from "./layout1"
+import { tabTemplate, icon, prepareMenu, buildTitle, buildSubtitle } from "./layout"
 import * as Lookup from "./lookupdata"
 
 declare const i18n: any;
@@ -41,6 +41,7 @@ interface IKey {
 }
 
 interface IFilter {
+    cie: number
     groupe: string
     year: number
 }
@@ -50,7 +51,7 @@ interface IFilter {
 let key: IKey;
 let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
-    pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { groupe: undefined, year: Perm.getCurrentYear() } }
+    pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { cie: App.cie, groupe: undefined, year: Perm.getCurrentYear() } }
 };
 let xtra: any;
 let uiSelectedRow: { id: number };
@@ -212,7 +213,7 @@ export const render = () => {
     const pager = Pager.render(state.pager, NS, [20, 50], null, filter);
     const table = tableTemplate(tbody, state.pager);
 
-    const tab = tabTemplate(null, null);
+    const tab = tabTemplate(null, null, null);
     return pageTemplate(pager, table, tab, dirty, warning);
 };
 

@@ -349,7 +349,8 @@ export const toStaticDateNA = (value: Date) => {
 };
 
 export const toStaticCheckbox = (value: boolean) => {
-    return (value ? "<i class='far fa-check-square js-static-checkbox'></i>" : "<i class='far fa-square js-static-checkbox'></i>");
+    //return (value ? "<i class='far fa-check-square js-static-checkbox'></i>" : "<i class='far fa-square js-static-checkbox'></i>");
+    return (value ? '<i class="fal fa-check-square"></i>' : '<span style="opacity: 0.25"><i class="fal fa-square"></i></span>');
 }
 
 export const toStaticCheckboxYesNo = (value: boolean) => {

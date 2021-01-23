@@ -30,6 +30,9 @@ let name = (<any>window).APP.name;
 let Layout: ILayout;
 let Theme: ITheme;
 
+// Note: Always fresh
+export let cie: number = (<any>window).APP.cie;
+
 export let Feature: IFeature = {
     emailEnabled: (<any>window).APP.emailEnabled
 }

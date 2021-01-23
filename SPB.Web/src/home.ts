@@ -73,17 +73,17 @@ export const getMenuData = () => {
                     name: "Gestion", icon: "fas fa-unlock-alt",
                     links: [
                         { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
-                        { name: "Matrice de sécurité", },
                         { name: "Gestion des tables", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
                         { name: "Gestion des périodes", },
+                        { name: "Matrice de sécurité", },
                     ],
                     merge: "start"
                 },
                 {
                     merge: "end",
-                    name: "Jaguar", icon: "fas fa-tools",
+                    name: "Support", icon: "fas fa-tools",
                     links: [
-                        { name: "Compagnies", href: "#/admin/companys", ns: ["App_companys", "App_company"] },
+                        { name: "Compagnies", href: "#/support/companys", ns: ["App_companys", "App_company"] },
                         { name: "Metadata des permissions", },
                         { name: "Audit", },
                     ]
@@ -99,6 +99,7 @@ export const getMenuData = () => {
                         { name: "Permis", },
                         { name: "Paramètres d'impression", },
                         { name: "Backup", },
+                        { name: "Profil par défaut", },
                     ]
                 },
             ]

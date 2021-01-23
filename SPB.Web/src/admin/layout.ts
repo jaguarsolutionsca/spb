@@ -19,32 +19,56 @@ export const prepareMenu = () => {
 }
 
 export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {
+    let isCompany = App.inContext("App_company");
     let isAccounts = App.inContext("App_accounts");
     let isAccount = App.inContext("App_account");
-    let isFiles = window.location.hash.startsWith("#/files/account");
-    let isFile = window.location.hash.startsWith("#/file/account");
+    let isLookups = App.inContext("App_lookups");
+    let isLookup = App.inContext("App_lookup");
+    let isFiles = window.location.hash.startsWith("#/files/company");
+    let isFile = window.location.hash.startsWith("#/file/company");
 
-    let showDetail = !isAccounts;
-    let showFiles = showDetail && xtra;
-    let showFile = isFile;
+    let showFiles = false && xtra;
+    let showFile = false && xtra && isFile;
 
     return `
 <div class="tabs is-boxed">
     <ul>
+        <li ${isCompany ? "class='is-active'" : ""}>
+            <a href="#/admin/company">
+                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
+                <span>${i18n("Company Details")}</span>
+            </a>
+        </li>
         <li ${isAccounts ? "class='is-active'" : ""}>
             <a href="#/admin/accounts">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
-                <span>${i18n("List")}</span>
+                <span>${i18n("Accounts")}</span>
             </a>
         </li>
-${showDetail ? `
-        <li ${isAccount ? "class='is-active'" : ""}>
+${isAccount ? `
+        <li class="is-active">
             <a href="#/admin/account/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
                 <span>${i18n("Account Details")}</span>
             </a>
         </li>
 ` : ``}
+
+        <li ${isLookups ? "class='is-active'" : ""}>
+            <a href="#/admin/lookups/profile.key">
+                <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
+                <span>${i18n("Lookups")}</span>
+            </a>
+        </li>
+${isLookup ? `
+        <li class="is-active">
+            <a href="#/admin/lookup/${id}">
+                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
+                <span>${i18n("Entry Details")}</span>
+            </a>
+        </li>
+` : ``}
+
 ${showFiles ? `
         <li ${isFiles ? "class='is-active'" : ""}>
             <a href="#/files/account/${id}">
@@ -54,7 +78,7 @@ ${showFiles ? `
         </li>
 ` : ``}
 ${showFile ? `
-        <li ${isFile ? "class='is-active'" : ""}>
+        <li class="is-active">
             <a href="#/file/account/${id}">
                 <span class="icon"><i class="far fa-paperclip" aria-hidden="true"></i></span>
                 <span>${i18n("File Details")}</span>

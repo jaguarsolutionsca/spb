@@ -31,19 +31,25 @@ interface IState {
 }
 
 interface IKey {
+    cie: number
 }
 
 interface IFilter {
+    cie: number
     archive: boolean
     readyToArchive: boolean
 }
 
+
+
 let key: IKey;
 let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
-    pager: { pageNo: 1, pageSize: 20, sortColumn: "EMAIL", sortDirection: "ASC", filter: { archive: undefined, readyToArchive: undefined } }
+    pager: { pageNo: 1, pageSize: 20, sortColumn: "EMAIL", sortDirection: "ASC", filter: { cie: App.cie, archive: undefined, readyToArchive: undefined } }
 };
 let uiSelectedRow: { uid: number };
+
+
 
 let autoArchiveButton = () => {
     let title = i18n("Auto Archive");
@@ -132,21 +138,21 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
 `;
 };
 
-export const fetchState = (id: number) => {
-    console.log(state)
+export const fetchState = (cie: number) => {
     Router.registerDirtyExit(null);
+    state.pager.filter.cie = cie;
     return App.POST("/account/search/", state.pager)
         .then(payload => {
             state = payload;
-            key = {};
+            key = { cie };
         })
 };
 
 export const fetch = (params: string[]) => {
-    let id = +params[0];
+    let cie = Perm.getCie(params);
     App.prepareRender(NS, i18n("accounts"));
     prepareMenu();
-    fetchState(id)
+    fetchState(cie)
         .then(App.render)
         .catch(App.render);
 };

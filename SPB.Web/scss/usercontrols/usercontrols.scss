@@ -561,3 +561,35 @@ form.js-readonly {
         left: 0;
     }
 }
+
+.js-linked {
+    &:hover {
+        &::before {
+            display: inline-block;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            font-family: "Font Awesome 5 Pro";
+            font-weight: 300;
+            content: "\f0c1";
+            margin-right: 4px;
+        }
+    }
+}
+
+.js-linked-after {
+    &:hover {
+        &::after {
+            display: inline-block;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            font-family: "Font Awesome 5 Pro";
+            font-weight: 300;
+            content: "\f0c1";
+            margin-left: 4px;
+        }
+    }
+}

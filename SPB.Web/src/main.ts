@@ -11,6 +11,7 @@ import * as Layout from "./layout"
 import * as Home from "./home"
 //
 import * as AdminMain from "./admin/main"
+import * as SupportMain from "./support/main"
 import * as FournisseurMain from "./fournisseur/main"
 import * as TerritoireMain from "./territoire/main"
 //
@@ -60,6 +61,7 @@ export const startup = (hasPublicHomePage = false) => {
     });
 
     AdminMain.startup();
+    SupportMain.startup();
     FournisseurMain.startup();
     TerritoireMain.startup();
 

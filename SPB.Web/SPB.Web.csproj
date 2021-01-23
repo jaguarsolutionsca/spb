@@ -52,7 +52,7 @@
     <TypeScriptCompile Include="src\admin\account.ts" />
     <TypeScriptCompile Include="src\admin\accounts.ts" />
     <TypeScriptCompile Include="src\admin\company.ts" />
-    <TypeScriptCompile Include="src\admin\companys.ts" />
+    <TypeScriptCompile Include="src\support\companys.ts" />
     <TypeScriptCompile Include="src\admin\layout.ts" />
     <TypeScriptCompile Include="src\admin\main.ts" />
     <TypeScriptCompile Include="src\fournisseur\layout.ts" />
