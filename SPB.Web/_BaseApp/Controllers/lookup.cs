@@ -29,6 +29,13 @@ namespace BaseApp.Web.Controllers
             return app.Lookup_Select(id);
         }
 
+        [HttpGet("new")]
+        public object New()
+        {
+            //app.RequirePermission(Perm.Lookup_Edit);
+            return app.Lookup_New();
+        }
+
         [HttpGet("new/{groupe}")]
         public object New(string groupe)
         {

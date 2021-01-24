@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [app].[Lookup_New]
 (
     @_uid int,
-	@groupe nvarchar(12)
+	@groupe nvarchar(12) = NULL
 )
 AS
 BEGIN
@@ -11,7 +11,7 @@ DECLARE @returnTable TABLE
 (
     [CIE] int NULL,
     [CIE_Text] nvarchar(50) NULL,
-    [Groupe] nvarchar(12) NOT NULL,
+    [Groupe] nvarchar(12) NULL,
     [Code] nvarchar(12) NULL,
     [Description] nvarchar(50) NOT NULL,
     [Value1] nvarchar(50) NULL,

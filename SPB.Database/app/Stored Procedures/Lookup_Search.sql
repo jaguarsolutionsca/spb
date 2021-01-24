@@ -9,7 +9,8 @@
 	--
     @Groupe nvarchar(12) = NULL,
 	@cie int = NULL,
-    @Year int = NULL
+    @Year int = NULL,
+	@Plus nvarchar(1024) = NULL
 )
 AS
 BEGIN
@@ -33,13 +34,18 @@ DECLARE @returnTable TABLE
     [Created] datetime NOT NULL,
     [Updated] datetime NOT NULL,
     [UpdatedBy] int NOT NULL,
-    [By] nvarchar(50) NOT NULL
+    [By] nvarchar(50) NOT NULL,
+	[PlusOrder] int NULL,
+	[RN] int NOT NULL IDENTITY(1,1)
 )
 ;
 SELECT @pageNo = CASE WHEN @pageNo > 0 THEN @pageNo ELSE 1 END;
 SELECT @pageSize = CASE WHEN @pageSize > 0 THEN @pageSize ELSE 25 END;
 DECLARE @rowOffset int = (@pageNo - 1) * @pageSize;
 IF(ISNULL(@searchText, '') = '') SET @searchText = NULL;
+
+declare @tplus TABLE (id int);
+insert @tplus select * from app.CsvOfString_to_Table(@plus);
 
 INSERT INTO @returnTable
 SELECT
@@ -59,10 +65,12 @@ SELECT
     pt.Created,
     pt.Updated,
     pt.UpdatedBy,
-    a.Email [By]
+    a.Email [By],
+	0 [PlusOrder]
 FROM [app].[Lookup] pt
 LEFT OUTER JOIN Company lut1 ON lut1.CIE = pt.CIE
 INNER JOIN Account a ON a.UID = pt.UpdatedBy
+LEFT OUTER JOIN @tplus tp ON tp.id = pt.ID
 WHERE
 (
     (@searchText IS NULL) OR
@@ -78,9 +86,9 @@ WHERE
     ((@cie IS NULL) OR (pt.CIE = @cie)) AND
 	((@Year IS NULL) OR (pt.Started <= @Year AND (pt.Ended IS NULL OR pt.Ended >= @Year)))
 )
-
 ORDER BY
     CASE WHEN @sortDirection <> 'ASC' THEN 0  WHEN @sortColumn = 'id' THEN pt.ID END ASC,
+    CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'cie_text' THEN lut1.Name END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'groupe' THEN pt.Groupe END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'code' THEN pt.Code END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'description' THEN pt.Description END ASC,
@@ -91,6 +99,7 @@ ORDER BY
     CASE WHEN @sortDirection <> 'ASC' THEN 0  WHEN @sortColumn = 'ended' THEN pt.Ended END ASC,
     --,
     CASE WHEN @sortDirection <> 'DESC' THEN 0  WHEN @sortColumn = 'id' THEN pt.ID END DESC,
+    CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'cie_text' THEN lut1.Name END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'groupe' THEN pt.Groupe END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'code' THEN pt.Code END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'description' THEN pt.Description END DESC,
@@ -103,5 +112,35 @@ OFFSET @rowoffset ROWS
 FETCH NEXT @pageSize ROWS ONLY
 ;
 
-SELECT * FROM @returnTable;
+
+SELECT * FROM @returnTable
+UNION
+SELECT
+    0 [TotalCount],
+    pt.ID,
+    pt.CIE,
+    lut1.Name [CIE_Text],
+    pt.Groupe,
+    pt.Code,
+    pt.Description,
+    pt.Value1,
+    pt.Value2,
+    pt.Value3,
+    pt.Started,
+    pt.Ended,
+    pt.SortOrder,
+    pt.Created,
+    pt.Updated,
+    pt.UpdatedBy,
+    a.Email [By],
+	1 [PlusOrder],
+	DATEDIFF(SECOND, '1995-01-01', pt.Created) [RN]
+FROM [app].[Lookup] pt
+LEFT OUTER JOIN Company lut1 ON lut1.CIE = pt.CIE
+INNER JOIN Account a ON a.UID = pt.UpdatedBy
+INNER JOIN @tplus tp ON tp.id = pt.ID
+WHERE (tp.id NOT IN (select id from @returnTable))
+ORDER BY PlusOrder, RN
+;
+
 END

@@ -28,6 +28,7 @@ namespace BaseApp.Service
     {
         object Lookup_Search(Dico pager);
         object Lookup_Select(int id);
+        object Lookup_New();
         object Lookup_New(string groupe);
         object Lookup_Insert(Dico uto);
         void Lookup_Update(Dico uto);
@@ -44,6 +45,7 @@ namespace BaseApp.Service
             var uto = pager.TrimRowCount().ReviveUTO();
             var parameters = KVList.Build(uto);
             var list = repo.queryDicoList("app.Lookup_Search", parameters, uid: true);
+            list.ForEach(one => one.TrimKeys(new string[] { "plusorder", "rn" }));
 
             var title = "NO GROUP";
             var groupe = uto.Parse<string>("groupe");
@@ -65,6 +67,15 @@ namespace BaseApp.Service
             {
                 item,
                 xtra = repo.queryDico("app.Lookup_Summary", "@id", id, uid: true)
+            };
+        }
+
+        public object Lookup_New()
+        {
+            return new
+            {
+                item = repo.queryDico("app.Lookup_New", uid: true),
+                xtra = new { title = "NEW LOOKUP" }
             };
         }
 

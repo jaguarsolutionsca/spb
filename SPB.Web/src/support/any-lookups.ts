@@ -52,7 +52,7 @@ interface IFilter {
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 
-const blackList = ["cie_text", "created", "by"];
+const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "created", "by"];
 
 let state = <IPagedState>{
     list: [],
@@ -118,8 +118,8 @@ const trTemplateRight = (item: IState, editId: number, deleteId: number, cie: st
     return `
 <tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
 ${!readonly ? `
-    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `cie_${id}`, cie, i18n("CIE"))}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `groupe_${id}`, item.groupe, 12)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `cie_${id}`, cie)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `groupe_${id}`, item.groupe, 12, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
@@ -127,7 +127,7 @@ ${!readonly ? `
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value3_${id}`, item.value3, 1024)}</td>
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `started_${id}`, item.started, true)}</td>
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `ended_${id}`, item.ended)}</td>
-    <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder, true)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder)}</td>
 ` : `
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.cie_text)}<div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe)}<div></td>
@@ -176,23 +176,22 @@ const tableTemplateRight = (tbody: string, pager: Pager.IPager<IFilter>) => {
 <table class="table is-hoverable js-inline" style="width: 100px; table-layout: fixed;">
     <thead>
         <tr>
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("CIE"), "cie_text", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC", "width:100px")}
         </tr>
     </thead>
     <tbody>
         ${tbody}
         <tr class="js-insert-row">
-            <td colspan="${11 + 4}">&nbsp;</td>
+            <td colspan="${10 + 4}">&nbsp;</td>
         </tr>
     </tbody>
 </table>
@@ -315,7 +314,7 @@ export const render = () => {
 
     const filter = filterTemplate(cie);
     const search = Pager.searchTemplate(state.pager, NS);
-    const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
+    const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
 
     const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
     const tableRight = tableTemplateRight(tbodyRight, state.pager);
@@ -433,11 +432,11 @@ export const cancel = () => {
 export const addNew = () => {
     let url = "/lookup/new";
     return App.GET(url)
-        .then((payload: IState) => {
-            state.list.push(payload);
+        .then((payload) => {
+            state.list.push(payload.item);
             fetchedState = Misc.clone(state) as IPagedState;
             isNew = true;
-            payload._isNew = true;
+            payload.item._isNew = true;
         })
         .then(App.render)
         .catch(App.render);
@@ -503,7 +502,7 @@ const dirtyExit = () => {
         }, 10);
     }
     return isDirty;
-};
+}
 
 
 
