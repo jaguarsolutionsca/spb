@@ -45,8 +45,10 @@ namespace BaseApp.Service
             var parameters = KVList.Build(uto);
             var list = repo.queryDicoList("app.Lookup_Search", parameters, uid: true);
 
+            var title = "NO GROUP";
             var groupe = uto.Parse<string>("groupe");
-            var title = repo.queryScalar<string>("select Description from app.Lookup where Code=@code", "@code", groupe);
+            if (!string.IsNullOrEmpty(groupe))
+                title = repo.queryScalar<string>("select Description from app.Lookup where Code=@code", "@code", groupe);
 
             return new
             {

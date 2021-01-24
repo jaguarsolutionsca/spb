@@ -20,13 +20,11 @@ export const prepareMenu = () => {
 
 export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {
     let isCompanys = App.inContext("App_companys");
-    let isCompany = App.inContext("App_company");
+    let isAnyLookups = App.inContext("App_any_lookups");
     let isFiles = window.location.hash.startsWith("#/files/company");
     let isFile = window.location.hash.startsWith("#/file/company");
 
-    let showDetail = !isCompanys;
-    let showFiles = showDetail && xtra;
-    let showFile = isFile;
+    let showFiles = false && xtra != undefined;
 
     return `
 <div class="tabs is-boxed">
@@ -34,17 +32,15 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
         <li ${isCompanys ? "class='is-active'" : ""}>
             <a href="#/support/companys">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
-                <span>${i18n("List")}</span>
+                <span>${i18n("Company List")}</span>
             </a>
         </li>
-${showDetail ? `
-        <li ${isCompany ? "class='is-active'" : ""}>
-            <a href="#/support/company/${id}">
-                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Company Details")}</span>
+        <li ${isAnyLookups ? "class='is-active'" : ""}>
+            <a href="#/support/any-lookups">
+                <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
+                <span>${i18n("Lookups")}</span>
             </a>
         </li>
-` : ``}
 ${showFiles ? `
         <li ${isFiles ? "class='is-active'" : ""}>
             <a href="#/files/account/${id}">
@@ -53,8 +49,8 @@ ${showFiles ? `
             </a>
         </li>
 ` : ``}
-${showFile ? `
-        <li ${isFile ? "class='is-active'" : ""}>
+${isFile ? `
+        <li class="is-active">
             <a href="#/file/account/${id}">
                 <span class="icon"><i class="far fa-paperclip" aria-hidden="true"></i></span>
                 <span>${i18n("File Details")}</span>
