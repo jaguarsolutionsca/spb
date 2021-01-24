@@ -77,7 +77,6 @@ const formTemplate = (item: IState, cie: string) => {
 `;
 };
 
-
 const pageTemplate = (item: IState, form: string, tab: string, warning: string, dirty: string) => {
     let canEdit = true;
     let readonly = !canEdit;
@@ -132,6 +131,8 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 const dirtyTemplate = () => {
     return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
 }
+
+
 
 export const fetchState = (id: number, groupe?: string) => {
     isNew = isNaN(id);
@@ -192,6 +193,8 @@ export const postRender = () => {
 export const inContext = () => {
     return App.inContext(NS);
 };
+
+
 
 const getFormState = () => {
     let clone = Misc.clone(state) as IState;

@@ -5784,9 +5784,9 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
     };
 });
 // File: any-lookups.ts
-System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/support/layout", "src/admin/lookupdata"], function (exports_45, context_45) {
+System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/support/layout"], function (exports_45, context_45) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, layout_9, Lookup, NS, key, state, xtra, uiSelectedRow, currentYear, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_groupID, filter_year, gotoDetail, create;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_9, NS, table_id, blackList, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupID, getFormState, valid, html5Valid, onchange, ondate, undo, cancel, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
     var __moduleName = context_45 && context_45.id;
     return {
         setters: [
@@ -5808,72 +5808,120 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             function (Pager_4) {
                 Pager = Pager_4;
             },
-            function (layout_9_1) {
-                layout_9 = layout_9_1;
+            function (calendar_1_1) {
+                calendar_1 = calendar_1_1;
             },
             function (Lookup_6) {
                 Lookup = Lookup_6;
+            },
+            function (layout_9_1) {
+                layout_9 = layout_9_1;
             }
         ],
         execute: function () {
             exports_45("NS", NS = "App_any_lookups");
+            table_id = "any_lookups_table";
+            blackList = ["cie_text", "created", "by"];
             state = {
                 list: [],
-                pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { groupe: undefined, year: Perm.getCurrentYear() } }
+                pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: {} }
             };
-            currentYear = new Date().getFullYear();
-            filterTemplate = function (groupID, year) {
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            filterTemplate = function (cie) {
                 var filters = [];
-                filters.push(Theme.renderDropdownFilter(NS, "groupID", groupID, i18n("LOOKUP")));
-                filters.push(Theme.renderNumberFilter(NS, "year", year, i18n("YEAR")));
+                filters.push(Theme.renderDropdownFilter(NS, "cie", cie, i18n("CIE")));
                 return filters.join("");
             };
-            trTemplate = function (item, rowNumber) {
-                var _a;
-                var obsolete = item.ended != undefined && item.ended < ((_a = state.pager.filter.year) !== null && _a !== void 0 ? _a : currentYear);
-                var classes = [];
-                if (isSelectedRow(item.id))
-                    classes.push("is-selected");
-                if (obsolete)
-                    classes.push("has-text-grey-light");
-                return "\n<tr class=\"" + classes.join(" ") + "\" onclick=\"" + NS + ".gotoDetail(" + item.id + ");\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n    <td>" + Misc.toStaticText(item.id) + "</td>\n    <td>" + Misc.toStaticText(item.cie_text) + "</td>\n    <td>" + Misc.toStaticText(item.groupe) + "</td>\n    <td>" + Misc.toStaticText(item.description) + "</td>\n    <td>" + Misc.toStaticText(item.code) + "</td>\n    <td>" + Misc.toStaticText(item.value1) + "</td>\n    <td>" + Misc.toStaticText(item.value2) + "</td>\n    <td>" + Misc.toStaticText(item.value3) + "</td>\n    <td>" + Misc.toStaticText(item.started) + "</td>\n    <td>" + Misc.toStaticText(item.ended) + "</td>\n    <td>" + Misc.toStaticText(item.sortorder) + "</td>\n</tr>";
+            trTemplateLeft = function (item, editId, deleteId, rowNumber) {
+                var id = item.id;
+                var tdConfirm = "<td class=\"js-td-33\">&nbsp;</td>";
+                if (item._editing)
+                    tdConfirm = "<td onclick=\"" + NS + ".save()\" class=\"js-td-33\" title=\"Click to confirm\"><i class=\"fa fa-check\"></i></td>";
+                if (item._deleting)
+                    tdConfirm = "<td onclick=\"" + NS + ".drop()\" class=\"js-td-33\" title=\"Click to confirm\"><i class=\"fa fa-check\"></i></td>";
+                if (item._isNew)
+                    tdConfirm = "<td onclick=\"" + NS + ".create()\" class=\"js-td-33\" title=\"Click to confirm\"><i class=\"fa fa-check\"></i></td>";
+                var clickUndo = item._editing || item._deleting || item._isNew;
+                var markDeletion = !clickUndo;
+                var canEdit = true; //perm && perm.canEdit;
+                var readonly = (deleteId != undefined) || (editId != undefined && id != editId) || (isNew && !item._isNew) || (!canEdit);
+                var classList = [];
+                if (item._editing || item._isNew)
+                    classList.push("js-not-same");
+                if (item._deleting)
+                    classList.push("js-strikeout");
+                if (item._isNew)
+                    classList.push("js-new");
+                if (readonly)
+                    classList.push("js-readonly");
+                if (!canEdit)
+                    classList.push("js-noclick");
+                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n    <td class=\"js-index\">" + rowNumber + "</td>\n\n" + (markDeletion ? "<td onclick=\"" + NS + ".selectfordrop(" + id + ")\" class=\"has-text-danger js-td-33 js-drop\" title=\"Click to mark for deletion\"><i class='fas fa-times'></i></td>" : "") + "\n" + (clickUndo ? "<td onclick=\"" + NS + ".undo()\" class=\"has-text-primary js-td-33\" title=\"Click to undo\"><i class='fa fa-undo'></i></td>" : "") + "\n" + tdConfirm + "\n\n</tr>";
             };
-            tableTemplate = function (tbody, pager) {
-                return "\n<div class=\"table-container\">\n<table class=\"table is-hoverable is-fullwidth\">\n    <thead>\n        <tr>\n            <th></th>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n    </tbody>\n</table>\n</div>\n";
+            trTemplateRight = function (item, editId, deleteId, cie) {
+                var id = item.id;
+                var canEdit = true; //perm && perm.canEdit;
+                var readonly = (deleteId != undefined) || (editId != undefined && id != editId) || (isNew && !item._isNew) || (!canEdit);
+                var classList = [];
+                if (item._editing || item._isNew)
+                    classList.push("js-not-same");
+                if (item._deleting)
+                    classList.push("js-strikeout");
+                if (item._isNew)
+                    classList.push("js-new");
+                if (readonly)
+                    classList.push("js-readonly");
+                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n" + (!readonly ? "\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "cie_" + id, cie, i18n("CIE")) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "groupe_" + id, item.groupe, 12) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "description_" + id, item.description, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "code_" + id, item.code, 12) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value1_" + id, item.value1, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value2_" + id, item.value2, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value3_" + id, item.value3, 1024) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "started_" + id, item.started, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "ended_" + id, item.ended) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "sortorder_" + id, item.sortorder, true) + "</td>\n" : "\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.cie_text) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.groupe) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.description) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.code) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value1) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value2) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value3) + "<div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.started) + "<div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.ended) + "<div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.sortorder) + "<div></td>\n") + "\n</tr>";
             };
-            pageTemplate = function (pager, table, tab, warning, dirty) {
+            tableTemplateLeft = function (tbody, editId, deleteId) {
+                var disableAddNew = (deleteId != undefined || editId != undefined || isNew);
+                var canEdit = true; //perm && perm.canEdit;
+                disableAddNew = disableAddNew || !canEdit;
+                return "\n<style>.js-td-33 { width: 33px; }</style>\n<div>\n<table class=\"table is-hoverable js-inline\" style=\"width: 10px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            <th style=\"width:99px\" colspan=\"3\">&nbsp;</th>\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n        <tr class=\"js-insert-row " + (disableAddNew ? "js-noclick" : "") + "\">\n            <td class=\"js-index js-td-33\">*</td>\n            <td class=\"has-text-primary js-td-33 js-add\" onclick=\"" + NS + ".addNew()\" title=\"Click to add a new row\"><i class=\"fas fa-plus\"></i></td>\n            <td></td>\n        </tr>\n    </tbody>\n</table>\n</div>\n";
+            };
+            tableTemplateRight = function (tbody, pager) {
+                return "\n<div id=\"" + table_id + "\" class=\"table-container\">\n<table class=\"table is-hoverable js-inline\" style=\"width: 100px; table-layout: fixed;\">\n    <thead>\n        <tr>\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC") + "\n            " + Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC") + "\n        </tr>\n    </thead>\n    <tbody>\n        " + tbody + "\n        <tr class=\"js-insert-row\">\n            <td colspan=\"" + (11 + 4) + "\">&nbsp;</td>\n        </tr>\n    </tbody>\n</table>\n</div>\n";
+            };
+            pageTemplate = function (xtra, pager, tableLeft, tableRight, tab, warning, dirty) {
                 var readonly = false;
                 var buttons = [];
-                buttons.push(Theme.buttonAddNew(NS, "#/admin/lookup/new/" + key.groupe, i18n("Add New")));
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_9.buildTitle(xtra, i18n("Code Table:") + " " + xtra.title);
-                var subtitle = layout_9.buildSubtitle(xtra, i18n("List of All Entries"));
+                var title = layout_9.buildTitle(xtra, i18n("Code Table: AAA"));
+                var subtitle = layout_9.buildSubtitle(xtra, i18n("AAA"));
+                var table = "<div style=\"display: flex;\">\n    <div>" + tableLeft + "</div>\n    <div style=\"width:calc(100% - 99px)\">" + tableRight + "</div>\n</div>";
                 return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_9.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_45("fetchState", fetchState = function (groupe) {
-                Router.registerDirtyExit(null);
-                state.pager.filter.groupe = groupe;
+            dirtyTemplate = function () {
+                return (isDirty ? App.dirtyTemplate(NS, null) : "");
+            };
+            exports_45("fetchState", fetchState = function () {
+                isNew = false;
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
                 return App.POST("/lookup/search", state.pager)
                     .then(function (payload) {
                     state = payload;
+                    fetchedState = Misc.clone(state);
                     xtra = payload.xtra;
-                    key = { groupe: groupe };
                 })
-                    .then(Lookup.fetch_lutGroup());
+                    .then(Lookup.fetch_cIE());
             });
             exports_45("fetch", fetch = function (params) {
-                var groupe = params[0];
                 App.prepareRender(NS, i18n("lookups"));
                 layout_9.prepareMenu();
-                fetchState(groupe)
+                fetchState()
                     .then(App.render)
                     .catch(App.render);
             });
             refresh = function () {
                 App.prepareRender(NS, i18n("lookups"));
+                clearFilterPlus();
                 App.POST("/lookup/search", state.pager)
                     .then(function (payload) {
                     state = payload;
+                    fetchedState = Misc.clone(state);
                 })
                     .then(App.render)
                     .catch(App.render);
@@ -5885,23 +5933,36 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
                     return App.fatalErrorTemplate();
                 if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
                     return App.warningTemplate() || App.unexpectedTemplate();
-                var warning = App.warningTemplate();
-                var dirty = "";
-                var tbody = state.list.reduce(function (html, item, index) {
+                var editId;
+                var deleteId;
+                state.list.forEach(function (item, index) {
+                    var prevItem = fetchedState.list[index];
+                    item._editing = !Misc.same(item, prevItem);
+                    if (item._editing)
+                        editId = item.id;
+                    if (item._deleting)
+                        deleteId = item.id;
+                });
+                var year = Perm.getCurrentYear(); //state.pager.filter.year;
+                var lookup_cIE = Lookup.get_cIE(year);
+                var tbodyLeft = state.list.reduce(function (html, item, index) {
                     var rowNumber = Pager.rowNumber(state.pager, index);
-                    return html + trTemplate(item, rowNumber);
+                    return html + trTemplateLeft(item, editId, deleteId, rowNumber);
                 }, "");
-                var year = Perm.getCurrentYear();
-                var lookup_lutGroup = Lookup.get_lutGroup(year).map(function (one) { return ({
-                    id: one.code.toLowerCase(),
-                    description: one.description
-                }); });
-                var groupID = Theme.renderOptions(lookup_lutGroup, state.pager.filter.groupe, false);
-                var filter = filterTemplate(groupID, state.pager.filter.year);
-                var pager = Pager.render(state.pager, NS, [20, 50], null, filter);
-                var table = tableTemplate(tbody, state.pager);
-                var tab = layout_9.tabTemplate(null, null, null);
-                return pageTemplate(pager, table, tab, dirty, warning);
+                var tbodyRight = state.list.reduce(function (html, item) {
+                    var cie = Theme.renderOptions(lookup_cIE, item.cie, true);
+                    return html + trTemplateRight(item, editId, deleteId, cie);
+                }, "");
+                var cie = Theme.renderOptions(lookup_cIE, state.pager.filter.cie, true);
+                var filter = filterTemplate(cie);
+                var search = Pager.searchTemplate(state.pager, NS);
+                var pager = Pager.render(state.pager, NS, [20, 50], search, filter);
+                var tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
+                var tableRight = tableTemplateRight(tbodyRight, state.pager);
+                var tab = layout_9.tabTemplate(null, null);
+                var dirty = dirtyTemplate();
+                var warning = App.warningTemplate();
+                return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
             });
             exports_45("postRender", postRender = function () {
                 if (!inContext())
@@ -5910,19 +5971,9 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             exports_45("inContext", inContext = function () {
                 return App.inContext(NS);
             });
-            setSelectedRow = function (id) {
-                if (uiSelectedRow == undefined)
-                    uiSelectedRow = { id: id };
-                uiSelectedRow.id = id;
-            };
-            isSelectedRow = function (id) {
-                if (uiSelectedRow == undefined)
-                    return false;
-                return (uiSelectedRow.id == id);
-            };
             exports_45("goto", goto = function (pageNo, pageSize) {
                 state.pager.pageNo = pageNo;
-                state.pager.pageSize = pageSize;
+                state.pager.pageSize = App.setPageState(NS, "pageSize", pageSize);
                 refresh();
             });
             exports_45("sortBy", sortBy = function (columnName, direction) {
@@ -5938,27 +5989,150 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             });
             exports_45("filter_groupID", filter_groupID = function (element) {
                 var value = element.options[element.selectedIndex].value;
-                var groupe = (value.length > 0 ? value : undefined);
-                if (groupe == state.pager.filter.groupe)
+                var cie = (value.length > 0 ? +value : undefined);
+                if (cie == state.pager.filter.cie)
                     return;
-                Router.goto("#/admin/lookups/" + groupe);
-            });
-            exports_45("filter_year", filter_year = function (element) {
-                var value = element.value;
-                var year = (value.length > 0 ? +value : undefined);
-                if (year == state.pager.filter.year)
-                    return;
-                state.pager.filter.year = year;
+                state.pager.filter.cie = cie;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_45("gotoDetail", gotoDetail = function (id) {
-                setSelectedRow(id);
-                Router.goto("#/admin/lookup/" + id);
+            getFormState = function () {
+                var clone = Misc.clone(state);
+                clone.list.forEach(function (item) {
+                    var id = item.id;
+                    item.cie = Misc.fromSelectNumber(NS + "_cie_" + id, item.cie);
+                    item.groupe = Misc.fromInputText(NS + "_groupe_" + id, item.groupe);
+                    item.code = Misc.fromInputTextNullable(NS + "_code_" + id, item.code);
+                    item.description = Misc.fromInputText(NS + "_description_" + id, item.description);
+                    item.value1 = Misc.fromInputTextNullable(NS + "_value1_" + id, item.value1);
+                    item.value2 = Misc.fromInputTextNullable(NS + "_value2_" + id, item.value2);
+                    item.value3 = Misc.fromInputTextNullable(NS + "_value3_" + id, item.value3);
+                    item.started = Misc.fromInputNumber(NS + "_started_" + id, item.started);
+                    item.ended = Misc.fromInputNumberNullable(NS + "_ended_" + id, item.ended);
+                    item.sortorder = Misc.fromInputNumberNullable(NS + "_sortorder_" + id, item.sortorder);
+                });
+                return clone;
+            };
+            valid = function (formState) {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = function () {
+                document.getElementById(NS + "_dummy_submit").click();
+                var form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_45("onchange", onchange = function (input) {
+                state = getFormState();
+                var parts = input.id.replace(NS + "_", "").split("_");
+                var field = parts[0];
+                var id = +parts[1];
+                var record = state.list.find(function (one) { return one.id == id; });
+                //if (field == "cie") {
+                //    record.some_field = null;
+                //}
+                App.render();
+            });
+            exports_45("ondate", ondate = function (input, eventname) {
+                return calendar_1.eventMan(NS, input, eventname);
+            });
+            exports_45("undo", undo = function () {
+                if (isNew) {
+                    isNew = false;
+                    fetchedState.list.pop();
+                }
+                state = Misc.clone(fetchedState);
+                isDirty = false;
+                App.render();
+            });
+            exports_45("cancel", cancel = function () {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_45("addNew", addNew = function () {
+                var url = "/lookup/new";
+                return App.GET(url)
+                    .then(function (payload) {
+                    state.list.push(payload);
+                    fetchedState = Misc.clone(state);
+                    isNew = true;
+                    payload._isNew = true;
+                })
+                    .then(App.render)
+                    .catch(App.render);
             });
             exports_45("create", create = function () {
-                Router.goto("#/admin/lookup/new/" + state.pager.filter.groupe);
+                var formState = getFormState();
+                var item = formState.list.find(function (one) { return one._isNew; });
+                if (!html5Valid())
+                    return;
+                if (!valid(item))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/lookup", Misc.createBlack(item, blackList))
+                    .then(function (key) {
+                    addFilterPlus(key.id);
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
             });
+            exports_45("save", save = function () {
+                var formState = getFormState();
+                var item = formState.list.find(function (one) { return one._editing; });
+                if (!html5Valid())
+                    return;
+                if (!valid(item))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/lookup", Misc.createBlack(item, blackList))
+                    .then(function () {
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_45("selectfordrop", selectfordrop = function (id) {
+                state = Misc.clone(fetchedState);
+                state.list.find(function (one) { return one.id == id; })._deleting = true;
+                App.render();
+            });
+            exports_45("drop", drop = function () {
+                App.prepareRender();
+                var item = state.list.find(function (one) { return one._deleting; });
+                App.DELETE("/lookup", { id: item.id, updated: item.updated })
+                    .then(function () {
+                    removeFilterPlus(item.id);
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_45("hasChanges", hasChanges = function () {
+                return !Misc.same(fetchedState, state);
+            });
+            dirtyExit = function () {
+                isDirty = !Misc.same(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(function () {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+            clearFilterPlus = function () {
+                state.pager.filter.plus = undefined;
+                isNew = false;
+            };
+            addFilterPlus = function (id) {
+                if (state.pager.filter.plus)
+                    state.pager.filter.plus += "," + id;
+                else
+                    state.pager.filter.plus = id.toString();
+            };
+            removeFilterPlus = function (id) {
+            };
         }
     };
 });
@@ -6950,7 +7124,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
 // File: lot.ts
 System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_54, context_54) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_1, autocomplete_1, Lookup, Perm, layout_15, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, calendar_2, autocomplete_1, Lookup, Perm, layout_15, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_54 && context_54.id;
     return {
         setters: [
@@ -6966,8 +7140,8 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
             function (Theme_12) {
                 Theme = Theme_12;
             },
-            function (calendar_1_1) {
-                calendar_1 = calendar_1_1;
+            function (calendar_2_1) {
+                calendar_2 = calendar_2_1;
             },
             function (autocomplete_1_1) {
                 autocomplete_1 = autocomplete_1_1;
@@ -6989,9 +7163,9 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
             fetchedState = {};
             isNew = false;
             isDirty = false;
-            contingent_dateCalendar = new calendar_1.Calendar(NS + "_contingent_date");
-            droit_coupe_dateCalendar = new calendar_1.Calendar(NS + "_droit_coupe_date");
-            entente_paiement_dateCalendar = new calendar_1.Calendar(NS + "_entente_paiement_date");
+            contingent_dateCalendar = new calendar_2.Calendar(NS + "_contingent_date");
+            droit_coupe_dateCalendar = new calendar_2.Calendar(NS + "_droit_coupe_date");
+            entente_paiement_dateCalendar = new calendar_2.Calendar(NS + "_entente_paiement_date");
             state_proprietaireid = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: {} }
