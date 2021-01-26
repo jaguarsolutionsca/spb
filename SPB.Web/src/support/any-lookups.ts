@@ -120,8 +120,8 @@ const trTemplateRight = (item: IState, editId: number, deleteId: number, cie: st
 ${!readonly ? `
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `cie_${id}`, cie)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `groupe_${id}`, item.groupe, 12, true)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value2_${id}`, item.value2, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value3_${id}`, item.value3, 1024)}</td>
@@ -131,8 +131,8 @@ ${!readonly ? `
 ` : `
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.cie_text)}<div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}<div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}<div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}<div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}<div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value2)}<div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value3)}<div></td>
@@ -178,8 +178,8 @@ const tableTemplateRight = (tbody: string, pager: Pager.IPager<IFilter>) => {
         <tr>
             ${Pager.sortableHeaderLink(pager, NS, i18n("CIE"), "cie_text", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC", "width:100px")}
@@ -354,7 +354,7 @@ export const search = (element) => {
     refresh();
 };
 
-export const filter_groupID = (element: HTMLSelectElement) => {
+export const filter_cie = (element: HTMLSelectElement) => {
     let value = element.options[element.selectedIndex].value;
     let cie = (value.length > 0 ? +value : undefined);
     if (cie == state.pager.filter.cie)
@@ -423,10 +423,6 @@ export const undo = () => {
     state = Misc.clone(fetchedState) as IPagedState;
     isDirty = false;
     App.render()
-}
-
-export const cancel = () => {
-    Router.goBackOrResume(isDirty);
 }
 
 export const addNew = () => {
