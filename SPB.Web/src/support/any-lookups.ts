@@ -1,4 +1,4 @@
-﻿// File: any-lookups.ts
+﻿// File: lookup.ts
 
 "use strict"
 
@@ -16,7 +16,6 @@ declare const i18n: any;
 
 export const NS = "App_any_lookups";
 const table_id = "any_lookups_table";
-
 
 interface IState {
     _editing: boolean
@@ -56,7 +55,7 @@ const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", 
 
 let state = <IPagedState>{
     list: [],
-    pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { } }
+    pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: { cie: undefined } }
 };
 let fetchedState = <IPagedState>{};
 let xtra: any;
@@ -121,7 +120,7 @@ ${!readonly ? `
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `cie_${id}`, cie)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `groupe_${id}`, item.groupe, 12, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value2_${id}`, item.value2, 50)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value3_${id}`, item.value3, 1024)}</td>
@@ -129,16 +128,16 @@ ${!readonly ? `
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `ended_${id}`, item.ended)}</td>
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder)}</td>
 ` : `
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.cie_text)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value2)}<div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value3)}<div></td>
-    <td><div class="js-number">${Misc.toStaticNumber(item.started)}<div></td>
-    <td><div class="js-number">${Misc.toStaticNumber(item.ended)}<div></td>
-    <td><div class="js-number">${Misc.toStaticNumber(item.sortorder)}<div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.cie_text)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value2)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value3)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.started)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.ended)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.sortorder)}</div></td>
 `}
 </tr>`;
 };
@@ -205,7 +204,7 @@ const pageTemplate = (xtra, pager: string, tableLeft: string, tableRight: string
     let buttons: string[] = [];
     let actions = Theme.renderButtons(buttons);
 
-    let title = buildTitle(xtra, i18n("Code Table: AAA"));
+    let title = buildTitle(xtra, i18n("AAA: AAA"));
     let subtitle = buildSubtitle(xtra, i18n("AAA"));
 
     let table = `<div style="display: flex;">
@@ -248,7 +247,7 @@ const dirtyTemplate = () => {
 
 
 
-export const fetchState = () => {
+export const fetchState = (id: number) => {
     isNew = false;
     isDirty = false;
     Router.registerDirtyExit(dirtyExit);
@@ -262,15 +261,16 @@ export const fetchState = () => {
 };
 
 export const fetch = (params: string[]) => {
-    App.prepareRender(NS, i18n("lookups"));
+    let id = +params[0];
+    App.prepareRender(NS, i18n("lookup"));
     prepareMenu();
-    fetchState()
+    fetchState(id)
         .then(App.render)
         .catch(App.render);
 };
 
 const refresh = () => {
-    App.prepareRender(NS, i18n("lookups"));
+    App.prepareRender(NS, i18n("lookup"));
     clearFilterPlus();
     App.POST("/lookup/search", state.pager)
         .then(payload => {
@@ -296,7 +296,8 @@ export const render = () => {
         if (item._deleting) deleteId = item.id;
     });
 
-    let year = Perm.getCurrentYear();//state.pager.filter.year;
+    let year = Perm.getCurrentYear(); //or something better
+
     let lookup_cIE = Lookup.get_cIE(year);
 
     const tbodyLeft = state.list.reduce((html, item, index) => {
@@ -306,7 +307,6 @@ export const render = () => {
 
     const tbodyRight = state.list.reduce((html, item) => {
         let cie = Theme.renderOptions(lookup_cIE, item.cie, true);
-
         return html + trTemplateRight(item, editId, deleteId, cie);
     }, "");
 
@@ -404,7 +404,7 @@ export const onchange = (input: HTMLInputElement) => {
     let id = +parts[1];
     let record = state.list.find(one => one.id == id);
 
-    //if (field == "cie") {
+    //if (field == "field_name") {
     //    record.some_field = null;
     //}
 

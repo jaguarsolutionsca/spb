@@ -5783,7 +5783,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
         }
     };
 });
-// File: any-lookups.ts
+// File: lookup.ts
 System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/support/layout"], function (exports_45, context_45) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_9, NS, table_id, blackList, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_cie, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
@@ -5824,7 +5824,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "created", "by"];
             state = {
                 list: [],
-                pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: {} }
+                pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: { cie: undefined } }
             };
             fetchedState = {};
             isNew = false;
@@ -5873,7 +5873,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
                     classList.push("js-new");
                 if (readonly)
                     classList.push("js-readonly");
-                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n" + (!readonly ? "\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "cie_" + id, cie) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "groupe_" + id, item.groupe, 12, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "code_" + id, item.code, 12) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "description_" + id, item.description, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value1_" + id, item.value1, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value2_" + id, item.value2, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value3_" + id, item.value3, 1024) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "started_" + id, item.started, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "ended_" + id, item.ended) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "sortorder_" + id, item.sortorder) + "</td>\n" : "\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.cie_text) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.groupe) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.code) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.description) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value1) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value2) + "<div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value3) + "<div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.started) + "<div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.ended) + "<div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.sortorder) + "<div></td>\n") + "\n</tr>";
+                return "\n<tr data-id=\"" + id + "\" class=\"" + classList.join(" ") + "\" style=\"cursor: pointer;\">\n" + (!readonly ? "\n    <td class=\"js-inline-select\">" + Theme.renderDropdownInline(NS, "cie_" + id, cie) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "groupe_" + id, item.groupe, 12, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "code_" + id, item.code, 12) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "description_" + id, item.description, 50, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value1_" + id, item.value1, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value2_" + id, item.value2, 50) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderTextInline(NS, "value3_" + id, item.value3, 1024) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "started_" + id, item.started, true) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "ended_" + id, item.ended) + "</td>\n    <td class=\"js-inline-input\">" + Theme.renderNumberInline(NS, "sortorder_" + id, item.sortorder) + "</td>\n" : "\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.cie_text) + "</div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.groupe) + "</div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.code) + "</div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.description) + "</div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value1) + "</div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value2) + "</div></td>\n    <td><div class=\"js-truncate\" style=\"width:100px;\">" + Misc.toStaticText(item.value3) + "</div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.started) + "</div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.ended) + "</div></td>\n    <td><div class=\"js-number\">" + Misc.toStaticNumber(item.sortorder) + "</div></td>\n") + "\n</tr>";
             };
             tableTemplateLeft = function (tbody, editId, deleteId) {
                 var disableAddNew = (deleteId != undefined || editId != undefined || isNew);
@@ -5888,7 +5888,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
                 var readonly = false;
                 var buttons = [];
                 var actions = Theme.renderButtons(buttons);
-                var title = layout_9.buildTitle(xtra, i18n("Code Table: AAA"));
+                var title = layout_9.buildTitle(xtra, i18n("AAA: AAA"));
                 var subtitle = layout_9.buildSubtitle(xtra, i18n("AAA"));
                 var table = "<div style=\"display: flex;\">\n    <div>" + tableLeft + "</div>\n    <div style=\"width:calc(100% - 99px)\">" + tableRight + "</div>\n</div>";
                 return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_9.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
@@ -5896,7 +5896,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             dirtyTemplate = function () {
                 return (isDirty ? App.dirtyTemplate(NS, null) : "");
             };
-            exports_45("fetchState", fetchState = function () {
+            exports_45("fetchState", fetchState = function (id) {
                 isNew = false;
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -5909,14 +5909,15 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
                     .then(Lookup.fetch_cIE());
             });
             exports_45("fetch", fetch = function (params) {
-                App.prepareRender(NS, i18n("lookups"));
+                var id = +params[0];
+                App.prepareRender(NS, i18n("lookup"));
                 layout_9.prepareMenu();
-                fetchState()
+                fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
             refresh = function () {
-                App.prepareRender(NS, i18n("lookups"));
+                App.prepareRender(NS, i18n("lookup"));
                 clearFilterPlus();
                 App.POST("/lookup/search", state.pager)
                     .then(function (payload) {
@@ -5943,7 +5944,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
                     if (item._deleting)
                         deleteId = item.id;
                 });
-                var year = Perm.getCurrentYear(); //state.pager.filter.year;
+                var year = Perm.getCurrentYear(); //or something better
                 var lookup_cIE = Lookup.get_cIE(year);
                 var tbodyLeft = state.list.reduce(function (html, item, index) {
                     var rowNumber = Pager.rowNumber(state.pager, index);
@@ -6029,7 +6030,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
                 var field = parts[0];
                 var id = +parts[1];
                 var record = state.list.find(function (one) { return one.id == id; });
-                //if (field == "cie") {
+                //if (field == "field_name") {
                 //    record.some_field = null;
                 //}
                 App.render();
