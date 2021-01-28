@@ -24,11 +24,13 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
     let isAccount = App.inContext("App_account");
     let isLookups = App.inContext("App_lookups");
     let isLookup = App.inContext("App_lookup");
+    let isSecurity = App.inContext("App_security");
     let isFiles = window.location.hash.startsWith("#/files/company");
     let isFile = window.location.hash.startsWith("#/file/company");
 
     let showFiles = false && xtra;
     let showFile = false && xtra && isFile;
+    let showSecurity = Perm.isSupport();
 
     return `
 <div class="tabs is-boxed">
@@ -65,6 +67,15 @@ ${isLookup ? `
             <a href="#/admin/lookup/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
                 <span>${i18n("Entry Details")}</span>
+            </a>
+        </li>
+` : ``}
+
+${showSecurity ? `
+        <li ${isSecurity ? "class='is-active'" : ""}>
+            <a href="#/support/security/${id}">
+                <span class="icon"><i class="far fa-paperclip" aria-hidden="true"></i></span>
+                <span>${i18n("Security")}</span>
             </a>
         </li>
 ` : ``}

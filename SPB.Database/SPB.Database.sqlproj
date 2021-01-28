@@ -133,18 +133,9 @@
     <Build Include="app\Stored Procedures\Company_Delete.sql" />
     <Build Include="app\Stored Procedures\CompanyProfile_Select.sql" />
     <Build Include="app\Stored Procedures\CompanyProfile_New.sql" />
-    <Build Include="dbo\Tables\CommitCBEFF.sql" />
-    <Build Include="dbo\Views\CommitCBEFF_Full.sql" />
     <Build Include="js\Functions\Encrypt.sql" />
     <Build Include="js\Functions\Decrypt.sql" />
     <Build Include="app\Functions\CsvOfString_to_Table.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_Update.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_Summary.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_Select.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_Search.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_New.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_Insert.sql" />
-    <Build Include="dbo\Stored Procedures\CommitCBEFF_Delete.sql" />
     <Build Include="app\Stored Procedures\Account_SelectEmailBy_ResetGUID.sql" />
     <Build Include="app\Stored Procedures\Lookup_Update.sql" />
     <Build Include="app\Stored Procedures\Lookup_Summary.sql" />
@@ -154,6 +145,10 @@
     <Build Include="app\Stored Procedures\Lookup_Insert.sql" />
     <Build Include="app\Stored Procedures\Lookup_Delete.sql" />
     <Build Include="app\Views\Lookup_Full.sql" />
+    <Build Include="dbo\Stored Procedures\Perm_UpdateBatch.sql" />
+    <Build Include="dbo\Stored Procedures\Perm_List.sql" />
+    <Build Include="app\Stored Procedures\Perm_UpdateBatch.sql" />
+    <Build Include="app\Stored Procedures\Perm_List.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
