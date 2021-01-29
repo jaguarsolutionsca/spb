@@ -157,8 +157,9 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
 `;
 };
 
-export const fetchState = (groupe: string) => {
+export const fetchState = (cie: number, groupe: string) => {
     Router.registerDirtyExit(null);
+    state.pager.filter.cie = cie;
     state.pager.filter.groupe = groupe;
     return App.POST("/lookup/search", state.pager)
         .then(payload => {
@@ -170,10 +171,11 @@ export const fetchState = (groupe: string) => {
 };
 
 export const fetch = (params: string[]) => {
+    let cie = Perm.getCie(params);
     let groupe = params[0];
     App.prepareRender(NS, i18n("lookups"));
     prepareMenu();
-    fetchState(groupe)
+    fetchState(cie, groupe)
         .then(App.render)
         .catch(App.render);
 };

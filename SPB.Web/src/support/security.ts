@@ -182,7 +182,7 @@ export const fetchState = (cie: number) => {
 };
 
 export const fetch = (params: string[]) => {
-    let cie = +params[0];
+    let cie = Perm.getCie(params);
     App.prepareRender(NS, i18n("Security"));
     fetchState(cie)
         .then(App.render)

@@ -73,7 +73,7 @@ ${isLookup ? `
 
 ${showSecurity ? `
         <li ${isSecurity ? "class='is-active'" : ""}>
-            <a href="#/support/security/${id}">
+            <a href="#/support/security">
                 <span class="icon"><i class="far fa-paperclip" aria-hidden="true"></i></span>
                 <span>${i18n("Security")}</span>
             </a>

@@ -25,7 +25,7 @@ import * as any_lookups from "./any-lookups"
 
 export const startup = () => {
     Router.addRoute("^#/support/companys/?(.*)?$", companys.fetch);
-    Router.addRoute("^#/support/security/(.*)?$", security.fetch);
+    Router.addRoute("^#/support/security/?(.*)?$", security.fetch);
     Router.addRoute("^#/support/any-lookups/?(.*)?$", any_lookups.fetch);
     //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
     //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
@@ -48,3 +48,4 @@ export const postRender = () => {
     //DataFiles.postRender();
     //DataFile.postRender();
 }
+

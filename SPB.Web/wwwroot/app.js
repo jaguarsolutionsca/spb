@@ -4377,7 +4377,7 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/permission", 
                 var showFiles = false && xtra;
                 var showFile = false && xtra && isFile;
                 var showSecurity = Perm.isSupport();
-                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isCompany ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/company\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Company Details") + "</span>\n            </a>\n        </li>\n        <li " + (isAccounts ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/accounts\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Accounts") + "</span>\n            </a>\n        </li>\n" + (isAccount ? "\n        <li class=\"is-active\">\n            <a href=\"#/admin/account/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Account Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n        <li " + (isLookups ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/lookups/profile.key\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Lookups") + "</span>\n            </a>\n        </li>\n" + (isLookup ? "\n        <li class=\"is-active\">\n            <a href=\"#/admin/lookup/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Entry Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n" + (showSecurity ? "\n        <li " + (isSecurity ? "class='is-active'" : "") + ">\n            <a href=\"#/support/security/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Security") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.fileCount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li class=\"is-active\">\n            <a href=\"#/file/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
+                return "\n<div class=\"tabs is-boxed\">\n    <ul>\n        <li " + (isCompany ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/company\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Company Details") + "</span>\n            </a>\n        </li>\n        <li " + (isAccounts ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/accounts\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Accounts") + "</span>\n            </a>\n        </li>\n" + (isAccount ? "\n        <li class=\"is-active\">\n            <a href=\"#/admin/account/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Account Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n        <li " + (isLookups ? "class='is-active'" : "") + ">\n            <a href=\"#/admin/lookups/profile.key\">\n                <span class=\"icon\"><i class=\"fas fa-list-ol\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Lookups") + "</span>\n            </a>\n        </li>\n" + (isLookup ? "\n        <li class=\"is-active\">\n            <a href=\"#/admin/lookup/" + id + "\">\n                <span class=\"icon\"><i class=\"" + icon + "\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Entry Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n" + (showSecurity ? "\n        <li " + (isSecurity ? "class='is-active'" : "") + ">\n            <a href=\"#/support/security\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Security") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n" + (showFiles ? "\n        <li " + (isFiles ? "class='is-active'" : "") + ">\n            <a href=\"#/files/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("Files") + " (" + xtra.fileCount + ")</span>\n            </a>\n        </li>\n" : "") + "\n" + (showFile ? "\n        <li class=\"is-active\">\n            <a href=\"#/file/account/" + id + "\">\n                <span class=\"icon\"><i class=\"far fa-paperclip\" aria-hidden=\"true\"></i></span>\n                <span>" + i18n("File Details") + "</span>\n            </a>\n        </li>\n" : "") + "\n\n    </ul>\n</div>\n";
             });
             exports_36("buildTitle", buildTitle = function (xtra, defaultText) {
                 var _a;
@@ -5229,8 +5229,9 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 var subtitle = layout_5.buildSubtitle(xtra, i18n("List of All Entries"));
                 return "\n<form onsubmit=\"return false;\">\n<input type=\"submit\" style=\"display:none;\" id=\"" + NS + "_dummy_submit\">\n\n<div class=\"js-fixed-heading\">\n<div class=\"js-head\">\n    <div class=\"content js-uc-heading js-flex-space\">\n        <div>\n            <div class=\"title\"><i class=\"" + layout_5.icon + "\"></i> <span>" + title + "</span></div>\n            <div class=\"subtitle\">" + subtitle + "</div>\n        </div>\n        <div>\n            " + Theme.wrapContent("js-uc-actions", actions) + "\n        </div>\n    </div>\n    " + Theme.wrapContent("js-uc-tabs", tab) + "\n</div>\n<div class=\"js-body\">\n    " + Theme.wrapContent("js-uc-notification", dirty) + "\n    " + Theme.wrapContent("js-uc-notification", warning) + "\n    " + Theme.wrapContent("js-uc-pager", pager) + "\n    " + Theme.wrapContent("js-uc-list", table) + "\n</div>\n</div>\n\n</form>\n";
             };
-            exports_40("fetchState", fetchState = function (groupe) {
+            exports_40("fetchState", fetchState = function (cie, groupe) {
                 Router.registerDirtyExit(null);
+                state.pager.filter.cie = cie;
                 state.pager.filter.groupe = groupe;
                 return App.POST("/lookup/search", state.pager)
                     .then(function (payload) {
@@ -5241,10 +5242,11 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     .then(Lookup.fetch_lutGroup());
             });
             exports_40("fetch", fetch = function (params) {
+                var cie = Perm.getCie(params);
                 var groupe = params[0];
                 App.prepareRender(NS, i18n("lookups"));
                 layout_5.prepareMenu();
-                fetchState(groupe)
+                fetchState(cie, groupe)
                     .then(App.render)
                     .catch(App.render);
             });
@@ -5864,7 +5866,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                 });
             });
             exports_45("fetch", fetch = function (params) {
-                var cie = +params[0];
+                var cie = Perm.getCie(params);
                 App.prepareRender(NS, i18n("Security"));
                 fetchState(cie)
                     .then(App.render)
@@ -6369,7 +6371,7 @@ System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/co
             //(<any>window).App_DataFile = DataFile;
             exports_47("startup", startup = function () {
                 Router.addRoute("^#/support/companys/?(.*)?$", companys.fetch);
-                Router.addRoute("^#/support/security/(.*)?$", security.fetch);
+                Router.addRoute("^#/support/security/?(.*)?$", security.fetch);
                 Router.addRoute("^#/support/any-lookups/?(.*)?$", any_lookups.fetch);
                 //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
                 //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
