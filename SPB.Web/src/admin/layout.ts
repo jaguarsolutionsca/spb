@@ -9,6 +9,7 @@ declare const i18n: any;
 
 export interface ISummary {
     title: string
+    subtitle: string
     fileCount: number
 }
 

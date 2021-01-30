@@ -222,7 +222,7 @@ export const fetchState = (proprietaireid: string, ownerNS?: string) => {
     isAddingNewParent = (proprietaireid == "new");
     callerNS = ownerNS || callerNS;
     isNew = false;
-    return App.POST(`/lot/search/proprietaire/${proprietaireid}`, state.pager)
+    return App.POST(`/lot/search/${proprietaireid}`, state.pager)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IPagedState;

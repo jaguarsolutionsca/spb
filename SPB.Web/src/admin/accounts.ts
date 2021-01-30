@@ -10,7 +10,7 @@ import * as Theme from "../../_BaseApp/src/theme/theme"
 import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Lookup from "../admin/lookupdata"
 import * as Layout from "./layout"
-import { tabTemplate, icon, prepareMenu } from "./layout"
+import { tabTemplate, icon, ISummary, prepareMenu } from "./layout"
 
 declare const i18n: any;
 
@@ -47,6 +47,7 @@ let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
     pager: { pageNo: 1, pageSize: 20, sortColumn: "EMAIL", sortDirection: "ASC", filter: { cie: App.cie, archive: undefined, readyToArchive: undefined } }
 };
+let xtra: ISummary;
 let uiSelectedRow: { uid: number };
 
 
@@ -108,6 +109,8 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
 
     let buttons: string[] = [];
     buttons.push(autoArchiveButton());
+    buttons.push(Theme.buttonAddNew(NS, "#/admin/account/new", i18n("Add New")));
+    let actions = Theme.renderButtons(buttons);
 
     return `
 <form onsubmit="return false;">
@@ -117,11 +120,11 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${icon}"></i> ${i18n("All accounts")}</div>
+            <div class="title"><i class="${icon}"></i> ${xtra.title}</div>
             <div class="subtitle">${i18n("List of accounts")}</div>
         </div>
         <div>
-            ${Theme.wrapContent("js-uc-actions", Theme.renderListActionButtons2(NS, i18n("Add New"), buttons))}
+            ${Theme.wrapContent("js-uc-actions", actions)}
         </div>
     </div>
     ${Theme.wrapContent("js-uc-tabs", tab)}
@@ -144,6 +147,7 @@ export const fetchState = (cie: number) => {
     return App.POST("/account/search/", state.pager)
         .then(payload => {
             state = payload;
+            xtra = payload.xtra;
             key = { cie };
         })
 };

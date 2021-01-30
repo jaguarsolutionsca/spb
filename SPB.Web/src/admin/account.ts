@@ -205,8 +205,8 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${icon}"></i> <span>${isNew ? i18n("New Account") : xtra && xtra.title}</span></div>
-            <div class="subtitle">${isNew ? i18n("Editing New account") : i18n("Editing account Details")}</div>
+            <div class="title"><i class="${icon}"></i> <span>${xtra.title}</span></div>
+            <div class="subtitle">${isNew ? i18n("New account") : xtra.subtitle}</div>
         </div>
         <div>
             ${Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, `#/admin/account/new`, buttons))}

@@ -6,10 +6,9 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        object Lot_Search(Dico pager);
-        object Lot_Search_ForProprietaire(string id, Dico pager);
+        object Lot_Search(Dico pager, string proprietaireid);
         object Lot_Select(int id);
-        object Lot_New();
+        object Lot_New(string proprietaireid);
         object Lot_Insert(Dico uto);
         void Lot_Update(Dico uto);
         void Lot_Delete(Dico key);
@@ -17,28 +16,20 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        public object Lot_Search(Dico pager)
+        public object Lot_Search(Dico pager, string proprietaireid)
         {
-            var parameters = KVList.Build(pager.TrimRowCount().ReviveUTO());
+            var uto = pager.TrimRowCount().ReviveUTO();
+            var parameters = KVList.Build(uto);
+            parameters.Add("@proprietaireid", proprietaireid);
             var list = repo.queryDicoList(GP("Lot_Search"), parameters, uid: true);
-            return new
-            {
-                list = list,
-                pager = pager.ReviveRowCount(list),
-                xtra = (object)null
-            };
-        }
+            list.ForEach(one => one.TrimKeys(new string[] { "plusorder", "rn" }));
 
-        public object Lot_Search_ForProprietaire(string id, Dico pager)
-        {
-            var parameters = KVList.Build(pager.TrimRowCount().ReviveUTO());
-            parameters.Add("@ProprietaireID", id);
-            var list = repo.queryDicoList(GP("Lot_Search_ForProprietaire"), parameters, uid: true);
             return new
             {
                 list = list,
                 pager = pager.ReviveRowCount(list),
-                xtra = (object)null
+                xtra = repo.queryDico(GP("Fournisseur_Summary"), "@id", proprietaireid, uid: true)
+
             };
         }
 
@@ -47,21 +38,23 @@ namespace BaseApp.Service
             return new
             {
                 item = repo.queryDico(GP("Lot_Select"), "@id", id, uid: true),
-                xtra = repo.queryDico(GP("Lot_Summary"), "@id", id, uid: true)
+                xtra = repo.queryDico(GP("Fournisseur_Summary"), "@lot_id", id, uid: true)
             };
         }
 
-        public object Lot_New()
+        public object Lot_New(string proprietaireid)
         {
             return new
             {
                 item = repo.queryDico(GP("Lot_New"), uid: true),
-                xtra = (object)null
+                xtra = repo.queryDico(GP("Fournisseur_Summary"), "@id", proprietaireid, uid: true)
+
             };
         }
 
         public object Lot_Insert(Dico uto)
         {
+            uto.TrimKeys(new string[] { "cantonid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text", "municipaliteid_text", "created", "by" });
             var parameters = KVList.Build(uto.ReviveUTO());
             var id = repo.queryScalar<int>(GP("Lot_Insert"), parameters, uid: true);
             return new
@@ -72,6 +65,7 @@ namespace BaseApp.Service
 
         public void Lot_Update(Dico uto)
         {
+            uto.TrimKeys(new string[] { "cantonid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text", "municipaliteid_text", "created", "by" });
             repo.queryNonQuery(GP("Lot_Update"), KVList.Build(uto.ReviveUTO()), uid: true);
         }
 
