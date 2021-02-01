@@ -8,7 +8,8 @@ namespace BaseApp.Service
     {
         object Lot_Search(Dico pager, string proprietaireid);
         object Lot_Select(int id);
-        object Lot_New(string proprietaireid);
+        object Lot_New();
+        object Lot_New_ByProprietaire(string proprietaireid);
         object Lot_Insert(Dico uto);
         void Lot_Update(Dico uto);
         void Lot_Delete(Dico key);
@@ -42,7 +43,16 @@ namespace BaseApp.Service
             };
         }
 
-        public object Lot_New(string proprietaireid)
+        public object Lot_New()
+        {
+            return new
+            {
+                item = repo.queryDico(GP("Lot_New"), uid: true),
+                xtra = (object)null
+            };
+        }
+
+        public object Lot_New_ByProprietaire(string proprietaireid)
         {
             return new
             {

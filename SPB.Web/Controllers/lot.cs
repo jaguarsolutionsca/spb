@@ -15,8 +15,15 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public class LotController : _CoreController
     {
+        [HttpPost("search")]
+        public object Search([FromBody] Dico pager)
+        {
+            //app.RequirePermission(Perm.Lot_Edit);
+            return app.Lot_Search(pager, null);
+        }
+
         [HttpPost("search/{proprietaireid}")]
-        public object Search([FromBody] Dico pager, string proprietaireid)
+        public object Search_ByProprietaire([FromBody] Dico pager, string proprietaireid)
         {
             //app.RequirePermission(Perm.Lot_Edit);
             return app.Lot_Search(pager, proprietaireid);
@@ -29,11 +36,18 @@ namespace BaseApp.Web.Controllers
             return app.Lot_Select(id);
         }
 
-        [HttpGet("new/{proprietaireid}")]
-        public object New(string proprietaireid)
+        [HttpGet("new")]
+        public object New()
         {
             //app.RequirePermission(Perm.Lot_Edit);
-            return app.Lot_New(proprietaireid);
+            return app.Lot_New();
+        }
+
+        [HttpGet("new/{proprietaireid}")]
+        public object New_ByProprietaire(string proprietaireid)
+        {
+            //app.RequirePermission(Perm.Lot_Edit);
+            return app.Lot_New_ByProprietaire(proprietaireid);
         }
 
         [HttpPost]
