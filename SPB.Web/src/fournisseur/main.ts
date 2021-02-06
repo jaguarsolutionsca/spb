@@ -10,19 +10,28 @@ import * as lots2 from "./lots2"
 
 
 //
-// Global references to application objects
-// These must match the "NS" values defined in modules
-// Mainly used for event handlers
+// Global references to application objects. Used for event handlers.
 //
 window[proprietaires.NS] = proprietaires;
 window[proprietaire.NS] = proprietaire;
 window[lots2.NS] = lots2;
 
 
+
+//
+// ***** Don't forget to update the root main.ts and add call to startup() *****
+//
+
 export const startup = () => {
     Router.addRoute("^#/proprietaires/?(.*)?$", proprietaires.fetch);
     Router.addRoute("^#/proprietaire/?(.*)?$", proprietaire.fetch);
 }
+
+
+
+//
+// ***** Don't forget to update the root layout.ts and add calls to render() and postRender() *****
+//
 
 export const render = () => {
     return `

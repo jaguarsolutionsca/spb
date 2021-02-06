@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="log\" />
+    <Folder Include="src\christian\" />
     <Folder Include="_BaseApp\Common\" />
     <Folder Include="_BaseApp\src\" />
   </ItemGroup>

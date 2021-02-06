@@ -13,6 +13,7 @@ import * as Main from "./main"
 import * as Home from "./home"
 import * as Admin from "./admin/main"
 import * as Support from "./support/main"
+import * as Christian from "./christian/main"
 import * as Fournisseur from "./fournisseur/main"
 import * as Territoire from "./territoire/main"
 
@@ -32,6 +33,7 @@ export const render = () => {
 ${Home.render()}
 ${Admin.render()}
 ${Support.render()}
+${Christian.render()}
 ${Fournisseur.render()}
 ${Territoire.render()}
 `;
@@ -53,6 +55,7 @@ export const postRender = () => {
     Home.postRender();
     Admin.postRender()
     Support.postRender()
+    Christian.postRender()
     Fournisseur.postRender()
     Territoire.postRender()
 }
