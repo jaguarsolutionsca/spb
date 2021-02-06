@@ -56,8 +56,7 @@ let openedonCalendar = new Calendar(`${NS}_openedon`);
 const formTemplate = (item: IState) => {
 
     return `
-<div class="columns js-2-columns">
-<div class="column is-half">\n
+
 ${isNew ? `
 ` : `
     ${Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID"))}
@@ -66,11 +65,6 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "location", item.location, i18n("LOCATION"), 50, true)}
     ${Theme.renderCalendarField(NS, "openedon", openedonCalendar, i18n("OPENEDON"))}
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
-    </div>
-<div class="column is-half">
-</div>
-</div>
-
     ${Theme.renderBlame(item, isNew)}
 `;
 };
@@ -143,6 +137,8 @@ export const fetchState = (id: number) => {
             openedonCalendar.setState(state.openedon);
 
         })
+
+
 };
 
 export const fetch = (params: string[]) => {
@@ -178,6 +174,7 @@ export const render = () => {
 export const postRender = () => {
     if (!inContext()) return;
     openedonCalendar.postRender();
+
 
     App.setPageTitle(isNew ? i18n("New office") : xtra.title);
 };
