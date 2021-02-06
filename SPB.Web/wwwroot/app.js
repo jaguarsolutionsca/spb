@@ -8530,7 +8530,7 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
         ],
         execute: function () {
             exports_50("NS", NS = "App_office");
-            blackList = ["created", "by"];
+            blackList = ["created", "updatedby", "by"];
             state = {};
             fetchedState = {};
             isNew = false;

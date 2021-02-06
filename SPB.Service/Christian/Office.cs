@@ -51,7 +51,7 @@ namespace BaseApp.Service
 
         public object Office_Insert(Dico uto)
         {
-            uto.TrimKeys(new string[] { "created", "by" });
+            uto.TrimKeys(new string[] { "created", "updatedby", "by" });
             var parameters = KVList.Build(uto.ReviveUTO());
             var id = repo.queryScalar<int>("Office_Insert", parameters, uid: true);
             return new
@@ -62,7 +62,7 @@ namespace BaseApp.Service
 
         public void Office_Update(Dico uto)
         {
-            uto.TrimKeys(new string[] { "created", "by" });
+            uto.TrimKeys(new string[] { "created", "updatedby", "by" });
             repo.queryNonQuery("Office_Update", KVList.Build(uto.ReviveUTO()), uid: true);
         }
 

@@ -42,7 +42,7 @@ interface IState {
 
 
 
-const blackList = ["created", "by"];
+const blackList = ["created", "updatedby", "by"];
 
 let key: IKey;
 let state = <IState>{};
