@@ -11,6 +11,8 @@ declare const i18n: any;
 export interface ISummary {
     title: string
     filecount: number
+    staffcount: number
+    roomcount: number
 }
 
 export let icon = "far fa-user";
@@ -22,12 +24,17 @@ export const prepareMenu = () => {
 export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {
     let isoffices = App.inContext("App_offices");
     let isoffice = App.inContext("App_office");
+    let isstaffs = App.inContext("App_staffs");
+    let isstaff = App.inContext("App_staff");
+    let isrooms = App.inContext("App_rooms");
+    let isroom = App.inContext("App_room");
     let isFiles = window.location.hash.startsWith("#/files/office");
     let isFile = window.location.hash.startsWith("#/file/office");
 
-    let showDetail = !isoffices;
-    let showFiles = showDetail && xtra;
-    let showFile = isFile;
+    let showOffice = !isoffices;
+    let showStaff = !isoffices && !(isoffice && isNew);
+    let showRoom = !isoffices && !(isoffice && isNew);
+    let showFiles = !isoffices && !(isoffice && isNew);
 
     return `
 <div class="tabs is-boxed">
@@ -38,7 +45,8 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
                 <span>${i18n("List")}</span>
             </a>
         </li>
-${showDetail ? `
+
+${showOffice ? `
         <li ${isoffice ? "class='is-active'" : ""}>
             <a href="#/office/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
@@ -46,21 +54,48 @@ ${showDetail ? `
             </a>
         </li>
 ` : ``}
+
+${showStaff ? `
+        <li ${isstaffs ? "class='is-active'" : ""}>
+            <a href="#/staffs/${id}">
+                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
+                <span>Staff (${xtra?.staffcount ?? -1})</span>
+            </a>
+        </li>
+${isstaff ? `
+        <li class="is-active">
+            <a>
+                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
+                <span>Staff</span>
+            </a>
+        </li>
+` : ``}
+` : ``}
+
+${showRoom ? `
+        <li ${isrooms ? "class='is-active'" : ""}>
+            <a href="#/rooms/${id}">
+                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
+                <span>Rooms (${xtra?.roomcount ?? -1})</span>
+            </a>
+        </li>
+` : ``}
+
 ${showFiles ? `
         <li ${isFiles ? "class='is-active'" : ""}>
             <a href="#/files/office/${id}">
                 <span class="icon"><i class="far fa-paperclip" aria-hidden="true"></i></span>
-                <span>${i18n("Files")} (${xtra.filecount})</span>
+                <span>${i18n("Files")} (${xtra?.filecount ?? -1})</span>
             </a>
         </li>
-` : ``}
-${showFile ? `
+${isFile ? `
         <li ${isFile ? "class='is-active'" : ""}>
-            <a href="#/file/office/${id}">
+            <a>
                 <span class="icon"><i class="far fa-paperclip" aria-hidden="true"></i></span>
                 <span>${i18n("File Details")}</span>
             </a>
         </li>
+` : ``}
 ` : ``}
 
     </ul>

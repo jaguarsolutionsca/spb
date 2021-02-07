@@ -12,6 +12,7 @@ namespace BaseApp.Service
         object Office_Insert(Dico uto);
         void Office_Update(Dico uto);
         void Office_Delete(Dico key);
+        object Office_Lookup();
     }
 
     public partial class AppService
@@ -36,7 +37,7 @@ namespace BaseApp.Service
             return new
             {
                 item = repo.queryDico("Office_Select", "@id", id, uid: true),
-                xtra = repo.queryDico("Office_Summary", "@id", id, uid: true)
+                xtra = repo.queryDico("Office_Summary", "@id", id)
             };
         }
 
@@ -69,6 +70,11 @@ namespace BaseApp.Service
         public void Office_Delete(Dico key)
         {
             repo.queryNonQuery("Office_Delete", KVList.Build(key.ReviveUTO()), uid: true);
+        }
+
+        public object Office_Lookup()
+        {
+            return repo.queryDicoList("Office_Lookup");
         }
     }
 }

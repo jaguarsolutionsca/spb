@@ -170,3 +170,28 @@ export const fetch_region = () => {
     }
 }
 export const get_region = (year: number) => region;
+
+
+
+
+
+
+let office: Lookup.LookupData[];
+export const fetch_office = () => {
+    return function (data: any) {
+        if (office != undefined && office.length > 0)
+            return;
+        return App.GET(`/office/lookup`).then(json => { office = json; });
+    }
+}
+export const get_office = (year: number) => office;
+
+let job: Lookup.LookupData[];
+export const fetch_job = () => {
+    return function (data: any) {
+        if (job != undefined && job.length > 0)
+            return;
+        return App.GET(`/office/lookup`).then(json => { job = json; });
+    }
+}
+export const get_job = (year: number) => job;

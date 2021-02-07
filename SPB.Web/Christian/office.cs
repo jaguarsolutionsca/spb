@@ -59,5 +59,11 @@ namespace BaseApp.Web.Controllers
             app.Office_Delete(key);
             return NoContent();
         }
+
+        [HttpGet("lookup")]
+        public object Lookup()
+        {
+            return app.Office_Lookup();
+        }
     }
 }

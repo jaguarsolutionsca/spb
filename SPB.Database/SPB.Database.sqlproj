@@ -149,6 +149,28 @@
     <Build Include="dbo\Stored Procedures\Perm_List.sql" />
     <Build Include="app\Stored Procedures\Perm_UpdateBatch.sql" />
     <Build Include="app\Stored Procedures\Perm_List.sql" />
+    <Build Include="dbo\Tables\Staff.sql" />
+    <Build Include="dbo\Tables\Room.sql" />
+    <Build Include="dbo\Tables\Office.sql" />
+    <Build Include="dbo\Tables\Job.sql" />
+    <Build Include="dbo\Tables\Equipment.sql" />
+    <Build Include="dbo\Tables\_GenCore.sql" />
+    <Build Include="dbo\Views\Staff_Full.sql" />
+    <Build Include="dbo\Views\Office_Full.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Search.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_New.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Search.sql" />
+    <Build Include="dbo\Stored Procedures\Office_New.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Lookup.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Office_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
