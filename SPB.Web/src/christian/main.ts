@@ -10,6 +10,7 @@ import * as staffs from "./staffs"
 import * as staff from "./staff"
 import * as staffs_2 from "./staffs_2"
 import * as staff_2 from "./staff_2"
+import * as staffs_3 from "./staffs_3"
 
 
 //
@@ -21,6 +22,7 @@ window[staffs.NS] = staffs;
 window[staff.NS] = staff;
 window[staffs_2.NS] = staffs_2;
 window[staff_2.NS] = staff_2;
+window[staffs_3.NS] = staffs_3;
 
 
 

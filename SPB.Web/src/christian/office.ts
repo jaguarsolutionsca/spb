@@ -13,6 +13,7 @@ import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
 import { tabTemplate, icon, prepareMenu, ISummary, buildTitle, buildSubtitle } from "./layout"
+import * as app_inline2 from "./staffs_3"
 
 declare const i18n: any;
 
@@ -53,7 +54,7 @@ let isDirty = false;
 let openedonCalendar = new Calendar(`${NS}_openedon`);
 
 
-const formTemplate = (item: IState) => {
+const formTemplate = (item: IState, inline2: string) => {
 
     return `
 ${isNew ? `
@@ -63,6 +64,9 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 50, true)}
     ${Theme.renderTextField(NS, "location", item.location, i18n("LOCATION"), 50, true)}
     ${Theme.renderCalendarField(NS, "openedon", openedonCalendar, i18n("OPENEDON"))}
+
+${Theme.renderStaticHtmlField(inline2, "STAFF")}
+
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
     ${Theme.renderBlame(item, isNew)}
 `;
@@ -77,12 +81,14 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     let canAdd = canEdit && !canInsert; // && Perm.hasOffice_CanAddOffice;
     let canUpdate = canEdit && !isNew;
 
+    let inline2_dirty = app_inline2.hasChanges();
+
     let buttons: string[] = [];
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
     if (canAdd) buttons.push(Theme.buttonAddNew(NS, `#/office/new`));
-    if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
+    if (canUpdate) buttons.push(Theme.buttonUpdate(NS, inline2_dirty));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, !isNew ? i18n("office Details") : i18n("New office"));
@@ -136,7 +142,7 @@ export const fetchState = (id: number) => {
             openedonCalendar.setState(state.openedon);
 
         })
-
+        .then(() => { return app_inline2.fetchState(id, NS) })
 
 };
 
@@ -157,12 +163,11 @@ export const render = () => {
 
     let year = Perm.getCurrentYear(); //or something better
 
+    app_inline2.preRender();
+    let inline2 = app_inline2.render();
 
 
-
-
-
-    const form = formTemplate(state);
+    const form = formTemplate(state, inline2);
 
     const tab = tabTemplate(state.id, xtra, isNew);
     const dirty = dirtyTemplate();
@@ -174,6 +179,7 @@ export const postRender = () => {
     if (!inContext()) return;
     openedonCalendar.postRender();
 
+    app_inline2.postRender();
 
     App.setPageTitle(isNew ? i18n("New office") : xtra.title);
 };
@@ -258,7 +264,9 @@ export const drop = () => {
 }
 
 const dirtyExit = () => {
-    isDirty = !Misc.same(fetchedState, getFormState());
+    let masterHasChange = !Misc.same(fetchedState, getFormState());
+    let detailsHasChange = app_inline2.hasChanges();
+    isDirty = masterHasChange || detailsHasChange;
     if (isDirty) {
         setTimeout(() => {
             state = getFormState();
