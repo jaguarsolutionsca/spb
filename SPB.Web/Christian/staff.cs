@@ -15,6 +15,13 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public class StaffController : _CoreController
     {
+        [HttpPost("search")]
+        public object Search([FromBody] Dico pager)
+        {
+            //app.RequirePermission(Perm.Staff_Edit);
+            return app.Staff_Search(pager);
+        }
+
         [HttpPost("search/{pid}/{parent}")]
         public object Search([FromBody] Dico pager, int? pid, string parent)
         {
@@ -22,11 +29,25 @@ namespace BaseApp.Web.Controllers
             return app.Staff_Search(pager, pid, parent);
         }
 
+        [HttpGet("{id}")]
+        public object Select(int id)
+        {
+            //app.RequirePermission(Perm.Staff_Edit);
+            return app.Staff_Select(id);
+        }
+
         [HttpGet("{id}/{parent}")]
         public object Select(int id, string parent)
         {
             //app.RequirePermission(Perm.Staff_Edit);
             return app.Staff_Select(id, parent);
+        }
+
+        [HttpGet("new")]
+        public object New()
+        {
+            //app.RequirePermission(Perm.Staff_Edit);
+            return app.Staff_New();
         }
 
         [HttpGet("new/{pid}/{parent}")]

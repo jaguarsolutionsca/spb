@@ -16,6 +16,7 @@
     <None Remove="src\admin\companys.ts" />
     <None Remove="src\admin\layout.ts" />
     <None Remove="src\admin\main.ts" />
+    <None Remove="src\christian\all-staffs.ts" />
     <None Remove="src\fournisseur\layout.ts" />
     <None Remove="src\fournisseur\lots2.ts" />
     <None Remove="src\fournisseur\main.ts" />
@@ -41,7 +42,6 @@
 
   <ItemGroup>
     <Folder Include="log\" />
-    <Folder Include="src\christian\" />
     <Folder Include="_BaseApp\Common\" />
     <Folder Include="_BaseApp\src\" />
   </ItemGroup>

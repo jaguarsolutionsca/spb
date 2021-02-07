@@ -86,7 +86,8 @@ export const getMenuData = () => {
                         { name: "Compagnies", href: "#/support/companys", ns: ["App_companys", "App_company"] },
                         { name: "Metadata des permissions", },
                         { name: "Audit", },
-                        { name: "Christian", href: "#/offices", ns: ["App_offices", "App_office"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
+                        { name: "(office)", href: "#/offices", ns: ["App_offices", "App_office"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
+                        { name: "(staff)", href: "#/staffs_2", ns: ["App_staffs_2", "App_staff_2"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
                     ]
                 },
                 {
