@@ -26,6 +26,7 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
     let isoffice = App.inContext("App_office");
     let isstaffs = App.inContext("App_staffs");
     let isstaff = App.inContext("App_staff");
+    let isstaffs_4 = App.inContext("App_staffs_4");
     let isrooms = App.inContext("App_rooms");
     let isroom = App.inContext("App_room");
     let isFiles = window.location.hash.startsWith("#/files/office");
@@ -70,6 +71,12 @@ ${isstaff ? `
             </a>
         </li>
 ` : ``}
+        <li ${isstaffs_4 ? "class='is-active'" : ""}>
+            <a href="#/staffs_4/${id}">
+                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
+                <span>Staff/grid (${xtra?.staffcount ?? -1})</span>
+            </a>
+        </li>
 ` : ``}
 
 ${showRoom ? `

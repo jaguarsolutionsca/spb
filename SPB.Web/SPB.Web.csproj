@@ -18,6 +18,7 @@
     <None Remove="src\admin\main.ts" />
     <None Remove="src\christian\all-staffs.ts" />
     <None Remove="src\christian\staffs_3.ts" />
+    <None Remove="src\christian\staffs_4.ts" />
     <None Remove="src\fournisseur\layout.ts" />
     <None Remove="src\fournisseur\lots2.ts" />
     <None Remove="src\fournisseur\main.ts" />
@@ -56,6 +57,7 @@
     <TypeScriptCompile Include="src\admin\accounts.ts" />
     <TypeScriptCompile Include="src\admin\company.ts" />
     <TypeScriptCompile Include="src\christian\staffs_3.ts" />
+    <TypeScriptCompile Include="src\christian\staffs_4.ts" />
     <TypeScriptCompile Include="src\support\companys.ts" />
     <TypeScriptCompile Include="src\admin\layout.ts" />
     <TypeScriptCompile Include="src\admin\main.ts" />
