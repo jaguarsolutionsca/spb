@@ -79,14 +79,14 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     let canAdd = canEdit && !canInsert; // && Perm.hasOffice_CanAddOffice;
     let canUpdate = canEdit && !isNew;
 
-    let staffs_3_dirty = inline_staffs_3.hasChanges();
+    let inline_dirty = inline_staffs_3.hasChanges();
 
     let buttons: string[] = [];
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
     if (canAdd) buttons.push(Theme.buttonAddNew(NS, `#/office/new`));
-    if (canUpdate) buttons.push(Theme.buttonUpdate(NS, staffs_3_dirty));
+    if (canUpdate) buttons.push(Theme.buttonUpdate(NS, inline_dirty));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, !isNew ? i18n("office Details") : i18n("New office"));
@@ -140,8 +140,8 @@ export const fetchState = (id: number) => {
             openedonCalendar.setState(state.openedon);
 
         })
-        .then(() => { return inline_staffs_3.fetchState(id, NS) })
 
+        .then(() => { return inline_staffs_3.fetchState(id, NS) })
 };
 
 export const fetch = (params: string[]) => {
@@ -161,9 +161,12 @@ export const render = () => {
 
     let year = Perm.getCurrentYear(); //or something better
 
+
+
+
+
     inline_staffs_3.preRender();
     let staffs_3 = inline_staffs_3.render();
-
 
     const form = formTemplate(state, staffs_3);
 
@@ -176,7 +179,6 @@ export const render = () => {
 export const postRender = () => {
     if (!inContext()) return;
     openedonCalendar.postRender();
-
     inline_staffs_3.postRender();
 
     App.setPageTitle(isNew ? i18n("New office") : xtra.title);
@@ -263,8 +265,8 @@ export const drop = () => {
 
 const dirtyExit = () => {
     let masterHasChange = !Misc.same(fetchedState, getFormState());
-    let detailsHasChange = inline_staffs_3.hasChanges();
-    isDirty = masterHasChange || detailsHasChange;
+    let inlineHasChange = inline_staffs_3.hasChanges();
+    isDirty = masterHasChange || inlineHasChange;
     if (isDirty) {
         setTimeout(() => {
             state = getFormState();

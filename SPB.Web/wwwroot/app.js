@@ -8857,7 +8857,7 @@ ${isNew ? `
                 let canDelete = canEdit && !canInsert; // && Perm.hasOffice_CanDeleteOffice;
                 let canAdd = canEdit && !canInsert; // && Perm.hasOffice_CanAddOffice;
                 let canUpdate = canEdit && !isNew;
-                let staffs_3_dirty = inline_staffs_3.hasChanges();
+                let inline_dirty = inline_staffs_3.hasChanges();
                 let buttons = [];
                 buttons.push(Theme.buttonCancel(NS));
                 if (canInsert)
@@ -8867,7 +8867,7 @@ ${isNew ? `
                 if (canAdd)
                     buttons.push(Theme.buttonAddNew(NS, `#/office/new`));
                 if (canUpdate)
-                    buttons.push(Theme.buttonUpdate(NS, staffs_3_dirty));
+                    buttons.push(Theme.buttonUpdate(NS, inline_dirty));
                 let actions = Theme.renderButtons(buttons);
                 let title = layout_13.buildTitle(xtra, !isNew ? i18n("office Details") : i18n("New office"));
                 let subtitle = layout_13.buildSubtitle(xtra, i18n("office subtitle"));
@@ -9024,8 +9024,8 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             });
             dirtyExit = () => {
                 let masterHasChange = !Misc.same(fetchedState, getFormState());
-                let detailsHasChange = inline_staffs_3.hasChanges();
-                isDirty = masterHasChange || detailsHasChange;
+                let inlineHasChange = inline_staffs_3.hasChanges();
+                isDirty = masterHasChange || inlineHasChange;
                 if (isDirty) {
                     setTimeout(() => {
                         state = getFormState();
