@@ -46,16 +46,17 @@ interface IFilter {
 let key: IKey;
 let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
-    pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
+    pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { officeid: undefined, jobid: undefined } }
 };
 let xtra: any;
 let uiSelectedRow: { id: number };
 
 
 
-const filterTemplate = () => {
+const filterTemplate = (officeid: string, jobid: string) => {
     let filters: string[] = [];
-
+    filters.push(Theme.renderDropdownFilter(NS, "officeid", officeid, i18n("OFFICEID")));
+    filters.push(Theme.renderDropdownFilter(NS, "jobid", jobid, i18n("JOBID")));
     return filters.join("");
 }
 
@@ -181,9 +182,13 @@ export const render = () => {
 
     let year = Perm.getCurrentYear();//state.pager.filter.year;
 
+    let lookup_office = Lookup.get_office(year);
+    let lookup_job = Lookup.get_job(year);
 
+    let officeid = Theme.renderOptions(lookup_office, state.pager.filter.officeid, true);
+    let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
 
-    const filter = filterTemplate();
+    const filter = filterTemplate(officeid, jobid);
     const search = Pager.searchTemplate(state.pager, NS);
     const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
     const table = tableTemplate(tbody, state.pager);
@@ -225,6 +230,26 @@ export const sortBy = (columnName: string, direction: string) => {
 
 export const search = (element) => {
     state.pager.searchText = element.value;
+    state.pager.pageNo = 1;
+    refresh();
+};
+
+export const filter_officeid = (element: HTMLSelectElement) => {
+    let value = element.options[element.selectedIndex].value;
+    let officeid = (value.length > 0 ? +value : undefined);
+    if (officeid == state.pager.filter.officeid)
+        return;
+    state.pager.filter.officeid = officeid;
+    state.pager.pageNo = 1;
+    refresh();
+};
+
+export const filter_jobid = (element: HTMLSelectElement) => {
+    let value = element.options[element.selectedIndex].value;
+    let jobid = (value.length > 0 ? +value : undefined);
+    if (jobid == state.pager.filter.jobid)
+        return;
+    state.pager.filter.jobid = jobid;
     state.pager.pageNo = 1;
     refresh();
 };

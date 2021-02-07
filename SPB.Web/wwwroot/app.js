@@ -4770,7 +4770,7 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
                 return function (data) {
                     if (job != undefined && job.length > 0)
                         return;
-                    return App.GET(`/office/lookup`).then(json => { job = json; });
+                    return App.GET(`/job/lookup`).then(json => { job = json; });
                 };
             });
             exports_34("get_job", get_job = (year) => job);
@@ -9307,7 +9307,7 @@ ${isFile ? `
 // File: staffs.ts
 System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout_2"], function (exports_54, context_54) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_2_2, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_2_2, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_officeid, filter_jobid, gotoDetail;
     var __moduleName = context_54 && context_54.id;
     return {
         setters: [
@@ -9340,10 +9340,12 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
             exports_54("NS", NS = "App_staffs_2");
             state = {
                 list: [],
-                pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { officeid: undefined, jobid: undefined } }
             };
-            filterTemplate = () => {
+            filterTemplate = (officeid, jobid) => {
                 let filters = [];
+                filters.push(Theme.renderDropdownFilter(NS, "officeid", officeid, i18n("OFFICEID")));
+                filters.push(Theme.renderDropdownFilter(NS, "jobid", jobid, i18n("JOBID")));
                 return filters.join("");
             };
             trTemplate = (item, rowNumber) => {
@@ -9457,7 +9459,11 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                     return html + trTemplate(item, rowNumber);
                 }, "");
                 let year = Perm.getCurrentYear(); //state.pager.filter.year;
-                const filter = filterTemplate();
+                let lookup_office = Lookup.get_office(year);
+                let lookup_job = Lookup.get_job(year);
+                let officeid = Theme.renderOptions(lookup_office, state.pager.filter.officeid, true);
+                let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
+                const filter = filterTemplate(officeid, jobid);
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
@@ -9494,6 +9500,24 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
             });
             exports_54("search", search = (element) => {
                 state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_54("filter_officeid", filter_officeid = (element) => {
+                let value = element.options[element.selectedIndex].value;
+                let officeid = (value.length > 0 ? +value : undefined);
+                if (officeid == state.pager.filter.officeid)
+                    return;
+                state.pager.filter.officeid = officeid;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_54("filter_jobid", filter_jobid = (element) => {
+                let value = element.options[element.selectedIndex].value;
+                let jobid = (value.length > 0 ? +value : undefined);
+                if (jobid == state.pager.filter.jobid)
+                    return;
+                state.pager.filter.jobid = jobid;
                 state.pager.pageNo = 1;
                 refresh();
             });

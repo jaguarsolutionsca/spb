@@ -191,7 +191,7 @@ export const fetch_job = () => {
     return function (data: any) {
         if (job != undefined && job.length > 0)
             return;
-        return App.GET(`/office/lookup`).then(json => { job = json; });
+        return App.GET(`/job/lookup`).then(json => { job = json; });
     }
 }
 export const get_job = (year: number) => job;
