@@ -94,7 +94,7 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
     let readonly = false;
 
     let buttons: string[] = [];
-    buttons.push(Theme.buttonAddNew(NS, "#/office/new", i18n("Add New")));
+    buttons.push(Theme.buttonAddNew(NS, `#/office/new`, i18n("Add New")));
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, i18n("offices title"));
@@ -131,7 +131,8 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
 
 export const fetchState = (id: number) => {
     Router.registerDirtyExit(null);
-    return App.POST("/office/search", state.pager)
+
+    return App.POST(`/office/search`, state.pager)
         .then(payload => {
             state = payload;
             xtra = payload.xtra;
@@ -151,7 +152,7 @@ export const fetch = (params: string[]) => {
 
 const refresh = () => {
     App.prepareRender(NS, i18n("offices"));
-    App.POST("/office/search", state.pager)
+    App.POST(`/office/search`, state.pager)
         .then(payload => {
             state = payload;
         })

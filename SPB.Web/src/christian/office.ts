@@ -56,7 +56,6 @@ let openedonCalendar = new Calendar(`${NS}_openedon`);
 const formTemplate = (item: IState) => {
 
     return `
-
 ${isNew ? `
 ` : `
     ${Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID"))}
@@ -82,7 +81,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     buttons.push(Theme.buttonCancel(NS));
     if (canInsert) buttons.push(Theme.buttonInsert(NS));
     if (canDelete) buttons.push(Theme.buttonDelete(NS));
-    if (canAdd) buttons.push(Theme.buttonAddNew(NS, "#/office/new"));
+    if (canAdd) buttons.push(Theme.buttonAddNew(NS, `#/office/new`));
     if (canUpdate) buttons.push(Theme.buttonUpdate(NS));
     let actions = Theme.renderButtons(buttons);
 

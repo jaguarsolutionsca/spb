@@ -8430,7 +8430,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
             pageTemplate = (pager, table, tab, warning, dirty) => {
                 let readonly = false;
                 let buttons = [];
-                buttons.push(Theme.buttonAddNew(NS, "#/office/new", i18n("Add New")));
+                buttons.push(Theme.buttonAddNew(NS, `#/office/new`, i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
                 let title = layout_12.buildTitle(xtra, i18n("offices title"));
                 let subtitle = layout_12.buildSubtitle(xtra, i18n("offices subtitle"));
@@ -8464,7 +8464,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
             };
             exports_49("fetchState", fetchState = (id) => {
                 Router.registerDirtyExit(null);
-                return App.POST("/office/search", state.pager)
+                return App.POST(`/office/search`, state.pager)
                     .then(payload => {
                     state = payload;
                     xtra = payload.xtra;
@@ -8481,7 +8481,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
             });
             refresh = () => {
                 App.prepareRender(NS, i18n("offices"));
-                App.POST("/office/search", state.pager)
+                App.POST(`/office/search`, state.pager)
                     .then(payload => {
                     state = payload;
                 })
@@ -8588,7 +8588,6 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             openedonCalendar = new calendar_2.Calendar(`${NS}_openedon`);
             formTemplate = (item) => {
                 return `
-
 ${isNew ? `
 ` : `
     ${Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID"))}
@@ -8614,7 +8613,7 @@ ${isNew ? `
                 if (canDelete)
                     buttons.push(Theme.buttonDelete(NS));
                 if (canAdd)
-                    buttons.push(Theme.buttonAddNew(NS, "#/office/new"));
+                    buttons.push(Theme.buttonAddNew(NS, `#/office/new`));
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 let actions = Theme.renderButtons(buttons);
