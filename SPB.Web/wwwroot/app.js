@@ -9340,7 +9340,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
             exports_54("NS", NS = "App_staffs_2");
             state = {
                 list: [],
-                pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { officeid: undefined, jobid: undefined } }
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
             };
             filterTemplate = (officeid, jobid) => {
                 let filters = [];

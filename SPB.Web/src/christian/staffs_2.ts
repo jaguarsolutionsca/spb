@@ -46,7 +46,7 @@ interface IFilter {
 let key: IKey;
 let state = <Pager.IPagedList<IState, IFilter>>{
     list: [],
-    pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { officeid: undefined, jobid: undefined } }
+    pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
 };
 let xtra: any;
 let uiSelectedRow: { id: number };
@@ -181,10 +181,8 @@ export const render = () => {
     }, "");
 
     let year = Perm.getCurrentYear();//state.pager.filter.year;
-
     let lookup_office = Lookup.get_office(year);
     let lookup_job = Lookup.get_job(year);
-
     let officeid = Theme.renderOptions(lookup_office, state.pager.filter.officeid, true);
     let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
 
