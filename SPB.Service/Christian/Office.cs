@@ -6,9 +6,9 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        object Office_Search(Dico pager);
-        object Office_Select(int id);
-        object Office_New();
+        object Office_Search(Dico pager, int? pid = null, string parent = null);
+        object Office_Select(int id, string parent = "Office");
+        object Office_New(int? pid = null, string parent = null);
         object Office_Insert(Dico uto);
         void Office_Update(Dico uto);
         void Office_Delete(Dico key);
@@ -17,7 +17,7 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        public object Office_Search(Dico pager)
+        public object Office_Search(Dico pager, int? pid = null, string parent = null)
         {
             var uto = pager.TrimRowCount().ReviveUTO();
             var parameters = KVList.Build(uto);
@@ -28,26 +28,33 @@ namespace BaseApp.Service
             {
                 list = list,
                 pager = pager.ReviveRowCount(list),
-                xtra = (object)null
+                xtra = !pid.HasValue ? (object)null : repo.queryDico($"{parent}_Summary", $"@{parent}id", pid)
             };
         }
 
-        public object Office_Select(int id)
+        public object Office_Select(int id, string parent = "Office")
         {
             return new
             {
                 item = repo.queryDico("Office_Select", "@id", id, uid: true),
-                xtra = repo.queryDico("Office_Summary", "@id", id)
+                xtra = repo.queryDico($"{parent}_Summary", "@Officeid", id)
             };
         }
 
-        public object Office_New()
+        public object Office_New(int? pid = null, string parent = null)
         {
-            return new
-            {
-                item = repo.queryDico("Office_New", uid: true),
-                xtra = (object)null
-            };
+            if (!pid.HasValue)
+                return new
+                {
+                    item = repo.queryDico("Office_New", uid: true),
+                    xtra = (object)null
+                };
+            else
+                return new
+                {
+                    item = repo.queryDico("Office_New", $"@{parent}id", pid, uid: true),
+                    xtra = repo.queryDico($"{parent}_Summary", $"@{parent}id", pid)
+                };
         }
 
         public object Office_Insert(Dico uto)

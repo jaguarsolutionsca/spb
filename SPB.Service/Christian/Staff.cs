@@ -6,9 +6,9 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        object Staff_Search(Dico pager, int? pid, string parent);
-        object Staff_Select(int id, string parent);
-        object Staff_New(int? officeid, string parent);
+        object Staff_Search(Dico pager, int? pid = null, string parent = null);
+        object Staff_Select(int id, string parent = "Staff");
+        object Staff_New(int? pid = null, string parent = null);
         object Staff_Insert(Dico uto);
         void Staff_Update(Dico uto);
         void Staff_Delete(Dico key);
@@ -17,7 +17,7 @@ namespace BaseApp.Service
 
     public partial class AppService
     {
-        public object Staff_Search(Dico pager, int? pid, string parent)
+        public object Staff_Search(Dico pager, int? pid = null, string parent = null)
         {
             var uto = pager.TrimRowCount().ReviveUTO();
             var parameters = KVList.Build(uto);
@@ -28,11 +28,11 @@ namespace BaseApp.Service
             {
                 list = list,
                 pager = pager.ReviveRowCount(list),
-                xtra = repo.queryDico($"{parent}_Summary", "@id", pid)
+                xtra = !pid.HasValue ? (object)null : repo.queryDico($"{parent}_Summary", $"@{parent}id", pid)
             };
         }
 
-        public object Staff_Select(int id, string parent)
+        public object Staff_Select(int id, string parent = "Staff")
         {
             return new
             {
@@ -41,13 +41,20 @@ namespace BaseApp.Service
             };
         }
 
-        public object Staff_New(int? pid, string parent)
+        public object Staff_New(int? pid = null, string parent = null)
         {
-            return new
-            {
-                item = repo.queryDico("Staff_New", $"@{parent}id", pid, uid: true),
-                xtra = repo.queryDico($"{parent}_Summary", "@id", pid)
-            };
+            if (!pid.HasValue)
+                return new
+                {
+                    item = repo.queryDico("Staff_New", uid: true),
+                    xtra = (object)null
+                };
+            else
+                return new
+                {
+                    item = repo.queryDico("Staff_New", $"@{parent}id", pid, uid: true),
+                    xtra = repo.queryDico($"{parent}_Summary", $"@{parent}id", pid)
+                };
         }
 
         public object Staff_Insert(Dico uto)
