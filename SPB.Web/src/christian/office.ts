@@ -54,7 +54,7 @@ let isDirty = false;
 let openedonCalendar = new Calendar(`${NS}_openedon`);
 
 
-const formTemplate = (item: IState, staff_3: string) => {
+const formTemplate = (item: IState, staffs_3: string) => {
 
     return `
 ${isNew ? `
@@ -65,9 +65,8 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "location", item.location, i18n("LOCATION"), 50, true)}
     ${Theme.renderCalendarField(NS, "openedon", openedonCalendar, i18n("OPENEDON"))}
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
+    ${Theme.renderStaticHtmlField(staffs_3, "STAFFS_3")}
     ${Theme.renderBlame(item, isNew)}
-
-    ${Theme.renderStaticHtmlField(staff_3, "STAFF")}
 `;
 };
 

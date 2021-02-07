@@ -8836,7 +8836,7 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             isNew = false;
             isDirty = false;
             openedonCalendar = new calendar_2.Calendar(`${NS}_openedon`);
-            formTemplate = (item, staff_3) => {
+            formTemplate = (item, staffs_3) => {
                 return `
 ${isNew ? `
 ` : `
@@ -8846,9 +8846,8 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "location", item.location, i18n("LOCATION"), 50, true)}
     ${Theme.renderCalendarField(NS, "openedon", openedonCalendar, i18n("OPENEDON"))}
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
+    ${Theme.renderStaticHtmlField(staffs_3, "STAFFS_3")}
     ${Theme.renderBlame(item, isNew)}
-
-    ${Theme.renderStaticHtmlField(staff_3, "STAFF")}
 `;
             };
             pageTemplate = (item, form, tab, warning, dirty) => {
