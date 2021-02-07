@@ -8738,7 +8738,6 @@ ${Theme.wrapContent("js-uc-list", table)}
                 App.render();
             });
             exports_50("addNew", addNew = () => {
-                debugger;
                 let url = `/staff/new/${key.officeid}/office`;
                 return App.GET(url)
                     .then(payload => {
@@ -8751,7 +8750,6 @@ ${Theme.wrapContent("js-uc-list", table)}
                     .catch(App.render);
             });
             exports_50("create", create = () => {
-                debugger;
                 let formState = getFormState();
                 let item = formState.list.find(one => one._isNew);
                 if (!html5Valid())
@@ -8801,7 +8799,7 @@ ${Theme.wrapContent("js-uc-list", table)}
 // File: office.ts
 System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "src/permission", "src/christian/layout", "src/christian/staffs_3"], function (exports_51, context_51) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_2, Perm, layout_13, app_inline2, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, openedonCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, calendar_2, Perm, layout_13, inline_staffs_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, openedonCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_51 && context_51.id;
     return {
         setters: [
@@ -8826,8 +8824,8 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (layout_13_1) {
                 layout_13 = layout_13_1;
             },
-            function (app_inline2_1) {
-                app_inline2 = app_inline2_1;
+            function (inline_staffs_3_1) {
+                inline_staffs_3 = inline_staffs_3_1;
             }
         ],
         execute: function () {
@@ -8838,7 +8836,7 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             isNew = false;
             isDirty = false;
             openedonCalendar = new calendar_2.Calendar(`${NS}_openedon`);
-            formTemplate = (item, inline2) => {
+            formTemplate = (item, staff_3) => {
                 return `
 ${isNew ? `
 ` : `
@@ -8847,11 +8845,10 @@ ${isNew ? `
     ${Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 50, true)}
     ${Theme.renderTextField(NS, "location", item.location, i18n("LOCATION"), 50, true)}
     ${Theme.renderCalendarField(NS, "openedon", openedonCalendar, i18n("OPENEDON"))}
-
-${Theme.renderStaticHtmlField(inline2, "STAFF")}
-
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
     ${Theme.renderBlame(item, isNew)}
+
+    ${Theme.renderStaticHtmlField(staff_3, "STAFF")}
 `;
             };
             pageTemplate = (item, form, tab, warning, dirty) => {
@@ -8861,7 +8858,7 @@ ${Theme.renderStaticHtmlField(inline2, "STAFF")}
                 let canDelete = canEdit && !canInsert; // && Perm.hasOffice_CanDeleteOffice;
                 let canAdd = canEdit && !canInsert; // && Perm.hasOffice_CanAddOffice;
                 let canUpdate = canEdit && !isNew;
-                let inline2_dirty = app_inline2.hasChanges();
+                let staffs_3_dirty = inline_staffs_3.hasChanges();
                 let buttons = [];
                 buttons.push(Theme.buttonCancel(NS));
                 if (canInsert)
@@ -8871,7 +8868,7 @@ ${Theme.renderStaticHtmlField(inline2, "STAFF")}
                 if (canAdd)
                     buttons.push(Theme.buttonAddNew(NS, `#/office/new`));
                 if (canUpdate)
-                    buttons.push(Theme.buttonUpdate(NS, inline2_dirty));
+                    buttons.push(Theme.buttonUpdate(NS, staffs_3_dirty));
                 let actions = Theme.renderButtons(buttons);
                 let title = layout_13.buildTitle(xtra, !isNew ? i18n("office Details") : i18n("New office"));
                 let subtitle = layout_13.buildSubtitle(xtra, i18n("office subtitle"));
@@ -8920,7 +8917,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     key = { id };
                     openedonCalendar.setState(state.openedon);
                 })
-                    .then(() => { return app_inline2.fetchState(id, NS); });
+                    .then(() => { return inline_staffs_3.fetchState(id, NS); });
             });
             exports_51("fetch", fetch = (params) => {
                 let id = +params[0];
@@ -8938,9 +8935,9 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 if (state == undefined || Object.keys(state).length == 0)
                     return App.warningTemplate() || App.unexpectedTemplate();
                 let year = Perm.getCurrentYear(); //or something better
-                app_inline2.preRender();
-                let inline2 = app_inline2.render();
-                const form = formTemplate(state, inline2);
+                inline_staffs_3.preRender();
+                let staffs_3 = inline_staffs_3.render();
+                const form = formTemplate(state, staffs_3);
                 const tab = layout_13.tabTemplate(state.id, xtra, isNew);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
@@ -8950,7 +8947,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 if (!inContext())
                     return;
                 openedonCalendar.postRender();
-                app_inline2.postRender();
+                inline_staffs_3.postRender();
                 App.setPageTitle(isNew ? i18n("New office") : xtra.title);
             });
             exports_51("inContext", inContext = () => {
@@ -9028,7 +9025,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             });
             dirtyExit = () => {
                 let masterHasChange = !Misc.same(fetchedState, getFormState());
-                let detailsHasChange = app_inline2.hasChanges();
+                let detailsHasChange = inline_staffs_3.hasChanges();
                 isDirty = masterHasChange || detailsHasChange;
                 if (isDirty) {
                     setTimeout(() => {
@@ -10851,8 +10848,8 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             function (layout_19_1) {
                 layout_19 = layout_19_1;
             },
-            function (app_inline2_2) {
-                app_inline2 = app_inline2_2;
+            function (app_inline2_1) {
+                app_inline2 = app_inline2_1;
             }
         ],
         execute: function () {

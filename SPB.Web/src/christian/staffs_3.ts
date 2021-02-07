@@ -223,7 +223,6 @@ export const undo = () => {
 }
 
 export const addNew = () => {
-    debugger
     let url = `/staff/new/${key.officeid}/office`;
     return App.GET(url)
         .then(payload => {
@@ -237,7 +236,6 @@ export const addNew = () => {
 }
 
 export const create = () => {
-    debugger
     let formState = getFormState();
     let item = formState.list.find(one => one._isNew);
     if (!html5Valid()) return;
