@@ -37,7 +37,7 @@ namespace BaseApp.Service
             return new
             {
                 item = repo.queryDico("Staff_Select", "@id", id, uid: true),
-                xtra = repo.queryDico($"{parent}_Summary", "@staffid", id)
+                xtra = repo.queryDico($"{parent}_Summary", "@Staffid", id)
             };
         }
 

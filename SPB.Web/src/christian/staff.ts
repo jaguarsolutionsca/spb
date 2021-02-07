@@ -59,7 +59,6 @@ let isDirty = false;
 const formTemplate = (item: IState, jobid: string) => {
 
     return `
-
 ${isNew ? `
 ` : `
     ${Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID"))}

@@ -9016,7 +9016,6 @@ System.register("src/christian/staff", ["_BaseApp/src/core/app", "_BaseApp/src/c
             isDirty = false;
             formTemplate = (item, jobid) => {
                 return `
-
 ${isNew ? `
 ` : `
     ${Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID"))}
