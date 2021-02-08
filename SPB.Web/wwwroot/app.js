@@ -9096,6 +9096,8 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
     <td>${Misc.toStaticText(item.lastname)}</td>
     <td>${Misc.toStaticText(item.jobid_text)}</td>
     <td>${Misc.toStaticCheckbox(item.archive)}</td>
+    <td>${Misc.toStaticText(item.plusorder)}</td>
+    <td>${Misc.toStaticText(item.rn)}</td>
 </tr>`;
             };
             tableTemplate = (tbody, pager) => {
@@ -9110,6 +9112,8 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
             ${Pager.sortableHeaderLink(pager, NS, i18n("LASTNAME"), "lastname", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("JOBID_TEXT"), "jobid_text", "ASC")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PLUSORDER"), "plusorder", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("RN"), "rn", "ASC")}
         </tr>
     </thead>
     <tbody>
