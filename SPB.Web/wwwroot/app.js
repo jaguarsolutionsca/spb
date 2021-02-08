@@ -8272,7 +8272,7 @@ System.register("src/christian/layout", ["_BaseApp/src/core/app", "src/layout"],
                 let isoffice = App.inContext("App_office");
                 let isstaffs = App.inContext("App_staffs");
                 let isstaff = App.inContext("App_staff");
-                let isstaffs_4 = App.inContext("App_staffs_4");
+                let isstaffs_4 = App.inContext("App_staff_4");
                 let isrooms = App.inContext("App_rooms");
                 let isroom = App.inContext("App_room");
                 let isFiles = window.location.hash.startsWith("#/files/office");
@@ -9047,7 +9047,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 // File: staffs.ts
 System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout"], function (exports_52, context_52) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_14, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_14, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_jobid, gotoDetail;
     var __moduleName = context_52 && context_52.id;
     return {
         setters: [
@@ -9082,8 +9082,9 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
             };
-            filterTemplate = () => {
+            filterTemplate = (jobid) => {
                 let filters = [];
+                filters.push(Theme.renderDropdownFilter(NS, "jobid", jobid, i18n("JOBID")));
                 return filters.join("");
             };
             trTemplate = (item, rowNumber) => {
@@ -9195,7 +9196,9 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                     return html + trTemplate(item, rowNumber);
                 }, "");
                 let year = Perm.getCurrentYear(); //state.pager.filter.year;
-                const filter = filterTemplate();
+                let lookup_job = Lookup.get_job(year);
+                let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
+                const filter = filterTemplate(jobid);
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
@@ -9232,6 +9235,15 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
             });
             exports_52("search", search = (element) => {
                 state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_52("filter_jobid", filter_jobid = (element) => {
+                let value = element.options[element.selectedIndex].value;
+                let jobid = (value.length > 0 ? +value : undefined);
+                if (jobid == state.pager.filter.jobid)
+                    return;
+                state.pager.filter.jobid = jobid;
                 state.pager.pageNo = 1;
                 refresh();
             });
@@ -10059,12 +10071,12 @@ System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/sr
             }
         ],
         execute: function () {
-            exports_57("NS", NS = "App_staffs_4");
-            table_id = "staffs_4_table";
+            exports_57("NS", NS = "App_staff_4");
+            table_id = "staff_4_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "officeid_text", "jobid_text", "created", "by"];
             state = {
                 list: [],
-                pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "FIRSTNAME", sortDirection: "ASC", filter: {} }
+                pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: {} }
             };
             fetchedState = {};
             isNew = false;
@@ -10276,7 +10288,6 @@ ${!readonly ? `
                 });
                 let year = Perm.getCurrentYear(); //or something better
                 let lookup_job = Lookup.get_job(year);
-                let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
                 const tbodyLeft = state.list.reduce((html, item, index) => {
                     let rowNumber = Pager.rowNumber(state.pager, index);
                     return html + trTemplateLeft(item, editId, deleteId, rowNumber);
@@ -10285,6 +10296,7 @@ ${!readonly ? `
                     let jobid = Theme.renderOptions(lookup_job, item.jobid, true);
                     return html + trTemplateRight(item, editId, deleteId, jobid);
                 }, "");
+                let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
                 const filter = filterTemplate(jobid);
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);

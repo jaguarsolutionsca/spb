@@ -9,7 +9,6 @@ import * as Misc from "../../_BaseApp/src/lib-ts/misc"
 import * as Theme from "../../_BaseApp/src/theme/theme"
 import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Lookup from "../admin/lookupdata"
-import * as Layout from "./layout"
 import { tabTemplate, icon, prepareMenu, buildTitle, buildSubtitle } from "./layout"
 
 declare const i18n: any;
@@ -54,9 +53,9 @@ let uiSelectedRow: { id: number };
 
 
 
-const filterTemplate = () => {
+const filterTemplate = (jobid: string) => {
     let filters: string[] = [];
-
+    filters.push(Theme.renderDropdownFilter(NS, "jobid", jobid, i18n("JOBID")));
     return filters.join("");
 }
 
@@ -178,10 +177,10 @@ export const render = () => {
     }, "");
 
     let year = Perm.getCurrentYear();//state.pager.filter.year;
+    let lookup_job = Lookup.get_job(year);
+    let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
 
-
-
-    const filter = filterTemplate();
+    const filter = filterTemplate(jobid);
     const search = Pager.searchTemplate(state.pager, NS);
     const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
     const table = tableTemplate(tbody, state.pager);
@@ -223,6 +222,16 @@ export const sortBy = (columnName: string, direction: string) => {
 
 export const search = (element) => {
     state.pager.searchText = element.value;
+    state.pager.pageNo = 1;
+    refresh();
+};
+
+export const filter_jobid = (element: HTMLSelectElement) => {
+    let value = element.options[element.selectedIndex].value;
+    let jobid = (value.length > 0 ? +value : undefined);
+    if (jobid == state.pager.filter.jobid)
+        return;
+    state.pager.filter.jobid = jobid;
     state.pager.pageNo = 1;
     refresh();
 };

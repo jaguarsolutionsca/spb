@@ -14,8 +14,8 @@ import { tabTemplate, icon, prepareMenu, buildTitle, buildSubtitle } from "./lay
 
 declare const i18n: any;
 
-export const NS = "App_staffs_4";
-const table_id = "staffs_4_table";
+export const NS = "App_staff_4";
+const table_id = "staff_4_table";
 
 interface IState {
     _editing: boolean
@@ -54,7 +54,7 @@ const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "officeid_te
 let key: IKey;
 let state = <IPagedState>{
     list: [],
-    pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "FIRSTNAME", sortDirection: "ASC", filter: {} }
+    pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: {} }
 };
 let fetchedState = <IPagedState>{};
 let xtra: any;
@@ -280,9 +280,7 @@ export const render = () => {
     });
 
     let year = Perm.getCurrentYear(); //or something better
-
     let lookup_job = Lookup.get_job(year);
-    let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
 
     const tbodyLeft = state.list.reduce((html, item, index) => {
         let rowNumber = Pager.rowNumber(state.pager, index);
@@ -294,7 +292,7 @@ export const render = () => {
         return html + trTemplateRight(item, editId, deleteId, jobid);
     }, "");
 
-
+    let jobid = Theme.renderOptions(lookup_job, state.pager.filter.jobid, true);
 
     const filter = filterTemplate(jobid);
     const search = Pager.searchTemplate(state.pager, NS);
