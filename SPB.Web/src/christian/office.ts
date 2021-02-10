@@ -79,7 +79,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     let canAdd = canEdit && !canInsert; // && Perm.hasOffice_CanAddOffice;
     let canUpdate = canEdit && !isNew;
 
-    let inline_dirty = inline_staffs_3.hasChanges();
+    let inline_dirty = (!isNew ? inline_staffs_3.hasChanges() : false);
 
     let buttons: string[] = [];
     buttons.push(Theme.buttonCancel(NS));
@@ -141,7 +141,7 @@ export const fetchState = (id: number) => {
 
         })
 
-        .then(() => { return inline_staffs_3.fetchState(id, NS) })
+        .then(() => { return !isNew ? inline_staffs_3.fetchState(id, NS) : Promise.resolve() })
 };
 
 export const fetch = (params: string[]) => {
@@ -165,8 +165,8 @@ export const render = () => {
 
 
 
-    inline_staffs_3.preRender();
-    let staffs_3 = inline_staffs_3.render();
+    if (!isNew) inline_staffs_3.preRender();
+    let staffs_3 = !isNew ? inline_staffs_3.render() : "";
 
     const form = formTemplate(state, staffs_3);
 
@@ -179,7 +179,7 @@ export const render = () => {
 export const postRender = () => {
     if (!inContext()) return;
     openedonCalendar.postRender();
-    inline_staffs_3.postRender();
+    if (!isNew) inline_staffs_3.postRender();
 
     App.setPageTitle(isNew ? i18n("New office") : xtra.title);
 };
@@ -265,7 +265,7 @@ export const drop = () => {
 
 const dirtyExit = () => {
     let masterHasChange = !Misc.same(fetchedState, getFormState());
-    let inlineHasChange = inline_staffs_3.hasChanges();
+    let inlineHasChange = (!isNew ? inline_staffs_3.hasChanges() : false);
     isDirty = masterHasChange || inlineHasChange;
     if (isDirty) {
         setTimeout(() => {

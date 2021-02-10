@@ -8864,7 +8864,7 @@ ${isNew ? `
                 let canDelete = canEdit && !canInsert; // && Perm.hasOffice_CanDeleteOffice;
                 let canAdd = canEdit && !canInsert; // && Perm.hasOffice_CanAddOffice;
                 let canUpdate = canEdit && !isNew;
-                let inline_dirty = inline_staffs_3.hasChanges();
+                let inline_dirty = (!isNew ? inline_staffs_3.hasChanges() : false);
                 let buttons = [];
                 buttons.push(Theme.buttonCancel(NS));
                 if (canInsert)
@@ -8923,7 +8923,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     key = { id };
                     openedonCalendar.setState(state.openedon);
                 })
-                    .then(() => { return inline_staffs_3.fetchState(id, NS); });
+                    .then(() => { return !isNew ? inline_staffs_3.fetchState(id, NS) : Promise.resolve(); });
             });
             exports_51("fetch", fetch = (params) => {
                 let id = +params[0];
@@ -8941,8 +8941,9 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 if (state == undefined || Object.keys(state).length == 0)
                     return App.warningTemplate() || App.unexpectedTemplate();
                 let year = Perm.getCurrentYear(); //or something better
-                inline_staffs_3.preRender();
-                let staffs_3 = inline_staffs_3.render();
+                if (!isNew)
+                    inline_staffs_3.preRender();
+                let staffs_3 = !isNew ? inline_staffs_3.render() : "";
                 const form = formTemplate(state, staffs_3);
                 const tab = layout_13.tabTemplate(state.id, xtra, isNew);
                 const dirty = dirtyTemplate();
@@ -8953,7 +8954,8 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 if (!inContext())
                     return;
                 openedonCalendar.postRender();
-                inline_staffs_3.postRender();
+                if (!isNew)
+                    inline_staffs_3.postRender();
                 App.setPageTitle(isNew ? i18n("New office") : xtra.title);
             });
             exports_51("inContext", inContext = () => {
@@ -9031,7 +9033,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             });
             dirtyExit = () => {
                 let masterHasChange = !Misc.same(fetchedState, getFormState());
-                let inlineHasChange = inline_staffs_3.hasChanges();
+                let inlineHasChange = (!isNew ? inline_staffs_3.hasChanges() : false);
                 isDirty = masterHasChange || inlineHasChange;
                 if (isDirty) {
                     setTimeout(() => {
