@@ -7474,7 +7474,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
     };
 });
 // File: network.ts
-System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/permission", "src/support/layout"], function (exports_45, context_45) {
+System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/permission", "src/admin/layout"], function (exports_45, context_45) {
     "use strict";
     var App, Router, Misc, Theme, Perm, layout_9, NS, key, state, fetchedState, isNew, isDirty, thKindTemplate, thRoleTemplate, trTemplate, tableTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, rowClick, cancel, create, save, dirtyExit;
     var __moduleName = context_45 && context_45.id;
@@ -7512,7 +7512,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
             };
             thRoleTemplate = (item) => {
                 return `
-<th>${item.role2.replace(" ", "<br>")}</th>
+<th>${item.role2}</th>
 `;
             };
             trTemplate = (item, item2, index, masks, titles) => {
@@ -7534,9 +7534,6 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
             };
             tableTemplate = (thead1, thead2, tbody) => {
                 return `
-<form onsubmit="return false;">
-    <input type="submit" style="display:none;" id="${NS}_dummy_submit">
-
 <div class="container">
 <table class="table is-hoverable is-fullwidth is-bordered is-narrow">
     <thead>
@@ -7558,41 +7555,48 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
     </tbody>
 </table>
 </div>
-
-</form>`;
+`;
             };
             pageTemplate = (item, table, tab, warning, dirty) => {
                 let canUpdate = Perm.isSupport();
                 let readonly = !canUpdate;
+                let buttons = [];
                 return `
 <style>
     .table thead th.js-empty { border: none; }
-    .table thead th:not(.js-empty) { vertical-align: bottom; background-color: rgb(68, 70, 79); line-height: 1.25rem; }
+    .table thead th:not(.js-empty) { vertical-align: bottom; line-height: 2rem; text-align: center; background-color: rgba(245, 245, 245, 0.75); }
     .table thead th { color: #aaa }
     .table td, .table th { text-align: center; }
-    .table .js-cell[data-checked='true'] { background-color: #228b2240; }
+    .table .js-cell[data-checked='true'] { background-color: #228b2229; }
     .table .js-cell[data-checked] { cursor: pointer; }
     .js-uc-details.js-readonly td { pointer-events: none; }
 </style>
 
-<section class="js-uc-heading">
-    <div class="js-container">
-        <div class="js-left">
-            <h2><span class="icon"><i class="${layout_9.icon}"></i></span> Security Matrix: <span>${Misc.toInputText(item.xtra && item.xtra.title)}</span></h2>
-            <h3>Editing Network Security</h3>
+<form onsubmit="return false;">
+<input type="submit" style="display:none;" id="${NS}_dummy_submit">
+
+<div class="js-fixed-heading">
+<div class="js-head">
+    <div class="content js-uc-heading js-flex-space">
+        <div>
+            <div class="title"><i class="${layout_9.icon}"></i> <span>${Misc.toInputText(item.xtra && item.xtra.title)}</span></div>
+            <div class="subtitle">Editing Network Security</div>
         </div>
-        <div class="js-right">
+        <div>
+            ${Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, null, buttons, false, false))}
+            ${Theme.renderBlame(item, isNew)}
         </div>
     </div>
-</section>
-${dirty}
-${warning}
-<div class="js-uc-details ${readonly ? "js-readonly" : ""}">
-    ${tab}
-    ${table}
-    <hr>
-    ${Theme.renderActionButtons(NS, isNew, null, null, !isNew)}
+    ${Theme.wrapContent("js-uc-tabs", tab)}
 </div>
+<div class="js-body">
+    ${Theme.wrapContent("js-uc-notification", dirty)}
+    ${Theme.wrapContent("js-uc-notification", warning)}
+    ${Theme.wrapContent("js-uc-details", table)}
+</div>
+</div>
+
+</form>
 `;
             };
             dirtyTemplate = () => {

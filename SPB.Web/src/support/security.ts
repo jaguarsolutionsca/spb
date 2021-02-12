@@ -10,7 +10,7 @@ import * as Pager from "../../_BaseApp/src/theme/pager"
 import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
-import { tabTemplate, icon } from "./layout"
+import { tabTemplate, icon } from "../admin/layout"
 
 declare const i18n: any;
 
@@ -68,7 +68,7 @@ const thKindTemplate = (item: IRole) => {
 
 const thRoleTemplate = (item: IRo) => {
     return `
-<th>${item.role2.replace(" ", "<br>")}</th>
+<th>${item.role2}</th>
 `
 }
 
@@ -94,9 +94,6 @@ const trTemplate = (item: IItem, item2: IItem2, index: number, masks: number[], 
 
 const tableTemplate = (thead1: string, thead2: string, tbody: string) => {
     return `
-<form onsubmit="return false;">
-    <input type="submit" style="display:none;" id="${NS}_dummy_submit">
-
 <div class="container">
 <table class="table is-hoverable is-fullwidth is-bordered is-narrow">
     <thead>
@@ -118,43 +115,51 @@ const tableTemplate = (thead1: string, thead2: string, tbody: string) => {
     </tbody>
 </table>
 </div>
-
-</form>`;
+`;
 };
 
 const pageTemplate = (item: IState, table: string, tab: string, warning: string, dirty: string) => {
     let canUpdate = Perm.isSupport();
     let readonly = !canUpdate;
 
+    let buttons: string[] = [];
+
     return `
 <style>
     .table thead th.js-empty { border: none; }
-    .table thead th:not(.js-empty) { vertical-align: bottom; background-color: rgb(68, 70, 79); line-height: 1.25rem; }
+    .table thead th:not(.js-empty) { vertical-align: bottom; line-height: 2rem; text-align: center; background-color: rgba(245, 245, 245, 0.75); }
     .table thead th { color: #aaa }
     .table td, .table th { text-align: center; }
-    .table .js-cell[data-checked='true'] { background-color: #228b2240; }
+    .table .js-cell[data-checked='true'] { background-color: #228b2229; }
     .table .js-cell[data-checked] { cursor: pointer; }
     .js-uc-details.js-readonly td { pointer-events: none; }
 </style>
 
-<section class="js-uc-heading">
-    <div class="js-container">
-        <div class="js-left">
-            <h2><span class="icon"><i class="${icon}"></i></span> Security Matrix: <span>${Misc.toInputText(item.xtra && item.xtra.title)}</span></h2>
-            <h3>Editing Network Security</h3>
+<form onsubmit="return false;">
+<input type="submit" style="display:none;" id="${NS}_dummy_submit">
+
+<div class="js-fixed-heading">
+<div class="js-head">
+    <div class="content js-uc-heading js-flex-space">
+        <div>
+            <div class="title"><i class="${icon}"></i> <span>${Misc.toInputText(item.xtra && item.xtra.title)}</span></div>
+            <div class="subtitle">Editing Network Security</div>
         </div>
-        <div class="js-right">
+        <div>
+            ${Theme.wrapContent("js-uc-actions", Theme.renderActionButtons2(NS, isNew, null, buttons, false, false))}
+            ${Theme.renderBlame(item, isNew)}
         </div>
     </div>
-</section>
-${dirty}
-${warning}
-<div class="js-uc-details ${readonly ? "js-readonly" : ""}">
-    ${tab}
-    ${table}
-    <hr>
-    ${Theme.renderActionButtons(NS, isNew, null, null, !isNew)}
+    ${Theme.wrapContent("js-uc-tabs", tab)}
 </div>
+<div class="js-body">
+    ${Theme.wrapContent("js-uc-notification", dirty)}
+    ${Theme.wrapContent("js-uc-notification", warning)}
+    ${Theme.wrapContent("js-uc-details", table)}
+</div>
+</div>
+
+</form>
 `;
 };
 
