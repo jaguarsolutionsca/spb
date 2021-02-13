@@ -8,7 +8,7 @@ namespace BaseApp.Service
     public partial interface IAppService
     {
         object Company_Search(Dico pager);
-        object Company_Select(string cie);
+        object Company_Select(int cie);
         object Company_New();
         object Company_Insert(Dico uto);
         void Company_Update(Dico uto);
@@ -31,7 +31,7 @@ namespace BaseApp.Service
             };
         }
 
-        public object Company_Select(string cie)
+        public object Company_Select(int cie)
         {
             var graylist = "caneditundeliveredpermits,fournisseur_planconjoint,fournisseur_surcharge,fournisseur_fond_roulement,fournisseur_fond_forestier,fournisseur_preleve_divers,gpversion,showyearsinpermislistview".Split(',');
             return new
@@ -53,7 +53,7 @@ namespace BaseApp.Service
         public object Company_Insert(Dico uto)
         {
             var parameters = KVList.Build(uto.ReviveUTO());
-            var cie = repo.queryScalar<string>("app.Company_Insert", parameters, uid: true);
+            var cie = repo.queryScalar<int>("app.Company_Insert", parameters, uid: true);
             return new
             {
                 cie = cie

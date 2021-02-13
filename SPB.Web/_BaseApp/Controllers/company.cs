@@ -1,11 +1,9 @@
-﻿using BaseApp.Common;
-using BaseApp.DTO;
+﻿// File: controllers/company.cs
+
+using BaseApp.Common;
 using BaseApp.Service;
-using BaseApp.UTO;
-using BaseApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +23,7 @@ namespace BaseApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public object Select(string id)
+        public object Select(int id)
         {
             app.RequirePermission(Perm.Company_Edit);
             return app.Company_Select(id);
