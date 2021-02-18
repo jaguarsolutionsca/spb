@@ -1,24 +1,24 @@
 ﻿CREATE PROCEDURE [dbo].[Office_Summary]
 (
-    @id int = NULL,
-	@staffid int = NULL,
-	@roomid int = NULL
+    @Officeid int = NULL,
+    @Roomid int = NULL,
+    @Staffid int = NULL
 )
 AS
 BEGIN
 SET NOCOUNT ON
 ;
-IF (@staffid IS NOT NULL)
-	SELECT @id = OfficeID FROM Staff WHERE ID = @staffid;
+IF (@Roomid IS NOT NULL)
+    SELECT @Officeid = OfficeID FROM Room WHERE ID = @Roomid;
 
-IF (@roomid IS NOT NULL)
-	SELECT @id = OfficeID FROM ROOM WHERE ID = @roomid;
+IF (@Staffid IS NOT NULL)
+    SELECT @Officeid = OfficeID FROM Staff WHERE ID = @Staffid;
 
 SELECT
-    (SELECT Name FROM Office WHERE ID = @id) [title],
-	(SELECT COUNT(*) FROM Room WHERE OfficeID = @id) [roomCount],
-	(SELECT COUNT(*) FROM Staff WHERE OfficeID = @id) [staffCount],
-    --(SELECT COUNT(*) FROM dbo.DataFile WHERE TableName = 'office' AND TableID = @id AND Archive = 0) [fileCount]
+    (SELECT Name FROM Office WHERE ID = @Officeid) [title],
+    (SELECT COUNT(*) FROM Room WHERE OfficeID = @Officeid) [RoomCount],
+    (SELECT COUNT(*) FROM Staff WHERE OfficeID = @Officeid) [StaffCount],
+    --(SELECT COUNT(*) FROM dbo.DataFile WHERE TableName = 'office' AND TableID = @Officeid AND Archive = 0) [fileCount]
     CAST(0 as int) [fileCount]
 ;
 END

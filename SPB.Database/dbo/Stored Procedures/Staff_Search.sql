@@ -6,6 +6,7 @@
     @sortColumn nvarchar(32) = NULL,
     @sortDirection nvarchar(4) = NULL,
     @searchText nvarchar(32) = NULL,
+    @Plus nvarchar(1024) = NULL,
     --
     @OfficeID int = NULL,
     @JobID int = NULL
@@ -28,7 +29,9 @@ DECLARE @returnTable TABLE
     [Created] datetime NOT NULL,
     [Updated] datetime NOT NULL,
     [UpdatedBy] int NOT NULL,
-    [By] nvarchar(50) NOT NULL
+    [By] nvarchar(50) NOT NULL,
+    [PlusOrder] int NULL,
+    [RN] int NOT NULL IDENTITY(1,1)
 )
 ;
 SELECT @pageNo = CASE WHEN @pageNo > 0 THEN @pageNo ELSE 1 END;
@@ -36,9 +39,12 @@ SELECT @pageSize = CASE WHEN @pageSize > 0 THEN @pageSize ELSE 25 END;
 DECLARE @rowOffset int = (@pageNo - 1) * @pageSize;
 IF(ISNULL(@searchText, '') = '') SET @searchText = NULL;
 
+DECLARE @tplus TABLE (id int);
+INSERT @tplus SELECT * FROM app.CsvOfString_to_Table(@plus);
+
 INSERT INTO @returnTable
 SELECT
-    COUNT(*) OVER()[TotalCount],
+    COUNT(*) OVER() [TotalCount],
     pt.ID,
     pt.FirstName,
     pt.LastName,
@@ -50,7 +56,8 @@ SELECT
     pt.Created,
     pt.Updated,
     pt.UpdatedBy,
-    a.Email [By]
+    a.Email [By],
+    0 [PlusOrder]
 FROM [dbo].[Staff] pt
 LEFT OUTER JOIN Office lut1 ON lut1.ID = pt.OfficeID
 LEFT OUTER JOIN Job lut2 ON lut2.ID = pt.JobID
@@ -93,5 +100,32 @@ OFFSET @rowoffset ROWS
 FETCH NEXT @pageSize ROWS ONLY
 ;
 
-SELECT * FROM @returnTable;
+
+SELECT * FROM @returnTable
+UNION
+SELECT
+    0 [TotalCount],
+    pt.ID,
+    pt.FirstName,
+    pt.LastName,
+    pt.OfficeID,
+    lut1.Name [OfficeID_Text],
+    pt.JobID,
+    lut2.Title [JobID_Text],
+    pt.Archive,
+    pt.Created,
+    pt.Updated,
+    pt.UpdatedBy,
+    a.Email [By],
+    1 [PlusOrder],
+    DATEDIFF(SECOND, '1995-01-01', pt.Created) [RN]
+FROM [dbo].[Staff] pt
+LEFT OUTER JOIN Office lut1 ON lut1.ID = pt.OfficeID
+LEFT OUTER JOIN Job lut2 ON lut2.ID = pt.JobID
+INNER JOIN app.Account a ON a.UID = pt.UpdatedBy
+INNER JOIN @tplus tp ON tp.id = pt.ID
+WHERE (tp.id NOT IN (SELECT id FROM @returnTable))
+ORDER BY PlusOrder, RN
+;
+
 END

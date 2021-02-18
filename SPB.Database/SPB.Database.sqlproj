@@ -171,6 +171,17 @@
     <Build Include="dbo\Stored Procedures\Office_Lookup.sql" />
     <Build Include="dbo\Stored Procedures\Office_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Office_Delete.sql" />
+    <Build Include="dbo\Views\Job_Full.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\Staff_Lookup.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Search.sql" />
+    <Build Include="dbo\Stored Procedures\Job_New.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Lookup.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Job_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
