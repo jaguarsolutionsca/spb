@@ -12,7 +12,8 @@ import * as staffs_2 from "./staffs_2"
 import * as staff_2 from "./staff_2"
 import * as staffs_3 from "./staffs_3"
 import * as staffs_4 from "./staffs_4"
-
+import * as equipments from "./equipments"
+import * as equipment from "./equipments"
 
 //
 // Global references to application objects. Used for event handlers.
@@ -25,7 +26,8 @@ window[staffs_2.NS] = staffs_2;
 window[staff_2.NS] = staff_2;
 window[staffs_3.NS] = staffs_3;
 window[staffs_4.NS] = staffs_4;
-
+window[equipments.NS] = equipments;
+window[equipment.NS] = equipment;
 
 
 //
@@ -40,7 +42,8 @@ export const startup = () => {
     Router.addRoute("^#/staffs_4/?(.*)?$", staffs_4.fetch);
     Router.addRoute("^#/staffs/?(.*)?$", staffs.fetch);
     Router.addRoute("^#/staff/?(.*)?$", staff.fetch);
-}
+    Router.addRoute("^#/equipments/?(.*)?$", equipments.fetch);
+    Router.addRoute("^#/equipment/?(.*)?$", equipment.fetch);}
 
 
 
@@ -58,7 +61,8 @@ export const render = () => {
     ${staffs_2.render()}
     ${staff_2.render()}
     ${staffs_4.render()}
-</div>
+    ${equipments.render()}
+    ${equipment.render()}</div>
 `;
 }
 
@@ -70,4 +74,5 @@ export const postRender = () => {
     staffs_2.postRender();
     staff_2.postRender();
     staffs_4.postRender();
-}
+    equipments.postRender();
+    equipment.postRender();}

@@ -195,3 +195,13 @@ export const fetch_job = () => {
     }
 }
 export const get_job = (year: number) => job;
+
+let cat: Lookup.LookupData[];
+export const fetch_cat = () => {
+    return function (data: any) {
+        if (cat != undefined && cat.length > 0)
+            return;
+        return App.GET(`/lookup/by/cat`).then(json => { cat = json; });
+    }
+}
+export const get_cat = (year: number) => cat;
