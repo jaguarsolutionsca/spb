@@ -13,7 +13,7 @@ import * as staff_2 from "./staff_2"
 import * as staffs_3 from "./staffs_3"
 import * as staffs_4 from "./staffs_4"
 import * as equipments from "./equipments"
-import * as equipment from "./equipments"
+import * as equipment from "./equipment"
 
 //
 // Global references to application objects. Used for event handlers.

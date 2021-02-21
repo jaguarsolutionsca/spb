@@ -182,6 +182,16 @@
     <Build Include="dbo\Stored Procedures\Job_Lookup.sql" />
     <Build Include="dbo\Stored Procedures\Job_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Job_Delete.sql" />
+    <Build Include="app\Tables\LookupGroupe.sql" />
+    <Build Include="dbo\Views\Equipment_Full.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Search.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_New.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Lookup.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Equipment_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
