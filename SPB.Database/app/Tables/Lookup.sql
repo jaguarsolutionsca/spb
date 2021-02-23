@@ -16,8 +16,11 @@
     [UpdatedBy]    INT            CONSTRAINT [DF_Lookup_UpdatedBy] DEFAULT ((0)) NOT NULL,
     CONSTRAINT [PK_Lookup] PRIMARY KEY CLUSTERED ([ID] ASC),
     CONSTRAINT [FK_Lookup_Company] FOREIGN KEY ([CIE]) REFERENCES [app].[Company] ([CIE]),
-    CONSTRAINT [FK_Lookup_LookupGroupe] FOREIGN KEY ([Groupe]) REFERENCES [app].[LookupGroupe] ([ID])
+    CONSTRAINT [FK_Lookup_LookupGroupe] FOREIGN KEY ([Groupe]) REFERENCES [app].[LookupGroupe] ([ID]),
+    CONSTRAINT [FK_Lookup_LookupGroupe1] FOREIGN KEY ([ParentGroupe]) REFERENCES [app].[LookupGroupe] ([ID])
 );
+
+
 
 
 

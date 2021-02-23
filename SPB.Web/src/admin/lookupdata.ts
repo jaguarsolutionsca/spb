@@ -34,7 +34,7 @@ export const fetch_authrole = () => {
 }
 
 let editLut: LookupData[];
-export const fetch_lutGroup = () => {
+export const fetch_editLut = () => {
     return function (data: any) {
         if (editLut != undefined && editLut.length > 0)
             return;

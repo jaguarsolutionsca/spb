@@ -6,11 +6,11 @@
     @sortColumn nvarchar(32) = NULL,
     @sortDirection nvarchar(4) = NULL,
     @searchText nvarchar(32) = NULL,
-	--
+    @Plus nvarchar(1024) = NULL,
+    --
+    @CIE int = NULL,
     @Groupe nvarchar(12) = NULL,
-	@cie int = NULL,
-    @Year int = NULL,
-	@Plus nvarchar(1024) = NULL
+    @Year int = NULL
 )
 AS
 BEGIN
@@ -23,6 +23,9 @@ DECLARE @returnTable TABLE
     [CIE] int NULL,
     [CIE_Text] nvarchar(50) NULL,
     [Groupe] nvarchar(12) NOT NULL,
+    [Groupe_Text] nvarchar(50) NOT NULL,
+    [ParentGroupe] nvarchar(12) NULL,
+    [ParentGroupe_Text] nvarchar(50) NULL,
     [Code] nvarchar(12) NULL,
     [Description] nvarchar(50) NOT NULL,
     [Value1] nvarchar(50) NULL,
@@ -35,8 +38,8 @@ DECLARE @returnTable TABLE
     [Updated] datetime NOT NULL,
     [UpdatedBy] int NOT NULL,
     [By] nvarchar(50) NOT NULL,
-	[PlusOrder] int NULL,
-	[RN] int NOT NULL IDENTITY(1,1)
+    [PlusOrder] int NULL,
+    [RN] int NOT NULL IDENTITY(1,1)
 )
 ;
 SELECT @pageNo = CASE WHEN @pageNo > 0 THEN @pageNo ELSE 1 END;
@@ -44,16 +47,19 @@ SELECT @pageSize = CASE WHEN @pageSize > 0 THEN @pageSize ELSE 25 END;
 DECLARE @rowOffset int = (@pageNo - 1) * @pageSize;
 IF(ISNULL(@searchText, '') = '') SET @searchText = NULL;
 
-declare @tplus TABLE (id int);
-insert @tplus select * from app.CsvOfString_to_Table(@plus);
+DECLARE @tplus TABLE (id int);
+INSERT @tplus SELECT * FROM app.CsvOfString_to_Table(@plus);
 
 INSERT INTO @returnTable
 SELECT
-    COUNT(*) OVER()[TotalCount],
+    COUNT(*) OVER() [TotalCount],
     pt.ID,
     pt.CIE,
     lut1.Name [CIE_Text],
     pt.Groupe,
+    lut2.Description [Groupe_Text],
+    pt.ParentGroupe,
+	lut3.Description [ParentGroupe_Text],
     pt.Code,
     pt.Description,
     pt.Value1,
@@ -66,11 +72,12 @@ SELECT
     pt.Updated,
     pt.UpdatedBy,
     a.Email [By],
-	0 [PlusOrder]
+    0 [PlusOrder]
 FROM [app].[Lookup] pt
 LEFT OUTER JOIN Company lut1 ON lut1.CIE = pt.CIE
-INNER JOIN Account a ON a.UID = pt.UpdatedBy
-LEFT OUTER JOIN @tplus tp ON tp.id = pt.ID
+INNER JOIN LookupGroupe lut2 ON lut2.ID = pt.Groupe
+LEFT OUTER JOIN LookupGroupe lut3 ON lut3.ID = pt.ParentGroupe
+INNER JOIN app.Account a ON a.UID = pt.UpdatedBy
 WHERE
 (
     (@searchText IS NULL) OR
@@ -80,8 +87,7 @@ WHERE
     (pt.Value1 LIKE '%'+@searchText+'%') OR
     (pt.Value2 LIKE '%'+@searchText+'%') OR
     (pt.Value3 LIKE '%'+@searchText+'%')
-) AND
-(
+) AND (
     ((@Groupe IS NULL) OR (pt.Groupe = @Groupe)) AND
     ((@cie IS NULL) OR (pt.CIE = @cie)) AND
 	((@Year IS NULL) OR (pt.Started <= @Year AND (pt.Ended IS NULL OR pt.Ended >= @Year)))
@@ -121,6 +127,9 @@ SELECT
     pt.CIE,
     lut1.Name [CIE_Text],
     pt.Groupe,
+    lut2.Description [Groupe_Text],
+    pt.ParentGroupe,
+	lut3.Description [ParentGroupe_Text],
     pt.Code,
     pt.Description,
     pt.Value1,
@@ -133,13 +142,15 @@ SELECT
     pt.Updated,
     pt.UpdatedBy,
     a.Email [By],
-	1 [PlusOrder],
-	DATEDIFF(SECOND, '1995-01-01', pt.Created) [RN]
+    1 [PlusOrder],
+    DATEDIFF(SECOND, '1995-01-01', pt.Created) [RN]
 FROM [app].[Lookup] pt
 LEFT OUTER JOIN Company lut1 ON lut1.CIE = pt.CIE
-INNER JOIN Account a ON a.UID = pt.UpdatedBy
+INNER JOIN LookupGroupe lut2 ON lut2.ID = pt.Groupe
+LEFT OUTER JOIN LookupGroupe lut3 ON lut3.ID = pt.ParentGroupe
+INNER JOIN app.Account a ON a.UID = pt.UpdatedBy
 INNER JOIN @tplus tp ON tp.id = pt.ID
-WHERE (tp.id NOT IN (select id from @returnTable))
+WHERE (tp.id NOT IN (SELECT id FROM @returnTable))
 ORDER BY PlusOrder, RN
 ;
 

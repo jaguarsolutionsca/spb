@@ -4581,7 +4581,7 @@ System.register("src/permission", ["_BaseApp/src/auth", "_BaseApp/src/core/app"]
 });
 System.register("src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_33, context_33) {
     "use strict";
-    var App, yearFilter, dateFilter, authrole, fetch_authrole, editLut, fetch_lutGroup, get_editLut, cIE, fetch_cIE, get_cIE, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone, region, fetch_region, get_region, office, fetch_office, get_office, job, fetch_job, get_job, cat, fetch_cat, get_cat;
+    var App, yearFilter, dateFilter, authrole, fetch_authrole, editLut, fetch_editLut, get_editLut, cIE, fetch_cIE, get_cIE, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone, region, fetch_region, get_region, office, fetch_office, get_office, job, fetch_job, get_job, cat, fetch_cat, get_cat;
     var __moduleName = context_33 && context_33.id;
     return {
         setters: [
@@ -4599,7 +4599,7 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exp
                     return App.GET(`/account/role`).then(json => { exports_33("authrole", authrole = json); });
                 };
             });
-            exports_33("fetch_lutGroup", fetch_lutGroup = () => {
+            exports_33("fetch_editLut", fetch_editLut = () => {
                 return function (data) {
                     if (editLut != undefined && editLut.length > 0)
                         return;
@@ -6639,7 +6639,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 // File: lookup.ts
 System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/admin/layout"], function (exports_39, context_39) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_5, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_5, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, filter_parentgroupe, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
     var __moduleName = context_39 && context_39.id;
     return {
         setters: [
@@ -6674,7 +6674,7 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         execute: function () {
             exports_39("NS", NS = "App_lookups");
             table_id = "lookups_table";
-            blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "groupe_text", "created", "by"];
+            blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "groupe_text", "parentgroupe_text", "created", "by"];
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -6682,9 +6682,10 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             fetchedState = {};
             isNew = false;
             isDirty = false;
-            filterTemplate = (groupe) => {
+            filterTemplate = (groupe, parentgroupe) => {
                 let filters = [];
                 filters.push(Theme.renderDropdownFilter(NS, "groupe", groupe, i18n("GROUPE")));
+                filters.push(Theme.renderDropdownFilter(NS, "parentgroupe", parentgroupe, i18n("PARENTGROUPE")));
                 return filters.join("");
             };
             trTemplateLeft = (item, editId, deleteId, rowNumber) => {
@@ -6721,7 +6722,7 @@ ${tdConfirm}
 
 </tr>`;
             };
-            trTemplateRight = (item, editId, deleteId, groupe) => {
+            trTemplateRight = (item, editId, deleteId, groupe, parentgroupe) => {
                 let id = item.id;
                 let canEdit = true; //perm && perm.canEdit;
                 let readonly = (deleteId != undefined) || (editId != undefined && id != editId) || (isNew && !item._isNew) || (!canEdit);
@@ -6738,7 +6739,7 @@ ${tdConfirm}
 <tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
 ${!readonly ? `
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `groupe_${id}`, groupe, true)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `parentgroupe_${id}`, item.parentgroupe, 12)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `parentgroupe_${id}`, parentgroupe)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
@@ -6749,7 +6750,7 @@ ${!readonly ? `
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder)}</td>
 ` : `
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe_text)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentgroupe)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentgroupe_text)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}</div></td>
@@ -6793,7 +6794,7 @@ ${!readonly ? `
     <thead>
         <tr>
             ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe_text", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENTGROUPE"), "parentgroupe", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENTGROUPE"), "parentgroupe_text", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC", "width:100px")}
@@ -6867,7 +6868,7 @@ ${!readonly ? `
                     key = { cie, id: undefined };
                     xtra = payload.xtra;
                 })
-                    .then(Lookup.fetch_lutGroup());
+                    .then(Lookup.fetch_editLut());
             });
             exports_39("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
@@ -6907,16 +6908,19 @@ ${!readonly ? `
                 });
                 let year = Perm.getCurrentYear(); //or something better
                 let lookup_groupe = Lookup.get_editLut(year);
+                let lookup_parentGroupe = Lookup.get_editLut(year);
                 const tbodyLeft = state.list.reduce((html, item, index) => {
                     let rowNumber = Pager.rowNumber(state.pager, index);
                     return html + trTemplateLeft(item, editId, deleteId, rowNumber);
                 }, "");
                 const tbodyRight = state.list.reduce((html, item) => {
                     let groupe = Theme.renderOptions(lookup_groupe, item.groupe, isNew);
-                    return html + trTemplateRight(item, editId, deleteId, groupe);
+                    let parentgroupe = Theme.renderOptions(lookup_parentGroupe, item.parentgroupe, true);
+                    return html + trTemplateRight(item, editId, deleteId, groupe, parentgroupe);
                 }, "");
                 let groupe = Theme.renderOptions(lookup_groupe, state.pager.filter.groupe, true);
-                const filter = filterTemplate(groupe);
+                let parentgroupe = Theme.renderOptions(lookup_parentGroupe, state.pager.filter.parentgroupe, true);
+                const filter = filterTemplate(groupe, parentgroupe);
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
                 const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
@@ -6958,13 +6962,22 @@ ${!readonly ? `
                 state.pager.pageNo = 1;
                 refresh();
             });
+            exports_39("filter_parentgroupe", filter_parentgroupe = (element) => {
+                let value = element.options[element.selectedIndex].value;
+                let parentgroupe = (value.length > 0 ? value : undefined);
+                if (parentgroupe == state.pager.filter.parentgroupe)
+                    return;
+                state.pager.filter.parentgroupe = parentgroupe;
+                state.pager.pageNo = 1;
+                refresh();
+            });
             getFormState = () => {
                 let clone = Misc.clone(state);
                 clone.list.forEach(item => {
                     let id = item.id;
                     item.cie = Misc.fromSelectNumber(`${NS}_cie_${id}`, item.cie);
                     item.groupe = Misc.fromSelectText(`${NS}_groupe_${id}`, item.groupe);
-                    item.parentgroupe = Misc.fromInputTextNullable(`${NS}_parentgroupe_${id}`, item.parentgroupe);
+                    item.parentgroupe = Misc.fromSelectText(`${NS}_parentgroupe_${id}`, item.parentgroupe);
                     item.code = Misc.fromInputTextNullable(`${NS}_code_${id}`, item.code);
                     item.description = Misc.fromInputText(`${NS}_description_${id}`, item.description);
                     item.value1 = Misc.fromInputTextNullable(`${NS}_value1_${id}`, item.value1);
@@ -7073,7 +7086,6 @@ ${!readonly ? `
             });
             dirtyExit = () => {
                 isDirty = !Misc.same(fetchedState, getFormState());
-                //console.log(fetchedState, getFormState());
                 if (isDirty) {
                     setTimeout(() => {
                         state = getFormState();

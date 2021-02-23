@@ -28,6 +28,7 @@ interface IState {
     groupe: string
     groupe_text: string
     parentgroupe: string
+    parentgroupe_text: string
     code: string
     description: string
     value1: string
@@ -50,12 +51,13 @@ interface IKey {
 interface IFilter {
     cie: number
     groupe: string
+    parentgroupe: string
     plus: string
 }
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 
-const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "groupe_text", "created", "by"];
+const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "groupe_text", "parentgroupe_text", "created", "by"];
 
 let key: IKey;
 let state = <IPagedState>{
@@ -69,9 +71,10 @@ let isDirty = false;
 
 
 
-const filterTemplate = (groupe: string) => {
+const filterTemplate = (groupe: string, parentgroupe: string) => {
     let filters: string[] = [];
     filters.push(Theme.renderDropdownFilter(NS, "groupe", groupe, i18n("GROUPE")));
+    filters.push(Theme.renderDropdownFilter(NS, "parentgroupe", parentgroupe, i18n("PARENTGROUPE")));
     return filters.join("");
 }
 
@@ -107,7 +110,7 @@ ${tdConfirm}
 </tr>`;
 };
 
-const trTemplateRight = (item: IState, editId: number, deleteId: number, groupe: string) => {
+const trTemplateRight = (item: IState, editId: number, deleteId: number, groupe: string, parentgroupe: string) => {
     let id = item.id;
 
     let canEdit = true; //perm && perm.canEdit;
@@ -123,7 +126,7 @@ const trTemplateRight = (item: IState, editId: number, deleteId: number, groupe:
 <tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
 ${!readonly ? `
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `groupe_${id}`, groupe, true)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `parentgroupe_${id}`, item.parentgroupe, 12)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `parentgroupe_${id}`, parentgroupe)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
@@ -134,7 +137,7 @@ ${!readonly ? `
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder)}</td>
 ` : `
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe_text)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentgroupe)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentgroupe_text)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}</div></td>
@@ -181,7 +184,7 @@ const tableTemplateRight = (tbody: string, pager: Pager.IPager<IFilter>) => {
     <thead>
         <tr>
             ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe_text", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENTGROUPE"), "parentgroupe", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENTGROUPE"), "parentgroupe_text", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC", "width:100px")}
@@ -264,7 +267,7 @@ export const fetchState = (cie: number) => {
             key = { cie, id: undefined };
             xtra = payload.xtra;
         })
-        .then(Lookup.fetch_lutGroup())
+        .then(Lookup.fetch_editLut())
 };
 
 export const fetch = (params: string[]) => {
@@ -305,6 +308,7 @@ export const render = () => {
 
     let year = Perm.getCurrentYear(); //or something better
     let lookup_groupe = Lookup.get_editLut(year);
+    let lookup_parentGroupe = Lookup.get_editLut(year);
 
     const tbodyLeft = state.list.reduce((html, item, index) => {
         let rowNumber = Pager.rowNumber(state.pager, index);
@@ -313,12 +317,14 @@ export const render = () => {
 
     const tbodyRight = state.list.reduce((html, item) => {
         let groupe = Theme.renderOptions(lookup_groupe, item.groupe, isNew);
-        return html + trTemplateRight(item, editId, deleteId, groupe);
+        let parentgroupe = Theme.renderOptions(lookup_parentGroupe, item.parentgroupe, true);
+        return html + trTemplateRight(item, editId, deleteId, groupe, parentgroupe);
     }, "");
 
     let groupe = Theme.renderOptions(lookup_groupe, state.pager.filter.groupe, true);
+    let parentgroupe = Theme.renderOptions(lookup_parentGroupe, state.pager.filter.parentgroupe, true);
 
-    const filter = filterTemplate(groupe);
+    const filter = filterTemplate(groupe, parentgroupe);
     const search = Pager.searchTemplate(state.pager, NS);
     const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
 
@@ -370,6 +376,16 @@ export const filter_groupe = (element: HTMLSelectElement) => {
     refresh();
 };
 
+export const filter_parentgroupe = (element: HTMLSelectElement) => {
+    let value = element.options[element.selectedIndex].value;
+    let parentgroupe = (value.length > 0 ? value : undefined);
+    if (parentgroupe == state.pager.filter.parentgroupe)
+        return;
+    state.pager.filter.parentgroupe = parentgroupe;
+    state.pager.pageNo = 1;
+    refresh();
+};
+
 
 
 const getFormState = () => {
@@ -378,7 +394,7 @@ const getFormState = () => {
         let id = item.id;
         item.cie = Misc.fromSelectNumber(`${NS}_cie_${id}`, item.cie);
         item.groupe = Misc.fromSelectText(`${NS}_groupe_${id}`, item.groupe);
-        item.parentgroupe = Misc.fromInputTextNullable(`${NS}_parentgroupe_${id}`, item.parentgroupe);
+        item.parentgroupe = Misc.fromSelectText(`${NS}_parentgroupe_${id}`, item.parentgroupe);
         item.code = Misc.fromInputTextNullable(`${NS}_code_${id}`, item.code);
         item.description = Misc.fromInputText(`${NS}_description_${id}`, item.description);
         item.value1 = Misc.fromInputTextNullable(`${NS}_value1_${id}`, item.value1);
@@ -498,7 +514,6 @@ export const hasChanges = () => {
 
 const dirtyExit = () => {
     isDirty = !Misc.same(fetchedState, getFormState());
-    //console.log(fetchedState, getFormState());
     if (isDirty) {
         setTimeout(() => {
             state = getFormState();
