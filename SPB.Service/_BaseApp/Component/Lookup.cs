@@ -26,84 +26,72 @@ namespace BaseApp.Service
 
     public partial interface IAppService
     {
-        object Lookup_Search(Dico pager);
-        object Lookup_Select(int id);
-        object Lookup_New();
-        object Lookup_New(string groupe);
+        object Lookup_Search(Dico pager, int? pid = null, string parent = null);
+        object Lookup_Select(int id, string parent = "Lookup");
+        object Lookup_New(int? pid = null, string parent = null);
         object Lookup_Insert(Dico uto);
         void Lookup_Update(Dico uto);
         void Lookup_Delete(Dico key);
         //
         List<Dico> Lookup_By(string groupe, int? year = null);
-        List<Dico> Lookup_LutGroup();
     }
 
     public partial class AppService
     {
-        public object Lookup_Search(Dico pager)
+        public object Lookup_Search(Dico pager, int? pid = null, string parent = null)
         {
             var uto = pager.TrimRowCount().ReviveUTO();
             var parameters = KVList.Build(uto);
             var list = repo.queryDicoList("app.Lookup_Search", parameters, uid: true);
             list.ForEach(one => one.TrimKeys(new string[] { "plusorder", "rn" }));
 
-            var title = "NO GROUP";
-            var groupe = uto.Parse<string>("groupe");
-            if (!string.IsNullOrEmpty(groupe))
-                title = repo.queryScalar<string>("select Description from app.Lookup where Code=@code", "@code", groupe);
-
             return new
             {
-                list,
+                list = list,
                 pager = pager.ReviveRowCount(list),
-                xtra = new { title }
+                xtra = !pid.HasValue ? (object)null : repo.queryDico($"app.{parent}_Summary", $"@{parent}id", pid)
             };
         }
 
-        public object Lookup_Select(int id)
+        public object Lookup_Select(int id, string parent = "Lookup")
         {
-            var item = repo.queryDico("app.Lookup_Select", "@id", id, uid: true).ReviveDTO().Decrypt(crypto, "by");
             return new
             {
-                item,
-                xtra = repo.queryDico("app.Lookup_Summary", "@id", id, uid: true)
+                item = repo.queryDico("app.Lookup_Select", "@id", id, uid: true),
+                xtra = repo.queryDico($"app.{parent}_Summary", "@Lookupid", id)
             };
         }
 
-        public object Lookup_New()
+        public object Lookup_New(int? pid = null, string parent = null)
         {
-            return new
-            {
-                item = repo.queryDico("app.Lookup_New", uid: true),
-                xtra = new { title = "NEW LOOKUP" }
-            };
-        }
-
-        public object Lookup_New(string groupe)
-        {
-            var title = repo.queryScalar<string>("select Description from app.Lookup where Code=@code", "@code", groupe);
-
-            return new
-            {
-                item = repo.queryDico("app.Lookup_New", "@groupe", groupe, uid: true),
-                xtra = new { title }
-            };
+            if (!pid.HasValue)
+                return new
+                {
+                    item = repo.queryDico("app.Lookup_New", uid: true),
+                    xtra = (object)null
+                };
+            else
+                return new
+                {
+                    item = repo.queryDico("app.Lookup_New", $"@{parent}id", pid, uid: true),
+                    xtra = repo.queryDico($"app.{parent}_Summary", $"@{parent}id", pid)
+                };
         }
 
         public object Lookup_Insert(Dico uto)
         {
-            uto.TrimKeys(new string[] { "cie_text", "created", "by" });
+            uto.TrimKeys(new string[] { "cie_text", "groupe_text", "created", "updatedby", "by" });
             var parameters = KVList.Build(uto.ReviveUTO());
             var id = repo.queryScalar<int>("app.Lookup_Insert", parameters, uid: true);
             return new
             {
-                id
+                id = id
             };
         }
 
         public void Lookup_Update(Dico uto)
         {
-            uto.TrimKeys(new string[] { "cie_text", "created", "by" });
+            uto.TrimKeys(new string[] { "cie_text", "groupe_text", "created", "updatedby", "by" });
             repo.queryNonQuery("app.Lookup_Update", KVList.Build(uto.ReviveUTO()), uid: true);
         }
 
@@ -117,7 +105,7 @@ namespace BaseApp.Service
         //
         //
         //
-        
+
         public List<Dico> Lookup_By(string groupe, int? year = null)
         {
             return repo.queryDicoList("app.Lookup_ListBy_Groupe", KVList.Build()
@@ -125,14 +113,5 @@ namespace BaseApp.Service
                 .Add("@year", year),
             uid: true);
         }
-
-        public List<Dico> Lookup_LutGroup()
-        {
-            return repo.queryDicoList("app.Lookup_ListBy_Groupe", KVList.Build()
-                .Add("@groupe", "EDIT.LUT")
-                .Add("@year", null),
-            uid: true);
-        }
-
     }
 }

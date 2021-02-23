@@ -24,7 +24,7 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
     let isAccounts = App.inContext("App_accounts");
     let isAccount = App.inContext("App_account");
     let isLookups = App.inContext("App_lookups");
-    let isLookup = App.inContext("App_lookup");
+    let isLookup = false && App.inContext("App_lookup");
     let isSecurity = App.inContext("App_security");
     let isFiles = window.location.hash.startsWith("#/files/company");
     let isFile = window.location.hash.startsWith("#/file/company");
@@ -58,7 +58,7 @@ ${isAccount ? `
 ` : ``}
 
         <li ${isLookups ? "class='is-active'" : ""}>
-            <a href="#/admin/lookups/profile.key">
+            <a href="#/admin/lookups">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
                 <span>${i18n("Lookups")}</span>
             </a>

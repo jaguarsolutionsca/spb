@@ -152,7 +152,7 @@ namespace BaseApp.Service
                 .Take(ps)
                 .ToList();
 
-            var xtra = repo.queryDico("app.Company_Summary", "@cie", filter["cie"], uid: true);
+            var xtra = repo.queryDico("app.Company_Summary", "@Companyid", filter["cie"]);
 
             return new
             {
@@ -186,7 +186,7 @@ namespace BaseApp.Service
                 item = repo.queryDico("app.Account_New", "@cie", cie, uid: true)
                     .ReviveDTO()
                     .Decrypt(crypto, "by"),
-                xtra = repo.queryDico("app.Company_Summary", "@cie", cie, uid: true)
+                xtra = repo.queryDico("app.Company_Summary", "@Companyid", cie)
             };
         }
 

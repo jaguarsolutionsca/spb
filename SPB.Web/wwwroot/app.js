@@ -1892,43 +1892,14 @@ System.register("_BaseApp/src/main", ["_BaseApp/src/core/app", "_BaseApp/src/cor
         }
     };
 });
-System.register("_BaseApp/src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_10, context_10) {
-    "use strict";
-    var App, authrole, fetch_authrole, lutGroup, fetch_lutGroup, get_lutGroup;
-    var __moduleName = context_10 && context_10.id;
-    return {
-        setters: [
-            function (App_4) {
-                App = App_4;
-            }
-        ],
-        execute: function () {
-            exports_10("fetch_authrole", fetch_authrole = () => {
-                return function (data) {
-                    if (authrole != undefined && authrole.length > 0)
-                        return;
-                    return App.GET(`/account/role`).then(json => { exports_10("authrole", authrole = json); });
-                };
-            });
-            exports_10("fetch_lutGroup", fetch_lutGroup = () => {
-                return function (data) {
-                    if (lutGroup != undefined && lutGroup.length > 0)
-                        return;
-                    return App.GET(`/lookup/lutGroup`).then(json => { lutGroup = json; });
-                };
-            });
-            exports_10("get_lutGroup", get_lutGroup = (year) => lutGroup);
-        }
-    };
-});
-System.register("_BaseApp/src/lang/en-CA", [], function (exports_11, context_11) {
+System.register("_BaseApp/src/lang/en-CA", [], function (exports_10, context_10) {
     "use strict";
     var en_CA;
-    var __moduleName = context_11 && context_11.id;
+    var __moduleName = context_10 && context_10.id;
     return {
         setters: [],
         execute: function () {
-            exports_11("en_CA", en_CA = {
+            exports_10("en_CA", en_CA = {
                 values: {
                     "EMAIL": "Email",
                     "PASSWORD": "Password"
@@ -1937,10 +1908,10 @@ System.register("_BaseApp/src/lang/en-CA", [], function (exports_11, context_11)
         }
     };
 });
-System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], function (exports_12, context_12) {
+System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], function (exports_11, context_11) {
     "use strict";
     var Misc, NullPager, render, renderStatic, sortableHeaderLink, headerLink, rowNumber, asParams, searchTemplate;
-    var __moduleName = context_12 && context_12.id;
+    var __moduleName = context_11 && context_11.id;
     return {
         setters: [
             function (Misc_2) {
@@ -1948,8 +1919,8 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
             }
         ],
         execute: function () {
-            exports_12("NullPager", NullPager = { pageNo: 1, pageSize: 1000, rowCount: 0, searchText: "", sortColumn: "", sortDirection: "", filter: {} });
-            exports_12("render", render = (pager, ns, sizes, searchHtml = null, customHtml = null) => {
+            exports_11("NullPager", NullPager = { pageNo: 1, pageSize: 1000, rowCount: 0, searchText: "", sortColumn: "", sortDirection: "", filter: {} });
+            exports_11("render", render = (pager, ns, sizes, searchHtml = null, customHtml = null) => {
                 let rowFirst = ((pager.pageNo - 1) * pager.pageSize) + 1;
                 if (pager.rowCount == 0)
                     rowFirst = 0;
@@ -2013,7 +1984,7 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
     </div>
 </div>`;
             });
-            exports_12("renderStatic", renderStatic = (pager) => {
+            exports_11("renderStatic", renderStatic = (pager) => {
                 return `
 <div class="js-container">
     <div class="js-filter-column"></div>
@@ -2022,7 +1993,7 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
     </div>
 </div>`;
             });
-            exports_12("sortableHeaderLink", sortableHeaderLink = (pager, ns, linkText, columnName, defaultDirection /*"ASC"*/, style = "") => {
+            exports_11("sortableHeaderLink", sortableHeaderLink = (pager, ns, linkText, columnName, defaultDirection /*"ASC"*/, style = "") => {
                 var indicator = "";
                 var sorting = "";
                 var nextDir = defaultDirection;
@@ -2036,13 +2007,13 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                     indicator = '&nbsp;<i class="fa fa-sort-down" style="visibility: hidden;"></i>';
                 return `<th${sorting} ${style ? `style="${style}"` : ""}><a href="#" onclick="${ns}.sortBy('${columnName}', '${nextDir}');return false;">${linkText}${indicator}</a></th>`;
             });
-            exports_12("headerLink", headerLink = (linkText) => {
+            exports_11("headerLink", headerLink = (linkText) => {
                 return `<th class="js-no-sorting">${linkText}</th>`;
             });
-            exports_12("rowNumber", rowNumber = (pager, index) => {
+            exports_11("rowNumber", rowNumber = (pager, index) => {
                 return 1 + index + ((pager.pageNo - 1) * pager.pageSize);
             });
-            exports_12("asParams", asParams = (pager) => {
+            exports_11("asParams", asParams = (pager) => {
                 let searchText = (pager.searchText != undefined ? encodeURIComponent(pager.searchText) : "");
                 let params = `pn=${pager.pageNo}&ps=${pager.pageSize}&sc=${pager.sortColumn}&sd=${pager.sortDirection}&st=${searchText}`;
                 if (pager.filter != undefined) {
@@ -2064,7 +2035,7 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
                 }
                 return params;
             });
-            exports_12("searchTemplate", searchTemplate = (pager, ns, xtra) => {
+            exports_11("searchTemplate", searchTemplate = (pager, ns, xtra) => {
                 return `
     <div class="field">
         <label class="label">${i18n("SEARCH")}</label>
@@ -2079,14 +2050,14 @@ System.register("_BaseApp/src/theme/pager", ["_BaseApp/src/lib-ts/misc"], functi
         }
     };
 });
-System.register("_BaseApp/src/theme/autocomplete", ["_BaseApp/src/core/app"], function (exports_13, context_13) {
+System.register("_BaseApp/src/theme/autocomplete", ["_BaseApp/src/core/app"], function (exports_12, context_12) {
     "use strict";
     var App, Autocomplete;
-    var __moduleName = context_13 && context_13.id;
+    var __moduleName = context_12 && context_12.id;
     return {
         setters: [
-            function (App_5) {
-                App = App_5;
+            function (App_4) {
+                App = App_4;
             }
         ],
         execute: function () {
@@ -2235,18 +2206,18 @@ ${textRows.length > 0 ? `
                     return this.text;
                 }
             };
-            exports_13("Autocomplete", Autocomplete);
+            exports_12("Autocomplete", Autocomplete);
         }
     };
 });
-System.register("_BaseApp/src/theme/calendar", ["_BaseApp/src/core/app", "_BaseApp/src/lib-ts/misc"], function (exports_14, context_14) {
+System.register("_BaseApp/src/theme/calendar", ["_BaseApp/src/core/app", "_BaseApp/src/lib-ts/misc"], function (exports_13, context_13) {
     "use strict";
     var App, Misc, days, months, Calendar, eventMan;
-    var __moduleName = context_14 && context_14.id;
+    var __moduleName = context_13 && context_13.id;
     return {
         setters: [
-            function (App_6) {
-                App = App_6;
+            function (App_5) {
+                App = App_5;
             },
             function (Misc_3) {
                 Misc = Misc_3;
@@ -2774,8 +2745,8 @@ ${this.hasToday ? `
                     this.maxValue = date;
                 }
             };
-            exports_14("Calendar", Calendar);
-            exports_14("eventMan", eventMan = (ns, dateElem, eventname) => {
+            exports_13("Calendar", Calendar);
+            exports_13("eventMan", eventMan = (ns, dateElem, eventname) => {
                 const ondatechange = () => {
                     if (!dateElem.getAttribute("required") && dateElem.value.length == 0) {
                         window[ns].onchange(dateElem);
@@ -2825,15 +2796,15 @@ ${this.hasToday ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/latlong", [], function (exports_15, context_15) {
+System.register("_BaseApp/src/theme/latlong", [], function (exports_14, context_14) {
     "use strict";
     var NS, onfocusLatLon, onchangeLatLon, onblurLatLon;
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_14 && context_14.id;
     return {
         setters: [],
         execute: function () {
-            exports_15("NS", NS = "App_LatLong");
-            exports_15("onfocusLatLon", onfocusLatLon = (element) => {
+            exports_14("NS", NS = "App_LatLong");
+            exports_14("onfocusLatLon", onfocusLatLon = (element) => {
                 if (element.dataset.isddmmcc == "true") {
                     element.value = element.value.replace("°", "").replace("′", "").replace(" ", "");
                     element.type = "number";
@@ -2845,7 +2816,7 @@ System.register("_BaseApp/src/theme/latlong", [], function (exports_15, context_
                     element.select();
                 }
             });
-            exports_15("onchangeLatLon", onchangeLatLon = (element) => {
+            exports_14("onchangeLatLon", onchangeLatLon = (element) => {
                 if (element.dataset.isddmmcc == "true") {
                     let isLongitude = (element.dataset.islongitude == "true");
                     let text = "0000000" + (+element.value).toFixed(2);
@@ -2873,7 +2844,7 @@ System.register("_BaseApp/src/theme/latlong", [], function (exports_15, context_
                     element.setAttribute("value", text);
                 }
             });
-            exports_15("onblurLatLon", onblurLatLon = (element) => {
+            exports_14("onblurLatLon", onblurLatLon = (element) => {
                 if (isNaN(+element.value))
                     return;
                 onchangeLatLon(element);
@@ -2881,14 +2852,14 @@ System.register("_BaseApp/src/theme/latlong", [], function (exports_15, context_
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-action", [], function (exports_16, context_16) {
+System.register("_BaseApp/src/theme/theme-action", [], function (exports_15, context_15) {
     "use strict";
     var renderActionButtons, renderActionButtons2, renderButtons, renderButtonsInline, renderInlineActionButtons, buttonCancelInline, buttonInsertInline, buttonDeleteInline, buttonAddNewInline, buttonUpdateInline, renderListActionButtons, renderListActionButtons2, renderListFloatingActionButtons, buttonCancel, buttonInsert, buttonDelete, buttonAddNew, buttonUpdate, buttonUpdateNoDone, buttonUpload;
-    var __moduleName = context_16 && context_16.id;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [],
         execute: function () {
-            exports_16("renderActionButtons", renderActionButtons = (ns, isNew, addUrl, buttons = null, updateOnly = false) => {
+            exports_15("renderActionButtons", renderActionButtons = (ns, isNew, addUrl, buttons = null, updateOnly = false) => {
                 let buttonsHtml = (buttons && buttons.length > 0 ? buttons.join("&nbsp;") : "");
                 return `
     <div class="level js-actions">
@@ -2919,7 +2890,7 @@ ${!updateOnly ? `
     </div>
 `;
             });
-            exports_16("renderActionButtons2", renderActionButtons2 = (ns, isNew, addUrl, buttons = null, canDelete = true, canAdd = true) => {
+            exports_15("renderActionButtons2", renderActionButtons2 = (ns, isNew, addUrl, buttons = null, canDelete = true, canAdd = true) => {
                 let buttonsHtml = (buttons && buttons.length > 0 ? buttons.join("") : "");
                 return `
     <div class="buttons">
@@ -2940,7 +2911,7 @@ ${isNew && canAdd ? `
     </div>
 `;
             });
-            exports_16("renderButtons", renderButtons = (buttons) => {
+            exports_15("renderButtons", renderButtons = (buttons) => {
                 let buttonsHtml = (buttons && buttons.length > 0 ? buttons.join("") : "");
                 return `
     <div class="buttons">
@@ -2948,7 +2919,7 @@ ${isNew && canAdd ? `
     </div>
 `;
             });
-            exports_16("renderButtonsInline", renderButtonsInline = (buttons) => {
+            exports_15("renderButtonsInline", renderButtonsInline = (buttons) => {
                 let buttonsHtml = (buttons && buttons.length > 0 ? buttons.join("") : "");
                 return `
     <div class="js-actions js-flex-end">
@@ -2958,7 +2929,7 @@ ${isNew && canAdd ? `
     </div>
 `;
             });
-            exports_16("renderInlineActionButtons", renderInlineActionButtons = (ns, isNew, disableDelete, disableAddNew, disableUpdate) => {
+            exports_15("renderInlineActionButtons", renderInlineActionButtons = (ns, isNew, disableDelete, disableAddNew, disableUpdate) => {
                 return `
     <div class="js-actions js-flex-end">
         <div class="buttons are-small">
@@ -2980,22 +2951,22 @@ ${!disableUpdate ? `
     </div>
 `;
             });
-            exports_16("buttonCancelInline", buttonCancelInline = (ns) => {
+            exports_15("buttonCancelInline", buttonCancelInline = (ns) => {
                 return `<button class="button is-outlined" onclick="${ns}.undo()"><span class="icon"><i class="fa fa-undo"></i></span><span>${i18n("Undo")}</span></button>`;
             });
-            exports_16("buttonInsertInline", buttonInsertInline = (ns) => {
+            exports_15("buttonInsertInline", buttonInsertInline = (ns) => {
                 return `<a class="button is-primary is-outlined" onclick="${ns}.create()><span class="icon"><i class="fa fa-check"></i></span><span>${i18n("Insert")}</span></a>`;
             });
-            exports_16("buttonDeleteInline", buttonDeleteInline = (ns) => {
+            exports_15("buttonDeleteInline", buttonDeleteInline = (ns) => {
                 return `<a class="button is-danger is-outlined" onclick="${ns}.drop()"><span class="icon"><i class="fa fa-times"></i></span><span>${i18n("Delete")}</span></a>`;
             });
-            exports_16("buttonAddNewInline", buttonAddNewInline = (ns, addUrl) => {
+            exports_15("buttonAddNewInline", buttonAddNewInline = (ns, addUrl) => {
                 return `<a class="button is-primary is-outlined" onclick="${ns}.addNew()"><span class="icon"><i class="fa fa-plus"></i></span><span>${i18n("Add New")}</span></a>`;
             });
-            exports_16("buttonUpdateInline", buttonUpdateInline = (ns) => {
+            exports_15("buttonUpdateInline", buttonUpdateInline = (ns) => {
                 return `<a class="button is-primary is-outlined" onclick="${ns}.save()"><span class="icon"><i class="fa fa-check"></i></span><span>${i18n("Update")}</span></a>`;
             });
-            exports_16("renderListActionButtons", renderListActionButtons = (ns, label, buttons = null) => {
+            exports_15("renderListActionButtons", renderListActionButtons = (ns, label, buttons = null) => {
                 let buttonsHtml = (buttons && buttons.length > 0 ? buttons.join("&nbsp;") : "");
                 return `
     <div class="level js-actions">
@@ -3014,7 +2985,7 @@ ${label != null ? `
     </div>
     `;
             });
-            exports_16("renderListActionButtons2", renderListActionButtons2 = (ns, label, buttons = null) => {
+            exports_15("renderListActionButtons2", renderListActionButtons2 = (ns, label, buttons = null) => {
                 let buttonsHtml = (buttons && buttons.length > 0 ? buttons.join("&nbsp;") : "");
                 return `
     <div class="buttons">
@@ -3023,46 +2994,46 @@ ${label != null ? `
     </div>
 `;
             });
-            exports_16("renderListFloatingActionButtons", renderListFloatingActionButtons = (ns, label) => {
+            exports_15("renderListFloatingActionButtons", renderListFloatingActionButtons = (ns, label) => {
                 return `
         <button class="button is-primary is-rounded js-floating" title="${label}" onclick="${ns}.create()"><span class="icon"><i class="fa fa-plus"></i></span></button>
     `;
             });
-            exports_16("buttonCancel", buttonCancel = (ns) => {
+            exports_15("buttonCancel", buttonCancel = (ns) => {
                 return `<button class="button" onclick="${ns}.cancel()"><span>${i18n("Cancel")}</span></button>`;
             });
-            exports_16("buttonInsert", buttonInsert = (ns, label = "Insert") => {
+            exports_15("buttonInsert", buttonInsert = (ns, label = "Insert") => {
                 return `<button class="button is-primary" onclick="${ns}.create()"><span class="icon"><i class="fa fa-check"></i></span><span>${i18n(label)}</span></button>`;
             });
-            exports_16("buttonDelete", buttonDelete = (ns) => {
+            exports_15("buttonDelete", buttonDelete = (ns) => {
                 return `<button class="button is-danger" onclick="App_Theme.openModal('modalDelete_${ns}')"><span class="icon"><i class="fa fa-times"></i></span><span>${i18n("Delete")}</span></button>`;
             });
-            exports_16("buttonAddNew", buttonAddNew = (ns, addUrl, label = null) => {
+            exports_15("buttonAddNew", buttonAddNew = (ns, addUrl, label = null) => {
                 return `<a class="button is-primary" href="${addUrl}"><span class="icon"><i class="fa fa-plus"></i></span><span>${label ? label : i18n("Add New")}</span></a>`;
             });
-            exports_16("buttonUpdate", buttonUpdate = (ns, disabled = false) => {
+            exports_15("buttonUpdate", buttonUpdate = (ns, disabled = false) => {
                 return `<button class="button is-primary" ${disabled ? "disabled" : ""} onclick="${ns}.save()"><span class="icon"><i class="fa fa-check"></i></span><span>${i18n("Update")}</span></button>
             <button class="button is-primary" ${disabled ? "disabled" : ""} onclick="${ns}.save(true)"><span class="icon"><i class="fa fa-reply"></i></span><span>${i18n("Done")}</span></button>
 `;
             });
-            exports_16("buttonUpdateNoDone", buttonUpdateNoDone = (ns, disabled = false) => {
+            exports_15("buttonUpdateNoDone", buttonUpdateNoDone = (ns, disabled = false) => {
                 return `<button class="button is-primary" ${disabled ? "disabled" : ""} onclick="${ns}.save()"><span class="icon"><i class="fa fa-check"></i></span><span>${i18n("Update")}</span></button>
 `;
             });
-            exports_16("buttonUpload", buttonUpload = (ns, disabled = false, label = "Upload File") => {
+            exports_15("buttonUpload", buttonUpload = (ns, disabled = false, label = "Upload File") => {
                 return `<button class="button is-primary" ${disabled ? "disabled" : ""} onclick="${ns}.create()"><span class="icon"><i class="far fa-cloud-upload-alt"></i></span><span>${i18n(label)}</span></button>`;
             });
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_17, context_17) {
+System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_16, context_16) {
     "use strict";
     var renderCheckboxField, renderCheckboxInline, renderCheckboxFilter, renderCheckboxListField, rawCheckbox, rawToggle;
-    var __moduleName = context_17 && context_17.id;
+    var __moduleName = context_16 && context_16.id;
     return {
         setters: [],
         execute: function () {
-            exports_17("renderCheckboxField", renderCheckboxField = (ns, propName, value, label, text, help, disabled = false) => {
+            exports_16("renderCheckboxField", renderCheckboxField = (ns, propName, value, label, text, help, disabled = false) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label">${label}</label></div>
@@ -3071,14 +3042,14 @@ System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_17, c
         </div>
     </div>`;
             });
-            exports_17("renderCheckboxInline", renderCheckboxInline = (ns, propName, value, label = "", text = "", help, disabled = false) => {
+            exports_16("renderCheckboxInline", renderCheckboxInline = (ns, propName, value, label = "", text = "", help, disabled = false) => {
                 return `
     <div class="field">
         ${rawCheckbox(ns, propName, value, text, disabled)}
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_17("renderCheckboxFilter", renderCheckboxFilter = (ns, propName, value, label = "", text) => {
+            exports_16("renderCheckboxFilter", renderCheckboxFilter = (ns, propName, value, label = "", text) => {
                 return `
     <div class="field">
         <label class="label">${label}</label>
@@ -3089,7 +3060,7 @@ System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_17, c
         </div>
     </div>`;
             });
-            exports_17("renderCheckboxListField", renderCheckboxListField = (ns, propName, maskValue, label, list) => {
+            exports_16("renderCheckboxListField", renderCheckboxListField = (ns, propName, maskValue, label, list) => {
                 const checkboxTemplate = (entry) => {
                     let selected = (+entry.code & maskValue) != 0;
                     return `
@@ -3111,7 +3082,7 @@ System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_17, c
     </div>
 `;
             });
-            exports_17("rawCheckbox", rawCheckbox = (ns, propName, value, text, disabled = false) => {
+            exports_16("rawCheckbox", rawCheckbox = (ns, propName, value, text, disabled = false) => {
                 return `
     <div class="control">
         <label class="checkbox ${disabled ? "js-disabled" : ""}">
@@ -3119,7 +3090,7 @@ System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_17, c
         </label>
     </div>`;
             });
-            exports_17("rawToggle", rawToggle = (ns, propName, value, text_on, text_off) => {
+            exports_16("rawToggle", rawToggle = (ns, propName, value, text_on, text_off) => {
                 return `
 <div class="js-toggle">
     <label for="${ns}_${propName}">${value ? text_on : text_off}</label>
@@ -3130,14 +3101,14 @@ System.register("_BaseApp/src/theme/theme-checkbox", [], function (exports_17, c
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-dropdown", [], function (exports_18, context_18) {
+System.register("_BaseApp/src/theme/theme-dropdown", [], function (exports_17, context_17) {
     "use strict";
     var renderDropdownField, renderDropdownInline, renderDropdownExInline, renderDropdownNaked, renderDropdownFilter, renderOptions, renderOptionsShowCode, renderOptionsShowBoth, renderOptionsFun, renderItems, renderNullableBooleanOptions, renderNullableBooleanOptionsReverse, renderDatalistOptions;
-    var __moduleName = context_18 && context_18.id;
+    var __moduleName = context_17 && context_17.id;
     return {
         setters: [],
         execute: function () {
-            exports_18("renderDropdownField", renderDropdownField = (ns, propName, options, label, required = false, size = "js-width-50", help, disabled = false) => {
+            exports_17("renderDropdownField", renderDropdownField = (ns, propName, options, label, required = false, size = "js-width-50", help, disabled = false) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3151,7 +3122,7 @@ System.register("_BaseApp/src/theme/theme-dropdown", [], function (exports_18, c
         </div>
     </div>`;
             });
-            exports_18("renderDropdownInline", renderDropdownInline = (ns, propName, options, required = false, disabled = false) => {
+            exports_17("renderDropdownInline", renderDropdownInline = (ns, propName, options, required = false, disabled = false) => {
                 return `
     <div class="field">
         <div class="select">
@@ -3165,7 +3136,7 @@ ${disabled ? "disabled tabindex='-1'" : ""}>
     </div>
 `;
             });
-            exports_18("renderDropdownExInline", renderDropdownExInline = (ns, propName, text, items, option) => {
+            exports_17("renderDropdownExInline", renderDropdownExInline = (ns, propName, text, items, option) => {
                 return `
     <div class="field">
 <div class="dropdown ${option.hoverable ? "is-hoverable" : ""}" ${!option.hoverable ? `onclick="this.classList.toggle('is-active')"` : ""}>
@@ -3186,13 +3157,13 @@ ${disabled ? "disabled tabindex='-1'" : ""}>
     </div>
 `;
             });
-            exports_18("renderDropdownNaked", renderDropdownNaked = (ns, propName, options, required = false, disabled = false) => {
+            exports_17("renderDropdownNaked", renderDropdownNaked = (ns, propName, options, required = false, disabled = false) => {
                 return `
     <select id="${ns}_${propName}" onchange="${ns}.onchange(this)" ${required ? "required='required'" : ""} ${disabled ? "disabled tabindex='-1'" : ""}>
         ${options}
     </select>`;
             });
-            exports_18("renderDropdownFilter", renderDropdownFilter = (ns, propName, options, label, required = false, size = "", help) => {
+            exports_17("renderDropdownFilter", renderDropdownFilter = (ns, propName, options, label, required = false, size = "", help) => {
                 return `
     <div class="field">
         <label class="label ${required ? "js-required" : ""}">${label}</label>
@@ -3206,16 +3177,16 @@ ${disabled ? "disabled tabindex='-1'" : ""}>
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_18("renderOptions", renderOptions = (list, selectedId, hasEmptyOption, emptyText = "") => {
+            exports_17("renderOptions", renderOptions = (list, selectedId, hasEmptyOption, emptyText = "") => {
                 return renderOptionsFun(list, selectedId, hasEmptyOption, emptyText, (item) => item.description);
             });
-            exports_18("renderOptionsShowCode", renderOptionsShowCode = (list, selectedId, hasEmptyOption, emptyText = "") => {
+            exports_17("renderOptionsShowCode", renderOptionsShowCode = (list, selectedId, hasEmptyOption, emptyText = "") => {
                 return renderOptionsFun(list, selectedId, hasEmptyOption, emptyText, (item) => item.code);
             });
-            exports_18("renderOptionsShowBoth", renderOptionsShowBoth = (list, selectedId, hasEmptyOption, emptyText = "") => {
+            exports_17("renderOptionsShowBoth", renderOptionsShowBoth = (list, selectedId, hasEmptyOption, emptyText = "") => {
                 return renderOptionsFun(list, selectedId, hasEmptyOption, emptyText, (item) => `${item.code}     ${item.description}`);
             });
-            exports_18("renderOptionsFun", renderOptionsFun = (list, selectedId, hasEmptyOption, emptyText = "", fun) => {
+            exports_17("renderOptionsFun", renderOptionsFun = (list, selectedId, hasEmptyOption, emptyText = "", fun) => {
                 if (hasEmptyOption) {
                     let emptySelected = (selectedId == undefined) || (list.findIndex(one => one.id == selectedId) == -1);
                     return list.reduce((html, entry) => {
@@ -3230,7 +3201,7 @@ ${disabled ? "disabled tabindex='-1'" : ""}>
                         return html + `<option value="${entry.id}" ${selected ? "selected" : ""}>${fun(entry)}</option>`;
                     }, "");
             });
-            exports_18("renderItems", renderItems = (list, selectedId, hasEmptyOption, emptyText = "") => {
+            exports_17("renderItems", renderItems = (list, selectedId, hasEmptyOption, emptyText = "") => {
                 if (hasEmptyOption) {
                     let emptySelected = (selectedId == undefined) || (list.findIndex(one => one.id == selectedId) == -1);
                     return list.reduce((html, entry) => {
@@ -3245,21 +3216,21 @@ ${disabled ? "disabled tabindex='-1'" : ""}>
                         return html + `<div data-value="${entry.id}" class="dropdown-item ${selected ? "is-active" : ""}">${entry.description}</div>`;
                     }, "");
             });
-            exports_18("renderNullableBooleanOptions", renderNullableBooleanOptions = (value, description) => {
+            exports_17("renderNullableBooleanOptions", renderNullableBooleanOptions = (value, description) => {
                 return `
     <option value="" ${value == undefined ? "selected" : ""}>${description[0]}</option>
     <option value="true" ${value != undefined && value ? "selected" : ""}>${description[1]}</option>
     <option value="false" ${value != undefined && !value ? "selected" : ""}>${description[2]}</option>
     `;
             });
-            exports_18("renderNullableBooleanOptionsReverse", renderNullableBooleanOptionsReverse = (value, description) => {
+            exports_17("renderNullableBooleanOptionsReverse", renderNullableBooleanOptionsReverse = (value, description) => {
                 return `
     <option value="false" ${value != undefined && !value ? "selected" : ""}>${description[2]}</option>
     <option value="true" ${value != undefined && value ? "selected" : ""}>${description[1]}</option>
     <option value="" ${value == undefined ? "selected" : ""}>${description[0]}</option>
     `;
             });
-            exports_18("renderDatalistOptions", renderDatalistOptions = (list) => {
+            exports_17("renderDatalistOptions", renderDatalistOptions = (list) => {
                 return list.reduce((html, entry) => {
                     return html + `<option value="${entry.description}">`;
                 }, "");
@@ -3267,14 +3238,14 @@ ${disabled ? "disabled tabindex='-1'" : ""}>
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-select", [], function (exports_19, context_19) {
+System.register("_BaseApp/src/theme/theme-select", [], function (exports_18, context_18) {
     "use strict";
     var rawSelect;
-    var __moduleName = context_19 && context_19.id;
+    var __moduleName = context_18 && context_18.id;
     return {
         setters: [],
         execute: function () {
-            exports_19("rawSelect", rawSelect = (ns, propName, options, option) => {
+            exports_18("rawSelect", rawSelect = (ns, propName, options, option) => {
                 return `
 <div class="control ${option.size || ""}">
     <div class="select" style="width:100%">
@@ -3287,14 +3258,14 @@ System.register("_BaseApp/src/theme/theme-select", [], function (exports_19, con
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-radio", [], function (exports_20, context_20) {
+System.register("_BaseApp/src/theme/theme-radio", [], function (exports_19, context_19) {
     "use strict";
     var renderRadioField, renderRadios;
-    var __moduleName = context_20 && context_20.id;
+    var __moduleName = context_19 && context_19.id;
     return {
         setters: [],
         execute: function () {
-            exports_20("renderRadioField", renderRadioField = (radios, label, disabled = false) => {
+            exports_19("renderRadioField", renderRadioField = (radios, label, disabled = false) => {
                 return `
     <div class="field is-horizontal js-radio">
         <div class="field-label"><label class="label">${label}</label></div>
@@ -3305,7 +3276,7 @@ System.register("_BaseApp/src/theme/theme-radio", [], function (exports_20, cont
         </div>
     </div>`;
             });
-            exports_20("renderRadios", renderRadios = (ns, propName, list, selectedId, hasEmptyOption, emptyText = "") => {
+            exports_19("renderRadios", renderRadios = (ns, propName, list, selectedId, hasEmptyOption, emptyText = "") => {
                 if (hasEmptyOption) {
                     return list.reduce((html, entry) => {
                         let checked = (selectedId != undefined && selectedId == entry.id);
@@ -3336,10 +3307,10 @@ System.register("_BaseApp/src/theme/theme-radio", [], function (exports_20, cont
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-filter", ["_BaseApp/src/lib-ts/misc"], function (exports_21, context_21) {
+System.register("_BaseApp/src/theme/theme-filter", ["_BaseApp/src/lib-ts/misc"], function (exports_20, context_20) {
     "use strict";
     var Misc, renderNumberFilter, renderDateFilter, renderDateChanger;
-    var __moduleName = context_21 && context_21.id;
+    var __moduleName = context_20 && context_20.id;
     return {
         setters: [
             function (Misc_4) {
@@ -3347,7 +3318,7 @@ System.register("_BaseApp/src/theme/theme-filter", ["_BaseApp/src/lib-ts/misc"],
             }
         ],
         execute: function () {
-            exports_21("renderNumberFilter", renderNumberFilter = (ns, propName, value, label = "", required = false, help) => {
+            exports_20("renderNumberFilter", renderNumberFilter = (ns, propName, value, label = "", required = false, help) => {
                 return `
     <div class="field">
         <label class="label ${required ? "js-required" : ""}">${label}</label>
@@ -3357,7 +3328,7 @@ System.register("_BaseApp/src/theme/theme-filter", ["_BaseApp/src/lib-ts/misc"],
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_21("renderDateFilter", renderDateFilter = (ns, propName, value, label = "", required = false, help, min = null, max = null) => {
+            exports_20("renderDateFilter", renderDateFilter = (ns, propName, value, label = "", required = false, help, min = null, max = null) => {
                 return `
     <div class="field">
         <label class="label ${required ? "js-required" : ""}">${label}</label>
@@ -3374,7 +3345,7 @@ ${required ? "required='required'" : ""}>
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_21("renderDateChanger", renderDateChanger = (ns, propName, disabled = false) => {
+            exports_20("renderDateChanger", renderDateChanger = (ns, propName, disabled = false) => {
                 return `
 <div class="field" style="margin-left: -0.75rem;">
     <label class="label">&nbsp;</label>
@@ -3388,10 +3359,10 @@ ${required ? "required='required'" : ""}>
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-number", ["_BaseApp/src/lib-ts/misc"], function (exports_22, context_22) {
+System.register("_BaseApp/src/theme/theme-number", ["_BaseApp/src/lib-ts/misc"], function (exports_21, context_21) {
     "use strict";
     var Misc, renderNumberField, renderNumberInline, renderDecimalField, renderDecimalInline, renderNumberField2, renderNumberInline2;
-    var __moduleName = context_22 && context_22.id;
+    var __moduleName = context_21 && context_21.id;
     return {
         setters: [
             function (Misc_5) {
@@ -3399,7 +3370,7 @@ System.register("_BaseApp/src/theme/theme-number", ["_BaseApp/src/lib-ts/misc"],
             }
         ],
         execute: function () {
-            exports_22("renderNumberField", renderNumberField = (ns, propName, value, label, required = false, size = "js-width-10", help) => {
+            exports_21("renderNumberField", renderNumberField = (ns, propName, value, label, required = false, size = "js-width-10", help) => {
                 return `
 <div class="field is-horizontal">
     <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3417,7 +3388,7 @@ System.register("_BaseApp/src/theme/theme-number", ["_BaseApp/src/lib-ts/misc"],
     </div>
 </div>`;
             });
-            exports_22("renderNumberInline", renderNumberInline = (ns, propName, value, required = false, disabled = false) => {
+            exports_21("renderNumberInline", renderNumberInline = (ns, propName, value, required = false, disabled = false) => {
                 return `
 <div class="field">
     <div class="control">
@@ -3431,7 +3402,7 @@ System.register("_BaseApp/src/theme/theme-number", ["_BaseApp/src/lib-ts/misc"],
     </div>
 </div>`;
             });
-            exports_22("renderDecimalField", renderDecimalField = (ns, propName, value, label, option) => {
+            exports_21("renderDecimalField", renderDecimalField = (ns, propName, value, label, option) => {
                 return `
 <div class="field is-horizontal">
     <div class="field-label"><label class="label ${option.required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3440,7 +3411,7 @@ System.register("_BaseApp/src/theme/theme-number", ["_BaseApp/src/lib-ts/misc"],
     </div>
 </div>`;
             });
-            exports_22("renderDecimalInline", renderDecimalInline = (ns, propName, value, option) => {
+            exports_21("renderDecimalInline", renderDecimalInline = (ns, propName, value, option) => {
                 let hasAddonStatic = (option.addonStatic != undefined);
                 let hasAddon = (option.addon != undefined);
                 return `
@@ -3472,7 +3443,7 @@ ${hasAddon ? `
     ${option.help != undefined ? `<p class="help">${option.help}</p>` : ``}
 </div>`;
             });
-            exports_22("renderNumberField2", renderNumberField2 = (ns, propName, value, label, option) => {
+            exports_21("renderNumberField2", renderNumberField2 = (ns, propName, value, label, option) => {
                 return `
 <div class="field is-horizontal">
     <div class="field-label"><label class="label ${option.required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3481,7 +3452,7 @@ ${hasAddon ? `
     </div>
 </div>`;
             });
-            exports_22("renderNumberInline2", renderNumberInline2 = (ns, propName, value, option) => {
+            exports_21("renderNumberInline2", renderNumberInline2 = (ns, propName, value, option) => {
                 let hasAddonStatic = (option.addonStatic != undefined);
                 let hasAddon = (option.addon != undefined);
                 return `
@@ -3517,10 +3488,10 @@ ${hasAddon ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-latlong", ["_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/latlong"], function (exports_23, context_23) {
+System.register("_BaseApp/src/theme/theme-latlong", ["_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/latlong"], function (exports_22, context_22) {
     "use strict";
     var Misc, latlong_1, renderDDMMCC, renderLatField, renderLongField, renderLatLongInline;
-    var __moduleName = context_23 && context_23.id;
+    var __moduleName = context_22 && context_22.id;
     return {
         setters: [
             function (Misc_6) {
@@ -3531,7 +3502,7 @@ System.register("_BaseApp/src/theme/theme-latlong", ["_BaseApp/src/lib-ts/misc",
             }
         ],
         execute: function () {
-            exports_23("renderDDMMCC", renderDDMMCC = (ns, isDDMMCC) => {
+            exports_22("renderDDMMCC", renderDDMMCC = (ns, isDDMMCC) => {
                 return `
 <div class="field is-horizontal">
     <div class="field-label">
@@ -3549,7 +3520,7 @@ System.register("_BaseApp/src/theme/theme-latlong", ["_BaseApp/src/lib-ts/misc",
 </div>
 `;
             });
-            exports_23("renderLatField", renderLatField = (ns, propName, value, label, required = false, size = "", help, isDDMMCC = false) => {
+            exports_22("renderLatField", renderLatField = (ns, propName, value, label, required = false, size = "", help, isDDMMCC = false) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3558,7 +3529,7 @@ System.register("_BaseApp/src/theme/theme-latlong", ["_BaseApp/src/lib-ts/misc",
         </div>
     </div>`;
             });
-            exports_23("renderLongField", renderLongField = (ns, propName, value, label, required = false, size = "", help, isDDMMCC = false) => {
+            exports_22("renderLongField", renderLongField = (ns, propName, value, label, required = false, size = "", help, isDDMMCC = false) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3567,7 +3538,7 @@ System.register("_BaseApp/src/theme/theme-latlong", ["_BaseApp/src/lib-ts/misc",
         </div>
     </div>`;
             });
-            exports_23("renderLatLongInline", renderLatLongInline = (ns, propName, value, required = false, size = "", help, isLongitude = false, isDDMMCC = false) => {
+            exports_22("renderLatLongInline", renderLatLongInline = (ns, propName, value, required = false, size = "", help, isLongitude = false, isDDMMCC = false) => {
                 return `
     <div class="field has-addons">
         <div class="control ${size}">
@@ -3594,10 +3565,10 @@ ${isDDMMCC ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-text", ["_BaseApp/src/lib-ts/misc"], function (exports_24, context_24) {
+System.register("_BaseApp/src/theme/theme-text", ["_BaseApp/src/lib-ts/misc"], function (exports_23, context_23) {
     "use strict";
     var Misc, renderTextField, renderTextField2, renderTextInline, renderTextInline2, renderTextareaField, renderTextareaField_V, renderTextareaInline, renderTextareaFieldWithMarkdown, rawText;
-    var __moduleName = context_24 && context_24.id;
+    var __moduleName = context_23 && context_23.id;
     return {
         setters: [
             function (Misc_7) {
@@ -3605,7 +3576,7 @@ System.register("_BaseApp/src/theme/theme-text", ["_BaseApp/src/lib-ts/misc"], f
             }
         ],
         execute: function () {
-            exports_24("renderTextField", renderTextField = (ns, propName, value, label, maxlength, required = false, size = "", help) => {
+            exports_23("renderTextField", renderTextField = (ns, propName, value, label, maxlength, required = false, size = "", help) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3614,7 +3585,7 @@ System.register("_BaseApp/src/theme/theme-text", ["_BaseApp/src/lib-ts/misc"], f
         </div>
     </div>`;
             });
-            exports_24("renderTextField2", renderTextField2 = (ns, propName, value, label, maxlength, option) => {
+            exports_23("renderTextField2", renderTextField2 = (ns, propName, value, label, maxlength, option) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${option.required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3623,7 +3594,7 @@ System.register("_BaseApp/src/theme/theme-text", ["_BaseApp/src/lib-ts/misc"], f
         </div>
     </div>`;
             });
-            exports_24("renderTextInline", renderTextInline = (ns, propName, value, maxlength, required = false, size = "", help, datalist) => {
+            exports_23("renderTextInline", renderTextInline = (ns, propName, value, maxlength, required = false, size = "", help, datalist) => {
                 return `
     <div class="field">
         <div class="control ${size}">
@@ -3632,7 +3603,7 @@ System.register("_BaseApp/src/theme/theme-text", ["_BaseApp/src/lib-ts/misc"], f
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_24("renderTextInline2", renderTextInline2 = (ns, propName, value, maxlength, option) => {
+            exports_23("renderTextInline2", renderTextInline2 = (ns, propName, value, maxlength, option) => {
                 let hasAddonStatic = (option.addonStatic != undefined);
                 let hasAddon = (option.addon != undefined);
                 let hasAddonHead = (option.addonHead != undefined);
@@ -3669,7 +3640,7 @@ ${hasAddon ? `
     ${option.help != undefined ? `<p class="help">${option.help}</p>` : ``}
     </div>`;
             });
-            exports_24("renderTextareaField", renderTextareaField = (ns, propName, value, label, maxlength = 0, required = false, help, rows = 2) => {
+            exports_23("renderTextareaField", renderTextareaField = (ns, propName, value, label, maxlength = 0, required = false, help, rows = 2) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3678,7 +3649,7 @@ ${hasAddon ? `
         </div>
     </div>`;
             });
-            exports_24("renderTextareaField_V", renderTextareaField_V = (ns, propName, value, label, maxlength = 0, required = false, help, rows = 2, event = "onchange") => {
+            exports_23("renderTextareaField_V", renderTextareaField_V = (ns, propName, value, label, maxlength = 0, required = false, help, rows = 2, event = "onchange") => {
                 return `
     <div class="field">
         <label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label>
@@ -3688,7 +3659,7 @@ ${hasAddon ? `
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_24("renderTextareaInline", renderTextareaInline = (ns, propName, value, maxlength = 0, required = false, help, rows = 2) => {
+            exports_23("renderTextareaInline", renderTextareaInline = (ns, propName, value, maxlength = 0, required = false, help, rows = 2) => {
                 return `
     <div class="field">
         <div class="control">
@@ -3697,7 +3668,7 @@ ${hasAddon ? `
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_24("renderTextareaFieldWithMarkdown", renderTextareaFieldWithMarkdown = (ns, propName, value, label, maxlength = 0, required = false, help, rows = 2, showHtml = false) => {
+            exports_23("renderTextareaFieldWithMarkdown", renderTextareaFieldWithMarkdown = (ns, propName, value, label, maxlength = 0, required = false, help, rows = 2, showHtml = false) => {
                 return `
     <div class="field is-horizontal">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}" for="${ns}_${propName}">${label}</label></div>
@@ -3716,7 +3687,7 @@ ${hasAddon ? `
         </div>
     </div>`;
             });
-            exports_24("rawText", rawText = (ns, propName, value, option) => {
+            exports_23("rawText", rawText = (ns, propName, value, option) => {
                 return `
 <input type="text" class="input ${option.size || ""} ${option.class || ""}" ${option.style ? `style="${option.style}"` : ""} id="${ns}_${propName}" value="${Misc.toInputText(value)}" onchange="${ns}.onchange(this)" ${option.max != undefined ? `maxlength="${option.max}"` : ""} ${option.required ? "required='required'" : ""}>
 `;
@@ -3724,10 +3695,10 @@ ${hasAddon ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-date", ["_BaseApp/src/lib-ts/misc"], function (exports_25, context_25) {
+System.register("_BaseApp/src/theme/theme-date", ["_BaseApp/src/lib-ts/misc"], function (exports_24, context_24) {
     "use strict";
     var Misc, renderDateInline, renderDateField, renderDateTimeField, renderDateExInline;
-    var __moduleName = context_25 && context_25.id;
+    var __moduleName = context_24 && context_24.id;
     return {
         setters: [
             function (Misc_8) {
@@ -3735,7 +3706,7 @@ System.register("_BaseApp/src/theme/theme-date", ["_BaseApp/src/lib-ts/misc"], f
             }
         ],
         execute: function () {
-            exports_25("renderDateInline", renderDateInline = (ns, propName, value, option) => {
+            exports_24("renderDateInline", renderDateInline = (ns, propName, value, option) => {
                 return `
     <div class="field">
         <div class="control">
@@ -3807,7 +3778,7 @@ ${option.disabled ? "tabindex='-1' style='pointer-events:none'" : ""}>
         </div>
     </div>`;
             };
-            exports_25("renderDateExInline", renderDateExInline = (ns, propName, value, option) => {
+            exports_24("renderDateExInline", renderDateExInline = (ns, propName, value, option) => {
                 return `
     <div class="field">
         <div class="control" style="width: 90px;">
@@ -3826,10 +3797,10 @@ ${option.disabled ? "tabindex='-1' style='pointer-events:none'" : ""}>
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-calendar", ["_BaseApp/src/lib-ts/misc"], function (exports_26, context_26) {
+System.register("_BaseApp/src/theme/theme-calendar", ["_BaseApp/src/lib-ts/misc"], function (exports_25, context_25) {
     "use strict";
     var Misc, renderCalendarField, renderCalendarFilter, renderCalendarInline;
-    var __moduleName = context_26 && context_26.id;
+    var __moduleName = context_25 && context_25.id;
     return {
         setters: [
             function (Misc_9) {
@@ -3837,7 +3808,7 @@ System.register("_BaseApp/src/theme/theme-calendar", ["_BaseApp/src/lib-ts/misc"
             }
         ],
         execute: function () {
-            exports_26("renderCalendarField", renderCalendarField = (ns, propName, calendar, label, option = {}) => {
+            exports_25("renderCalendarField", renderCalendarField = (ns, propName, calendar, label, option = {}) => {
                 let input_id = `${ns}_${propName}`;
                 return `
     <div class="field is-horizontal">
@@ -3847,14 +3818,14 @@ System.register("_BaseApp/src/theme/theme-calendar", ["_BaseApp/src/lib-ts/misc"
         </div>
     </div>`;
             });
-            exports_26("renderCalendarFilter", renderCalendarFilter = (ns, propName, calendar, label, option = {}) => {
+            exports_25("renderCalendarFilter", renderCalendarFilter = (ns, propName, calendar, label, option = {}) => {
                 return `
     <div class="field">
         <label class="label ${option.required ? "js-required" : ""}">${label}</label>
 ${renderCalendarInline(ns, propName, calendar, option)}
     </div>`;
             });
-            exports_26("renderCalendarInline", renderCalendarInline = (ns, propName, calendar, option) => {
+            exports_25("renderCalendarInline", renderCalendarInline = (ns, propName, calendar, option) => {
                 let input_id = `${ns}_${propName}`;
                 return `
     <div id="${input_id}_wrapper" class="field-body">
@@ -3918,10 +3889,10 @@ ${calendar.hasChanger ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"], function (exports_27, context_27) {
+System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"], function (exports_26, context_26) {
     "use strict";
     var Misc, renderStaticField, renderStaticField2, renderStaticHtmlField, renderStaticField_V, renderStaticInline, renderStaticInline2;
-    var __moduleName = context_27 && context_27.id;
+    var __moduleName = context_26 && context_26.id;
     return {
         setters: [
             function (Misc_10) {
@@ -3929,7 +3900,7 @@ System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"],
             }
         ],
         execute: function () {
-            exports_27("renderStaticField", renderStaticField = (value, label, help, required = false) => {
+            exports_26("renderStaticField", renderStaticField = (value, label, help, required = false) => {
                 return `
     <div class="field is-horizontal js-field-static">
         <div class="field-label"><label class="label ${required ? "js-required" : ""}">${label}</label></div>
@@ -3941,7 +3912,7 @@ System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"],
         </div>
     </div>`;
             });
-            exports_27("renderStaticField2", renderStaticField2 = (value, label, option) => {
+            exports_26("renderStaticField2", renderStaticField2 = (value, label, option) => {
                 return `
 <div class="field is-horizontal js-field-static">
     <div class="field-label"><label class="label">${label}</label></div>
@@ -3950,7 +3921,7 @@ System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"],
     </div>
 </div>`;
             });
-            exports_27("renderStaticHtmlField", renderStaticHtmlField = (value, label, help) => {
+            exports_26("renderStaticHtmlField", renderStaticHtmlField = (value, label, help) => {
                 return `
     <div class="field is-horizontal js-field-static">
         <div class="field-label"><label class="label">${label}</label></div>
@@ -3962,7 +3933,7 @@ System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"],
         </div>
     </div>`;
             });
-            exports_27("renderStaticField_V", renderStaticField_V = (value, label, help, extraStyle = "") => {
+            exports_26("renderStaticField_V", renderStaticField_V = (value, label, help, extraStyle = "") => {
                 return `
     <div class="field">
         <label class="label">${label}</label>
@@ -3970,13 +3941,13 @@ System.register("_BaseApp/src/theme/theme-static", ["_BaseApp/src/lib-ts/misc"],
         ${help != undefined ? `<p class="help">${help}</p>` : ``}
     </div>`;
             });
-            exports_27("renderStaticInline", renderStaticInline = (value) => {
+            exports_26("renderStaticInline", renderStaticInline = (value) => {
                 return `
     <div class="field">
         <div class="field-body"><span>${value}</span></div>
     </div>`;
             });
-            exports_27("renderStaticInline2", renderStaticInline2 = (value, option) => {
+            exports_26("renderStaticInline2", renderStaticInline2 = (value, option) => {
                 let hasAddonStatic = (option.addonStatic != undefined);
                 let hasAddon = (option.addon != undefined);
                 return `
@@ -4004,14 +3975,14 @@ ${hasAddon ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-button", [], function (exports_28, context_28) {
+System.register("_BaseApp/src/theme/theme-button", [], function (exports_27, context_27) {
     "use strict";
     var renderButtonWithConfirm, renderButtonWithConfirmChoices, renderButton;
-    var __moduleName = context_28 && context_28.id;
+    var __moduleName = context_27 && context_27.id;
     return {
         setters: [],
         execute: function () {
-            exports_28("renderButtonWithConfirm", renderButtonWithConfirm = (title, icon, items, onclick, disabled = false, active = false, hoverable = false, ontoggle = null, valid = true) => {
+            exports_27("renderButtonWithConfirm", renderButtonWithConfirm = (title, icon, items, onclick, disabled = false, active = false, hoverable = false, ontoggle = null, valid = true) => {
                 let uid = new Date().getTime();
                 let tag = (disabled ? "p" : "a");
                 let itemsHtml = "";
@@ -4044,7 +4015,7 @@ ${valid ? `
     </div>
 </div>`;
             });
-            exports_28("renderButtonWithConfirmChoices", renderButtonWithConfirmChoices = (title, icon, helpText, choices, disabled = false) => {
+            exports_27("renderButtonWithConfirmChoices", renderButtonWithConfirmChoices = (title, icon, helpText, choices, disabled = false) => {
                 let uid = new Date().getTime();
                 let tag = (disabled ? "p" : "a");
                 let choiceTemplate = (item) => {
@@ -4073,7 +4044,7 @@ ${valid ? `
     </div>
 </div>`;
             });
-            exports_28("renderButton", renderButton = (title, icon, onclick, disabled = false) => {
+            exports_27("renderButton", renderButton = (title, icon, onclick, disabled = false) => {
                 return `
 <button class="button" onclick="${onclick}" ${disabled ? "disabled" : ""}>
     <span class="icon"><i class="${icon}"></i></span>
@@ -4083,10 +4054,10 @@ ${valid ? `
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-modal", ["_BaseApp/src/lib-ts/domlib"], function (exports_29, context_29) {
+System.register("_BaseApp/src/theme/theme-modal", ["_BaseApp/src/lib-ts/domlib"], function (exports_28, context_28) {
     "use strict";
     var domlib, renderModalDelete, openModal, closeModal;
-    var __moduleName = context_29 && context_29.id;
+    var __moduleName = context_28 && context_28.id;
     return {
         setters: [
             function (domlib_1) {
@@ -4094,7 +4065,7 @@ System.register("_BaseApp/src/theme/theme-modal", ["_BaseApp/src/lib-ts/domlib"]
             }
         ],
         execute: function () {
-            exports_29("renderModalDelete", renderModalDelete = (id, onclick) => {
+            exports_28("renderModalDelete", renderModalDelete = (id, onclick) => {
                 return `
 <div class="modal js-modal-delete" id="${id}" js-skip-render-class="is-active">
     <div class="modal-background" onclick="App_Theme.closeModal(this);"></div>
@@ -4126,26 +4097,26 @@ System.register("_BaseApp/src/theme/theme-modal", ["_BaseApp/src/lib-ts/domlib"]
     </div>
 </div>`;
             });
-            exports_29("openModal", openModal = (id) => {
+            exports_28("openModal", openModal = (id) => {
                 document.getElementById(id).classList.add("is-active");
             });
-            exports_29("closeModal", closeModal = (element) => {
+            exports_28("closeModal", closeModal = (element) => {
                 domlib.closestByClassName(element, "modal").classList.remove("is-active");
             });
         }
     };
 });
-System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme-action", "_BaseApp/src/theme/theme-checkbox", "_BaseApp/src/theme/theme-dropdown", "_BaseApp/src/theme/theme-select", "_BaseApp/src/theme/theme-radio", "_BaseApp/src/theme/theme-filter", "_BaseApp/src/theme/theme-number", "_BaseApp/src/theme/theme-latlong", "_BaseApp/src/theme/theme-text", "_BaseApp/src/theme/theme-date", "_BaseApp/src/theme/theme-calendar", "_BaseApp/src/theme/theme-static", "_BaseApp/src/theme/theme-button", "_BaseApp/src/theme/theme-autocomplete", "_BaseApp/src/theme/theme-modal"], function (exports_30, context_30) {
+System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme-action", "_BaseApp/src/theme/theme-checkbox", "_BaseApp/src/theme/theme-dropdown", "_BaseApp/src/theme/theme-select", "_BaseApp/src/theme/theme-radio", "_BaseApp/src/theme/theme-filter", "_BaseApp/src/theme/theme-number", "_BaseApp/src/theme/theme-latlong", "_BaseApp/src/theme/theme-text", "_BaseApp/src/theme/theme-date", "_BaseApp/src/theme/theme-calendar", "_BaseApp/src/theme/theme-static", "_BaseApp/src/theme/theme-button", "_BaseApp/src/theme/theme-autocomplete", "_BaseApp/src/theme/theme-modal"], function (exports_29, context_29) {
     "use strict";
     var Misc, NS, toggleActive, wrapContent, warningTemplate, fatalErrorTemplate403, fatalErrorTemplate404, dirtyTemplate, unexpectedTemplate, inConstruction, onburger, renderBlame, renderFileUpload, renderStyleForFixedWidthTable, renderStyleForScrollableTable, wrapFieldset, float_menu_button, scrollTo, field;
-    var __moduleName = context_30 && context_30.id;
+    var __moduleName = context_29 && context_29.id;
     return {
         setters: [
             function (Misc_11) {
                 Misc = Misc_11;
             },
             function (theme_action_1_1) {
-                exports_30({
+                exports_29({
                     "renderActionButtons": theme_action_1_1["renderActionButtons"],
                     "renderActionButtons2": theme_action_1_1["renderActionButtons2"],
                     "renderInlineActionButtons": theme_action_1_1["renderInlineActionButtons"],
@@ -4169,7 +4140,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_checkbox_1_1) {
-                exports_30({
+                exports_29({
                     "rawCheckbox": theme_checkbox_1_1["rawCheckbox"],
                     "renderCheckboxField": theme_checkbox_1_1["renderCheckboxField"],
                     "renderCheckboxInline": theme_checkbox_1_1["renderCheckboxInline"],
@@ -4179,7 +4150,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_dropdown_1_1) {
-                exports_30({
+                exports_29({
                     "renderDropdownField": theme_dropdown_1_1["renderDropdownField"],
                     "renderDropdownInline": theme_dropdown_1_1["renderDropdownInline"],
                     "renderDropdownExInline": theme_dropdown_1_1["renderDropdownExInline"],
@@ -4196,25 +4167,25 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_select_1_1) {
-                exports_30({
+                exports_29({
                     "rawSelect": theme_select_1_1["rawSelect"]
                 });
             },
             function (theme_radio_1_1) {
-                exports_30({
+                exports_29({
                     "renderRadios": theme_radio_1_1["renderRadios"],
                     "renderRadioField": theme_radio_1_1["renderRadioField"]
                 });
             },
             function (theme_filter_1_1) {
-                exports_30({
+                exports_29({
                     "renderNumberFilter": theme_filter_1_1["renderNumberFilter"],
                     "renderDateFilter": theme_filter_1_1["renderDateFilter"],
                     "renderDateChanger": theme_filter_1_1["renderDateChanger"]
                 });
             },
             function (theme_number_1_1) {
-                exports_30({
+                exports_29({
                     "renderNumberField": theme_number_1_1["renderNumberField"],
                     "renderNumberField2": theme_number_1_1["renderNumberField2"],
                     "renderNumberInline": theme_number_1_1["renderNumberInline"],
@@ -4224,7 +4195,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_latlong_1_1) {
-                exports_30({
+                exports_29({
                     "renderLatField": theme_latlong_1_1["renderLatField"],
                     "renderLongField": theme_latlong_1_1["renderLongField"],
                     "renderLatLongInline": theme_latlong_1_1["renderLatLongInline"],
@@ -4232,7 +4203,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_text_1_1) {
-                exports_30({
+                exports_29({
                     "rawText": theme_text_1_1["rawText"],
                     "renderTextField": theme_text_1_1["renderTextField"],
                     "renderTextField2": theme_text_1_1["renderTextField2"],
@@ -4245,20 +4216,20 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_date_1_1) {
-                exports_30({
+                exports_29({
                     "renderDateInline": theme_date_1_1["renderDateInline"],
                     "renderDateExInline": theme_date_1_1["renderDateExInline"]
                 });
             },
             function (theme_calendar_1_1) {
-                exports_30({
+                exports_29({
                     "renderCalendarField": theme_calendar_1_1["renderCalendarField"],
                     "renderCalendarInline": theme_calendar_1_1["renderCalendarInline"],
                     "renderCalendarFilter": theme_calendar_1_1["renderCalendarFilter"]
                 });
             },
             function (theme_static_1_1) {
-                exports_30({
+                exports_29({
                     "renderStaticField": theme_static_1_1["renderStaticField"],
                     "renderStaticField2": theme_static_1_1["renderStaticField2"],
                     "renderStaticHtmlField": theme_static_1_1["renderStaticHtmlField"],
@@ -4267,20 +4238,20 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
                 });
             },
             function (theme_button_1_1) {
-                exports_30({
+                exports_29({
                     "renderButtonWithConfirm": theme_button_1_1["renderButtonWithConfirm"],
                     "renderButtonWithConfirmChoices": theme_button_1_1["renderButtonWithConfirmChoices"],
                     "renderButton": theme_button_1_1["renderButton"]
                 });
             },
             function (theme_autocomplete_1_1) {
-                exports_30({
+                exports_29({
                     "renderAutocompleteField": theme_autocomplete_1_1["renderAutocompleteField"],
                     "renderAutocompleteInline": theme_autocomplete_1_1["renderAutocompleteInline"]
                 });
             },
             function (theme_modal_1_1) {
-                exports_30({
+                exports_29({
                     "renderModalDelete": theme_modal_1_1["renderModalDelete"],
                     "openModal": theme_modal_1_1["openModal"],
                     "closeModal": theme_modal_1_1["closeModal"]
@@ -4288,36 +4259,36 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
             }
         ],
         execute: function () {
-            exports_30("NS", NS = "App_Theme");
-            exports_30("toggleActive", toggleActive = (element) => {
+            exports_29("NS", NS = "App_Theme");
+            exports_29("toggleActive", toggleActive = (element) => {
                 element.classList.toggle("is-active");
             });
-            exports_30("wrapContent", wrapContent = (contentClass, html) => {
+            exports_29("wrapContent", wrapContent = (contentClass, html) => {
                 if (html != undefined && html.length > 0)
                     return `<div class="content ${contentClass}">${html}</div>`;
                 return "";
             });
-            exports_30("warningTemplate", warningTemplate = (errorMessages) => {
+            exports_29("warningTemplate", warningTemplate = (errorMessages) => {
                 return errorMessages.reduce((text, error) => text +
                     `<div class="notification is-danger">
         <i class="fa fa-exclamation-triangle"></i>&nbsp;${error}
     </div>`, "");
             });
-            exports_30("fatalErrorTemplate403", fatalErrorTemplate403 = () => {
+            exports_29("fatalErrorTemplate403", fatalErrorTemplate403 = () => {
                 return `
     <div class="notification is-danger">
         <h3><i class="fas fa-skull-crossbones"></i>&nbsp;${i18n("Unauthorized")}</h3>
         ${i18n("You don't have the required permission for this operation")}
     </div>`;
             });
-            exports_30("fatalErrorTemplate404", fatalErrorTemplate404 = () => {
+            exports_29("fatalErrorTemplate404", fatalErrorTemplate404 = () => {
                 return `
     <div class="notification is-danger">
         <h3><i class="fas fa-skull-crossbones"></i>&nbsp;${i18n("Failed to fetch page data")}</h3>
         ${i18n("You don't have the required permission for this operation")}
     </div>`;
             });
-            exports_30("dirtyTemplate", dirtyTemplate = (ns, details = null) => {
+            exports_29("dirtyTemplate", dirtyTemplate = (ns, details = null) => {
                 return `
     <div class="notification is-warning">
         <i class="fa fa-exclamation-triangle"></i>
@@ -4325,24 +4296,24 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
         ${details != undefined ? `<br>${details}` : ""}</div>
     </div>`;
             });
-            exports_30("unexpectedTemplate", unexpectedTemplate = () => {
+            exports_29("unexpectedTemplate", unexpectedTemplate = () => {
                 return `<div class="notification is-danger">
         <i class="fa fa-exclamation-triangle"></i>&nbsp;UNEXPECTED ERROR
     </div>`;
             });
-            exports_30("inConstruction", inConstruction = (text = "In Construction") => {
+            exports_29("inConstruction", inConstruction = (text = "In Construction") => {
                 return `
     <div class="notification is-size-4 has-text-centered">
         <span class="icon"><i class="fas fa-wrench"></i></span> ${text}
     </div>
     `;
             });
-            exports_30("onburger", onburger = (element) => {
+            exports_29("onburger", onburger = (element) => {
                 let target = document.getElementById(element.dataset.target);
                 element.classList.toggle("is-active");
                 target.classList.toggle("is-active");
             });
-            exports_30("renderBlame", renderBlame = (obj, isNew) => {
+            exports_29("renderBlame", renderBlame = (obj, isNew) => {
                 if (isNew || obj == undefined || obj.updated == undefined || obj.by == undefined)
                     return "";
                 return `
@@ -4351,7 +4322,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
     </div>
 `;
             });
-            exports_30("renderFileUpload", renderFileUpload = (ns, propName, label, accept = "image/*", isBusy = false) => {
+            exports_29("renderFileUpload", renderFileUpload = (ns, propName, label, accept = "image/*", isBusy = false) => {
                 if (!isBusy)
                     return `
 <div class="level-item">
@@ -4376,7 +4347,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
 </div>
     `;
             });
-            exports_30("renderStyleForFixedWidthTable", renderStyleForFixedWidthTable = (id, widths) => {
+            exports_29("renderStyleForFixedWidthTable", renderStyleForFixedWidthTable = (id, widths) => {
                 let table_width = widths.reduce((sum, width) => sum + width, 0);
                 let thead = widths.reduce((html, width, index) => {
                     return html + `#${id} thead th:nth-child(${index + 1}) { width: ${width}px; min-width: ${width}px; }`;
@@ -4392,7 +4363,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
 </style>
 `;
             });
-            exports_30("renderStyleForScrollableTable", renderStyleForScrollableTable = (id, rows, widths) => {
+            exports_29("renderStyleForScrollableTable", renderStyleForScrollableTable = (id, rows, widths) => {
                 let table_width = widths.reduce((sum, width) => sum + width, 0);
                 let table_th_height = 32;
                 let scrollbar_width = 16 + 4;
@@ -4419,7 +4390,7 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
 </style>
 `;
             });
-            exports_30("wrapFieldset", wrapFieldset = (legend, content, actions = null) => {
+            exports_29("wrapFieldset", wrapFieldset = (legend, content, actions = null) => {
                 var id = legend.split(" ").join("");
                 return `
 <fieldset id="${id}">
@@ -4428,17 +4399,17 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
 </fieldset>
 `;
             });
-            exports_30("float_menu_button", float_menu_button = (title, id) => {
+            exports_29("float_menu_button", float_menu_button = (title, id) => {
                 return `<button class="button is-text" onclick="${NS}.scrollTo('${id || title}')">${title}</button>`;
             });
-            exports_30("scrollTo", scrollTo = (anchor) => {
+            exports_29("scrollTo", scrollTo = (anchor) => {
                 var id = anchor.replace(/ /g, "");
                 var fieldset = document.getElementById(id);
                 //
                 fieldset.scrollIntoView();
                 setTimeout(function () { window.scrollBy(0, -180); }, 10);
             });
-            exports_30("field", field = (label, controls, required = false, cssclass) => {
+            exports_29("field", field = (label, controls, required = false, cssclass) => {
                 let html;
                 if (typeof controls === "string")
                     html = `<div class="field">` + controls + "</div>";
@@ -4455,10 +4426,10 @@ System.register("_BaseApp/src/theme/theme", ["_BaseApp/src/lib-ts/misc", "_BaseA
         }
     };
 });
-System.register("_BaseApp/src/theme/theme-autocomplete", ["_BaseApp/src/lib-ts/misc"], function (exports_31, context_31) {
+System.register("_BaseApp/src/theme/theme-autocomplete", ["_BaseApp/src/lib-ts/misc"], function (exports_30, context_30) {
     "use strict";
     var Misc, renderAutocompleteField, renderAutocompleteInline;
-    var __moduleName = context_31 && context_31.id;
+    var __moduleName = context_30 && context_30.id;
     return {
         setters: [
             function (Misc_12) {
@@ -4466,7 +4437,7 @@ System.register("_BaseApp/src/theme/theme-autocomplete", ["_BaseApp/src/lib-ts/m
             }
         ],
         execute: function () {
-            exports_31("renderAutocompleteField", renderAutocompleteField = (ns, propName, autocomplete, label, option) => {
+            exports_30("renderAutocompleteField", renderAutocompleteField = (ns, propName, autocomplete, label, option) => {
                 let input_id = `${ns}_${propName}`;
                 return `
     <div class="field is-horizontal">
@@ -4476,7 +4447,7 @@ System.register("_BaseApp/src/theme/theme-autocomplete", ["_BaseApp/src/lib-ts/m
         </div>
     </div>`;
             });
-            exports_31("renderAutocompleteInline", renderAutocompleteInline = (ns, propName, autocomplete, option) => {
+            exports_30("renderAutocompleteInline", renderAutocompleteInline = (ns, propName, autocomplete, option) => {
                 let hasAddonStatic = (option.addonStatic != undefined);
                 let hasAddon = (option.addon != undefined);
                 let hasAddonHead = (option.addonHead != undefined);
@@ -4522,14 +4493,14 @@ ${hasAddon ? `
         }
     };
 });
-System.register("src/fr-CA", [], function (exports_32, context_32) {
+System.register("src/fr-CA", [], function (exports_31, context_31) {
     "use strict";
     var fr_CA;
-    var __moduleName = context_32 && context_32.id;
+    var __moduleName = context_31 && context_31.id;
     return {
         setters: [],
         execute: function () {
-            exports_32("fr_CA", fr_CA = {
+            exports_31("fr_CA", fr_CA = {
                 values: {
                     "HOME": "Accueil",
                     "Sign out": "Déconnexion",
@@ -4560,15 +4531,15 @@ System.register("src/fr-CA", [], function (exports_32, context_32) {
         }
     };
 });
-System.register("src/permission", ["_BaseApp/src/auth", "_BaseApp/src/core/app"], function (exports_33, context_33) {
+System.register("src/permission", ["_BaseApp/src/auth", "_BaseApp/src/core/app"], function (exports_32, context_32) {
     "use strict";
     var Auth, app_1, ROLE_SUPPORT, default_cie, isSupport, hasPermission, getCie, canDoThis, canDoThat, Feature, feature, assignFeature;
-    var __moduleName = context_33 && context_33.id;
+    var __moduleName = context_32 && context_32.id;
     return {
         setters: [
             function (Auth_4) {
                 Auth = Auth_4;
-                exports_33({
+                exports_32({
                     "getEmail": Auth_4["getEmail"],
                     "getName": Auth_4["getName"],
                     "getUID": Auth_4["getUID"],
@@ -4583,17 +4554,17 @@ System.register("src/permission", ["_BaseApp/src/auth", "_BaseApp/src/core/app"]
         ],
         execute: function () {
             ROLE_SUPPORT = 1;
-            exports_33("isSupport", isSupport = () => { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); });
+            exports_32("isSupport", isSupport = () => { return (Auth.getRoles().indexOf(ROLE_SUPPORT) != -1); });
             hasPermission = (permid) => { return (Auth.getPermissions().indexOf(permid) != -1) || isSupport(); };
             // Default cie
-            exports_33("getCie", getCie = (params) => {
+            exports_32("getCie", getCie = (params) => {
                 if (isSupport() && params && params.length && params[0].startsWith("?cie="))
                     default_cie = +params[0].substr(5);
                 return default_cie !== null && default_cie !== void 0 ? default_cie : app_1.cie;
             });
             // Block 100
-            exports_33("canDoThis", canDoThis = () => hasPermission(101));
-            exports_33("canDoThat", canDoThat = () => hasPermission(102));
+            exports_32("canDoThis", canDoThis = () => hasPermission(101));
+            exports_32("canDoThat", canDoThat = () => hasPermission(102));
             Feature = class Feature {
                 constructor() {
                     this.feat = {};
@@ -4604,40 +4575,50 @@ System.register("src/permission", ["_BaseApp/src/auth", "_BaseApp/src/core/app"]
                 get private110() { var _a; return (_a = this.feat.private110) !== null && _a !== void 0 ? _a : []; }
             };
             feature = new Feature();
-            exports_33("assignFeature", assignFeature = (newFeature) => feature.assignFeature(newFeature));
+            exports_32("assignFeature", assignFeature = (newFeature) => feature.assignFeature(newFeature));
         }
     };
 });
-System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/admin/lookupdata"], function (exports_34, context_34) {
+System.register("src/admin/lookupdata", ["_BaseApp/src/core/app"], function (exports_33, context_33) {
     "use strict";
-    var App, yearFilter, dateFilter, cIE, fetch_cIE, get_cIE, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone, region, fetch_region, get_region, office, fetch_office, get_office, job, fetch_job, get_job;
-    var __moduleName = context_34 && context_34.id;
+    var App, yearFilter, dateFilter, authrole, fetch_authrole, editLut, fetch_lutGroup, get_editLut, cIE, fetch_cIE, get_cIE, sortOrderKeys, fetch_sortOrderKeys, get_sortOrderKeys, pays, fetch_pays, get_pays, institutionBanquaire, fetch_institutionBanquaire, get_institutionBanquaire, compte, fetch_compte, get_compte, autreFournisseur, fetch_autreFournisseur, get_autreFournisseur, lot, fetch_lot, get_lot, canton, fetch_canton, get_canton, municipalite, fetch_municipalite, get_municipalite, proprietaire, fetch_proprietaire, get_proprietaire, contingent, fetch_contingent, get_contingent, droit_coupe, fetch_droit_coupe, get_droit_coupe, entente_paiement, fetch_entente_paiement, get_entente_paiement, zone, fetch_zone, get_zone, region, fetch_region, get_region, office, fetch_office, get_office, job, fetch_job, get_job, cat, fetch_cat, get_cat;
+    var __moduleName = context_33 && context_33.id;
     return {
         setters: [
-            function (App_7) {
-                App = App_7;
-            },
-            function (lookupdata_1_1) {
-                exports_34({
-                    "fetch_authrole": lookupdata_1_1["fetch_authrole"],
-                    "authrole": lookupdata_1_1["authrole"],
-                    "fetch_lutGroup": lookupdata_1_1["fetch_lutGroup"],
-                    "get_lutGroup": lookupdata_1_1["get_lutGroup"]
-                });
+            function (App_6) {
+                App = App_6;
             }
         ],
         execute: function () {
             yearFilter = (one, year) => year >= one.started && (one.ended == undefined || year <= one.ended);
             dateFilter = (one, date) => date >= one.started && (one.ended == undefined || date <= one.ended);
-            exports_34("fetch_cIE", fetch_cIE = () => {
+            exports_33("fetch_authrole", fetch_authrole = () => {
+                return function (data) {
+                    if (authrole != undefined && authrole.length > 0)
+                        return;
+                    return App.GET(`/account/role`).then(json => { exports_33("authrole", authrole = json); });
+                };
+            });
+            exports_33("fetch_lutGroup", fetch_lutGroup = () => {
+                return function (data) {
+                    if (editLut != undefined && editLut.length > 0)
+                        return;
+                    return App.GET(`/lookup/by/edit.lut`).then(json => {
+                        editLut = json;
+                        editLut.forEach(one => one.id = one.parentgroupe);
+                    });
+                };
+            });
+            exports_33("get_editLut", get_editLut = (year) => editLut);
+            exports_33("fetch_cIE", fetch_cIE = () => {
                 return function (data) {
                     if (cIE != undefined && cIE.length > 0)
                         return;
                     return App.GET(`/lookup/by/cie`).then(json => { cIE = json; });
                 };
             });
-            exports_34("get_cIE", get_cIE = (year) => cIE);
-            exports_34("fetch_sortOrderKeys", fetch_sortOrderKeys = () => {
+            exports_33("get_cIE", get_cIE = (year) => cIE);
+            exports_33("fetch_sortOrderKeys", fetch_sortOrderKeys = () => {
                 return function (data) {
                     const fill = (id, description) => {
                         return {
@@ -4653,138 +4634,146 @@ System.register("src/admin/lookupdata", ["_BaseApp/src/core/app", "_BaseApp/src/
                     ];
                 };
             });
-            exports_34("get_sortOrderKeys", get_sortOrderKeys = (year) => sortOrderKeys);
-            exports_34("fetch_pays", fetch_pays = () => {
+            exports_33("get_sortOrderKeys", get_sortOrderKeys = (year) => sortOrderKeys);
+            exports_33("fetch_pays", fetch_pays = () => {
                 return function (data) {
                     if (pays != undefined && pays.length > 0)
                         return;
                     return App.GET(`/lookup/by/pays`).then(json => { pays = json; });
                 };
             });
-            exports_34("get_pays", get_pays = (year) => pays);
-            exports_34("fetch_institutionBanquaire", fetch_institutionBanquaire = () => {
+            exports_33("get_pays", get_pays = (year) => pays);
+            exports_33("fetch_institutionBanquaire", fetch_institutionBanquaire = () => {
                 return function (data) {
                     if (institutionBanquaire != undefined && institutionBanquaire.length > 0)
                         return;
                     return App.GET(`/lookup/by/institutionBanquaire`).then(json => { institutionBanquaire = json; });
                 };
             });
-            exports_34("get_institutionBanquaire", get_institutionBanquaire = (year) => institutionBanquaire);
-            exports_34("fetch_compte", fetch_compte = () => {
+            exports_33("get_institutionBanquaire", get_institutionBanquaire = (year) => institutionBanquaire);
+            exports_33("fetch_compte", fetch_compte = () => {
                 return function (data) {
                     if (compte != undefined && compte.length > 0)
                         return;
                     return App.GET(`/lookup/by/compte`).then(json => { compte = json; });
                 };
             });
-            exports_34("get_compte", get_compte = (year) => compte);
-            exports_34("fetch_autreFournisseur", fetch_autreFournisseur = () => {
+            exports_33("get_compte", get_compte = (year) => compte);
+            exports_33("fetch_autreFournisseur", fetch_autreFournisseur = () => {
                 return function (data) {
                     if (autreFournisseur != undefined && autreFournisseur.length > 0)
                         return;
                     return App.GET(`/lookup/by/autreFournisseur`).then(json => { autreFournisseur = json; });
                 };
             });
-            exports_34("get_autreFournisseur", get_autreFournisseur = (year) => autreFournisseur);
-            exports_34("fetch_lot", fetch_lot = () => {
+            exports_33("get_autreFournisseur", get_autreFournisseur = (year) => autreFournisseur);
+            exports_33("fetch_lot", fetch_lot = () => {
                 return function (data) {
                     if (lot != undefined && lot.length > 0)
                         return;
                     return App.GET(`/lookup/by/lot`).then(json => { lot = json; });
                 };
             });
-            exports_34("get_lot", get_lot = (year) => lot);
-            exports_34("fetch_canton", fetch_canton = () => {
+            exports_33("get_lot", get_lot = (year) => lot);
+            exports_33("fetch_canton", fetch_canton = () => {
                 return function (data) {
                     if (canton != undefined && canton.length > 0)
                         return;
                     return App.GET(`/lookup/by/canton`).then(json => { canton = json; });
                 };
             });
-            exports_34("get_canton", get_canton = (year) => canton);
-            exports_34("fetch_municipalite", fetch_municipalite = () => {
+            exports_33("get_canton", get_canton = (year) => canton);
+            exports_33("fetch_municipalite", fetch_municipalite = () => {
                 return function (data) {
                     if (municipalite != undefined && municipalite.length > 0)
                         return;
                     return App.GET(`/lookup/by/municipalite`).then(json => { municipalite = json; });
                 };
             });
-            exports_34("get_municipalite", get_municipalite = (year) => municipalite);
-            exports_34("fetch_proprietaire", fetch_proprietaire = () => {
+            exports_33("get_municipalite", get_municipalite = (year) => municipalite);
+            exports_33("fetch_proprietaire", fetch_proprietaire = () => {
                 return function (data) {
                     if (proprietaire != undefined && proprietaire.length > 0)
                         return;
                     return App.GET(`/lookup/by/proprietaire`).then(json => { proprietaire = json; });
                 };
             });
-            exports_34("get_proprietaire", get_proprietaire = (year) => proprietaire);
-            exports_34("fetch_contingent", fetch_contingent = () => {
+            exports_33("get_proprietaire", get_proprietaire = (year) => proprietaire);
+            exports_33("fetch_contingent", fetch_contingent = () => {
                 return function (data) {
                     if (contingent != undefined && contingent.length > 0)
                         return;
                     return App.GET(`/lookup/by/contingent`).then(json => { contingent = json; });
                 };
             });
-            exports_34("get_contingent", get_contingent = (year) => contingent);
-            exports_34("fetch_droit_coupe", fetch_droit_coupe = () => {
+            exports_33("get_contingent", get_contingent = (year) => contingent);
+            exports_33("fetch_droit_coupe", fetch_droit_coupe = () => {
                 return function (data) {
                     if (droit_coupe != undefined && droit_coupe.length > 0)
                         return;
                     return App.GET(`/lookup/by/droit_coupe`).then(json => { droit_coupe = json; });
                 };
             });
-            exports_34("get_droit_coupe", get_droit_coupe = (year) => droit_coupe);
-            exports_34("fetch_entente_paiement", fetch_entente_paiement = () => {
+            exports_33("get_droit_coupe", get_droit_coupe = (year) => droit_coupe);
+            exports_33("fetch_entente_paiement", fetch_entente_paiement = () => {
                 return function (data) {
                     if (entente_paiement != undefined && entente_paiement.length > 0)
                         return;
                     return App.GET(`/lookup/by/entente_paiement`).then(json => { entente_paiement = json; });
                 };
             });
-            exports_34("get_entente_paiement", get_entente_paiement = (year) => entente_paiement);
-            exports_34("fetch_zone", fetch_zone = () => {
+            exports_33("get_entente_paiement", get_entente_paiement = (year) => entente_paiement);
+            exports_33("fetch_zone", fetch_zone = () => {
                 return function (data) {
                     if (zone != undefined && zone.length > 0)
                         return;
                     return App.GET(`/lookup/by/zone`).then(json => { zone = json; });
                 };
             });
-            exports_34("get_zone", get_zone = (year) => zone);
-            exports_34("fetch_region", fetch_region = () => {
+            exports_33("get_zone", get_zone = (year) => zone);
+            exports_33("fetch_region", fetch_region = () => {
                 return function (data) {
                     if (region != undefined && region.length > 0)
                         return;
                     return App.GET(`/lookup/by/region`).then(json => { region = json; });
                 };
             });
-            exports_34("get_region", get_region = (year) => region);
-            exports_34("fetch_office", fetch_office = () => {
+            exports_33("get_region", get_region = (year) => region);
+            exports_33("fetch_office", fetch_office = () => {
                 return function (data) {
                     if (office != undefined && office.length > 0)
                         return;
                     return App.GET(`/office/lookup`).then(json => { office = json; });
                 };
             });
-            exports_34("get_office", get_office = (year) => office);
-            exports_34("fetch_job", fetch_job = () => {
+            exports_33("get_office", get_office = (year) => office);
+            exports_33("fetch_job", fetch_job = () => {
                 return function (data) {
                     if (job != undefined && job.length > 0)
                         return;
                     return App.GET(`/job/lookup`).then(json => { job = json; });
                 };
             });
-            exports_34("get_job", get_job = (year) => job);
+            exports_33("get_job", get_job = (year) => job);
+            exports_33("fetch_cat", fetch_cat = () => {
+                return function (data) {
+                    if (cat != undefined && cat.length > 0)
+                        return;
+                    return App.GET(`/lookup/by/cat`).then(json => { cat = json; });
+                };
+            });
+            exports_33("get_cat", get_cat = (year) => cat);
         }
     };
 });
-System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "src/layout"], function (exports_35, context_35) {
+System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "src/layout"], function (exports_34, context_34) {
     "use strict";
     var App, Router, Perm, Layout, NS, menuData, yesterday, today, tomorrow, tomorrow_2, tomorrow_3, tomorrow_4, region, getMenuData, clearMenuData, renderDropdown, menuTemplate, pageTemplate, fetchState, fetch, render, postRender, getFormState, onchange, loadToolsState, saveToolsState;
-    var __moduleName = context_35 && context_35.id;
+    var __moduleName = context_34 && context_34.id;
     return {
         setters: [
-            function (App_8) {
-                App = App_8;
+            function (App_7) {
+                App = App_7;
             },
             function (Router_4) {
                 Router = Router_4;
@@ -4797,8 +4786,8 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
             }
         ],
         execute: function () {
-            exports_35("NS", NS = "App_Home");
-            exports_35("getMenuData", getMenuData = () => {
+            exports_34("NS", NS = "App_Home");
+            exports_34("getMenuData", getMenuData = () => {
                 if (menuData != undefined)
                     return menuData;
                 menuData = [
@@ -5279,10 +5268,10 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                 ];
                 return menuData;
             });
-            exports_35("clearMenuData", clearMenuData = () => {
+            exports_34("clearMenuData", clearMenuData = () => {
                 menuData = null;
             });
-            exports_35("renderDropdown", renderDropdown = (propName, options) => {
+            exports_34("renderDropdown", renderDropdown = (propName, options) => {
                 return `
     <div class="select is-small">
         <select id="${NS}_${propName}" onchange="${NS}.onchange(this)">
@@ -5365,7 +5354,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                 //.then(Lookup.fetch_tools())
                 //.then(() => { saveToolsState(Lookup.get_tools(Perm.getCurrentYear())) })
             };
-            exports_35("fetch", fetch = () => {
+            exports_34("fetch", fetch = () => {
                 App.setRenderDomain(Layout);
                 App.prepareRender(NS, "HOME");
                 Router.registerDirtyExit(null);
@@ -5373,7 +5362,7 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_35("render", render = () => {
+            exports_34("render", render = () => {
                 if (!App.inContext(NS))
                     return "";
                 //
@@ -5382,13 +5371,13 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                 let menu = menuTemplate(getMenuData());
                 return pageTemplate(menu);
             });
-            exports_35("postRender", postRender = () => {
+            exports_34("postRender", postRender = () => {
                 if (!App.inContext(NS))
                     return "";
             });
             getFormState = () => {
             };
-            exports_35("onchange", onchange = (input) => {
+            exports_34("onchange", onchange = (input) => {
                 //state = getFormState();
                 App.render();
             });
@@ -5401,14 +5390,14 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
         }
     };
 });
-System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/permission", "src/layout"], function (exports_36, context_36) {
+System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/permission", "src/layout"], function (exports_35, context_35) {
     "use strict";
     var App, Perm, layout_1, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_36 && context_36.id;
+    var __moduleName = context_35 && context_35.id;
     return {
         setters: [
-            function (App_9) {
-                App = App_9;
+            function (App_8) {
+                App = App_8;
             },
             function (Perm_2) {
                 Perm = Perm_2;
@@ -5418,16 +5407,16 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/permission", 
             }
         ],
         execute: function () {
-            exports_36("icon", icon = "far fa-user");
-            exports_36("prepareMenu", prepareMenu = () => {
+            exports_35("icon", icon = "far fa-user");
+            exports_35("prepareMenu", prepareMenu = () => {
                 layout_1.setOpenedMenu("Administration-Management");
             });
-            exports_36("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
+            exports_35("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isCompany = App.inContext("App_company");
                 let isAccounts = App.inContext("App_accounts");
                 let isAccount = App.inContext("App_account");
                 let isLookups = App.inContext("App_lookups");
-                let isLookup = App.inContext("App_lookup");
+                let isLookup = false && App.inContext("App_lookup");
                 let isSecurity = App.inContext("App_security");
                 let isFiles = window.location.hash.startsWith("#/files/company");
                 let isFile = window.location.hash.startsWith("#/file/company");
@@ -5459,7 +5448,7 @@ ${isAccount ? `
 ` : ``}
 
         <li ${isLookups ? "class='is-active'" : ""}>
-            <a href="#/admin/lookups/profile.key">
+            <a href="#/admin/lookups">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
                 <span>${i18n("Lookups")}</span>
             </a>
@@ -5503,11 +5492,11 @@ ${showFile ? `
 </div>
 `;
             });
-            exports_36("buildTitle", buildTitle = (xtra, defaultText) => {
+            exports_35("buildTitle", buildTitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_36("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
+            exports_35("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -5515,14 +5504,14 @@ ${showFile ? `
     };
 });
 // File: accounts.ts
-System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout"], function (exports_37, context_37) {
+System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout"], function (exports_36, context_36) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, layout_2, NS, key, state, xtra, uiSelectedRow, autoArchiveButton, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_archive, filter_readytoarchive, gotoDetail, create, autoArchive;
-    var __moduleName = context_37 && context_37.id;
+    var __moduleName = context_36 && context_36.id;
     return {
         setters: [
-            function (App_10) {
-                App = App_10;
+            function (App_9) {
+                App = App_9;
             },
             function (Router_5) {
                 Router = Router_5;
@@ -5544,7 +5533,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
             }
         ],
         execute: function () {
-            exports_37("NS", NS = "App_accounts");
+            exports_36("NS", NS = "App_accounts");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "EMAIL", sortDirection: "ASC", filter: { cie: App.cie, archive: undefined, readyToArchive: undefined } }
@@ -5631,7 +5620,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
 </form>
 `;
             };
-            exports_37("fetchState", fetchState = (cie) => {
+            exports_36("fetchState", fetchState = (cie) => {
                 Router.registerDirtyExit(null);
                 state.pager.filter.cie = cie;
                 return App.POST("/account/search/", state.pager)
@@ -5641,7 +5630,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     key = { cie };
                 });
             });
-            exports_37("fetch", fetch = (params) => {
+            exports_36("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
                 App.prepareRender(NS, i18n("accounts"));
                 layout_2.prepareMenu();
@@ -5658,7 +5647,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_37("render", render = () => {
+            exports_36("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5681,11 +5670,11 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 const tab = layout_2.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_37("postRender", postRender = () => {
+            exports_36("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_37("inContext", inContext = () => {
+            exports_36("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (uid) => {
@@ -5698,23 +5687,23 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                     return false;
                 return (uiSelectedRow.uid == uid);
             };
-            exports_37("goto", goto = (pageNo, pageSize) => {
+            exports_36("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_37("sortBy", sortBy = (columnName, direction) => {
+            exports_36("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_37("search", search = (element) => {
+            exports_36("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_37("filter_archive", filter_archive = (element) => {
+            exports_36("filter_archive", filter_archive = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let archive = (value.length > 0 ? value == "true" : undefined);
                 if (archive == state.pager.filter.archive)
@@ -5723,7 +5712,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_37("filter_readytoarchive", filter_readytoarchive = (element) => {
+            exports_36("filter_readytoarchive", filter_readytoarchive = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let readytoarchive = (value.length > 0 ? value == "true" : undefined);
                 if (readytoarchive == state.pager.filter.readyToArchive)
@@ -5732,14 +5721,14 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_37("gotoDetail", gotoDetail = (cid) => {
+            exports_36("gotoDetail", gotoDetail = (cid) => {
                 setSelectedRow(cid);
                 Router.goto(`#/admin/account/${cid}`);
             });
-            exports_37("create", create = () => {
+            exports_36("create", create = () => {
                 Router.goto(`#/admin/account/new`);
             });
-            exports_37("autoArchive", autoArchive = () => {
+            exports_36("autoArchive", autoArchive = () => {
                 App.POST("/account/auto-archive", null)
                     .then(_ => {
                     Misc.toastSuccess(i18n("Auto Archive Executed"));
@@ -5751,14 +5740,14 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
     };
 });
 // File: account.ts
-System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/auth", "src/admin/lookupdata", "src/admin/layout"], function (exports_38, context_38) {
+System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/auth", "src/admin/lookupdata", "src/admin/layout"], function (exports_37, context_37) {
     "use strict";
     var App, Router, Misc, Theme, Auth, Lookup, layout_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, emailSubject, emailBody, block_account, block_profile, formTemplate, resetPasswordButton, canUpdate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, resetPassword, createInvitation, dirtyExit;
-    var __moduleName = context_38 && context_38.id;
+    var __moduleName = context_37 && context_37.id;
     return {
         setters: [
-            function (App_11) {
-                App = App_11;
+            function (App_10) {
+                App = App_10;
             },
             function (Router_6) {
                 Router = Router_6;
@@ -5780,7 +5769,7 @@ System.register("src/admin/account", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             }
         ],
         execute: function () {
-            exports_38("NS", NS = "App_account");
+            exports_37("NS", NS = "App_account");
             blackList = ["cie_text", "roleluid_text", "resetguid", "created", "updatedby", "by", "profileJson", "xtra"];
             state = {};
             fetchedState = {};
@@ -5918,7 +5907,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             clearState = () => {
                 state = {};
             };
-            exports_38("fetchState", fetchState = (uid) => {
+            exports_37("fetchState", fetchState = (uid) => {
                 isNew = isNaN(uid);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -5934,7 +5923,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(Lookup.fetch_authrole())
                     .then(Lookup.fetch_sortOrderKeys());
             });
-            exports_38("fetch", fetch = (params) => {
+            exports_37("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("account"));
                 layout_3.prepareMenu();
@@ -5942,7 +5931,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_38("render", render = () => {
+            exports_37("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -5959,12 +5948,12 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_38("postRender", postRender = () => {
+            exports_37("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New account") : xtra.title);
             });
-            exports_38("inContext", inContext = () => {
+            exports_37("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -5993,14 +5982,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_38("onchange", onchange = (input) => {
+            exports_37("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_38("cancel", cancel = () => {
+            exports_37("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_38("create", create = () => {
+            exports_37("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -6017,7 +6006,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_38("save", save = (done = false) => {
+            exports_37("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -6034,7 +6023,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_38("drop", drop = () => {
+            exports_37("drop", drop = () => {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/account", key)
@@ -6044,7 +6033,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_38("resetPassword", resetPassword = () => {
+            exports_37("resetPassword", resetPassword = () => {
                 App.POST("/account/reset-password", key)
                     .then(_ => {
                     Misc.toastSuccess(i18n("Password reset sent"));
@@ -6052,7 +6041,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_38("createInvitation", createInvitation = () => {
+            exports_37("createInvitation", createInvitation = () => {
                 App.POST("/account/create-invitation", key)
                     .then(_ => {
                     Misc.toastSuccess(i18n("Invitation sent"));
@@ -6074,14 +6063,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
     };
 });
 // File: company.ts
-System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_39, context_39) {
+System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_38, context_38) {
     "use strict";
     var App, Router, Misc, Theme, Lookup, Perm, layout_4, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, block_company, block_system, block_personnalisation, block_acomba, block_comptes, block_preleve, block_permis, block_print, block_backup, block_security, block_default_profile, block_todo, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_39 && context_39.id;
+    var __moduleName = context_38 && context_38.id;
     return {
         setters: [
-            function (App_12) {
-                App = App_12;
+            function (App_11) {
+                App = App_11;
             },
             function (Router_7) {
                 Router = Router_7;
@@ -6103,7 +6092,7 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             }
         ],
         execute: function () {
-            exports_39("NS", NS = "App_company");
+            exports_38("NS", NS = "App_company");
             blackList = ["created"];
             state = {};
             fetchedState = {};
@@ -6394,7 +6383,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_39("fetchState", fetchState = (cie) => {
+            exports_38("fetchState", fetchState = (cie) => {
                 isNew = isNaN(cie);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -6408,14 +6397,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(Lookup.fetch_autreFournisseur())
                     .then(Lookup.fetch_compte());
             });
-            exports_39("fetch", fetch = (params) => {
+            exports_38("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
                 App.prepareRender(NS, i18n("company"));
                 fetchState(cie)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_39("render", render = () => {
+            exports_38("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -6444,12 +6433,12 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_39("postRender", postRender = () => {
+            exports_38("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New company") : xtra.title);
             });
-            exports_39("inContext", inContext = () => {
+            exports_38("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -6586,14 +6575,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_39("onchange", onchange = (input) => {
+            exports_38("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_39("cancel", cancel = () => {
+            exports_38("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_39("create", create = () => {
+            exports_38("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -6608,7 +6597,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_39("save", save = (done = false) => {
+            exports_38("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -6625,7 +6614,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_39("drop", drop = () => {
+            exports_38("drop", drop = () => {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/company", key)
@@ -6647,15 +6636,15 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
         }
     };
 });
-// File: lookups.ts
-System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/layout", "src/admin/lookupdata"], function (exports_40, context_40) {
+// File: lookup.ts
+System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/admin/layout"], function (exports_39, context_39) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, layout_5, Lookup, NS, key, state, xtra, uiSelectedRow, currentYear, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_groupID, filter_year, gotoDetail, create;
-    var __moduleName = context_40 && context_40.id;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_5, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var __moduleName = context_39 && context_39.id;
     return {
         setters: [
-            function (App_13) {
-                App = App_13;
+            function (App_12) {
+                App = App_12;
             },
             function (Router_8) {
                 Router = Router_8;
@@ -6672,84 +6661,169 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             function (Pager_2) {
                 Pager = Pager_2;
             },
-            function (layout_5_1) {
-                layout_5 = layout_5_1;
+            function (calendar_1_1) {
+                calendar_1 = calendar_1_1;
             },
             function (Lookup_3) {
                 Lookup = Lookup_3;
+            },
+            function (layout_5_1) {
+                layout_5 = layout_5_1;
             }
         ],
         execute: function () {
-            exports_40("NS", NS = "App_lookups");
+            exports_39("NS", NS = "App_lookups");
+            table_id = "lookups_table";
+            blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "groupe_text", "created", "by"];
             state = {
                 list: [],
-                pager: { pageNo: 1, pageSize: 20, sortColumn: "DESCRIPTION", sortDirection: "ASC", filter: { cie: App.cie, groupe: undefined, year: Perm.getCurrentYear() } }
+                pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: {} }
             };
-            currentYear = new Date().getFullYear();
-            filterTemplate = (groupID, year) => {
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            filterTemplate = (groupe) => {
                 let filters = [];
-                filters.push(Theme.renderDropdownFilter(NS, "groupID", groupID, i18n("LOOKUP")));
-                filters.push(Theme.renderNumberFilter(NS, "year", year, i18n("YEAR")));
+                filters.push(Theme.renderDropdownFilter(NS, "groupe", groupe, i18n("GROUPE")));
                 return filters.join("");
             };
-            trTemplate = (item, rowNumber) => {
-                var _a;
-                let obsolete = item.ended != undefined && item.ended < ((_a = state.pager.filter.year) !== null && _a !== void 0 ? _a : currentYear);
-                let classes = [];
-                if (isSelectedRow(item.id))
-                    classes.push("is-selected");
-                if (obsolete)
-                    classes.push("has-text-grey-light");
+            trTemplateLeft = (item, editId, deleteId, rowNumber) => {
+                let id = item.id;
+                let tdConfirm = `<td class="js-td-33">&nbsp;</td>`;
+                if (item._editing)
+                    tdConfirm = `<td onclick="${NS}.save()" class="js-td-33" title="Click to confirm"><i class="fa fa-check"></i></td>`;
+                if (item._deleting)
+                    tdConfirm = `<td onclick="${NS}.drop()" class="js-td-33" title="Click to confirm"><i class="fa fa-check"></i></td>`;
+                if (item._isNew)
+                    tdConfirm = `<td onclick="${NS}.create()" class="js-td-33" title="Click to confirm"><i class="fa fa-check"></i></td>`;
+                let clickUndo = item._editing || item._deleting || item._isNew;
+                let markDeletion = !clickUndo;
+                let canEdit = true; //perm && perm.canEdit;
+                let readonly = (deleteId != undefined) || (editId != undefined && id != editId) || (isNew && !item._isNew) || (!canEdit);
+                let classList = [];
+                if (item._editing || item._isNew)
+                    classList.push("js-not-same");
+                if (item._deleting)
+                    classList.push("js-strikeout");
+                if (item._isNew)
+                    classList.push("js-new");
+                if (readonly)
+                    classList.push("js-readonly");
+                if (!canEdit)
+                    classList.push("js-noclick");
                 return `
-<tr class="${classes.join(" ")}" onclick="${NS}.gotoDetail(${item.id});">
+<tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
     <td class="js-index">${rowNumber}</td>
-    <td>${Misc.toStaticText(item.id)}</td>
-    <td>${Misc.toStaticText(item.cie_text)}</td>
-    <td>${Misc.toStaticText(item.groupe)}</td>
-    <td>${Misc.toStaticText(item.description)}</td>
-    <td>${Misc.toStaticText(item.code)}</td>
-    <td>${Misc.toStaticText(item.value1)}</td>
-    <td>${Misc.toStaticText(item.value2)}</td>
-    <td>${Misc.toStaticText(item.value3)}</td>
-    <td>${Misc.toStaticText(item.started)}</td>
-    <td>${Misc.toStaticText(item.ended)}</td>
-    <td>${Misc.toStaticText(item.sortorder)}</td>
+
+${markDeletion ? `<td onclick="${NS}.selectfordrop(${id})" class="has-text-danger js-td-33 js-drop" title="Click to mark for deletion"><i class='fas fa-times'></i></td>` : ``}
+${clickUndo ? `<td onclick="${NS}.undo()" class="has-text-primary js-td-33" title="Click to undo"><i class='fa fa-undo'></i></td>` : ``}
+${tdConfirm}
+
 </tr>`;
             };
-            tableTemplate = (tbody, pager) => {
+            trTemplateRight = (item, editId, deleteId, groupe) => {
+                let id = item.id;
+                let canEdit = true; //perm && perm.canEdit;
+                let readonly = (deleteId != undefined) || (editId != undefined && id != editId) || (isNew && !item._isNew) || (!canEdit);
+                let classList = [];
+                if (item._editing || item._isNew)
+                    classList.push("js-not-same");
+                if (item._deleting)
+                    classList.push("js-strikeout");
+                if (item._isNew)
+                    classList.push("js-new");
+                if (readonly)
+                    classList.push("js-readonly");
                 return `
-<div class="table-container">
-<table class="table is-hoverable is-fullwidth">
+<tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
+${!readonly ? `
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `groupe_${id}`, groupe, true)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `parentgroupe_${id}`, item.parentgroupe, 12)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50, true)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `value2_${id}`, item.value2, 50)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `value3_${id}`, item.value3, 1024)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `started_${id}`, item.started, true)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `ended_${id}`, item.ended)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder)}</td>
+` : `
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe_text)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentgroupe)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value2)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value3)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.started)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.ended)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.sortorder)}</div></td>
+`}
+</tr>`;
+            };
+            tableTemplateLeft = (tbody, editId, deleteId) => {
+                let disableAddNew = (deleteId != undefined || editId != undefined || isNew);
+                let canEdit = true; //perm && perm.canEdit;
+                disableAddNew = disableAddNew || !canEdit;
+                return `
+<style>.js-td-33 { width: 33px; }</style>
+<div>
+<table class="table is-hoverable js-inline" style="width: 10px; table-layout: fixed;">
     <thead>
         <tr>
-            <th></th>
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("CIE_TEXT"), "cie_text", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC")}
+            <th style="width:99px" colspan="3">&nbsp;</th>
         </tr>
     </thead>
     <tbody>
         ${tbody}
+        <tr class="js-insert-row ${disableAddNew ? "js-noclick" : ""}">
+            <td class="js-index js-td-33">*</td>
+            <td class="has-text-primary js-td-33 js-add" onclick="${NS}.addNew()" title="Click to add a new row"><i class="fas fa-plus"></i></td>
+            <td></td>
+        </tr>
     </tbody>
 </table>
 </div>
 `;
             };
-            pageTemplate = (pager, table, tab, warning, dirty) => {
+            tableTemplateRight = (tbody, pager) => {
+                return `
+<div id="${table_id}" class="table-container">
+<table class="table is-hoverable js-inline" style="width: 100px; table-layout: fixed;">
+    <thead>
+        <tr>
+            ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe_text", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENTGROUPE"), "parentgroupe", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC", "width:100px")}
+        </tr>
+    </thead>
+    <tbody>
+        ${tbody}
+        <tr class="js-insert-row">
+            <td colspan="${10 + 4}">&nbsp;</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+`;
+            };
+            pageTemplate = (xtra, pager, tableLeft, tableRight, tab, warning, dirty) => {
                 let readonly = false;
                 let buttons = [];
-                buttons.push(Theme.buttonAddNew(NS, `#/admin/lookup/new/${key.groupe}`, i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_5.buildTitle(xtra, `${i18n("Code Table:")} ${xtra.title}`);
-                let subtitle = layout_5.buildSubtitle(xtra, i18n("List of All Entries"));
+                let title = layout_5.buildTitle(xtra, i18n("AAA: AAA"));
+                let subtitle = layout_5.buildSubtitle(xtra, i18n("AAA"));
+                let table = `<div style="display: flex;">
+    <div>${tableLeft}</div>
+    <div style="width:calc(100% - 99px)">${tableRight}</div>
+</div>`;
                 return `
 <form onsubmit="return false;">
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -6778,129 +6852,260 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
 </form>
 `;
             };
-            exports_40("fetchState", fetchState = (cie, groupe) => {
-                Router.registerDirtyExit(null);
+            dirtyTemplate = () => {
+                return (isDirty ? App.dirtyTemplate(NS, null) : "");
+            };
+            exports_39("fetchState", fetchState = (cie) => {
+                isNew = false;
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
                 state.pager.filter.cie = cie;
-                state.pager.filter.groupe = groupe;
-                return App.POST("/lookup/search", state.pager)
+                return App.POST(`/lookup/search/${cie}/company`, state.pager)
                     .then(payload => {
                     state = payload;
+                    fetchedState = Misc.clone(state);
+                    key = { cie, id: undefined };
                     xtra = payload.xtra;
-                    key = { groupe };
                 })
                     .then(Lookup.fetch_lutGroup());
             });
-            exports_40("fetch", fetch = (params) => {
+            exports_39("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
-                let groupe = params[0];
-                App.prepareRender(NS, i18n("lookups"));
+                App.prepareRender(NS, i18n("lookup"));
                 layout_5.prepareMenu();
-                fetchState(cie, groupe)
+                fetchState(cie)
                     .then(App.render)
                     .catch(App.render);
             });
             refresh = () => {
-                App.prepareRender(NS, i18n("lookups"));
-                App.POST("/lookup/search", state.pager)
+                App.prepareRender(NS, i18n("lookup"));
+                clearFilterPlus();
+                App.POST(`/lookup/search/${key.cie}/company`, state.pager)
                     .then(payload => {
                     state = payload;
+                    fetchedState = Misc.clone(state);
                 })
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_40("render", render = () => {
+            exports_39("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
                     return App.fatalErrorTemplate();
                 if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
                     return App.warningTemplate() || App.unexpectedTemplate();
-                let warning = App.warningTemplate();
-                let dirty = "";
-                const tbody = state.list.reduce((html, item, index) => {
+                let editId;
+                let deleteId;
+                state.list.forEach((item, index) => {
+                    let prevItem = fetchedState.list[index];
+                    item._editing = !Misc.same(item, prevItem);
+                    if (item._editing)
+                        editId = item.id;
+                    if (item._deleting)
+                        deleteId = item.id;
+                });
+                let year = Perm.getCurrentYear(); //or something better
+                let lookup_groupe = Lookup.get_editLut(year);
+                const tbodyLeft = state.list.reduce((html, item, index) => {
                     let rowNumber = Pager.rowNumber(state.pager, index);
-                    return html + trTemplate(item, rowNumber);
+                    return html + trTemplateLeft(item, editId, deleteId, rowNumber);
                 }, "");
-                var year = Perm.getCurrentYear();
-                var lookup_lutGroup = Lookup.get_lutGroup(year).map(one => ({
-                    id: one.code.toLowerCase(),
-                    description: one.description
-                }));
-                let groupID = Theme.renderOptions(lookup_lutGroup, state.pager.filter.groupe, false);
-                const filter = filterTemplate(groupID, state.pager.filter.year);
-                const pager = Pager.render(state.pager, NS, [20, 50], null, filter);
-                const table = tableTemplate(tbody, state.pager);
-                const tab = layout_5.tabTemplate(null, null, null);
-                return pageTemplate(pager, table, tab, dirty, warning);
+                const tbodyRight = state.list.reduce((html, item) => {
+                    let groupe = Theme.renderOptions(lookup_groupe, item.groupe, isNew);
+                    return html + trTemplateRight(item, editId, deleteId, groupe);
+                }, "");
+                let groupe = Theme.renderOptions(lookup_groupe, state.pager.filter.groupe, true);
+                const filter = filterTemplate(groupe);
+                const search = Pager.searchTemplate(state.pager, NS);
+                const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
+                const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
+                const tableRight = tableTemplateRight(tbodyRight, state.pager);
+                const tab = layout_5.tabTemplate(key.cie, xtra);
+                const dirty = dirtyTemplate();
+                let warning = App.warningTemplate();
+                return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
             });
-            exports_40("postRender", postRender = () => {
+            exports_39("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_40("inContext", inContext = () => {
+            exports_39("inContext", inContext = () => {
                 return App.inContext(NS);
             });
-            setSelectedRow = (id) => {
-                if (uiSelectedRow == undefined)
-                    uiSelectedRow = { id };
-                uiSelectedRow.id = id;
-            };
-            isSelectedRow = (id) => {
-                if (uiSelectedRow == undefined)
-                    return false;
-                return (uiSelectedRow.id == id);
-            };
-            exports_40("goto", goto = (pageNo, pageSize) => {
+            exports_39("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
-                state.pager.pageSize = pageSize;
+                state.pager.pageSize = App.setPageState(NS, "pageSize", pageSize);
                 refresh();
             });
-            exports_40("sortBy", sortBy = (columnName, direction) => {
+            exports_39("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_40("search", search = (element) => {
+            exports_39("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_40("filter_groupID", filter_groupID = (element) => {
+            exports_39("filter_groupe", filter_groupe = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let groupe = (value.length > 0 ? value : undefined);
                 if (groupe == state.pager.filter.groupe)
                     return;
-                Router.goto(`#/admin/lookups/${groupe}`);
-            });
-            exports_40("filter_year", filter_year = (element) => {
-                let value = element.value;
-                let year = (value.length > 0 ? +value : undefined);
-                if (year == state.pager.filter.year)
-                    return;
-                state.pager.filter.year = year;
+                state.pager.filter.groupe = groupe;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_40("gotoDetail", gotoDetail = (id) => {
-                setSelectedRow(id);
-                Router.goto(`#/admin/lookup/${id}`);
+            getFormState = () => {
+                let clone = Misc.clone(state);
+                clone.list.forEach(item => {
+                    let id = item.id;
+                    item.cie = Misc.fromSelectNumber(`${NS}_cie_${id}`, item.cie);
+                    item.groupe = Misc.fromSelectText(`${NS}_groupe_${id}`, item.groupe);
+                    item.parentgroupe = Misc.fromInputTextNullable(`${NS}_parentgroupe_${id}`, item.parentgroupe);
+                    item.code = Misc.fromInputTextNullable(`${NS}_code_${id}`, item.code);
+                    item.description = Misc.fromInputText(`${NS}_description_${id}`, item.description);
+                    item.value1 = Misc.fromInputTextNullable(`${NS}_value1_${id}`, item.value1);
+                    item.value2 = Misc.fromInputTextNullable(`${NS}_value2_${id}`, item.value2);
+                    item.value3 = Misc.fromInputTextNullable(`${NS}_value3_${id}`, item.value3);
+                    item.started = Misc.fromInputNumber(`${NS}_started_${id}`, item.started);
+                    item.ended = Misc.fromInputNumberNullable(`${NS}_ended_${id}`, item.ended);
+                    item.sortorder = Misc.fromInputNumberNullable(`${NS}_sortorder_${id}`, item.sortorder);
+                });
+                return clone;
+            };
+            valid = (formState) => {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = () => {
+                document.getElementById(`${NS}_dummy_submit`).click();
+                let form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_39("onchange", onchange = (input) => {
+                state = getFormState();
+                let parts = input.id.replace(`${NS}_`, "").split("_");
+                let field = parts[0];
+                let id = +parts[1];
+                let record = state.list.find(one => one.id == id);
+                //if (field == "field_name") {
+                //    record.some_field = null;
+                //}
+                App.render();
             });
-            exports_40("create", create = () => {
-                Router.goto(`#/admin/lookup/new/${state.pager.filter.groupe}`);
+            exports_39("ondate", ondate = (input, eventname) => {
+                return calendar_1.eventMan(NS, input, eventname);
             });
+            exports_39("undo", undo = () => {
+                if (isNew) {
+                    isNew = false;
+                    fetchedState.list.pop();
+                }
+                state = Misc.clone(fetchedState);
+                isDirty = false;
+                App.render();
+            });
+            exports_39("addNew", addNew = () => {
+                let url = `/lookup/new/${key.cie}/company`;
+                return App.GET(url)
+                    .then((payload) => {
+                    state.list.push(payload.item);
+                    fetchedState = Misc.clone(state);
+                    isNew = true;
+                    payload.item._isNew = true;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_39("create", create = () => {
+                let formState = getFormState();
+                let item = formState.list.find(one => one._isNew);
+                if (!html5Valid())
+                    return;
+                if (!valid(item))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/lookup", Misc.createBlack(item, blackList))
+                    .then((key) => {
+                    addFilterPlus(key.id);
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_39("save", save = () => {
+                let formState = getFormState();
+                let item = formState.list.find(one => one._editing);
+                if (!html5Valid())
+                    return;
+                if (!valid(item))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/lookup", Misc.createBlack(item, blackList))
+                    .then(() => {
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_39("selectfordrop", selectfordrop = (id) => {
+                state = Misc.clone(fetchedState);
+                state.list.find(one => one.id == id)._deleting = true;
+                App.render();
+            });
+            exports_39("drop", drop = () => {
+                App.prepareRender();
+                let item = state.list.find(one => one._deleting);
+                App.DELETE("/lookup", { id: item.id, updated: item.updated })
+                    .then(() => {
+                    removeFilterPlus(item.id);
+                    fetchedState = Misc.clone(state);
+                    Router.gotoCurrent(1);
+                })
+                    .catch(App.render);
+            });
+            exports_39("hasChanges", hasChanges = () => {
+                return !Misc.same(fetchedState, state);
+            });
+            dirtyExit = () => {
+                isDirty = !Misc.same(fetchedState, getFormState());
+                //console.log(fetchedState, getFormState());
+                if (isDirty) {
+                    setTimeout(() => {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+            clearFilterPlus = () => {
+                state.pager.filter.plus = undefined;
+                isNew = false;
+            };
+            addFilterPlus = (id) => {
+                if (state.pager.filter.plus)
+                    state.pager.filter.plus += `,${id}`;
+                else
+                    state.pager.filter.plus = id.toString();
+            };
+            removeFilterPlus = (id) => {
+            };
         }
     };
 });
 // File: lookup.ts
-System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_41, context_41) {
+System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_40, context_40) {
     "use strict";
     var App, Router, Misc, Theme, Lookup, Perm, layout_6, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_41 && context_41.id;
+    var __moduleName = context_40 && context_40.id;
     return {
         setters: [
-            function (App_14) {
-                App = App_14;
+            function (App_13) {
+                App = App_13;
             },
             function (Router_9) {
                 Router = Router_9;
@@ -6922,7 +7127,7 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
             }
         ],
         execute: function () {
-            exports_41("NS", NS = "App_lookup");
+            exports_40("NS", NS = "App_lookup");
             blackList = ["cie_text", "created", "by"];
             state = {};
             fetchedState = {};
@@ -6996,7 +7201,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_41("fetchState", fetchState = (id, groupe) => {
+            exports_40("fetchState", fetchState = (id, groupe) => {
                 isNew = isNaN(id);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -7009,7 +7214,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .then(Lookup.fetch_cIE());
             });
-            exports_41("fetch", fetch = (params) => {
+            exports_40("fetch", fetch = (params) => {
                 let id = +params[0];
                 let groupe = (params.length > 1 ? params[1] : null);
                 App.prepareRender(NS, i18n("lookup"));
@@ -7018,7 +7223,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_41("render", render = () => {
+            exports_40("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -7034,12 +7239,12 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_41("postRender", postRender = () => {
+            exports_40("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New lookup") : xtra.title);
             });
-            exports_41("inContext", inContext = () => {
+            exports_40("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -7066,14 +7271,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_41("onchange", onchange = (input) => {
+            exports_40("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_41("cancel", cancel = () => {
+            exports_40("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_41("create", create = () => {
+            exports_40("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -7088,7 +7293,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_41("save", save = (done = false) => {
+            exports_40("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -7105,7 +7310,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_41("drop", drop = () => {
+            exports_40("drop", drop = () => {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/lookup", key)
@@ -7127,10 +7332,10 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
         }
     };
 });
-System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/company", "src/admin/lookups", "src/admin/lookup"], function (exports_42, context_42) {
+System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accounts", "src/admin/account", "src/admin/company", "src/admin/lookups", "src/admin/lookup"], function (exports_41, context_41) {
     "use strict";
     var Router, accounts, account, company, lookups, lookup, startup, render, postRender;
-    var __moduleName = context_42 && context_42.id;
+    var __moduleName = context_41 && context_41.id;
     return {
         setters: [
             function (Router_10) {
@@ -7168,7 +7373,7 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
             window.App_lookup = lookup;
             //(<any>window).App_DataFiles = DataFiles;
             //(<any>window).App_DataFile = DataFile;
-            exports_42("startup", startup = () => {
+            exports_41("startup", startup = () => {
                 Router.addRoute("^#/admin/accounts/?(.*)?$", accounts.fetch);
                 Router.addRoute("^#/admin/account/(.*)$", account.fetch);
                 Router.addRoute("^#/admin/company/?(.*)$", company.fetch);
@@ -7178,7 +7383,7 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
                 //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
                 //Router.addRoute("^#/admin/audittrails/?(.*)$", AuditTrails.fetch);
             });
-            exports_42("render", render = () => {
+            exports_41("render", render = () => {
                 return `
     ${accounts.render()}
     ${account.render()}
@@ -7189,7 +7394,7 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
                 //${DataFiles.render()}
                 //${DataFile.render()}
             });
-            exports_42("postRender", postRender = () => {
+            exports_41("postRender", postRender = () => {
                 accounts.postRender();
                 account.postRender();
                 company.postRender();
@@ -7201,25 +7406,25 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
         }
     };
 });
-System.register("src/support/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_43, context_43) {
+System.register("src/support/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_42, context_42) {
     "use strict";
     var App, layout_7, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_43 && context_43.id;
+    var __moduleName = context_42 && context_42.id;
     return {
         setters: [
-            function (App_15) {
-                App = App_15;
+            function (App_14) {
+                App = App_14;
             },
             function (layout_7_1) {
                 layout_7 = layout_7_1;
             }
         ],
         execute: function () {
-            exports_43("icon", icon = "far fa-user");
-            exports_43("prepareMenu", prepareMenu = () => {
+            exports_42("icon", icon = "far fa-user");
+            exports_42("prepareMenu", prepareMenu = () => {
                 layout_7.setOpenedMenu("Administration-Management");
             });
-            exports_43("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
+            exports_42("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isCompanys = App.inContext("App_companys");
                 let isAnyLookups = App.inContext("App_any_lookups");
                 let isFiles = window.location.hash.startsWith("#/files/company");
@@ -7261,11 +7466,11 @@ ${isFile ? `
 </div>
 `;
             });
-            exports_43("buildTitle", buildTitle = (xtra, defaultText) => {
+            exports_42("buildTitle", buildTitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_43("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
+            exports_42("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -7273,14 +7478,14 @@ ${isFile ? `
     };
 });
 // File: companys.ts
-System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/support/layout"], function (exports_44, context_44) {
+System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/support/layout"], function (exports_43, context_43) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_8, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
-    var __moduleName = context_44 && context_44.id;
+    var __moduleName = context_43 && context_43.id;
     return {
         setters: [
-            function (App_16) {
-                App = App_16;
+            function (App_15) {
+                App = App_15;
             },
             function (Router_11) {
                 Router = Router_11;
@@ -7305,7 +7510,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
             }
         ],
         execute: function () {
-            exports_44("NS", NS = "App_companys");
+            exports_43("NS", NS = "App_companys");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "CIE", sortDirection: "ASC", filter: {} }
@@ -7385,7 +7590,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
 </form>
 `;
             };
-            exports_44("fetchState", fetchState = (cie) => {
+            exports_43("fetchState", fetchState = (cie) => {
                 Router.registerDirtyExit(null);
                 return App.POST("/company/search", state.pager)
                     .then(payload => {
@@ -7396,7 +7601,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
                     .then(Lookup.fetch_autreFournisseur())
                     .then(Lookup.fetch_compte());
             });
-            exports_44("fetch", fetch = (params) => {
+            exports_43("fetch", fetch = (params) => {
                 let cie = +params[0];
                 App.prepareRender(NS, i18n("companys"));
                 fetchState(cie)
@@ -7412,7 +7617,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_44("render", render = () => {
+            exports_43("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -7433,11 +7638,11 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
                 const tab = layout_8.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_44("postRender", postRender = () => {
+            exports_43("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_44("inContext", inContext = () => {
+            exports_43("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (cie) => {
@@ -7450,23 +7655,23 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
                     return false;
                 return (uiSelectedRow.cie == cie);
             };
-            exports_44("goto", goto = (pageNo, pageSize) => {
+            exports_43("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_44("sortBy", sortBy = (columnName, direction) => {
+            exports_43("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_44("search", search = (element) => {
+            exports_43("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_44("gotoDetail", gotoDetail = (cie) => {
+            exports_43("gotoDetail", gotoDetail = (cie) => {
                 setSelectedRow(cie);
                 Router.goto(`#/admin/company/?cie=${cie}`);
             });
@@ -7474,14 +7679,14 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
     };
 });
 // File: network.ts
-System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/permission", "src/admin/layout"], function (exports_45, context_45) {
+System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/permission", "src/admin/layout"], function (exports_44, context_44) {
     "use strict";
     var App, Router, Misc, Theme, Perm, layout_9, NS, key, state, fetchedState, isNew, isDirty, thKindTemplate, thRoleTemplate, trTemplate, tableTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, rowClick, cancel, create, save, dirtyExit;
-    var __moduleName = context_45 && context_45.id;
+    var __moduleName = context_44 && context_44.id;
     return {
         setters: [
-            function (App_17) {
-                App = App_17;
+            function (App_16) {
+                App = App_16;
             },
             function (Router_12) {
                 Router = Router_12;
@@ -7500,7 +7705,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
             }
         ],
         execute: function () {
-            exports_45("NS", NS = "App_security");
+            exports_44("NS", NS = "App_security");
             state = {};
             fetchedState = {};
             isNew = false;
@@ -7605,7 +7810,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
             clearState = () => {
                 state = {};
             };
-            exports_45("fetchState", fetchState = (cie) => {
+            exports_44("fetchState", fetchState = (cie) => {
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
                 clearState();
@@ -7618,14 +7823,14 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                     isNew = (state.items[0].item[0].perm[0].permValue == undefined);
                 });
             });
-            exports_45("fetch", fetch = (params) => {
+            exports_44("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
                 App.prepareRender(NS, i18n("Security"));
                 fetchState(cie)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_45("render", render = () => {
+            exports_44("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -7650,11 +7855,11 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                 const warning = App.warningTemplate();
                 return pageTemplate(state, table, tab, warning, dirty);
             });
-            exports_45("postRender", postRender = () => {
+            exports_44("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_45("inContext", inContext = () => {
+            exports_44("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -7671,11 +7876,11 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_45("onchange", onchange = (input) => {
+            exports_44("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_45("rowClick", rowClick = (permID) => {
+            exports_44("rowClick", rowClick = (permID) => {
                 event.stopPropagation();
                 let target = event.target.closest("td");
                 if (target.dataset.mask == undefined)
@@ -7690,10 +7895,10 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                 }));
                 App.render();
             });
-            exports_45("cancel", cancel = () => {
+            exports_44("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_45("create", create = () => {
+            exports_44("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -7707,7 +7912,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .catch(App.render);
             });
-            exports_45("save", save = () => {
+            exports_44("save", save = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -7738,14 +7943,14 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
     };
 });
 // File: lookup.ts
-System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/support/layout"], function (exports_46, context_46) {
+System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/support/layout"], function (exports_45, context_45) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_10, NS, table_id, blackList, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_cie, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
-    var __moduleName = context_46 && context_46.id;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_2, Lookup, layout_10, NS, table_id, blackList, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_cie, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var __moduleName = context_45 && context_45.id;
     return {
         setters: [
-            function (App_18) {
-                App = App_18;
+            function (App_17) {
+                App = App_17;
             },
             function (Router_13) {
                 Router = Router_13;
@@ -7762,8 +7967,8 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             function (Pager_4) {
                 Pager = Pager_4;
             },
-            function (calendar_1_1) {
-                calendar_1 = calendar_1_1;
+            function (calendar_2_1) {
+                calendar_2 = calendar_2_1;
             },
             function (Lookup_6) {
                 Lookup = Lookup_6;
@@ -7773,7 +7978,7 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             }
         ],
         execute: function () {
-            exports_46("NS", NS = "App_any_lookups");
+            exports_45("NS", NS = "App_any_lookups");
             table_id = "any_lookups_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "created", "by"];
             state = {
@@ -7956,7 +8161,7 @@ ${!readonly ? `
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, null) : "");
             };
-            exports_46("fetchState", fetchState = (id) => {
+            exports_45("fetchState", fetchState = (id) => {
                 isNew = false;
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -7968,7 +8173,7 @@ ${!readonly ? `
                 })
                     .then(Lookup.fetch_cIE());
             });
-            exports_46("fetch", fetch = (params) => {
+            exports_45("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("lookup"));
                 layout_10.prepareMenu();
@@ -7987,7 +8192,7 @@ ${!readonly ? `
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_46("render", render = () => {
+            exports_45("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -8025,30 +8230,30 @@ ${!readonly ? `
                 let warning = App.warningTemplate();
                 return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
             });
-            exports_46("postRender", postRender = () => {
+            exports_45("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_46("inContext", inContext = () => {
+            exports_45("inContext", inContext = () => {
                 return App.inContext(NS);
             });
-            exports_46("goto", goto = (pageNo, pageSize) => {
+            exports_45("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = App.setPageState(NS, "pageSize", pageSize);
                 refresh();
             });
-            exports_46("sortBy", sortBy = (columnName, direction) => {
+            exports_45("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_46("search", search = (element) => {
+            exports_45("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_46("filter_cie", filter_cie = (element) => {
+            exports_45("filter_cie", filter_cie = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let cie = (value.length > 0 ? +value : undefined);
                 if (cie == state.pager.filter.cie)
@@ -8084,7 +8289,7 @@ ${!readonly ? `
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_46("onchange", onchange = (input) => {
+            exports_45("onchange", onchange = (input) => {
                 state = getFormState();
                 let parts = input.id.replace(`${NS}_`, "").split("_");
                 let field = parts[0];
@@ -8095,10 +8300,10 @@ ${!readonly ? `
                 //}
                 App.render();
             });
-            exports_46("ondate", ondate = (input, eventname) => {
-                return calendar_1.eventMan(NS, input, eventname);
+            exports_45("ondate", ondate = (input, eventname) => {
+                return calendar_2.eventMan(NS, input, eventname);
             });
-            exports_46("undo", undo = () => {
+            exports_45("undo", undo = () => {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -8107,7 +8312,7 @@ ${!readonly ? `
                 isDirty = false;
                 App.render();
             });
-            exports_46("addNew", addNew = () => {
+            exports_45("addNew", addNew = () => {
                 let url = "/lookup/new";
                 return App.GET(url)
                     .then((payload) => {
@@ -8119,7 +8324,7 @@ ${!readonly ? `
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_46("create", create = () => {
+            exports_45("create", create = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._isNew);
                 if (!html5Valid())
@@ -8135,7 +8340,7 @@ ${!readonly ? `
                 })
                     .catch(App.render);
             });
-            exports_46("save", save = () => {
+            exports_45("save", save = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._editing);
                 if (!html5Valid())
@@ -8150,12 +8355,12 @@ ${!readonly ? `
                 })
                     .catch(App.render);
             });
-            exports_46("selectfordrop", selectfordrop = (id) => {
+            exports_45("selectfordrop", selectfordrop = (id) => {
                 state = Misc.clone(fetchedState);
                 state.list.find(one => one.id == id)._deleting = true;
                 App.render();
             });
-            exports_46("drop", drop = () => {
+            exports_45("drop", drop = () => {
                 App.prepareRender();
                 let item = state.list.find(one => one._deleting);
                 App.DELETE("/lookup", { id: item.id, updated: item.updated })
@@ -8166,7 +8371,7 @@ ${!readonly ? `
                 })
                     .catch(App.render);
             });
-            exports_46("hasChanges", hasChanges = () => {
+            exports_45("hasChanges", hasChanges = () => {
                 return !Misc.same(fetchedState, state);
             });
             dirtyExit = () => {
@@ -8194,10 +8399,10 @@ ${!readonly ? `
         }
     };
 });
-System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/companys", "src/support/security", "src/support/any-lookups"], function (exports_47, context_47) {
+System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/companys", "src/support/security", "src/support/any-lookups"], function (exports_46, context_46) {
     "use strict";
     var Router, companys, security, any_lookups, startup, render, postRender;
-    var __moduleName = context_47 && context_47.id;
+    var __moduleName = context_46 && context_46.id;
     return {
         setters: [
             function (Router_14) {
@@ -8226,14 +8431,14 @@ System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/co
             window.App_any_lookups = any_lookups;
             //(<any>window).App_DataFiles = DataFiles;
             //(<any>window).App_DataFile = DataFile;
-            exports_47("startup", startup = () => {
+            exports_46("startup", startup = () => {
                 Router.addRoute("^#/support/companys/?(.*)?$", companys.fetch);
                 Router.addRoute("^#/support/security/?(.*)?$", security.fetch);
                 Router.addRoute("^#/support/any-lookups/?(.*)?$", any_lookups.fetch);
                 //Router.addRoute("^#/files/(.*)$", DataFiles.fetch);
                 //Router.addRoute("^#/file/(.*)$", DataFile.fetch);
             });
-            exports_47("render", render = () => {
+            exports_46("render", render = () => {
                 return `
     ${companys.render()}
     ${security.render()}
@@ -8242,7 +8447,7 @@ System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/co
                 //${DataFiles.render()}
                 //${DataFile.render()}
             });
-            exports_47("postRender", postRender = () => {
+            exports_46("postRender", postRender = () => {
                 companys.postRender();
                 security.postRender();
                 any_lookups.postRender();
@@ -8252,25 +8457,25 @@ System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/co
         }
     };
 });
-System.register("src/christian/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_48, context_48) {
+System.register("src/christian/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_47, context_47) {
     "use strict";
     var App, layout_11, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_48 && context_48.id;
+    var __moduleName = context_47 && context_47.id;
     return {
         setters: [
-            function (App_19) {
-                App = App_19;
+            function (App_18) {
+                App = App_18;
             },
             function (layout_11_1) {
                 layout_11 = layout_11_1;
             }
         ],
         execute: function () {
-            exports_48("icon", icon = "far fa-user");
-            exports_48("prepareMenu", prepareMenu = () => {
+            exports_47("icon", icon = "far fa-user");
+            exports_47("prepareMenu", prepareMenu = () => {
                 layout_11.setOpenedMenu("Christian");
             });
-            exports_48("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
+            exports_47("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 var _a, _b, _c, _d;
                 let isoffices = App.inContext("App_offices");
                 let isoffice = App.inContext("App_office");
@@ -8357,11 +8562,11 @@ ${isFile ? `
 </div>
 `;
             });
-            exports_48("buildTitle", buildTitle = (xtra, defaultText) => {
+            exports_47("buildTitle", buildTitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_48("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
+            exports_47("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -8369,14 +8574,14 @@ ${isFile ? `
     };
 });
 // File: offices.ts
-System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/christian/layout"], function (exports_49, context_49) {
+System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/christian/layout"], function (exports_48, context_48) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, layout_12, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
-    var __moduleName = context_49 && context_49.id;
+    var __moduleName = context_48 && context_48.id;
     return {
         setters: [
-            function (App_20) {
-                App = App_20;
+            function (App_19) {
+                App = App_19;
             },
             function (Router_15) {
                 Router = Router_15;
@@ -8398,7 +8603,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
             }
         ],
         execute: function () {
-            exports_49("NS", NS = "App_offices");
+            exports_48("NS", NS = "App_offices");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -8474,7 +8679,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
 </form>
 `;
             };
-            exports_49("fetchState", fetchState = (id) => {
+            exports_48("fetchState", fetchState = (id) => {
                 Router.registerDirtyExit(null);
                 return App.POST(`/office/search`, state.pager)
                     .then(payload => {
@@ -8483,7 +8688,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
                     key = {};
                 });
             });
-            exports_49("fetch", fetch = (params) => {
+            exports_48("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("offices"));
                 layout_12.prepareMenu();
@@ -8500,7 +8705,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_49("render", render = () => {
+            exports_48("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -8521,11 +8726,11 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
                 const tab = layout_12.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_49("postRender", postRender = () => {
+            exports_48("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_49("inContext", inContext = () => {
+            exports_48("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (id) => {
@@ -8538,23 +8743,23 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_49("goto", goto = (pageNo, pageSize) => {
+            exports_48("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_49("sortBy", sortBy = (columnName, direction) => {
+            exports_48("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_49("search", search = (element) => {
+            exports_48("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_49("gotoDetail", gotoDetail = (id) => {
+            exports_48("gotoDetail", gotoDetail = (id) => {
                 setSelectedRow(id);
                 Router.goto(`#/office/${id}`);
             });
@@ -8562,14 +8767,14 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
     };
 });
 // File: staff.ts
-System.register("src/christian/staffs_3", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_50, context_50) {
+System.register("src/christian/staffs_3", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_49, context_49) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
-    var __moduleName = context_50 && context_50.id;
+    var __moduleName = context_49 && context_49.id;
     return {
         setters: [
-            function (App_21) {
-                App = App_21;
+            function (App_20) {
+                App = App_20;
             },
             function (Router_16) {
                 Router = Router_16;
@@ -8591,7 +8796,7 @@ System.register("src/christian/staffs_3", ["_BaseApp/src/core/app", "_BaseApp/sr
             }
         ],
         execute: function () {
-            exports_50("NS", NS = "App_staff_3");
+            exports_49("NS", NS = "App_staff_3");
             table_id = "staff_3_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "officeid_text", "jobid_text", "created", "by"];
             state = {
@@ -8675,7 +8880,7 @@ ${!readonly ? `
 ${Theme.wrapContent("js-uc-list", table)}
 `;
             };
-            exports_50("fetchState", fetchState = (officeid, ownerNS) => {
+            exports_49("fetchState", fetchState = (officeid, ownerNS) => {
                 isAddingNewParent = isNaN(officeid);
                 callerNS = ownerNS || callerNS;
                 isNew = false;
@@ -8688,9 +8893,9 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .then(Lookup.fetch_job());
             });
-            exports_50("preRender", preRender = () => {
+            exports_49("preRender", preRender = () => {
             });
-            exports_50("render", render = () => {
+            exports_49("render", render = () => {
                 if (isAddingNewParent)
                     return "";
                 let editId;
@@ -8713,9 +8918,9 @@ ${Theme.wrapContent("js-uc-list", table)}
                 const table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
             });
-            exports_50("postRender", postRender = () => {
+            exports_49("postRender", postRender = () => {
             });
-            exports_50("inContext", inContext = () => {
+            exports_49("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -8736,11 +8941,11 @@ ${Theme.wrapContent("js-uc-list", table)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_50("onchange", onchange = (input) => {
+            exports_49("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_50("undo", undo = () => {
+            exports_49("undo", undo = () => {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -8748,7 +8953,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 state = Misc.clone(fetchedState);
                 App.render();
             });
-            exports_50("addNew", addNew = () => {
+            exports_49("addNew", addNew = () => {
                 let url = `/staff/new/${key.officeid}/office`;
                 return App.GET(url)
                     .then(payload => {
@@ -8760,7 +8965,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_50("create", create = () => {
+            exports_49("create", create = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._isNew);
                 if (!html5Valid())
@@ -8773,7 +8978,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_50("save", save = () => {
+            exports_49("save", save = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._editing);
                 if (!html5Valid())
@@ -8786,12 +8991,12 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_50("selectfordrop", selectfordrop = (id) => {
+            exports_49("selectfordrop", selectfordrop = (id) => {
                 state = Misc.clone(fetchedState);
                 state.list.find(one => one.id == id)._deleting = true;
                 App.render();
             });
-            exports_50("drop", drop = () => {
+            exports_49("drop", drop = () => {
                 App.prepareRender();
                 let item = state.list.find(one => one._deleting);
                 App.DELETE("/staff", { id: item.id, updated: item.updated })
@@ -8801,21 +9006,21 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_50("hasChanges", hasChanges = () => {
+            exports_49("hasChanges", hasChanges = () => {
                 return !Misc.same(fetchedState, state);
             });
         }
     };
 });
 // File: office.ts
-System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "src/permission", "src/christian/layout", "src/christian/staffs_3"], function (exports_51, context_51) {
+System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "src/permission", "src/christian/layout", "src/christian/staffs_3"], function (exports_50, context_50) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_2, Perm, layout_13, inline_staffs_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, openedonCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_51 && context_51.id;
+    var App, Router, Misc, Theme, calendar_3, Perm, layout_13, inline_staffs_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, openedonCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_50 && context_50.id;
     return {
         setters: [
-            function (App_22) {
-                App = App_22;
+            function (App_21) {
+                App = App_21;
             },
             function (Router_17) {
                 Router = Router_17;
@@ -8826,8 +9031,8 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (Theme_11) {
                 Theme = Theme_11;
             },
-            function (calendar_2_1) {
-                calendar_2 = calendar_2_1;
+            function (calendar_3_1) {
+                calendar_3 = calendar_3_1;
             },
             function (Perm_12) {
                 Perm = Perm_12;
@@ -8840,13 +9045,13 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             }
         ],
         execute: function () {
-            exports_51("NS", NS = "App_office");
+            exports_50("NS", NS = "App_office");
             blackList = ["created", "updatedby", "by"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
-            openedonCalendar = new calendar_2.Calendar(`${NS}_openedon`);
+            openedonCalendar = new calendar_3.Calendar(`${NS}_openedon`);
             formTemplate = (item, staffs_3) => {
                 return `
 ${isNew ? `
@@ -8915,7 +9120,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_51("fetchState", fetchState = (id) => {
+            exports_50("fetchState", fetchState = (id) => {
                 isNew = isNaN(id);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -8929,7 +9134,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .then(() => { return !isNew ? inline_staffs_3.fetchState(id, NS) : Promise.resolve(); });
             });
-            exports_51("fetch", fetch = (params) => {
+            exports_50("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("office"));
                 layout_13.prepareMenu();
@@ -8937,7 +9142,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_51("render", render = () => {
+            exports_50("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -8954,7 +9159,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_51("postRender", postRender = () => {
+            exports_50("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 openedonCalendar.postRender();
@@ -8962,7 +9167,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     inline_staffs_3.postRender();
                 App.setPageTitle(isNew ? i18n("New office") : xtra.title);
             });
-            exports_51("inContext", inContext = () => {
+            exports_50("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -8983,18 +9188,18 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_51("oncalendar", oncalendar = (id) => {
+            exports_50("oncalendar", oncalendar = (id) => {
                 if (openedonCalendar.id == id)
                     openedonCalendar.toggle();
             });
-            exports_51("onchange", onchange = (input) => {
+            exports_50("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_51("cancel", cancel = () => {
+            exports_50("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_51("create", create = () => {
+            exports_50("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -9009,7 +9214,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_51("save", save = (done = false) => {
+            exports_50("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -9026,7 +9231,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_51("drop", drop = () => {
+            exports_50("drop", drop = () => {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/office", key)
@@ -9051,14 +9256,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
     };
 });
 // File: staffs.ts
-System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout"], function (exports_52, context_52) {
+System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout"], function (exports_51, context_51) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_14, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_jobid, gotoDetail;
-    var __moduleName = context_52 && context_52.id;
+    var __moduleName = context_51 && context_51.id;
     return {
         setters: [
-            function (App_23) {
-                App = App_23;
+            function (App_22) {
+                App = App_22;
             },
             function (Router_18) {
                 Router = Router_18;
@@ -9083,7 +9288,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
             }
         ],
         execute: function () {
-            exports_52("NS", NS = "App_staffs");
+            exports_51("NS", NS = "App_staffs");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -9164,7 +9369,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
 </form>
 `;
             };
-            exports_52("fetchState", fetchState = (officeid) => {
+            exports_51("fetchState", fetchState = (officeid) => {
                 Router.registerDirtyExit(null);
                 state.pager.filter.officeid = officeid;
                 return App.POST(`/staff/search/${officeid}/office`, state.pager)
@@ -9175,7 +9380,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                 })
                     .then(Lookup.fetch_job());
             });
-            exports_52("fetch", fetch = (params) => {
+            exports_51("fetch", fetch = (params) => {
                 let officeid = +params[0];
                 App.prepareRender(NS, i18n("staffs"));
                 layout_14.prepareMenu();
@@ -9192,7 +9397,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_52("render", render = () => {
+            exports_51("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -9215,11 +9420,11 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                 const tab = layout_14.tabTemplate(key.officeid, xtra);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_52("postRender", postRender = () => {
+            exports_51("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_52("inContext", inContext = () => {
+            exports_51("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (id) => {
@@ -9232,23 +9437,23 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_52("goto", goto = (pageNo, pageSize) => {
+            exports_51("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_52("sortBy", sortBy = (columnName, direction) => {
+            exports_51("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_52("search", search = (element) => {
+            exports_51("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_52("filter_jobid", filter_jobid = (element) => {
+            exports_51("filter_jobid", filter_jobid = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let jobid = (value.length > 0 ? +value : undefined);
                 if (jobid == state.pager.filter.jobid)
@@ -9257,7 +9462,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_52("gotoDetail", gotoDetail = (id) => {
+            exports_51("gotoDetail", gotoDetail = (id) => {
                 setSelectedRow(id);
                 Router.goto(`#/staff/${id}/${key.officeid}`);
             });
@@ -9265,14 +9470,14 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
     };
 });
 // File: staff.ts
-System.register("src/christian/staff", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/christian/layout"], function (exports_53, context_53) {
+System.register("src/christian/staff", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/christian/layout"], function (exports_52, context_52) {
     "use strict";
     var App, Router, Misc, Theme, Lookup, Perm, layout_15, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_53 && context_53.id;
+    var __moduleName = context_52 && context_52.id;
     return {
         setters: [
-            function (App_24) {
-                App = App_24;
+            function (App_23) {
+                App = App_23;
             },
             function (Router_19) {
                 Router = Router_19;
@@ -9294,7 +9499,7 @@ System.register("src/christian/staff", ["_BaseApp/src/core/app", "_BaseApp/src/c
             }
         ],
         execute: function () {
-            exports_53("NS", NS = "App_staff");
+            exports_52("NS", NS = "App_staff");
             blackList = ["officeid_text", "jobid_text", "created", "updatedby", "by"];
             state = {};
             fetchedState = {};
@@ -9366,7 +9571,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_53("fetchState", fetchState = (id, officeid) => {
+            exports_52("fetchState", fetchState = (id, officeid) => {
                 isNew = isNaN(id);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -9379,7 +9584,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .then(Lookup.fetch_job());
             });
-            exports_53("fetch", fetch = (params) => {
+            exports_52("fetch", fetch = (params) => {
                 let id = +params[0];
                 let officeid = +params[1];
                 App.prepareRender(NS, i18n("staff"));
@@ -9388,7 +9593,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_53("render", render = () => {
+            exports_52("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -9404,12 +9609,12 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_53("postRender", postRender = () => {
+            exports_52("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New staff") : xtra.title);
             });
-            exports_53("inContext", inContext = () => {
+            exports_52("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -9431,14 +9636,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_53("onchange", onchange = (input) => {
+            exports_52("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_53("cancel", cancel = () => {
+            exports_52("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_53("create", create = () => {
+            exports_52("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -9453,7 +9658,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_53("save", save = (done = false) => {
+            exports_52("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -9470,7 +9675,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_53("drop", drop = () => {
+            exports_52("drop", drop = () => {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/staff", key)
@@ -9493,25 +9698,25 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
         }
     };
 });
-System.register("src/christian/layout_2", ["_BaseApp/src/core/app", "src/layout"], function (exports_54, context_54) {
+System.register("src/christian/layout_2", ["_BaseApp/src/core/app", "src/layout"], function (exports_53, context_53) {
     "use strict";
     var App, layout_16, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_54 && context_54.id;
+    var __moduleName = context_53 && context_53.id;
     return {
         setters: [
-            function (App_25) {
-                App = App_25;
+            function (App_24) {
+                App = App_24;
             },
             function (layout_16_1) {
                 layout_16 = layout_16_1;
             }
         ],
         execute: function () {
-            exports_54("icon", icon = "far fa-user");
-            exports_54("prepareMenu", prepareMenu = () => {
+            exports_53("icon", icon = "far fa-user");
+            exports_53("prepareMenu", prepareMenu = () => {
                 layout_16.setOpenedMenu("Christian");
             });
-            exports_54("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
+            exports_53("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 var _a, _b;
                 let isstaffs = App.inContext("App_staffs_2");
                 let isstaff = App.inContext("App_staff_2");
@@ -9579,11 +9784,11 @@ ${isFile ? `
 </div>
 `;
             });
-            exports_54("buildTitle", buildTitle = (xtra, defaultText) => {
+            exports_53("buildTitle", buildTitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_54("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
+            exports_53("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -9591,14 +9796,14 @@ ${isFile ? `
     };
 });
 // File: staffs.ts
-System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout_2"], function (exports_55, context_55) {
+System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout_2"], function (exports_54, context_54) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_2_2, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_officeid, filter_jobid, gotoDetail;
-    var __moduleName = context_55 && context_55.id;
+    var __moduleName = context_54 && context_54.id;
     return {
         setters: [
-            function (App_26) {
-                App = App_26;
+            function (App_25) {
+                App = App_25;
             },
             function (Router_20) {
                 Router = Router_20;
@@ -9623,7 +9828,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
             }
         ],
         execute: function () {
-            exports_55("NS", NS = "App_staffs_2");
+            exports_54("NS", NS = "App_staffs_2");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -9703,7 +9908,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
 </form>
 `;
             };
-            exports_55("fetchState", fetchState = (id) => {
+            exports_54("fetchState", fetchState = (id) => {
                 Router.registerDirtyExit(null);
                 return App.POST(`/staff/search`, state.pager)
                     .then(payload => {
@@ -9714,7 +9919,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                     .then(Lookup.fetch_office())
                     .then(Lookup.fetch_job());
             });
-            exports_55("fetch", fetch = (params) => {
+            exports_54("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("staffs"));
                 layout_2_2.prepareMenu();
@@ -9731,7 +9936,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_55("render", render = () => {
+            exports_54("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -9756,11 +9961,11 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                 const tab = layout_2_2.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_55("postRender", postRender = () => {
+            exports_54("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_55("inContext", inContext = () => {
+            exports_54("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (id) => {
@@ -9773,23 +9978,23 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_55("goto", goto = (pageNo, pageSize) => {
+            exports_54("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_55("sortBy", sortBy = (columnName, direction) => {
+            exports_54("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_55("search", search = (element) => {
+            exports_54("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_55("filter_officeid", filter_officeid = (element) => {
+            exports_54("filter_officeid", filter_officeid = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let officeid = (value.length > 0 ? +value : undefined);
                 if (officeid == state.pager.filter.officeid)
@@ -9798,7 +10003,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_55("filter_jobid", filter_jobid = (element) => {
+            exports_54("filter_jobid", filter_jobid = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let jobid = (value.length > 0 ? +value : undefined);
                 if (jobid == state.pager.filter.jobid)
@@ -9807,7 +10012,7 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_55("gotoDetail", gotoDetail = (id) => {
+            exports_54("gotoDetail", gotoDetail = (id) => {
                 setSelectedRow(id);
                 Router.goto(`#/staff_2/${id}`);
             });
@@ -9815,14 +10020,14 @@ System.register("src/christian/staffs_2", ["_BaseApp/src/core/app", "_BaseApp/sr
     };
 });
 // File: staff.ts
-System.register("src/christian/staff_2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/christian/layout_2"], function (exports_56, context_56) {
+System.register("src/christian/staff_2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/christian/layout_2"], function (exports_55, context_55) {
     "use strict";
     var App, Router, Misc, Theme, Lookup, Perm, layout_2_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_56 && context_56.id;
+    var __moduleName = context_55 && context_55.id;
     return {
         setters: [
-            function (App_27) {
-                App = App_27;
+            function (App_26) {
+                App = App_26;
             },
             function (Router_21) {
                 Router = Router_21;
@@ -9844,7 +10049,7 @@ System.register("src/christian/staff_2", ["_BaseApp/src/core/app", "_BaseApp/src
             }
         ],
         execute: function () {
-            exports_56("NS", NS = "App_staff_2");
+            exports_55("NS", NS = "App_staff_2");
             blackList = ["officeid_text", "jobid_text", "created", "updatedby", "by"];
             state = {};
             fetchedState = {};
@@ -9917,7 +10122,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_56("fetchState", fetchState = (id) => {
+            exports_55("fetchState", fetchState = (id) => {
                 isNew = isNaN(id);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -9931,7 +10136,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(Lookup.fetch_office())
                     .then(Lookup.fetch_job());
             });
-            exports_56("fetch", fetch = (params) => {
+            exports_55("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("staff"));
                 layout_2_3.prepareMenu();
@@ -9939,7 +10144,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_56("render", render = () => {
+            exports_55("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -9957,12 +10162,12 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_56("postRender", postRender = () => {
+            exports_55("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 App.setPageTitle(isNew ? i18n("New staff") : xtra.title);
             });
-            exports_56("inContext", inContext = () => {
+            exports_55("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -9984,14 +10189,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_56("onchange", onchange = (input) => {
+            exports_55("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_56("cancel", cancel = () => {
+            exports_55("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_56("create", create = () => {
+            exports_55("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -10006,7 +10211,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_56("save", save = (done = false) => {
+            exports_55("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -10023,7 +10228,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_56("drop", drop = () => {
+            exports_55("drop", drop = () => {
                 key.updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/staff", key)
@@ -10046,14 +10251,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
     };
 });
 // File: staff.ts
-System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/christian/layout"], function (exports_57, context_57) {
+System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/christian/layout"], function (exports_56, context_56) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_3, Lookup, layout_17, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_jobid, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
-    var __moduleName = context_57 && context_57.id;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_4, Lookup, layout_17, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_jobid, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var __moduleName = context_56 && context_56.id;
     return {
         setters: [
-            function (App_28) {
-                App = App_28;
+            function (App_27) {
+                App = App_27;
             },
             function (Router_22) {
                 Router = Router_22;
@@ -10070,8 +10275,8 @@ System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/sr
             function (Pager_9) {
                 Pager = Pager_9;
             },
-            function (calendar_3_1) {
-                calendar_3 = calendar_3_1;
+            function (calendar_4_1) {
+                calendar_4 = calendar_4_1;
             },
             function (Lookup_12) {
                 Lookup = Lookup_12;
@@ -10081,7 +10286,7 @@ System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/sr
             }
         ],
         execute: function () {
-            exports_57("NS", NS = "App_staff_4");
+            exports_56("NS", NS = "App_staff_4");
             table_id = "staff_4_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "officeid_text", "jobid_text", "created", "by"];
             state = {
@@ -10246,7 +10451,7 @@ ${!readonly ? `
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, null) : "");
             };
-            exports_57("fetchState", fetchState = (officeid) => {
+            exports_56("fetchState", fetchState = (officeid) => {
                 isNew = false;
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -10260,7 +10465,7 @@ ${!readonly ? `
                 })
                     .then(Lookup.fetch_job());
             });
-            exports_57("fetch", fetch = (params) => {
+            exports_56("fetch", fetch = (params) => {
                 let officeid = +params[0];
                 App.prepareRender(NS, i18n("staff"));
                 layout_17.prepareMenu();
@@ -10279,7 +10484,7 @@ ${!readonly ? `
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_57("render", render = () => {
+            exports_56("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -10317,30 +10522,30 @@ ${!readonly ? `
                 let warning = App.warningTemplate();
                 return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
             });
-            exports_57("postRender", postRender = () => {
+            exports_56("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_57("inContext", inContext = () => {
+            exports_56("inContext", inContext = () => {
                 return App.inContext(NS);
             });
-            exports_57("goto", goto = (pageNo, pageSize) => {
+            exports_56("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = App.setPageState(NS, "pageSize", pageSize);
                 refresh();
             });
-            exports_57("sortBy", sortBy = (columnName, direction) => {
+            exports_56("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_57("search", search = (element) => {
+            exports_56("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_57("filter_jobid", filter_jobid = (element) => {
+            exports_56("filter_jobid", filter_jobid = (element) => {
                 let value = element.options[element.selectedIndex].value;
                 let jobid = (value.length > 0 ? +value : undefined);
                 if (jobid == state.pager.filter.jobid)
@@ -10371,7 +10576,7 @@ ${!readonly ? `
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_57("onchange", onchange = (input) => {
+            exports_56("onchange", onchange = (input) => {
                 state = getFormState();
                 let parts = input.id.replace(`${NS}_`, "").split("_");
                 let field = parts[0];
@@ -10382,10 +10587,10 @@ ${!readonly ? `
                 //}
                 App.render();
             });
-            exports_57("ondate", ondate = (input, eventname) => {
-                return calendar_3.eventMan(NS, input, eventname);
+            exports_56("ondate", ondate = (input, eventname) => {
+                return calendar_4.eventMan(NS, input, eventname);
             });
-            exports_57("undo", undo = () => {
+            exports_56("undo", undo = () => {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -10394,7 +10599,7 @@ ${!readonly ? `
                 isDirty = false;
                 App.render();
             });
-            exports_57("addNew", addNew = () => {
+            exports_56("addNew", addNew = () => {
                 let url = `/staff/new/${key.officeid}/office`;
                 return App.GET(url)
                     .then((payload) => {
@@ -10406,7 +10611,7 @@ ${!readonly ? `
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_57("create", create = () => {
+            exports_56("create", create = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._isNew);
                 if (!html5Valid())
@@ -10422,7 +10627,7 @@ ${!readonly ? `
                 })
                     .catch(App.render);
             });
-            exports_57("save", save = () => {
+            exports_56("save", save = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._editing);
                 if (!html5Valid())
@@ -10437,12 +10642,12 @@ ${!readonly ? `
                 })
                     .catch(App.render);
             });
-            exports_57("selectfordrop", selectfordrop = (id) => {
+            exports_56("selectfordrop", selectfordrop = (id) => {
                 state = Misc.clone(fetchedState);
                 state.list.find(one => one.id == id)._deleting = true;
                 App.render();
             });
-            exports_57("drop", drop = () => {
+            exports_56("drop", drop = () => {
                 App.prepareRender();
                 let item = state.list.find(one => one._deleting);
                 App.DELETE("/staff", { id: item.id, updated: item.updated })
@@ -10453,7 +10658,7 @@ ${!readonly ? `
                 })
                     .catch(App.render);
             });
-            exports_57("hasChanges", hasChanges = () => {
+            exports_56("hasChanges", hasChanges = () => {
                 return !Misc.same(fetchedState, state);
             });
             dirtyExit = () => {
@@ -10481,14 +10686,459 @@ ${!readonly ? `
         }
     };
 });
-System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christian/offices", "src/christian/office", "src/christian/staffs", "src/christian/staff", "src/christian/staffs_2", "src/christian/staff_2", "src/christian/staffs_3", "src/christian/staffs_4"], function (exports_58, context_58) {
+// File: equipments.ts
+System.register("src/christian/equipments", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout_2"], function (exports_57, context_57) {
     "use strict";
-    var Router, offices, office, staffs, staff, staffs_2, staff_2, staffs_3, staffs_4, startup, render, postRender;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_2_4, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_catluid, gotoDetail;
+    var __moduleName = context_57 && context_57.id;
+    return {
+        setters: [
+            function (App_28) {
+                App = App_28;
+            },
+            function (Router_23) {
+                Router = Router_23;
+            },
+            function (Perm_18) {
+                Perm = Perm_18;
+            },
+            function (Misc_29) {
+                Misc = Misc_29;
+            },
+            function (Theme_17) {
+                Theme = Theme_17;
+            },
+            function (Pager_10) {
+                Pager = Pager_10;
+            },
+            function (Lookup_13) {
+                Lookup = Lookup_13;
+            },
+            function (layout_2_4_1) {
+                layout_2_4 = layout_2_4_1;
+            }
+        ],
+        execute: function () {
+            exports_57("NS", NS = "App_equipments");
+            state = {
+                list: [],
+                pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
+            };
+            filterTemplate = (catluid) => {
+                let filters = [];
+                filters.push(Theme.renderDropdownFilter(NS, "catluid", catluid, i18n("CATLUID")));
+                return filters.join("");
+            };
+            trTemplate = (item, rowNumber) => {
+                return `
+<tr class="${isSelectedRow(item.id) ? "is-selected" : ""}" onclick="${NS}.gotoDetail(${item.id});">
+    <td class="js-index">${rowNumber}</td>
+    <td>${Misc.toStaticText(item.id)}</td>
+    <td>${Misc.toStaticText(item.name)}</td>
+    <td>${Misc.toStaticText(item.catluid_text)}</td>
+    <td>${Misc.toStaticText(item.price)}</td>
+    <td>${Misc.toStaticCheckbox(item.archive)}</td>
+    <td>${Misc.toStaticText(item.plusorder)}</td>
+    <td>${Misc.toStaticText(item.rn)}</td>
+</tr>`;
+            };
+            tableTemplate = (tbody, pager) => {
+                return `
+<div class="table-container">
+<table class="table is-hoverable is-fullwidth">
+    <thead>
+        <tr>
+            <th></th>
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ID"), "id", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("NAME"), "name", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("CATLUID_TEXT"), "catluid_text", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PRICE"), "price", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PLUSORDER"), "plusorder", "ASC")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("RN"), "rn", "ASC")}
+        </tr>
+    </thead>
+    <tbody>
+        ${tbody}
+    </tbody>
+</table>
+</div>
+`;
+            };
+            pageTemplate = (pager, table, tab, warning, dirty) => {
+                let readonly = false;
+                let buttons = [];
+                buttons.push(Theme.buttonAddNew(NS, `#/equipment/new/${key.staffid}`, i18n("Add New")));
+                let actions = Theme.renderButtons(buttons);
+                let title = layout_2_4.buildTitle(xtra, i18n("equipments title"));
+                let subtitle = layout_2_4.buildSubtitle(xtra, i18n("equipments subtitle"));
+                return `
+<form onsubmit="return false;">
+<input type="submit" style="display:none;" id="${NS}_dummy_submit">
+
+<div class="js-fixed-heading">
+<div class="js-head">
+    <div class="content js-uc-heading js-flex-space">
+        <div>
+            <div class="title"><i class="${layout_2_4.icon}"></i> <span>${title}</span></div>
+            <div class="subtitle">${subtitle}</div>
+        </div>
+        <div>
+            ${Theme.wrapContent("js-uc-actions", actions)}
+        </div>
+    </div>
+    ${Theme.wrapContent("js-uc-tabs", tab)}
+</div>
+<div class="js-body">
+    ${Theme.wrapContent("js-uc-notification", dirty)}
+    ${Theme.wrapContent("js-uc-notification", warning)}
+    ${Theme.wrapContent("js-uc-pager", pager)}
+    ${Theme.wrapContent("js-uc-list", table)}
+</div>
+</div>
+
+</form>
+`;
+            };
+            exports_57("fetchState", fetchState = (staffid) => {
+                Router.registerDirtyExit(null);
+                state.pager.filter.staffid = staffid;
+                return App.POST(`/equipment/search/${staffid}/staff`, state.pager)
+                    .then(payload => {
+                    state = payload;
+                    xtra = payload.xtra;
+                    key = { staffid };
+                })
+                    .then(Lookup.fetch_cat());
+            });
+            exports_57("fetch", fetch = (params) => {
+                let staffid = +params[0];
+                App.prepareRender(NS, i18n("equipments"));
+                layout_2_4.prepareMenu();
+                fetchState(staffid)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            refresh = () => {
+                App.prepareRender(NS, i18n("equipments"));
+                App.POST(`/equipment/search/${key.staffid}/staff`, state.pager)
+                    .then(payload => {
+                    state = payload;
+                })
+                    .then(App.render)
+                    .catch(App.render);
+            };
+            exports_57("render", render = () => {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || state.list == undefined || (state.list instanceof Array) == false)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                let warning = App.warningTemplate();
+                let dirty = "";
+                const tbody = state.list.reduce((html, item, index) => {
+                    let rowNumber = Pager.rowNumber(state.pager, index);
+                    return html + trTemplate(item, rowNumber);
+                }, "");
+                let year = Perm.getCurrentYear(); //state.pager.filter.year;
+                let lookup_cat = Lookup.get_cat(year);
+                let catluid = Theme.renderOptions(lookup_cat, state.pager.filter.catluid, true);
+                const filter = filterTemplate(catluid);
+                const search = Pager.searchTemplate(state.pager, NS);
+                const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
+                const table = tableTemplate(tbody, state.pager);
+                const tab = layout_2_4.tabTemplate(key.staffid, xtra);
+                return pageTemplate(pager, table, tab, dirty, warning);
+            });
+            exports_57("postRender", postRender = () => {
+                if (!inContext())
+                    return;
+            });
+            exports_57("inContext", inContext = () => {
+                return App.inContext(NS);
+            });
+            setSelectedRow = (id) => {
+                if (uiSelectedRow == undefined)
+                    uiSelectedRow = { id };
+                uiSelectedRow.id = id;
+            };
+            isSelectedRow = (id) => {
+                if (uiSelectedRow == undefined)
+                    return false;
+                return (uiSelectedRow.id == id);
+            };
+            exports_57("goto", goto = (pageNo, pageSize) => {
+                state.pager.pageNo = pageNo;
+                state.pager.pageSize = pageSize;
+                refresh();
+            });
+            exports_57("sortBy", sortBy = (columnName, direction) => {
+                state.pager.pageNo = 1;
+                state.pager.sortColumn = columnName;
+                state.pager.sortDirection = direction;
+                refresh();
+            });
+            exports_57("search", search = (element) => {
+                state.pager.searchText = element.value;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_57("filter_catluid", filter_catluid = (element) => {
+                let value = element.options[element.selectedIndex].value;
+                let catluid = (value.length > 0 ? +value : undefined);
+                if (catluid == state.pager.filter.catluid)
+                    return;
+                state.pager.filter.catluid = catluid;
+                state.pager.pageNo = 1;
+                refresh();
+            });
+            exports_57("gotoDetail", gotoDetail = (id) => {
+                setSelectedRow(id);
+                Router.goto(`#/equipment/${id}/${key.staffid}`);
+            });
+        }
+    };
+});
+// File: equipment.ts
+System.register("src/christian/equipment", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/christian/layout_2"], function (exports_58, context_58) {
+    "use strict";
+    var App, Router, Misc, Theme, Lookup, Perm, layout_2_5, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_58 && context_58.id;
     return {
         setters: [
-            function (Router_23) {
-                Router = Router_23;
+            function (App_29) {
+                App = App_29;
+            },
+            function (Router_24) {
+                Router = Router_24;
+            },
+            function (Misc_30) {
+                Misc = Misc_30;
+            },
+            function (Theme_18) {
+                Theme = Theme_18;
+            },
+            function (Lookup_14) {
+                Lookup = Lookup_14;
+            },
+            function (Perm_19) {
+                Perm = Perm_19;
+            },
+            function (layout_2_5_1) {
+                layout_2_5 = layout_2_5_1;
+            }
+        ],
+        execute: function () {
+            exports_58("NS", NS = "App_equipment");
+            blackList = ["staffid_text", "catluid_text", "created", "updatedby", "by"];
+            state = {};
+            fetchedState = {};
+            isNew = false;
+            isDirty = false;
+            formTemplate = (item, catluid) => {
+                return `
+${isNew ? `
+` : `
+    ${Theme.renderStaticField(Misc.toStaticNumber(item.id), i18n("ID"))}
+`}
+    ${Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 50, true)}
+    ${Theme.renderDropdownField(NS, "catluid", catluid, i18n("CATLUID"))}
+    ${Theme.renderNumberField(NS, "price", item.price, i18n("PRICE"))}
+    ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
+    ${Theme.renderBlame(item, isNew)}
+`;
+            };
+            pageTemplate = (item, form, tab, warning, dirty) => {
+                let canEdit = true;
+                let readonly = !canEdit;
+                let canInsert = canEdit && isNew; // && Perm.hasEquipment_CanAddEquipment;
+                let canDelete = canEdit && !canInsert; // && Perm.hasEquipment_CanDeleteEquipment;
+                let canAdd = canEdit && !canInsert; // && Perm.hasEquipment_CanAddEquipment;
+                let canUpdate = canEdit && !isNew;
+                let buttons = [];
+                buttons.push(Theme.buttonCancel(NS));
+                if (canInsert)
+                    buttons.push(Theme.buttonInsert(NS));
+                if (canDelete)
+                    buttons.push(Theme.buttonDelete(NS));
+                if (canAdd)
+                    buttons.push(Theme.buttonAddNew(NS, `#/equipment/new/${state.staffid}`));
+                if (canUpdate)
+                    buttons.push(Theme.buttonUpdate(NS));
+                let actions = Theme.renderButtons(buttons);
+                let title = layout_2_5.buildTitle(xtra, !isNew ? i18n("equipment Details") : i18n("New equipment"));
+                let subtitle = layout_2_5.buildSubtitle(xtra, `${i18n("Editing equipment")}: <span>${item.name}</span>`);
+                return `
+<form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
+<input type="submit" style="display:none;" id="${NS}_dummy_submit">
+
+<div class="js-fixed-heading">
+<div class="js-head">
+    <div class="content js-uc-heading js-flex-space">
+        <div>
+            <div class="title"><i class="${layout_2_5.icon}"></i> <span>${title}</span></div>
+            <div class="subtitle">${subtitle}</div>
+        </div>
+        <div>
+            ${Theme.wrapContent("js-uc-actions", actions)}
+            ${Theme.renderBlame(item, isNew)}
+        </div>
+    </div>
+    ${Theme.wrapContent("js-uc-tabs", tab)}
+</div>
+<div class="js-body">
+    ${Theme.wrapContent("js-uc-notification", dirty)}
+    ${Theme.wrapContent("js-uc-notification", warning)}
+    ${Theme.wrapContent("js-uc-details", form)}
+</div>
+</div>
+
+${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
+
+</form>
+`;
+            };
+            dirtyTemplate = () => {
+                return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
+            };
+            exports_58("fetchState", fetchState = (id, staffid) => {
+                isNew = isNaN(id);
+                isDirty = false;
+                Router.registerDirtyExit(dirtyExit);
+                return App.GET(`/equipment/${isNew ? `new/${staffid}` : id}/staff`)
+                    .then((payload) => {
+                    state = payload.item;
+                    fetchedState = Misc.clone(state);
+                    xtra = payload.xtra;
+                    key = { id };
+                })
+                    .then(Lookup.fetch_cat());
+            });
+            exports_58("fetch", fetch = (params) => {
+                let id = +params[0];
+                let staffid = +params[1];
+                App.prepareRender(NS, i18n("equipment"));
+                layout_2_5.prepareMenu();
+                fetchState(id, staffid)
+                    .then(App.render)
+                    .catch(App.render);
+            });
+            exports_58("render", render = () => {
+                if (!inContext())
+                    return "";
+                if (App.fatalError())
+                    return App.fatalErrorTemplate();
+                if (state == undefined || Object.keys(state).length == 0)
+                    return App.warningTemplate() || App.unexpectedTemplate();
+                let year = Perm.getCurrentYear(); //or something better
+                let lookup_cat = Lookup.get_cat(year);
+                let catluid = Theme.renderOptions(lookup_cat, state.catluid, true);
+                const form = formTemplate(state, catluid);
+                const tab = layout_2_5.tabTemplate(state.staffid, xtra, isNew);
+                const dirty = dirtyTemplate();
+                const warning = App.warningTemplate();
+                return pageTemplate(state, form, tab, warning, dirty);
+            });
+            exports_58("postRender", postRender = () => {
+                if (!inContext())
+                    return;
+                App.setPageTitle(isNew ? i18n("New equipment") : xtra.title);
+            });
+            exports_58("inContext", inContext = () => {
+                return App.inContext(NS);
+            });
+            getFormState = () => {
+                let clone = Misc.clone(state);
+                clone.staffid = Misc.fromSelectNumber(`${NS}_staffid`, state.staffid);
+                clone.name = Misc.fromInputText(`${NS}_name`, state.name);
+                clone.catluid = Misc.fromSelectNumber(`${NS}_catluid`, state.catluid);
+                clone.price = Misc.fromInputNumberNullable(`${NS}_price`, state.price);
+                clone.archive = Misc.fromInputCheckbox(`${NS}_archive`, state.archive);
+                return clone;
+            };
+            valid = (formState) => {
+                //if (formState.somefield.length == 0) App.setError("Somefield is required");
+                return App.hasNoError();
+            };
+            html5Valid = () => {
+                document.getElementById(`${NS}_dummy_submit`).click();
+                let form = document.getElementsByTagName("form")[0];
+                form.classList.add("js-error");
+                return form.checkValidity();
+            };
+            exports_58("onchange", onchange = (input) => {
+                state = getFormState();
+                App.render();
+            });
+            exports_58("cancel", cancel = () => {
+                Router.goBackOrResume(isDirty);
+            });
+            exports_58("create", create = () => {
+                let formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.POST("/equipment", Misc.createBlack(formState, blackList))
+                    .then(payload => {
+                    let newkey = payload;
+                    Misc.toastSuccessSave();
+                    Router.goto(`#/equipment/${newkey.id}`, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_58("save", save = (done = false) => {
+                let formState = getFormState();
+                if (!html5Valid())
+                    return;
+                if (!valid(formState))
+                    return App.render();
+                App.prepareRender();
+                App.PUT("/equipment", Misc.createBlack(formState, blackList))
+                    .then(_ => {
+                    Misc.toastSuccessSave();
+                    if (done)
+                        Router.goto(`#/equipments/${state.staffid}`, 100);
+                    else
+                        Router.goto(`#/equipment/${key.id}`, 10);
+                })
+                    .catch(App.render);
+            });
+            exports_58("drop", drop = () => {
+                key.updated = state.updated;
+                App.prepareRender();
+                App.DELETE("/equipment", key)
+                    .then(_ => {
+                    let staffid = state.staffid;
+                    Router.goto(`#/equipments/${staffid}`, 250);
+                })
+                    .catch(App.render);
+            });
+            dirtyExit = () => {
+                let masterHasChange = !Misc.same(fetchedState, getFormState());
+                let inlineHasChange = false;
+                isDirty = masterHasChange || inlineHasChange;
+                if (isDirty) {
+                    setTimeout(() => {
+                        state = getFormState();
+                        App.render();
+                    }, 10);
+                }
+                return isDirty;
+            };
+        }
+    };
+});
+System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christian/offices", "src/christian/office", "src/christian/staffs", "src/christian/staff", "src/christian/staffs_2", "src/christian/staff_2", "src/christian/staffs_3", "src/christian/staffs_4", "src/christian/equipments", "src/christian/equipment"], function (exports_59, context_59) {
+    "use strict";
+    var Router, offices, office, staffs, staff, staffs_2, staff_2, staffs_3, staffs_4, equipments, equipment, startup, render, postRender;
+    var __moduleName = context_59 && context_59.id;
+    return {
+        setters: [
+            function (Router_25) {
+                Router = Router_25;
             },
             function (offices_1) {
                 offices = offices_1;
@@ -10513,6 +11163,12 @@ System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christia
             },
             function (staffs_4_1) {
                 staffs_4 = staffs_4_1;
+            },
+            function (equipments_1) {
+                equipments = equipments_1;
+            },
+            function (equipment_1) {
+                equipment = equipment_1;
             }
         ],
         execute: function () {
@@ -10527,10 +11183,12 @@ System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christia
             window[staff_2.NS] = staff_2;
             window[staffs_3.NS] = staffs_3;
             window[staffs_4.NS] = staffs_4;
+            window[equipments.NS] = equipments;
+            window[equipment.NS] = equipment;
             //
             // ***** For a brand new main.ts, don't forget to update the root main.ts and add call to startup() *****
             //
-            exports_58("startup", startup = () => {
+            exports_59("startup", startup = () => {
                 Router.addRoute("^#/offices/?(.*)?$", offices.fetch);
                 Router.addRoute("^#/office/?(.*)?$", office.fetch);
                 Router.addRoute("^#/staffs_2/?(.*)?$", staffs_2.fetch);
@@ -10538,11 +11196,13 @@ System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christia
                 Router.addRoute("^#/staffs_4/?(.*)?$", staffs_4.fetch);
                 Router.addRoute("^#/staffs/?(.*)?$", staffs.fetch);
                 Router.addRoute("^#/staff/?(.*)?$", staff.fetch);
+                Router.addRoute("^#/equipments/?(.*)?$", equipments.fetch);
+                Router.addRoute("^#/equipment/?(.*)?$", equipment.fetch);
             });
             //
             // ***** For a brand new main.ts, don't forget to update the root layout.ts and add calls to render() and postRender() *****
             //
-            exports_58("render", render = () => {
+            exports_59("render", render = () => {
                 return `
 <div>
     ${offices.render()}
@@ -10552,10 +11212,11 @@ System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christia
     ${staffs_2.render()}
     ${staff_2.render()}
     ${staffs_4.render()}
-</div>
+    ${equipments.render()}
+    ${equipment.render()}</div>
 `;
             });
-            exports_58("postRender", postRender = () => {
+            exports_59("postRender", postRender = () => {
                 offices.postRender();
                 office.postRender();
                 staffs.postRender();
@@ -10563,29 +11224,31 @@ System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christia
                 staffs_2.postRender();
                 staff_2.postRender();
                 staffs_4.postRender();
+                equipments.postRender();
+                equipment.postRender();
             });
         }
     };
 });
-System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_59, context_59) {
+System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_60, context_60) {
     "use strict";
     var App, layout_18, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_59 && context_59.id;
+    var __moduleName = context_60 && context_60.id;
     return {
         setters: [
-            function (App_29) {
-                App = App_29;
+            function (App_30) {
+                App = App_30;
             },
             function (layout_18_1) {
                 layout_18 = layout_18_1;
             }
         ],
         execute: function () {
-            exports_59("icon", icon = "far fa-user");
-            exports_59("prepareMenu", prepareMenu = () => {
+            exports_60("icon", icon = "far fa-user");
+            exports_60("prepareMenu", prepareMenu = () => {
                 layout_18.setOpenedMenu("Fournisseur-Propriétaires");
             });
-            exports_59("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
+            exports_60("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isProprietaires = App.inContext("App_proprietaires");
                 let isProprietaire = App.inContext("App_proprietaire");
                 let isFiles = window.location.hash.startsWith("#/files/proprietaire");
@@ -10631,11 +11294,11 @@ ${showFile ? `
 </div>
 `;
             });
-            exports_59("buildTitle", buildTitle = (xtra, defaultText) => {
+            exports_60("buildTitle", buildTitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_59("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
+            exports_60("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -10643,39 +11306,39 @@ ${showFile ? `
     };
 });
 // File: proprietaires.ts
-System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_60, context_60) {
+System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_61, context_61) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_19, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
-    var __moduleName = context_60 && context_60.id;
+    var __moduleName = context_61 && context_61.id;
     return {
         setters: [
-            function (App_30) {
-                App = App_30;
+            function (App_31) {
+                App = App_31;
             },
-            function (Router_24) {
-                Router = Router_24;
+            function (Router_26) {
+                Router = Router_26;
             },
-            function (Perm_18) {
-                Perm = Perm_18;
+            function (Perm_20) {
+                Perm = Perm_20;
             },
-            function (Misc_29) {
-                Misc = Misc_29;
+            function (Misc_31) {
+                Misc = Misc_31;
             },
-            function (Theme_17) {
-                Theme = Theme_17;
+            function (Theme_19) {
+                Theme = Theme_19;
             },
-            function (Pager_10) {
-                Pager = Pager_10;
+            function (Pager_11) {
+                Pager = Pager_11;
             },
-            function (Lookup_13) {
-                Lookup = Lookup_13;
+            function (Lookup_15) {
+                Lookup = Lookup_15;
             },
             function (layout_19_1) {
                 layout_19 = layout_19_1;
             }
         ],
         execute: function () {
-            exports_60("NS", NS = "App_proprietaires");
+            exports_61("NS", NS = "App_proprietaires");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: { nom: undefined } }
@@ -10863,7 +11526,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
 </form>
 `;
             };
-            exports_60("fetchState", fetchState = (id) => {
+            exports_61("fetchState", fetchState = (id) => {
                 Router.registerDirtyExit(null);
                 return App.POST("/fournisseur/search", state.pager)
                     .then(payload => {
@@ -10874,7 +11537,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(Lookup.fetch_pays())
                     .then(Lookup.fetch_institutionBanquaire());
             });
-            exports_60("fetch", fetch = (params) => {
+            exports_61("fetch", fetch = (params) => {
                 let id = params[0];
                 App.prepareRender(NS, i18n("fournisseurs"));
                 fetchState(id)
@@ -10890,7 +11553,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_60("render", render = () => {
+            exports_61("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -10911,11 +11574,11 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 const tab = layout_19.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_60("postRender", postRender = () => {
+            exports_61("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_60("inContext", inContext = () => {
+            exports_61("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (id) => {
@@ -10928,26 +11591,26 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_60("goto", goto = (pageNo, pageSize) => {
+            exports_61("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_60("sortBy", sortBy = (columnName, direction) => {
+            exports_61("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_60("search", search = (element) => {
+            exports_61("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_60("filter_nom", filter_nom = (element) => {
+            exports_61("filter_nom", filter_nom = (element) => {
                 // TODO (filterDef)
             });
-            exports_60("gotoDetail", gotoDetail = (id) => {
+            exports_61("gotoDetail", gotoDetail = (id) => {
                 setSelectedRow(id);
                 Router.goto(`#/proprietaire/${id}`);
             });
@@ -10955,36 +11618,36 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
     };
 });
 // File: lots2.ts
-System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_61, context_61) {
+System.register("src/fournisseur/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_62, context_62) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
-    var __moduleName = context_61 && context_61.id;
+    var __moduleName = context_62 && context_62.id;
     return {
         setters: [
-            function (App_31) {
-                App = App_31;
+            function (App_32) {
+                App = App_32;
             },
-            function (Router_25) {
-                Router = Router_25;
+            function (Router_27) {
+                Router = Router_27;
             },
-            function (Perm_19) {
-                Perm = Perm_19;
+            function (Perm_21) {
+                Perm = Perm_21;
             },
-            function (Misc_30) {
-                Misc = Misc_30;
+            function (Misc_32) {
+                Misc = Misc_32;
             },
-            function (Theme_18) {
-                Theme = Theme_18;
+            function (Theme_20) {
+                Theme = Theme_20;
             },
-            function (Pager_11) {
-                Pager = Pager_11;
+            function (Pager_12) {
+                Pager = Pager_12;
             },
-            function (Lookup_14) {
-                Lookup = Lookup_14;
+            function (Lookup_16) {
+                Lookup = Lookup_16;
             }
         ],
         execute: function () {
-            exports_61("NS", NS = "App_lots2");
+            exports_62("NS", NS = "App_lots2");
             table_id = "lots2_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
             state = {
@@ -11128,7 +11791,7 @@ ${!readonly ? `
 ${Theme.wrapContent("js-uc-list", table)}
 `;
             };
-            exports_61("fetchState", fetchState = (proprietaireid, ownerNS) => {
+            exports_62("fetchState", fetchState = (proprietaireid, ownerNS) => {
                 isAddingNewParent = (proprietaireid == "new");
                 callerNS = ownerNS || callerNS;
                 isNew = false;
@@ -11145,9 +11808,9 @@ ${Theme.wrapContent("js-uc-list", table)}
                     .then(Lookup.fetch_entente_paiement())
                     .then(Lookup.fetch_zone());
             });
-            exports_61("preRender", preRender = () => {
+            exports_62("preRender", preRender = () => {
             });
-            exports_61("render", render = () => {
+            exports_62("render", render = () => {
                 if (isAddingNewParent)
                     return "";
                 let editId;
@@ -11180,9 +11843,9 @@ ${Theme.wrapContent("js-uc-list", table)}
                 const table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
             });
-            exports_61("postRender", postRender = () => {
+            exports_62("postRender", postRender = () => {
             });
-            exports_61("inContext", inContext = () => {
+            exports_62("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -11223,11 +11886,11 @@ ${Theme.wrapContent("js-uc-list", table)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_61("onchange", onchange = (input) => {
+            exports_62("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_61("undo", undo = () => {
+            exports_62("undo", undo = () => {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -11235,7 +11898,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 state = Misc.clone(fetchedState);
                 App.render();
             });
-            exports_61("addNew", addNew = () => {
+            exports_62("addNew", addNew = () => {
                 let url = `/lot/new/${key.proprietaireid}`;
                 return App.GET(url)
                     .then((payload) => {
@@ -11247,7 +11910,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_61("create", create = () => {
+            exports_62("create", create = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._isNew);
                 if (!html5Valid())
@@ -11260,7 +11923,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_61("save", save = () => {
+            exports_62("save", save = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._editing);
                 if (!html5Valid())
@@ -11273,12 +11936,12 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_61("selectfordrop", selectfordrop = (id) => {
+            exports_62("selectfordrop", selectfordrop = (id) => {
                 state = Misc.clone(fetchedState);
                 state.list.find(one => one.id == id)._deleting = true;
                 App.render();
             });
-            exports_61("drop", drop = () => {
+            exports_62("drop", drop = () => {
                 App.prepareRender();
                 let item = state.list.find(one => one._deleting);
                 App.DELETE("/lot", { id: item.id })
@@ -11288,33 +11951,33 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_61("hasChanges", hasChanges = () => {
+            exports_62("hasChanges", hasChanges = () => {
                 return !Misc.same(fetchedState, state);
             });
         }
     };
 });
 // File: proprietaire.ts
-System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout", "src/fournisseur/lots2"], function (exports_62, context_62) {
+System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout", "src/fournisseur/lots2"], function (exports_63, context_63) {
     "use strict";
     var App, Router, Misc, Theme, Lookup, layout_20, app_inline2, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, block_address, block_telephone, block_ciel, block_internet, block_autres, block_depotdirect, block_representant, block_camions, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_62 && context_62.id;
+    var __moduleName = context_63 && context_63.id;
     return {
         setters: [
-            function (App_32) {
-                App = App_32;
+            function (App_33) {
+                App = App_33;
             },
-            function (Router_26) {
-                Router = Router_26;
+            function (Router_28) {
+                Router = Router_28;
             },
-            function (Misc_31) {
-                Misc = Misc_31;
+            function (Misc_33) {
+                Misc = Misc_33;
             },
-            function (Theme_19) {
-                Theme = Theme_19;
+            function (Theme_21) {
+                Theme = Theme_21;
             },
-            function (Lookup_15) {
-                Lookup = Lookup_15;
+            function (Lookup_17) {
+                Lookup = Lookup_17;
             },
             function (layout_20_1) {
                 layout_20 = layout_20_1;
@@ -11324,7 +11987,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             }
         ],
         execute: function () {
-            exports_62("NS", NS = "App_proprietaire");
+            exports_63("NS", NS = "App_proprietaire");
             blackList = ["paysid_text", "institutionbanquaireid_text"];
             state = {};
             fetchedState = {};
@@ -11521,7 +12184,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_62("fetchState", fetchState = (id) => {
+            exports_63("fetchState", fetchState = (id) => {
                 isNew = (id == "new");
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -11536,14 +12199,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(Lookup.fetch_institutionBanquaire())
                     .then(() => { return app_inline2.fetchState(id, NS); });
             });
-            exports_62("fetch", fetch = (params) => {
+            exports_63("fetch", fetch = (params) => {
                 let id = params[0];
                 App.prepareRender(NS, i18n("proprietaire"));
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_62("render", render = () => {
+            exports_63("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -11563,13 +12226,13 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_62("postRender", postRender = () => {
+            exports_63("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 app_inline2.postRender();
                 App.setPageTitle(isNew ? i18n("New proprietaire") : xtra.title);
             });
-            exports_62("inContext", inContext = () => {
+            exports_63("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -11645,14 +12308,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_62("onchange", onchange = (input) => {
+            exports_63("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_62("cancel", cancel = () => {
+            exports_63("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_62("create", create = () => {
+            exports_63("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -11667,7 +12330,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_62("save", save = (done = false) => {
+            exports_63("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -11684,7 +12347,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_62("drop", drop = () => {
+            exports_63("drop", drop = () => {
                 //(<any>key).updatedUtc = state.updatedUtc;
                 App.prepareRender();
                 App.DELETE("/fournisseur", key)
@@ -11708,14 +12371,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
         }
     };
 });
-System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire", "src/fournisseur/lots2"], function (exports_63, context_63) {
+System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fournisseur/proprietaires", "src/fournisseur/proprietaire", "src/fournisseur/lots2"], function (exports_64, context_64) {
     "use strict";
     var Router, proprietaires, proprietaire, lots2, startup, render, postRender;
-    var __moduleName = context_63 && context_63.id;
+    var __moduleName = context_64 && context_64.id;
     return {
         setters: [
-            function (Router_27) {
-                Router = Router_27;
+            function (Router_29) {
+                Router = Router_29;
             },
             function (proprietaires_1) {
                 proprietaires = proprietaires_1;
@@ -11737,14 +12400,14 @@ System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fourni
             //
             // ***** Don't forget to update the root main.ts and add call to startup() *****
             //
-            exports_63("startup", startup = () => {
+            exports_64("startup", startup = () => {
                 Router.addRoute("^#/proprietaires/?(.*)?$", proprietaires.fetch);
                 Router.addRoute("^#/proprietaire/?(.*)?$", proprietaire.fetch);
             });
             //
             // ***** Don't forget to update the root layout.ts and add calls to render() and postRender() *****
             //
-            exports_63("render", render = () => {
+            exports_64("render", render = () => {
                 return `
 <div>
     ${proprietaires.render()}
@@ -11752,32 +12415,32 @@ System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fourni
 </div>
 `;
             });
-            exports_63("postRender", postRender = () => {
+            exports_64("postRender", postRender = () => {
                 proprietaires.postRender();
                 proprietaire.postRender();
             });
         }
     };
 });
-System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_64, context_64) {
+System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_65, context_65) {
     "use strict";
     var App, layout_21, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
-    var __moduleName = context_64 && context_64.id;
+    var __moduleName = context_65 && context_65.id;
     return {
         setters: [
-            function (App_33) {
-                App = App_33;
+            function (App_34) {
+                App = App_34;
             },
             function (layout_21_1) {
                 layout_21 = layout_21_1;
             }
         ],
         execute: function () {
-            exports_64("icon", icon = "far fa-user");
-            exports_64("prepareMenu", prepareMenu = () => {
+            exports_65("icon", icon = "far fa-user");
+            exports_65("prepareMenu", prepareMenu = () => {
                 layout_21.setOpenedMenu("Territoire-Lots");
             });
-            exports_64("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
+            exports_65("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isLots = App.inContext("App_lots");
                 let isLot = App.inContext("App_lot");
                 let isFiles = window.location.hash.startsWith("#/files/lot");
@@ -11823,11 +12486,11 @@ ${showFile ? `
 </div>
 `;
             });
-            exports_64("buildTitle", buildTitle = (xtra, defaultText) => {
+            exports_65("buildTitle", buildTitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.title) !== null && _a !== void 0 ? _a : defaultText;
             });
-            exports_64("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
+            exports_65("buildSubtitle", buildSubtitle = (xtra, defaultText) => {
                 var _a;
                 return (_a = xtra === null || xtra === void 0 ? void 0 : xtra.subtitle) !== null && _a !== void 0 ? _a : defaultText;
             });
@@ -11835,39 +12498,39 @@ ${showFile ? `
     };
 });
 // File: lots.ts
-System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/territoire/layout"], function (exports_65, context_65) {
+System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/territoire/layout"], function (exports_66, context_66) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_22, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
-    var __moduleName = context_65 && context_65.id;
+    var __moduleName = context_66 && context_66.id;
     return {
         setters: [
-            function (App_34) {
-                App = App_34;
+            function (App_35) {
+                App = App_35;
             },
-            function (Router_28) {
-                Router = Router_28;
+            function (Router_30) {
+                Router = Router_30;
             },
-            function (Perm_20) {
-                Perm = Perm_20;
+            function (Perm_22) {
+                Perm = Perm_22;
             },
-            function (Misc_32) {
-                Misc = Misc_32;
+            function (Misc_34) {
+                Misc = Misc_34;
             },
-            function (Theme_20) {
-                Theme = Theme_20;
+            function (Theme_22) {
+                Theme = Theme_22;
             },
-            function (Pager_12) {
-                Pager = Pager_12;
+            function (Pager_13) {
+                Pager = Pager_13;
             },
-            function (Lookup_16) {
-                Lookup = Lookup_16;
+            function (Lookup_18) {
+                Lookup = Lookup_18;
             },
             function (layout_22_1) {
                 layout_22 = layout_22_1;
             }
         ],
         execute: function () {
-            exports_65("NS", NS = "App_lots");
+            exports_66("NS", NS = "App_lots");
             state = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 20, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -11986,7 +12649,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
 </form>
 `;
             };
-            exports_65("fetchState", fetchState = (id) => {
+            exports_66("fetchState", fetchState = (id) => {
                 Router.registerDirtyExit(null);
                 return App.POST("/lot/search", state.pager)
                     .then(payload => {
@@ -12001,7 +12664,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                     .then(Lookup.fetch_droit_coupe())
                     .then(Lookup.fetch_entente_paiement());
             });
-            exports_65("fetch", fetch = (params) => {
+            exports_66("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("lots"));
                 fetchState(id)
@@ -12017,7 +12680,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                     .then(App.render)
                     .catch(App.render);
             };
-            exports_65("render", render = () => {
+            exports_66("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -12038,11 +12701,11 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                 const tab = layout_22.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
-            exports_65("postRender", postRender = () => {
+            exports_66("postRender", postRender = () => {
                 if (!inContext())
                     return;
             });
-            exports_65("inContext", inContext = () => {
+            exports_66("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             setSelectedRow = (id) => {
@@ -12055,23 +12718,23 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                     return false;
                 return (uiSelectedRow.id == id);
             };
-            exports_65("goto", goto = (pageNo, pageSize) => {
+            exports_66("goto", goto = (pageNo, pageSize) => {
                 state.pager.pageNo = pageNo;
                 state.pager.pageSize = pageSize;
                 refresh();
             });
-            exports_65("sortBy", sortBy = (columnName, direction) => {
+            exports_66("sortBy", sortBy = (columnName, direction) => {
                 state.pager.pageNo = 1;
                 state.pager.sortColumn = columnName;
                 state.pager.sortDirection = direction;
                 refresh();
             });
-            exports_65("search", search = (element) => {
+            exports_66("search", search = (element) => {
                 state.pager.searchText = element.value;
                 state.pager.pageNo = 1;
                 refresh();
             });
-            exports_65("gotoDetail", gotoDetail = (id) => {
+            exports_66("gotoDetail", gotoDetail = (id) => {
                 setSelectedRow(id);
                 Router.goto(`#/lot/${id}`);
             });
@@ -12079,50 +12742,50 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
     };
 });
 // File: lot.ts
-System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_66, context_66) {
+System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_67, context_67) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_4, autocomplete_1, Lookup, Perm, layout_23, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
-    var __moduleName = context_66 && context_66.id;
+    var App, Router, Misc, Theme, calendar_5, autocomplete_1, Lookup, Perm, layout_23, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
+    var __moduleName = context_67 && context_67.id;
     return {
         setters: [
-            function (App_35) {
-                App = App_35;
+            function (App_36) {
+                App = App_36;
             },
-            function (Router_29) {
-                Router = Router_29;
+            function (Router_31) {
+                Router = Router_31;
             },
-            function (Misc_33) {
-                Misc = Misc_33;
+            function (Misc_35) {
+                Misc = Misc_35;
             },
-            function (Theme_21) {
-                Theme = Theme_21;
+            function (Theme_23) {
+                Theme = Theme_23;
             },
-            function (calendar_4_1) {
-                calendar_4 = calendar_4_1;
+            function (calendar_5_1) {
+                calendar_5 = calendar_5_1;
             },
             function (autocomplete_1_1) {
                 autocomplete_1 = autocomplete_1_1;
             },
-            function (Lookup_17) {
-                Lookup = Lookup_17;
+            function (Lookup_19) {
+                Lookup = Lookup_19;
             },
-            function (Perm_21) {
-                Perm = Perm_21;
+            function (Perm_23) {
+                Perm = Perm_23;
             },
             function (layout_23_1) {
                 layout_23 = layout_23_1;
             }
         ],
         execute: function () {
-            exports_66("NS", NS = "App_lot");
+            exports_67("NS", NS = "App_lot");
             blackList = ["cantonid_text", "municipaliteid_text", "proprietaireid_text", "contingentid_text", "droit_coupeid_text", "entente_paiementid_text", "zoneid_text"];
             state = {};
             fetchedState = {};
             isNew = false;
             isDirty = false;
-            contingent_dateCalendar = new calendar_4.Calendar(`${NS}_contingent_date`);
-            droit_coupe_dateCalendar = new calendar_4.Calendar(`${NS}_droit_coupe_date`);
-            entente_paiement_dateCalendar = new calendar_4.Calendar(`${NS}_entente_paiement_date`);
+            contingent_dateCalendar = new calendar_5.Calendar(`${NS}_contingent_date`);
+            droit_coupe_dateCalendar = new calendar_5.Calendar(`${NS}_droit_coupe_date`);
+            entente_paiement_dateCalendar = new calendar_5.Calendar(`${NS}_entente_paiement_date`);
             state_proprietaireid = {
                 list: [],
                 pager: { pageNo: 1, pageSize: 5, sortColumn: "ID", sortDirection: "ASC", filter: {} }
@@ -12224,7 +12887,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             dirtyTemplate = () => {
                 return (isDirty ? App.dirtyTemplate(NS, Misc.changes(fetchedState, state)) : "");
             };
-            exports_66("fetchState", fetchState = (id) => {
+            exports_67("fetchState", fetchState = (id) => {
                 isNew = isNaN(id);
                 isDirty = false;
                 Router.registerDirtyExit(dirtyExit);
@@ -12245,14 +12908,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     .then(Lookup.fetch_droit_coupe())
                     .then(Lookup.fetch_entente_paiement());
             });
-            exports_66("fetch", fetch = (params) => {
+            exports_67("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("lot"));
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_66("render", render = () => {
+            exports_67("render", render = () => {
                 if (!inContext())
                     return "";
                 if (App.fatalError())
@@ -12277,7 +12940,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
             });
-            exports_66("postRender", postRender = () => {
+            exports_67("postRender", postRender = () => {
                 if (!inContext())
                     return;
                 contingent_dateCalendar.postRender();
@@ -12285,7 +12948,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 entente_paiement_dateCalendar.postRender();
                 App.setPageTitle(isNew ? i18n("New lot") : xtra.title);
             });
-            exports_66("inContext", inContext = () => {
+            exports_67("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -12326,7 +12989,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_66("oncalendar", oncalendar = (id) => {
+            exports_67("oncalendar", oncalendar = (id) => {
                 if (contingent_dateCalendar.id == id)
                     contingent_dateCalendar.toggle();
                 if (droit_coupe_dateCalendar.id == id)
@@ -12334,7 +12997,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 if (entente_paiement_dateCalendar.id == id)
                     entente_paiement_dateCalendar.toggle();
             });
-            exports_66("onautocomplete", onautocomplete = (id) => {
+            exports_67("onautocomplete", onautocomplete = (id) => {
                 if (proprietaireidAutocomplete.id == id) {
                     state_proprietaireid.pager.searchText = proprietaireidAutocomplete.textValue;
                     App.POST("/fournisseur/search", state_proprietaireid.pager)
@@ -12344,14 +13007,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                         .then(App.render);
                 }
             });
-            exports_66("onchange", onchange = (input) => {
+            exports_67("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_66("cancel", cancel = () => {
+            exports_67("cancel", cancel = () => {
                 Router.goBackOrResume(isDirty);
             });
-            exports_66("create", create = () => {
+            exports_67("create", create = () => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -12366,7 +13029,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_66("save", save = (done = false) => {
+            exports_67("save", save = (done = false) => {
                 let formState = getFormState();
                 if (!html5Valid())
                     return;
@@ -12383,7 +13046,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 })
                     .catch(App.render);
             });
-            exports_66("drop", drop = () => {
+            exports_67("drop", drop = () => {
                 //(<any>key).updated = state.updated;
                 App.prepareRender();
                 App.DELETE("/lot", key)
@@ -12405,14 +13068,14 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
         }
     };
 });
-System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territoire/lots", "src/territoire/lot"], function (exports_67, context_67) {
+System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territoire/lots", "src/territoire/lot"], function (exports_68, context_68) {
     "use strict";
     var Router, lots, lot, startup, render, postRender;
-    var __moduleName = context_67 && context_67.id;
+    var __moduleName = context_68 && context_68.id;
     return {
         setters: [
-            function (Router_30) {
-                Router = Router_30;
+            function (Router_32) {
+                Router = Router_32;
             },
             function (lots_1) {
                 lots = lots_1;
@@ -12429,11 +13092,11 @@ System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territo
             //
             window[lots.NS] = lots;
             window[lot.NS] = lot;
-            exports_67("startup", startup = () => {
+            exports_68("startup", startup = () => {
                 Router.addRoute("^#/lots/?(.*)?$", lots.fetch);
                 Router.addRoute("^#/lot/?(.*)?$", lot.fetch);
             });
-            exports_67("render", render = () => {
+            exports_68("render", render = () => {
                 return `
 <div>
     ${lots.render()}
@@ -12441,24 +13104,24 @@ System.register("src/territoire/main", ["_BaseApp/src/core/router", "src/territo
 </div>
 `;
             });
-            exports_67("postRender", postRender = () => {
+            exports_68("postRender", postRender = () => {
                 lots.postRender();
                 lot.postRender();
             });
         }
     };
 });
-System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/support/main", "src/christian/main", "src/fournisseur/main", "src/territoire/main"], function (exports_68, context_68) {
+System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/main", "src/home", "src/admin/main", "src/support/main", "src/christian/main", "src/fournisseur/main", "src/territoire/main"], function (exports_69, context_69) {
     "use strict";
     var App, Perm, Main, Home, Admin, Support, Christian, Fournisseur, Territoire, NS, render, postRender, renderHeader, menuTemplate, renderAsideMenu, isActive, menuClick, toggle, setOpenedMenu, editProfile, toggleProfileMenu;
-    var __moduleName = context_68 && context_68.id;
+    var __moduleName = context_69 && context_69.id;
     return {
         setters: [
-            function (App_36) {
-                App = App_36;
+            function (App_37) {
+                App = App_37;
             },
-            function (Perm_22) {
-                Perm = Perm_22;
+            function (Perm_24) {
+                Perm = Perm_24;
             },
             function (Main_1) {
                 Main = Main_1;
@@ -12483,8 +13146,8 @@ System.register("src/layout", ["_BaseApp/src/core/app", "src/permission", "src/m
             }
         ],
         execute: function () {
-            exports_68("NS", NS = "App_Layout");
-            exports_68("render", render = () => {
+            exports_69("NS", NS = "App_Layout");
+            exports_69("render", render = () => {
                 Main.saveUIState();
                 // Note: Render js-uc-main content first, before renderHeader() and renderAsideMenu(), 
                 // so they can potentially have an impact over there.
@@ -12507,7 +13170,7 @@ ${ucMain}
 </div>
 `;
             });
-            exports_68("postRender", postRender = () => {
+            exports_69("postRender", postRender = () => {
                 Home.postRender();
                 Admin.postRender();
                 Support.postRender();
@@ -12636,43 +13299,43 @@ ${opened ? `
             isActive = (ns) => {
                 return App.inContext(ns) ? "is-active" : "";
             };
-            exports_68("menuClick", menuClick = () => {
+            exports_69("menuClick", menuClick = () => {
                 Main.state.menuOpened = !Main.state.menuOpened;
                 Main.saveUIState();
                 App.render();
             });
-            exports_68("toggle", toggle = (entry) => {
+            exports_69("toggle", toggle = (entry) => {
                 Main.state.subMenu = (Main.state.subMenu == entry ? "" : entry);
                 App.render();
             });
-            exports_68("setOpenedMenu", setOpenedMenu = (entry) => {
+            exports_69("setOpenedMenu", setOpenedMenu = (entry) => {
                 Main.state.subMenu = entry;
             });
-            exports_68("editProfile", editProfile = () => {
+            exports_69("editProfile", editProfile = () => {
                 //Profile.fetch([Perm.getUID().toString()]);
                 return false;
             });
-            exports_68("toggleProfileMenu", toggleProfileMenu = (element) => {
+            exports_69("toggleProfileMenu", toggleProfileMenu = (element) => {
                 if (element)
                     element.classList.toggle("is-active");
             });
         }
     };
 });
-System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/support/main", "src/christian/main", "src/fournisseur/main", "src/territoire/main"], function (exports_69, context_69) {
+System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/latlong", "src/fr-CA", "src/permission", "src/layout", "src/home", "src/admin/main", "src/support/main", "src/christian/main", "src/fournisseur/main", "src/territoire/main"], function (exports_70, context_70) {
     "use strict";
     var App, BaseMain, Theme, LatLong, fr_CA_1, Perm, Layout, Home, AdminMain, SupportMain, ChristianMain, FournisseurMain, TerritoireMain, state, html_lang, startup, loadUIState, saveUIState;
-    var __moduleName = context_69 && context_69.id;
+    var __moduleName = context_70 && context_70.id;
     return {
         setters: [
-            function (App_37) {
-                App = App_37;
+            function (App_38) {
+                App = App_38;
             },
             function (BaseMain_1) {
                 BaseMain = BaseMain_1;
             },
-            function (Theme_22) {
-                Theme = Theme_22;
+            function (Theme_24) {
+                Theme = Theme_24;
             },
             function (LatLong_1) {
                 LatLong = LatLong_1;
@@ -12680,8 +13343,8 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             function (fr_CA_1_1) {
                 fr_CA_1 = fr_CA_1_1;
             },
-            function (Perm_23) {
-                Perm = Perm_23;
+            function (Perm_25) {
+                Perm = Perm_25;
             },
             function (Layout_2) {
                 Layout = Layout_2;
@@ -12721,7 +13384,7 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
             // Language files
             html_lang = document.documentElement.lang;
             i18n.translator.add(fr_CA_1.fr_CA);
-            exports_69("startup", startup = (hasPublicHomePage = false) => {
+            exports_70("startup", startup = (hasPublicHomePage = false) => {
                 let main = BaseMain.startup(hasPublicHomePage, Layout, Theme);
                 let router = main.router;
                 // Routing table
@@ -12738,18 +13401,18 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
                 TerritoireMain.startup();
                 loadUIState();
             });
-            exports_69("loadUIState", loadUIState = () => {
+            exports_70("loadUIState", loadUIState = () => {
                 let uid = Perm.getUID();
                 let key = (uid != undefined ? `home-state:${uid}` : "home-state");
-                exports_69("state", state = JSON.parse(localStorage.getItem(key)));
+                exports_70("state", state = JSON.parse(localStorage.getItem(key)));
                 if (state == undefined) {
-                    exports_69("state", state = {
+                    exports_70("state", state = {
                         menuOpened: true,
                         subMenu: ""
                     });
                 }
             });
-            exports_69("saveUIState", saveUIState = () => {
+            exports_70("saveUIState", saveUIState = () => {
                 let uid = Perm.getUID();
                 let key = (uid != undefined ? `home-state:${uid}` : "home-state");
                 localStorage.setItem(key, JSON.stringify(state));
@@ -12757,10 +13420,10 @@ System.register("src/main", ["_BaseApp/src/core/app", "_BaseApp/src/main", "_Bas
         }
     };
 });
-System.register("src/app", ["src/main"], function (exports_70, context_70) {
+System.register("src/app", ["src/main"], function (exports_71, context_71) {
     "use strict";
     var main;
-    var __moduleName = context_70 && context_70.id;
+    var __moduleName = context_71 && context_71.id;
     return {
         setters: [
             function (main_1) {
@@ -12776,36 +13439,36 @@ System.register("src/app", ["src/main"], function (exports_70, context_70) {
     };
 });
 // File: commitcbeff.ts
-System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_71, context_71) {
+System.register("src/territoire/lots2", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata"], function (exports_72, context_72) {
     "use strict";
     var App, Router, Perm, Misc, Theme, Pager, Lookup, NS, table_id, blackList, key, state, fetchedState, isNew, callerNS, isAddingNewParent, trTemplate, tableTemplate, pageTemplate, fetchState, preRender, render, postRender, inContext, getFormState, html5Valid, onchange, undo, addNew, create, save, selectfordrop, drop, hasChanges;
-    var __moduleName = context_71 && context_71.id;
+    var __moduleName = context_72 && context_72.id;
     return {
         setters: [
-            function (App_38) {
-                App = App_38;
+            function (App_39) {
+                App = App_39;
             },
-            function (Router_31) {
-                Router = Router_31;
+            function (Router_33) {
+                Router = Router_33;
             },
-            function (Perm_24) {
-                Perm = Perm_24;
+            function (Perm_26) {
+                Perm = Perm_26;
             },
-            function (Misc_34) {
-                Misc = Misc_34;
+            function (Misc_36) {
+                Misc = Misc_36;
             },
-            function (Theme_23) {
-                Theme = Theme_23;
+            function (Theme_25) {
+                Theme = Theme_25;
             },
-            function (Pager_13) {
-                Pager = Pager_13;
+            function (Pager_14) {
+                Pager = Pager_14;
             },
-            function (Lookup_18) {
-                Lookup = Lookup_18;
+            function (Lookup_20) {
+                Lookup = Lookup_20;
             }
         ],
         execute: function () {
-            exports_71("NS", NS = "App_commitcbeff");
+            exports_72("NS", NS = "App_commitcbeff");
             table_id = "commitcbeff_table";
             blackList = ["_editing", "_deleting", "_isNew", "totalcount", "regionluid_text"];
             state = {
@@ -12901,7 +13564,7 @@ ${!readonly ? `
 ${Theme.wrapContent("js-uc-list", table)}
 `;
             };
-            exports_71("fetchState", fetchState = (id, ownerNS) => {
+            exports_72("fetchState", fetchState = (id, ownerNS) => {
                 isAddingNewParent = isNaN(id);
                 callerNS = ownerNS || callerNS;
                 isNew = false;
@@ -12913,9 +13576,9 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .then(Lookup.fetch_region());
             });
-            exports_71("preRender", preRender = () => {
+            exports_72("preRender", preRender = () => {
             });
-            exports_71("render", render = () => {
+            exports_72("render", render = () => {
                 if (isAddingNewParent)
                     return "";
                 let editId;
@@ -12938,9 +13601,9 @@ ${Theme.wrapContent("js-uc-list", table)}
                 const table = tableTemplate(tbody, editId, deleteId);
                 return pageTemplate(table);
             });
-            exports_71("postRender", postRender = () => {
+            exports_72("postRender", postRender = () => {
             });
-            exports_71("inContext", inContext = () => {
+            exports_72("inContext", inContext = () => {
                 return App.inContext(NS);
             });
             getFormState = () => {
@@ -12964,11 +13627,11 @@ ${Theme.wrapContent("js-uc-list", table)}
                 form.classList.add("js-error");
                 return form.checkValidity();
             };
-            exports_71("onchange", onchange = (input) => {
+            exports_72("onchange", onchange = (input) => {
                 state = getFormState();
                 App.render();
             });
-            exports_71("undo", undo = () => {
+            exports_72("undo", undo = () => {
                 if (isNew) {
                     isNew = false;
                     fetchedState.list.pop();
@@ -12976,7 +13639,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 state = Misc.clone(fetchedState);
                 App.render();
             });
-            exports_71("addNew", addNew = () => {
+            exports_72("addNew", addNew = () => {
                 let url = `/commitcbeff/new`;
                 return App.GET(url)
                     .then((payload) => {
@@ -12988,7 +13651,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                     .then(App.render)
                     .catch(App.render);
             });
-            exports_71("create", create = () => {
+            exports_72("create", create = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._isNew);
                 if (!html5Valid())
@@ -13001,7 +13664,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_71("save", save = () => {
+            exports_72("save", save = () => {
                 let formState = getFormState();
                 let item = formState.list.find(one => one._editing);
                 if (!html5Valid())
@@ -13014,12 +13677,12 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_71("selectfordrop", selectfordrop = (id) => {
+            exports_72("selectfordrop", selectfordrop = (id) => {
                 state = Misc.clone(fetchedState);
                 state.list.find(one => one.id == id)._deleting = true;
                 App.render();
             });
-            exports_71("drop", drop = () => {
+            exports_72("drop", drop = () => {
                 App.prepareRender();
                 let item = state.list.find(one => one._deleting);
                 App.DELETE("/commitcbeff", { id: item.id, updated: item.updated })
@@ -13029,7 +13692,7 @@ ${Theme.wrapContent("js-uc-list", table)}
                 })
                     .catch(App.render);
             });
-            exports_71("hasChanges", hasChanges = () => {
+            exports_72("hasChanges", hasChanges = () => {
                 return !Misc.same(fetchedState, state);
             });
         }

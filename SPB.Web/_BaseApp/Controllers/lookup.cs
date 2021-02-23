@@ -15,32 +15,25 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public class LookupController : _CoreController
     {
-        [HttpPost("search")]
-        public object Search([FromBody] Dico pager)
+        [HttpPost("search/{pid}/{parent}")]
+        public object Search([FromBody] Dico pager, int? pid, string parent)
         {
             //app.RequirePermission(Perm.Lookup_Edit);
-            return app.Lookup_Search(pager);
+            return app.Lookup_Search(pager, pid, parent);
         }
 
-        [HttpGet("{id}")]
-        public object Select(int id)
+        [HttpGet("{id}/{parent}")]
+        public object Select(int id, string parent)
         {
             //app.RequirePermission(Perm.Lookup_Edit);
-            return app.Lookup_Select(id);
+            return app.Lookup_Select(id, parent);
         }
 
-        [HttpGet("new")]
-        public object New()
+        [HttpGet("new/{pid}/{parent}")]
+        public object New(int? pid, string parent)
         {
             //app.RequirePermission(Perm.Lookup_Edit);
-            return app.Lookup_New();
-        }
-
-        [HttpGet("new/{groupe}")]
-        public object New(string groupe)
-        {
-            //app.RequirePermission(Perm.Lookup_Edit);
-            return app.Lookup_New(groupe);
+            return app.Lookup_New(pid, parent);
         }
 
         [HttpPost]
@@ -64,15 +57,6 @@ namespace BaseApp.Web.Controllers
             //app.RequirePermission(Perm.Lookup_Edit);
             app.Lookup_Delete(key);
             return NoContent();
-        }
-
-
-
-
-        [HttpGet("lutGroup")]
-        public List<Dico> Lookup_LutGroup()
-        {
-            return app.Lookup_LutGroup();
         }
 
 

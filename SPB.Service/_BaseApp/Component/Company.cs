@@ -37,7 +37,7 @@ namespace BaseApp.Service
             return new
             {
                 item = repo.queryDico("app.Company_Select", "@cie", cie, uid: true).ReviveDTO(graylist: graylist),
-                xtra = repo.queryDico("app.Company_Summary", "@cie", cie, uid: true)
+                xtra = repo.queryDico("app.Company_Summary", "@Companyid", cie)
             };
         }
 
