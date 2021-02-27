@@ -2,5 +2,5 @@
 (@clearText NVARCHAR (MAX) NULL)
 RETURNS NVARCHAR (MAX)
 AS
- EXTERNAL NAME [Jaguar].[UserDefinedFunctions].[Encrypt]
+ EXTERNAL NAME [Jaguar].[UserDefinedFunctions].[jsEncrypt]
 

@@ -213,7 +213,7 @@ const pageTemplate = (xtra, pager: string, tableLeft: string, tableRight: string
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, i18n("AAA: AAA"));
-    let subtitle = buildSubtitle(xtra, i18n("AAA"));
+    let subtitle = buildSubtitle(xtra, i18n("List of Lookups"));
 
     let table = `<div style="display: flex;">
     <div>${tableLeft}</div>

@@ -2,5 +2,5 @@
 RETURNS int
 AS
 BEGIN
-RETURN (select ID from app.PermMeta where Groupe='ROLE2EX' AND [Key]='SUPPORT');
+RETURN (select ID from app.PermMeta where Groupe='ROLE-ITEM' AND [Key]='SUPPORT');
 END

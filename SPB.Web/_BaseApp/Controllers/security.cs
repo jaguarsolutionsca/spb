@@ -17,7 +17,7 @@ namespace BaseApp.Web.Controllers
         [HttpGet("{cie}")]
         public async Task GetMatrix(int cie)
         {
-            await sqlPipe.Sql($"exec dbo.Perm_List @cie={cie}").Stream(Response.Body);
+            await sqlPipe.Sql($"exec app.Perm_List @cie={cie}").Stream(Response.Body);
         }
 
         [HttpPut("{cie}")]

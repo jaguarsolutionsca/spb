@@ -28,7 +28,7 @@ select
 		from app.PermMeta ro
 		inner join app.PermMeta grp on grp.ID = ro.ParentID
 		where
-			ro.Groupe = 'ROLE2EX' and (ro.[Key] is null or ro.[Key] <> 'SUPPORT')
+			ro.Groupe = 'ROLE-ITEM' and (ro.[Key] is null or ro.[Key] <> 'SUPPORT')
 		order by grp.SortOrder, ro.SortOrder
 		for json AUTO
 	)) as [roles]

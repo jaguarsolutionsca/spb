@@ -12,7 +12,7 @@ SELECT
 	SortOrder
 FROM app.PermMeta
 WHERE
-	Groupe = 'ROLE2EX' AND
+	Groupe = 'ROLE-ITEM' AND
 	((Archive = 0) OR (app.UserIs_Support(@uid) = 1))
 ;
 END
