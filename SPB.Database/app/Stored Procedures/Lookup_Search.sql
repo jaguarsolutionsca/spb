@@ -57,9 +57,9 @@ SELECT
     pt.CIE,
     lut1.Name [CIE_Text],
     pt.Groupe,
-    lut2.Description [Groupe_Text],
+    pt.Groupe [Groupe_Text],
     pt.ParentGroupe,
-	lut3.Description [ParentGroupe_Text],
+	pt.ParentGroupe [ParentGroupe_Text],
     pt.Code,
     pt.Description,
     pt.Value1,
@@ -75,8 +75,6 @@ SELECT
     0 [PlusOrder]
 FROM [app].[Lookup] pt
 LEFT OUTER JOIN Company lut1 ON lut1.CIE = pt.CIE
-INNER JOIN LookupGroupe lut2 ON lut2.ID = pt.Groupe
-LEFT OUTER JOIN LookupGroupe lut3 ON lut3.ID = pt.ParentGroupe
 INNER JOIN app.Account a ON a.UID = pt.UpdatedBy
 WHERE
 (
@@ -127,9 +125,9 @@ SELECT
     pt.CIE,
     lut1.Name [CIE_Text],
     pt.Groupe,
-    lut2.Description [Groupe_Text],
+    pt.Groupe [Groupe_Text],
     pt.ParentGroupe,
-	lut3.Description [ParentGroupe_Text],
+	pt.ParentGroupe [ParentGroupe_Text],
     pt.Code,
     pt.Description,
     pt.Value1,
@@ -146,8 +144,6 @@ SELECT
     DATEDIFF(SECOND, '1995-01-01', pt.Created) [RN]
 FROM [app].[Lookup] pt
 LEFT OUTER JOIN Company lut1 ON lut1.CIE = pt.CIE
-INNER JOIN LookupGroupe lut2 ON lut2.ID = pt.Groupe
-LEFT OUTER JOIN LookupGroupe lut3 ON lut3.ID = pt.ParentGroupe
 INNER JOIN app.Account a ON a.UID = pt.UpdatedBy
 INNER JOIN @tplus tp ON tp.id = pt.ID
 WHERE (tp.id NOT IN (SELECT id FROM @returnTable))

@@ -145,8 +145,6 @@
     <Build Include="app\Stored Procedures\Lookup_Insert.sql" />
     <Build Include="app\Stored Procedures\Lookup_Delete.sql" />
     <Build Include="app\Views\Lookup_Full.sql" />
-    <Build Include="dbo\Stored Procedures\Perm_UpdateBatch.sql" />
-    <Build Include="dbo\Stored Procedures\Perm_List.sql" />
     <Build Include="app\Stored Procedures\Perm_UpdateBatch.sql" />
     <Build Include="app\Stored Procedures\Perm_List.sql" />
     <Build Include="dbo\Tables\Staff.sql" />
