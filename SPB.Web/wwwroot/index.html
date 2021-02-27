@@ -32,8 +32,13 @@
         var APP = {};
         (function (callback) {
 
-            var robins = ["https://localhost:44347"]
-            var urlBag = "/spb.web/api/portalbag?u=" + btoa(window.location.href)
+            // IISExpress
+            //var robins = ["https://localhost:44347"]
+            //var urlBag = "/spb.web/api/portalbag?u=" + btoa(window.location.href)
+
+            // Kestrel
+            var robins = ["https://localhost:5001"]
+            var urlBag = "/api/portalbag?u=" + btoa(window.location.href)
 
             function selectServer() {
                 var index = Math.floor(Math.random() * Math.floor(robins.length))
