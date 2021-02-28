@@ -15,6 +15,13 @@ namespace BaseApp.Web.Controllers
     [Authorize, ApiController]
     public class LookupController : _CoreController
     {
+        [HttpPost("search")]
+        public object Search([FromBody] Dico pager)
+        {
+            //app.RequirePermission(Perm.Lookup_Edit);
+            return app.Lookup_Search(pager);
+        }
+
         [HttpPost("search/{pid}/{parent}")]
         public object Search([FromBody] Dico pager, int? pid, string parent)
         {

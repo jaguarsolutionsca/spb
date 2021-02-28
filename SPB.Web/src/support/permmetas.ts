@@ -1,4 +1,4 @@
-﻿// File: lookup.ts
+﻿// File: permmetas.ts
 
 "use strict"
 
@@ -14,8 +14,8 @@ import { tabTemplate, icon, prepareMenu, buildTitle, buildSubtitle } from "./lay
 
 declare const i18n: any;
 
-export const NS = "App_lookups";
-const table_id = "lookups_table";
+export const NS = "App_permmetas";
+const table_id = "permmetas_table";
 
 interface IState {
     _editing: boolean
@@ -23,20 +23,15 @@ interface IState {
     _isNew: boolean
     totalcount: number
     id: number
-    cie: number
-    cie_text: string
     groupe: string
     groupe_text: string
-    parentgroupe: string
-    parentgroupe_text: string
-    code: string
+    code: number
     description: string
-    value1: string
-    value2: string
-    value3: string
-    started: number
-    ended: number
+    parentid: number
+    parentid_text: string
     sortorder: number
+    key: string
+    archive: boolean
     created: Date
     updated: Date
     updatedby: number
@@ -44,25 +39,23 @@ interface IState {
 }
 
 interface IKey {
-    cie: number
     id: number
 }
 
 interface IFilter {
-    cie: number
     groupe: string
-    parentgroupe: string
+    parentid: number
     plus: string
 }
 
 interface IPagedState extends Pager.IPagedList<IState, IFilter> { }
 
-const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "cie_text", "groupe_text", "parentgroupe_text", "created", "by"];
+const blackList = ["_editing", "_deleting", "_isNew", "totalcount", "groupe_text", "parentid_text", "created", "by"];
 
 let key: IKey;
 let state = <IPagedState>{
     list: [],
-    pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "GROUPE_TEXT", sortDirection: "ASC", filter: {} }
+    pager: { pageNo: 1, pageSize: App.getPageState(NS, "pageSize", 20), sortColumn: "ID", sortDirection: "ASC", filter: {} }
 };
 let fetchedState = <IPagedState>{};
 let xtra: any;
@@ -71,10 +64,10 @@ let isDirty = false;
 
 
 
-const filterTemplate = (groupe: string, parentgroupe: string) => {
+const filterTemplate = (groupe: string, parentid: string) => {
     let filters: string[] = [];
     filters.push(Theme.renderDropdownFilter(NS, "groupe", groupe, i18n("GROUPE")));
-    filters.push(Theme.renderDropdownFilter(NS, "parentgroupe", parentgroupe, i18n("PARENTGROUPE")));
+    filters.push(Theme.renderDropdownFilter(NS, "parentid", parentid, i18n("PARENTID")));
     return filters.join("");
 }
 
@@ -110,7 +103,7 @@ ${tdConfirm}
 </tr>`;
 };
 
-const trTemplateRight = (item: IState, editId: number, deleteId: number, groupe: string, parentgroupe: string) => {
+const trTemplateRight = (item: IState, editId: number, deleteId: number, groupe: string, parentid: string) => {
     let id = item.id;
 
     let canEdit = true; //perm && perm.canEdit;
@@ -126,26 +119,20 @@ const trTemplateRight = (item: IState, editId: number, deleteId: number, groupe:
 <tr data-id="${id}" class="${classList.join(" ")}" style="cursor: pointer;">
 ${!readonly ? `
     <td class="js-inline-select">${Theme.renderDropdownInline(NS, `groupe_${id}`, groupe, true)}</td>
-    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `parentgroupe_${id}`, parentgroupe)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `code_${id}`, item.code, 12)}</td>
+    <td class="js-inline-input">${Theme.renderNumberInline(NS, `code_${id}`, item.code, true)}</td>
     <td class="js-inline-input">${Theme.renderTextInline(NS, `description_${id}`, item.description, 50, true)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `value1_${id}`, item.value1, 50)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `value2_${id}`, item.value2, 50)}</td>
-    <td class="js-inline-input">${Theme.renderTextInline(NS, `value3_${id}`, item.value3, 1024)}</td>
-    <td class="js-inline-input">${Theme.renderNumberInline(NS, `started_${id}`, item.started, true)}</td>
-    <td class="js-inline-input">${Theme.renderNumberInline(NS, `ended_${id}`, item.ended)}</td>
+    <td class="js-inline-select">${Theme.renderDropdownInline(NS, `parentid_${id}`, parentid)}</td>
     <td class="js-inline-input">${Theme.renderNumberInline(NS, `sortorder_${id}`, item.sortorder)}</td>
+    <td class="js-inline-input">${Theme.renderTextInline(NS, `key_${id}`, item.key, 8)}</td>
+    <td class="js-inline-input">${Theme.renderCheckboxInline(NS, `archive_${id}`, item.archive)}</td>
 ` : `
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.groupe_text)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentgroupe_text)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.code)}</div></td>
+    <td><div class="js-number">${Misc.toStaticNumber(item.code)}</div></td>
     <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.description)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value1)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value2)}</div></td>
-    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.value3)}</div></td>
-    <td><div class="js-number">${Misc.toStaticNumber(item.started)}</div></td>
-    <td><div class="js-number">${Misc.toStaticNumber(item.ended)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.parentid_text)}</div></td>
     <td><div class="js-number">${Misc.toStaticNumber(item.sortorder)}</div></td>
+    <td><div class="js-truncate" style="width:100px;">${Misc.toStaticText(item.key)}</div></td>
+    <td>${Misc.toStaticCheckbox(item.archive)}</td>
 `}
 </tr>`;
 };
@@ -184,21 +171,18 @@ const tableTemplateRight = (tbody: string, pager: Pager.IPager<IFilter>) => {
     <thead>
         <tr>
             ${Pager.sortableHeaderLink(pager, NS, i18n("GROUPE"), "groupe_text", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENTGROUPE"), "parentgroupe_text", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("CODE"), "code", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("DESCRIPTION"), "description", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE1"), "value1", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE2"), "value2", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("VALUE3"), "value3", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("STARTED"), "started", "ASC", "width:100px")}
-            ${Pager.sortableHeaderLink(pager, NS, i18n("ENDED"), "ended", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("PARENT"), "parentid_text", "ASC", "width:100px")}
             ${Pager.sortableHeaderLink(pager, NS, i18n("SORTORDER"), "sortorder", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("KEY"), "key", "ASC", "width:100px")}
+            ${Pager.sortableHeaderLink(pager, NS, i18n("ARCHIVE"), "archive", "ASC", "width:100px")}
         </tr>
     </thead>
     <tbody>
         ${tbody}
         <tr class="js-insert-row">
-            <td colspan="${10 + 4}">&nbsp;</td>
+            <td colspan="${7 + 4}">&nbsp;</td>
         </tr>
     </tbody>
 </table>
@@ -213,7 +197,7 @@ const pageTemplate = (xtra, pager: string, tableLeft: string, tableRight: string
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, i18n("AAA: AAA"));
-    let subtitle = buildSubtitle(xtra, i18n("List of Lookups"));
+    let subtitle = buildSubtitle(xtra, i18n("AAA"));
 
     let table = `<div style="display: flex;">
     <div>${tableLeft}</div>
@@ -255,34 +239,35 @@ const dirtyTemplate = () => {
 
 
 
-export const fetchState = (cie: number) => {
+export const fetchState = (id: number) => {
     isNew = false;
     isDirty = false;
     Router.registerDirtyExit(dirtyExit);
-    state.pager.filter.cie = cie;
-    return App.POST(`/lookup/search/${cie}/company`, state.pager)
+
+    return App.POST(`/permmeta/search`, state.pager)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IPagedState;
-            key = { cie, id: undefined };
+            key = { id: undefined };
             xtra = payload.xtra;
         })
-        .then(Lookup.fetch_editLut())
+        .then(Lookup.fetch_permmeta_groupe())
+        .then(Lookup.fetch_permmeta_parent())
 };
 
 export const fetch = (params: string[]) => {
-    let cie = Perm.getCie(params);
-    App.prepareRender(NS, i18n("lookup"));
+    let id = +params[0];
+    App.prepareRender(NS, i18n("permmeta"));
     prepareMenu();
-    fetchState(cie)
+    fetchState(id)
         .then(App.render)
         .catch(App.render);
 };
 
 const refresh = () => {
-    App.prepareRender(NS, i18n("lookup"));
+    App.prepareRender(NS, i18n("permmeta"));
     clearFilterPlus();
-    App.POST(`/lookup/search/${key.cie}/company`, state.pager)
+    App.POST(`/permmeta/search`, state.pager)
         .then(payload => {
             state = payload;
             fetchedState = Misc.clone(state) as IPagedState;
@@ -307,8 +292,8 @@ export const render = () => {
     });
 
     let year = Perm.getCurrentYear(); //or something better
-    let lookup_groupe = Lookup.get_editLut(year);
-    let lookup_parentGroupe = Lookup.get_editLut(year);
+    let lookup_groupe = Lookup.get_permmeta_groupe(year);
+    let lookup_parent = Lookup.get_permmeta_parent(year);
 
     const tbodyLeft = state.list.reduce((html, item, index) => {
         let rowNumber = Pager.rowNumber(state.pager, index);
@@ -317,21 +302,21 @@ export const render = () => {
 
     const tbodyRight = state.list.reduce((html, item) => {
         let groupe = Theme.renderOptions(lookup_groupe, item.groupe, isNew);
-        let parentgroupe = Theme.renderOptions(lookup_parentGroupe, item.parentgroupe, true);
-        return html + trTemplateRight(item, editId, deleteId, groupe, parentgroupe);
+        let parentid = Theme.renderOptions(lookup_parent, item.parentid, true);
+        return html + trTemplateRight(item, editId, deleteId, groupe, parentid);
     }, "");
 
     let groupe = Theme.renderOptions(lookup_groupe, state.pager.filter.groupe, true);
-    let parentgroupe = Theme.renderOptions(lookup_parentGroupe, state.pager.filter.parentgroupe, true);
+    let parentid = Theme.renderOptions(lookup_parent, state.pager.filter.parentid, true);
 
-    const filter = filterTemplate(groupe, parentgroupe);
+    const filter = filterTemplate(groupe, parentid);
     const search = Pager.searchTemplate(state.pager, NS);
     const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
 
     const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
     const tableRight = tableTemplateRight(tbodyRight, state.pager);
 
-    const tab = tabTemplate(key.cie, xtra);
+    const tab = tabTemplate(null, null);
     const dirty = dirtyTemplate();
     let warning = App.warningTemplate();
     return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
@@ -376,12 +361,12 @@ export const filter_groupe = (element: HTMLSelectElement) => {
     refresh();
 };
 
-export const filter_parentgroupe = (element: HTMLSelectElement) => {
+export const filter_parentid = (element: HTMLSelectElement) => {
     let value = element.options[element.selectedIndex].value;
-    let parentgroupe = (value.length > 0 ? value : undefined);
-    if (parentgroupe == state.pager.filter.parentgroupe)
+    let parentid = (value.length > 0 ? +value : undefined);
+    if (parentid == state.pager.filter.parentid)
         return;
-    state.pager.filter.parentgroupe = parentgroupe;
+    state.pager.filter.parentid = parentid;
     state.pager.pageNo = 1;
     refresh();
 };
@@ -392,17 +377,13 @@ const getFormState = () => {
     let clone = Misc.clone(state) as IPagedState;
     clone.list.forEach(item => {
         let id = item.id;
-        item.cie = Misc.fromSelectNumber(`${NS}_cie_${id}`, item.cie);
         item.groupe = Misc.fromSelectText(`${NS}_groupe_${id}`, item.groupe);
-        item.parentgroupe = Misc.fromSelectText(`${NS}_parentgroupe_${id}`, item.parentgroupe);
-        item.code = Misc.fromInputTextNullable(`${NS}_code_${id}`, item.code);
+        item.code = Misc.fromInputNumber(`${NS}_code_${id}`, item.code);
         item.description = Misc.fromInputText(`${NS}_description_${id}`, item.description);
-        item.value1 = Misc.fromInputTextNullable(`${NS}_value1_${id}`, item.value1);
-        item.value2 = Misc.fromInputTextNullable(`${NS}_value2_${id}`, item.value2);
-        item.value3 = Misc.fromInputTextNullable(`${NS}_value3_${id}`, item.value3);
-        item.started = Misc.fromInputNumber(`${NS}_started_${id}`, item.started);
-        item.ended = Misc.fromInputNumberNullable(`${NS}_ended_${id}`, item.ended);
+        item.parentid = Misc.fromSelectNumber(`${NS}_parentid_${id}`, item.parentid);
         item.sortorder = Misc.fromInputNumberNullable(`${NS}_sortorder_${id}`, item.sortorder);
+        item.key = Misc.fromInputTextNullable(`${NS}_key_${id}`, item.key);
+        item.archive = Misc.fromInputCheckbox(`${NS}_archive_${id}`, item.archive);
     })
     return clone;
 };
@@ -449,7 +430,7 @@ export const undo = () => {
 }
 
 export const addNew = () => {
-    let url = `/lookup/new/${key.cie}/company`;
+    let url = `/permmeta/new`;
     return App.GET(url)
         .then((payload) => {
             state.list.push(payload.item);
@@ -467,7 +448,7 @@ export const create = () => {
     if (!html5Valid()) return;
     if (!valid(item)) return App.render();
     App.prepareRender();
-    App.POST("/lookup", Misc.createBlack(item, blackList))
+    App.POST("/permmeta", Misc.createBlack(item, blackList))
         .then((key: IKey) => {
             addFilterPlus(key.id);
             fetchedState = Misc.clone(state) as IPagedState;
@@ -482,7 +463,7 @@ export const save = () => {
     if (!html5Valid()) return;
     if (!valid(item)) return App.render();
     App.prepareRender();
-    App.PUT("/lookup", Misc.createBlack(item, blackList))
+    App.PUT("/permmeta", Misc.createBlack(item, blackList))
         .then(() => {
             fetchedState = Misc.clone(state) as IPagedState;
             Router.gotoCurrent(1);
@@ -499,7 +480,7 @@ export const selectfordrop = (id: number) => {
 export const drop = () => {
     App.prepareRender();
     let item = state.list.find(one => one._deleting);
-    App.DELETE("/lookup", { id: item.id, updated: item.updated })
+    App.DELETE("/permmeta", { id: item.id, updated: item.updated })
         .then(() => {
             removeFilterPlus(item.id);
             fetchedState = Misc.clone(state) as IPagedState;

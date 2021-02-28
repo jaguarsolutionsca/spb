@@ -67,26 +67,11 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="dbo\Views\" />
-    <Folder Include="js\" />
-    <Folder Include="js\Functions\" />
-    <Folder Include="Assemblies\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Cryptor.cs" />
-    <Compile Include="UserDefinedFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Jaguar">
-      <HintPath>Assemblies\Jaguar.dll</HintPath>
-      <SqlAssemblyName>Jaguar</SqlAssemblyName>
-      <IsModelAware>True</IsModelAware>
-      <GenerateSqlClrDdl>False</GenerateSqlClrDdl>
-      <SqlOwnerName>dbo</SqlOwnerName>
-      <SqlPermissionSet>SAFE</SqlPermissionSet>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Build Include="app\Tables\Lookup.sql" />
@@ -133,8 +118,6 @@
     <Build Include="app\Stored Procedures\Company_Delete.sql" />
     <Build Include="app\Stored Procedures\CompanyProfile_Select.sql" />
     <Build Include="app\Stored Procedures\CompanyProfile_New.sql" />
-    <Build Include="js\Functions\Encrypt.sql" />
-    <Build Include="js\Functions\Decrypt.sql" />
     <Build Include="app\Functions\CsvOfString_to_Table.sql" />
     <Build Include="app\Stored Procedures\Account_SelectEmailBy_ResetGUID.sql" />
     <Build Include="app\Stored Procedures\Lookup_Update.sql" />
@@ -180,7 +163,6 @@
     <Build Include="dbo\Stored Procedures\Job_Lookup.sql" />
     <Build Include="dbo\Stored Procedures\Job_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Job_Delete.sql" />
-    <Build Include="app\Tables\LookupGroupe.sql" />
     <Build Include="dbo\Views\Equipment_Full.sql" />
     <Build Include="dbo\Stored Procedures\Equipment_Update.sql" />
     <Build Include="dbo\Stored Procedures\Equipment_Summary.sql" />
@@ -190,11 +172,19 @@
     <Build Include="dbo\Stored Procedures\Equipment_Lookup.sql" />
     <Build Include="dbo\Stored Procedures\Equipment_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Equipment_Delete.sql" />
+    <Build Include="app\Views\PermMeta_Full.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Update.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Select.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Search.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_New.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Lookup_Parent.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Lookup_Groupe.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Insert.sql" />
+    <Build Include="app\Stored Procedures\PermMeta_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="01.schema.dev_to_project.scmp" />
     <None Include="02.schema.project_to_dev.scmp" />
-    <None Include="Assemblies\Jaguar.dll" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="SPB.Database.refactorlog" />

@@ -33,6 +33,26 @@ export const fetch_authrole = () => {
     }
 }
 
+let permmeta_groupe: LookupData[];
+export const fetch_permmeta_groupe = () => {
+    return function (data: any) {
+        if (permmeta_groupe != undefined && permmeta_groupe.length > 0)
+            return;
+        return App.GET(`/permmeta/lookup_groupe`).then(json => { permmeta_groupe = json; });
+    }
+}
+export const get_permmeta_groupe = (year: number) => permmeta_groupe;
+
+let permmeta_parent: LookupData[];
+export const fetch_permmeta_parent = () => {
+    return function (data: any) {
+        if (permmeta_parent != undefined && permmeta_parent.length > 0)
+            return;
+        return App.GET(`/permmeta/lookup_parent`).then(json => { permmeta_parent = json; });
+    }
+}
+export const get_permmeta_parent = (year: number) => permmeta_parent;
+
 let editLut: LookupData[];
 export const fetch_editLut = () => {
     return function (data: any) {

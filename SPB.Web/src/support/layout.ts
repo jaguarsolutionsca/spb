@@ -21,6 +21,7 @@ export const prepareMenu = () => {
 export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {
     let isCompanys = App.inContext("App_companys");
     let isAnyLookups = App.inContext("App_any_lookups");
+    let isPermMetas = App.inContext("App_permmetas");
     let isFiles = window.location.hash.startsWith("#/files/company");
     let isFile = window.location.hash.startsWith("#/file/company");
 
@@ -39,6 +40,12 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
             <a href="#/support/any-lookups">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
                 <span>${i18n("Lookups")}</span>
+            </a>
+        </li>
+        <li ${isPermMetas ? "class='is-active'" : ""}>
+            <a href="#/support/permmetas">
+                <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
+                <span>${i18n("Permission Metadata")}</span>
             </a>
         </li>
 ${showFiles ? `

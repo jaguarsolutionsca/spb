@@ -93,7 +93,7 @@ WHERE
 ORDER BY
     CASE WHEN @sortDirection <> 'ASC' THEN 0  WHEN @sortColumn = 'id' THEN pt.ID END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'cie_text' THEN lut1.Name END ASC,
-    CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'groupe' THEN pt.Groupe END ASC,
+    CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'groupe_text' THEN pt.Groupe END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'code' THEN pt.Code END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'description' THEN pt.Description END ASC,
     CASE WHEN @sortDirection <> 'ASC' THEN '' WHEN @sortColumn = 'value1' THEN pt.Value1 END ASC,
@@ -104,7 +104,7 @@ ORDER BY
     --,
     CASE WHEN @sortDirection <> 'DESC' THEN 0  WHEN @sortColumn = 'id' THEN pt.ID END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'cie_text' THEN lut1.Name END DESC,
-    CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'groupe' THEN pt.Groupe END DESC,
+    CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'groupe_text' THEN pt.Groupe END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'code' THEN pt.Code END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'description' THEN pt.Description END DESC,
     CASE WHEN @sortDirection <> 'DESC' THEN '' WHEN @sortColumn = 'value1' THEN pt.Value1 END DESC,
