@@ -13,6 +13,7 @@ import * as Auth from "../../_BaseApp/src/auth"
 import * as Lookup from "../admin/lookupdata"
 import * as Perm from "../permission"
 import { tabTemplate, icon, ISummary, buildTitle, buildSubtitle } from "./layout"
+import { setOpenedMenu } from "../layout"
 
 declare const i18n: any;
 
@@ -181,10 +182,13 @@ let isDirty = false;
 
 
 const block_company = (item: IState) => {
+    let isSupport = Perm.isSupport();
     return `
     ${Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 64, true)}
+${isSupport ? `
     ${Theme.renderTextField(NS, "features", item.features, i18n("FEATURES"), 2048)}
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
+` : ``}
 `;
 }
 
@@ -390,7 +394,7 @@ const formTemplate = (item: IState, fournisseur_planconjoint: string, fournisseu
     return `
 <div class="js-float-menu">
     <ul>
-        <li>${Theme.float_menu_button("Compte")}</li>
+        <li>${Theme.float_menu_button("Compagnie")}</li>
         <li>${Theme.float_menu_button("Paramètres système")}</li>
         <li>${Theme.float_menu_button("Personnalisation")}</li>
         <li>${Theme.float_menu_button("Acomba")}</li>
@@ -407,7 +411,7 @@ const formTemplate = (item: IState, fournisseur_planconjoint: string, fournisseu
 
 <div class="columns">
     <div class="column is-8 is-offset-3">
-        ${Theme.wrapFieldset("Compte", block_company(item))}
+        ${Theme.wrapFieldset("Compagnie", block_company(item))}
         ${Theme.wrapFieldset("Paramètres système", block_system(item))}
         ${Theme.wrapFieldset("Personnalisation", block_personnalisation(item))}
         ${Theme.wrapFieldset("Acomba", block_acomba(item))}
@@ -429,10 +433,11 @@ const formTemplate = (item: IState, fournisseur_planconjoint: string, fournisseu
 const pageTemplate = (item: IState, form: string, tab: string, warning: string, dirty: string) => {
     let canEdit = true;
     let readonly = !canEdit;
+    let isSupport = Perm.isSupport();
 
-    let canInsert = canEdit && isNew; // && Perm.hasCompany_CanAddCompany;
-    let canDelete = canEdit && !canInsert; // && Perm.hasCompany_CanDeleteCompany;
-    let canAdd = canEdit && !canInsert; // && Perm.hasCompany_CanAddCompany;
+    let canInsert = isSupport && canEdit && isNew;
+    let canDelete = isSupport && canEdit && !canInsert;
+    let canAdd = isSupport && canEdit && !canInsert;
     let canUpdate = canEdit && !isNew;
 
     let buttons: string[] = [];
@@ -444,7 +449,7 @@ const pageTemplate = (item: IState, form: string, tab: string, warning: string, 
     let actions = Theme.renderButtons(buttons);
 
     let title = buildTitle(xtra, !isNew ? i18n("company Details") : i18n("New company"));
-    let subtitle = buildSubtitle(xtra, i18n("company subtitle"));
+    let subtitle = buildSubtitle(xtra, i18n("Détails de la compagnie"));
 
     return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
@@ -501,8 +506,26 @@ export const fetchState = (cie: number) => {
 export const fetch = (params: string[]) => {
     let cie = Perm.getCie(params);
     App.prepareRender(NS, i18n("company"));
+    setOpenedMenu("Application-Configuration");
     fetchState(cie)
         .then(App.render)
+        .then(_ => {
+            let to = (params && params.length && params[0].startsWith("?to=") ? params[0].substr(4) : undefined);
+            if (to != undefined) {
+                let jumps = {
+                    "param": "Paramètres système",
+                    "perso": "Personnalisation",
+                    "acomba": "Acomba",
+                    "comptes": "Comptes/Fournisseurs",
+                    "taxe": "Taxe",
+                    "permis": "Permis",
+                    "print": "Paramètres imprimantes",
+                    "backup": "Backup",
+                    "profil": "Profil par défaut",
+                }
+                setTimeout(function () { Theme.scrollTo(jumps[to]) }, 0)
+            }
+        })
         .catch(App.render);
 };
 

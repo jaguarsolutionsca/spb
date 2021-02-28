@@ -73,9 +73,8 @@ export const getMenuData = () => {
                     name: "Gestion", icon: "fas fa-unlock-alt",
                     links: [
                         { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
-                        { name: "Gestion des tables", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
+                        { name: "Gestion des lookups", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
                         { name: "Gestion des périodes", },
-                        { name: "Matrice de sécurité", },
                     ],
                     merge: "start"
                 },
@@ -84,7 +83,6 @@ export const getMenuData = () => {
                     name: "Support", icon: "fas fa-tools",
                     links: [
                         { name: "Compagnies", href: "#/support/companys", ns: ["App_companys", "App_company"] },
-                        { name: "Metadata des permissions", },
                         { name: "Audit", },
                         { name: "(office)", href: "#/offices", ns: ["App_offices", "App_office"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
                         { name: "(staff)", href: "#/staffs_2", ns: ["App_staffs_2", "App_staff_2"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
@@ -93,15 +91,15 @@ export const getMenuData = () => {
                 {
                     name: "Configuration", icon: "fas fa-tools",
                     links: [
-                        { name: "Paramètres du système", },
-                        { name: "Personnalisation", },
-                        { name: "Acomba", },
-                        { name: "Comptes/Fournisseurs", },
-                        { name: "Numéro de taxes", },
-                        { name: "Permis", },
-                        { name: "Paramètres d'impression", },
-                        { name: "Backup", },
-                        { name: "Profil par défaut", },
+                        { name: "Paramètres du système", href: "#/admin/company/?to=param" },
+                        { name: "Personnalisation", href: "#/admin/company/?to=perso" },
+                        { name: "Acomba", href: "#/admin/company/?to=acomba" },
+                        { name: "Comptes/Fournisseurs", href: "#/admin/company/?to=comptes" },
+                        { name: "Numéro de taxes", href: "#/admin/company/?to=taxe" },
+                        { name: "Permis", href: "#/admin/company/?to=permis" },
+                        { name: "Paramètres d'impression", href: "#/admin/company/?to=print" },
+                        { name: "Backup", href: "#/admin/company/?to=backup" },
+                        { name: "Profil par défaut", href: "#/admin/company/?to=profil" },
                     ]
                 },
             ]

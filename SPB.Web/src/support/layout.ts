@@ -12,7 +12,7 @@ export interface ISummary {
     fileCount: number
 }
 
-export let icon = "far fa-user";
+export let icon = "far fa-copyright";
 
 export const prepareMenu = () => {
     setOpenedMenu("Administration-Management");

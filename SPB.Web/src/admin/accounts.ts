@@ -121,7 +121,7 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
     <div class="content js-uc-heading js-flex-space">
         <div>
             <div class="title"><i class="${icon}"></i> ${xtra.title}</div>
-            <div class="subtitle">${i18n("List of accounts")}</div>
+            <div class="subtitle">${i18n("Liste des comptes")}</div>
         </div>
         <div>
             ${Theme.wrapContent("js-uc-actions", actions)}

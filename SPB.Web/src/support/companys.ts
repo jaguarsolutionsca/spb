@@ -95,8 +95,8 @@ const pageTemplate = (pager: string, table: string, tab: string, warning: string
     buttons.push(Theme.buttonAddNew(NS, "#/admin/company/new", i18n("Add New")));
     let actions = Theme.renderButtons(buttons);
 
-    let title = buildTitle(xtra, i18n("companys title"));
-    let subtitle = buildSubtitle(xtra, i18n("companys subtitle"));
+    let title = buildTitle(xtra, i18n("Compagnies"));
+    let subtitle = buildSubtitle(xtra, i18n("Liste des compagnies"));
 
     return `
 <form onsubmit="return false;">

@@ -204,8 +204,8 @@ const pageTemplate = (xtra, pager: string, tableLeft: string, tableRight: string
     let buttons: string[] = [];
     let actions = Theme.renderButtons(buttons);
 
-    let title = buildTitle(xtra, i18n("AAA: AAA"));
-    let subtitle = buildSubtitle(xtra, i18n("AAA"));
+    let title = buildTitle(xtra, i18n("Compagnies"));
+    let subtitle = buildSubtitle(xtra, i18n("Liste des lookups"));
 
     let table = `<div style="display: flex;">
     <div>${tableLeft}</div>
@@ -263,7 +263,7 @@ export const fetchState = (id: number) => {
 export const fetch = (params: string[]) => {
     let id = +params[0];
     App.prepareRender(NS, i18n("lookup"));
-    prepareMenu();
+    //prepareMenu();
     fetchState(id)
         .then(App.render)
         .catch(App.render);

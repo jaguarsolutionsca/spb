@@ -153,7 +153,7 @@ export const fetchState = (officeid: number) => {
 export const fetch = (params: string[]) => {
     let officeid = +params[0];
     App.prepareRender(NS, i18n("staffs"));
-    prepareMenu();
+    //prepareMenu();
     fetchState(officeid)
         .then(App.render)
         .catch(App.render);

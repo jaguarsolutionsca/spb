@@ -4818,9 +4818,8 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                                 name: "Gestion", icon: "fas fa-unlock-alt",
                                 links: [
                                     { name: "Comptes", href: "#/admin/accounts", ns: ["App_accounts", "App_account"] },
-                                    { name: "Gestion des tables", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
+                                    { name: "Gestion des lookups", href: "#/admin/lookups/profile.key", ns: ["App_lookups", "App_lookup"] },
                                     { name: "Gestion des périodes", },
-                                    { name: "Matrice de sécurité", },
                                 ],
                                 merge: "start"
                             },
@@ -4829,7 +4828,6 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                                 name: "Support", icon: "fas fa-tools",
                                 links: [
                                     { name: "Compagnies", href: "#/support/companys", ns: ["App_companys", "App_company"] },
-                                    { name: "Metadata des permissions", },
                                     { name: "Audit", },
                                     { name: "(office)", href: "#/offices", ns: ["App_offices", "App_office"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
                                     { name: "(staff)", href: "#/staffs_2", ns: ["App_staffs_2", "App_staff_2"], hidden: Perm.getEmail() != "ctrepanier@jaguarsolutions.ca" },
@@ -4838,15 +4836,15 @@ System.register("src/home", ["_BaseApp/src/core/app", "_BaseApp/src/core/router"
                             {
                                 name: "Configuration", icon: "fas fa-tools",
                                 links: [
-                                    { name: "Paramètres du système", },
-                                    { name: "Personnalisation", },
-                                    { name: "Acomba", },
-                                    { name: "Comptes/Fournisseurs", },
-                                    { name: "Numéro de taxes", },
-                                    { name: "Permis", },
-                                    { name: "Paramètres d'impression", },
-                                    { name: "Backup", },
-                                    { name: "Profil par défaut", },
+                                    { name: "Paramètres du système", href: "#/admin/company/?to=param" },
+                                    { name: "Personnalisation", href: "#/admin/company/?to=perso" },
+                                    { name: "Acomba", href: "#/admin/company/?to=acomba" },
+                                    { name: "Comptes/Fournisseurs", href: "#/admin/company/?to=comptes" },
+                                    { name: "Numéro de taxes", href: "#/admin/company/?to=taxe" },
+                                    { name: "Permis", href: "#/admin/company/?to=permis" },
+                                    { name: "Paramètres d'impression", href: "#/admin/company/?to=print" },
+                                    { name: "Backup", href: "#/admin/company/?to=backup" },
+                                    { name: "Profil par défaut", href: "#/admin/company/?to=profil" },
                                 ]
                             },
                         ]
@@ -5423,9 +5421,9 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/permission", 
             }
         ],
         execute: function () {
-            exports_35("icon", icon = "far fa-user");
+            exports_35("icon", icon = "far fa-copyright");
             exports_35("prepareMenu", prepareMenu = () => {
-                layout_1.setOpenedMenu("Administration-Management");
+                layout_1.setOpenedMenu("Application-Gestion");
             });
             exports_35("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isCompany = App.inContext("App_company");
@@ -5445,20 +5443,20 @@ System.register("src/admin/layout", ["_BaseApp/src/core/app", "src/permission", 
         <li ${isCompany ? "class='is-active'" : ""}>
             <a href="#/admin/company">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Company Details")}</span>
+                <span>${i18n("Details de la compagnie")}</span>
             </a>
         </li>
         <li ${isAccounts ? "class='is-active'" : ""}>
             <a href="#/admin/accounts">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
-                <span>${i18n("Accounts")}</span>
+                <span>${i18n("Comptes")}</span>
             </a>
         </li>
 ${isAccount ? `
         <li class="is-active">
             <a href="#/admin/account/${id}">
-                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Account Details")}</span>
+                <span class="icon"><i class="fal fa-user" aria-hidden="true"></i></span>
+                <span>${i18n("Details du compte")}</span>
             </a>
         </li>
 ` : ``}
@@ -5473,7 +5471,7 @@ ${isLookup ? `
         <li class="is-active">
             <a href="#/admin/lookup/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Entry Details")}</span>
+                <span>${i18n("Details du lookup")}</span>
             </a>
         </li>
 ` : ``}
@@ -5617,7 +5615,7 @@ System.register("src/admin/accounts", ["_BaseApp/src/core/app", "_BaseApp/src/co
     <div class="content js-uc-heading js-flex-space">
         <div>
             <div class="title"><i class="${layout_2.icon}"></i> ${xtra.title}</div>
-            <div class="subtitle">${i18n("List of accounts")}</div>
+            <div class="subtitle">${i18n("Liste des comptes")}</div>
         </div>
         <div>
             ${Theme.wrapContent("js-uc-actions", actions)}
@@ -6079,9 +6077,9 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
     };
 });
 // File: company.ts
-System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_38, context_38) {
+System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout", "src/layout"], function (exports_38, context_38) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_4, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, block_company, block_system, block_personnalisation, block_acomba, block_comptes, block_preleve, block_permis, block_print, block_backup, block_security, block_default_profile, block_todo, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, Perm, layout_4, layout_5, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, block_company, block_system, block_personnalisation, block_acomba, block_comptes, block_preleve, block_permis, block_print, block_backup, block_security, block_default_profile, block_todo, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_38 && context_38.id;
     return {
         setters: [
@@ -6105,6 +6103,9 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             },
             function (layout_4_1) {
                 layout_4 = layout_4_1;
+            },
+            function (layout_5_1) {
+                layout_5 = layout_5_1;
             }
         ],
         execute: function () {
@@ -6115,10 +6116,13 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             isNew = false;
             isDirty = false;
             block_company = (item) => {
+                let isSupport = Perm.isSupport();
                 return `
     ${Theme.renderTextField(NS, "name", item.name, i18n("NAME"), 64, true)}
+${isSupport ? `
     ${Theme.renderTextField(NS, "features", item.features, i18n("FEATURES"), 2048)}
     ${Theme.renderCheckboxField(NS, "archive", item.archive, i18n("ARCHIVE"))}
+` : ``}
 `;
             };
             block_system = (item) => {
@@ -6311,7 +6315,7 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                 return `
 <div class="js-float-menu">
     <ul>
-        <li>${Theme.float_menu_button("Compte")}</li>
+        <li>${Theme.float_menu_button("Compagnie")}</li>
         <li>${Theme.float_menu_button("Paramètres système")}</li>
         <li>${Theme.float_menu_button("Personnalisation")}</li>
         <li>${Theme.float_menu_button("Acomba")}</li>
@@ -6328,7 +6332,7 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
 
 <div class="columns">
     <div class="column is-8 is-offset-3">
-        ${Theme.wrapFieldset("Compte", block_company(item))}
+        ${Theme.wrapFieldset("Compagnie", block_company(item))}
         ${Theme.wrapFieldset("Paramètres système", block_system(item))}
         ${Theme.wrapFieldset("Personnalisation", block_personnalisation(item))}
         ${Theme.wrapFieldset("Acomba", block_acomba(item))}
@@ -6349,9 +6353,10 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             pageTemplate = (item, form, tab, warning, dirty) => {
                 let canEdit = true;
                 let readonly = !canEdit;
-                let canInsert = canEdit && isNew; // && Perm.hasCompany_CanAddCompany;
-                let canDelete = canEdit && !canInsert; // && Perm.hasCompany_CanDeleteCompany;
-                let canAdd = canEdit && !canInsert; // && Perm.hasCompany_CanAddCompany;
+                let isSupport = Perm.isSupport();
+                let canInsert = isSupport && canEdit && isNew;
+                let canDelete = isSupport && canEdit && !canInsert;
+                let canAdd = isSupport && canEdit && !canInsert;
                 let canUpdate = canEdit && !isNew;
                 let buttons = [];
                 buttons.push(Theme.buttonCancel(NS));
@@ -6365,7 +6370,7 @@ System.register("src/admin/company", ["_BaseApp/src/core/app", "_BaseApp/src/cor
                     buttons.push(Theme.buttonUpdate(NS));
                 let actions = Theme.renderButtons(buttons);
                 let title = layout_4.buildTitle(xtra, !isNew ? i18n("company Details") : i18n("New company"));
-                let subtitle = layout_4.buildSubtitle(xtra, i18n("company subtitle"));
+                let subtitle = layout_4.buildSubtitle(xtra, i18n("Détails de la compagnie"));
                 return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -6416,8 +6421,26 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             exports_38("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
                 App.prepareRender(NS, i18n("company"));
+                layout_5.setOpenedMenu("Application-Configuration");
                 fetchState(cie)
                     .then(App.render)
+                    .then(_ => {
+                    let to = (params && params.length && params[0].startsWith("?to=") ? params[0].substr(4) : undefined);
+                    if (to != undefined) {
+                        let jumps = {
+                            "param": "Paramètres système",
+                            "perso": "Personnalisation",
+                            "acomba": "Acomba",
+                            "comptes": "Comptes/Fournisseurs",
+                            "taxe": "Taxe",
+                            "permis": "Permis",
+                            "print": "Paramètres imprimantes",
+                            "backup": "Backup",
+                            "profil": "Profil par défaut",
+                        };
+                        setTimeout(function () { Theme.scrollTo(jumps[to]); }, 0);
+                    }
+                })
                     .catch(App.render);
             });
             exports_38("render", render = () => {
@@ -6655,7 +6678,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 // File: lookup.ts
 System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/admin/layout"], function (exports_39, context_39) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_5, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, filter_parentgroupe, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_1, Lookup, layout_6, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, filter_parentgroupe, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
     var __moduleName = context_39 && context_39.id;
     return {
         setters: [
@@ -6683,8 +6706,8 @@ System.register("src/admin/lookups", ["_BaseApp/src/core/app", "_BaseApp/src/cor
             function (Lookup_3) {
                 Lookup = Lookup_3;
             },
-            function (layout_5_1) {
-                layout_5 = layout_5_1;
+            function (layout_6_1) {
+                layout_6 = layout_6_1;
             }
         ],
         execute: function () {
@@ -6835,8 +6858,8 @@ ${!readonly ? `
                 let readonly = false;
                 let buttons = [];
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_5.buildTitle(xtra, i18n("AAA: AAA"));
-                let subtitle = layout_5.buildSubtitle(xtra, i18n("List of Lookups"));
+                let title = layout_6.buildTitle(xtra, i18n("INVALID"));
+                let subtitle = layout_6.buildSubtitle(xtra, i18n("Liste des lookups"));
                 let table = `<div style="display: flex;">
     <div>${tableLeft}</div>
     <div style="width:calc(100% - 99px)">${tableRight}</div>
@@ -6849,7 +6872,7 @@ ${!readonly ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_5.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_6.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -6889,7 +6912,7 @@ ${!readonly ? `
             exports_39("fetch", fetch = (params) => {
                 let cie = Perm.getCie(params);
                 App.prepareRender(NS, i18n("lookup"));
-                layout_5.prepareMenu();
+                layout_6.prepareMenu();
                 fetchState(cie)
                     .then(App.render)
                     .catch(App.render);
@@ -6941,7 +6964,7 @@ ${!readonly ? `
                 const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
                 const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
                 const tableRight = tableTemplateRight(tbodyRight, state.pager);
-                const tab = layout_5.tabTemplate(key.cie, xtra);
+                const tab = layout_6.tabTemplate(key.cie, xtra);
                 const dirty = dirtyTemplate();
                 let warning = App.warningTemplate();
                 return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
@@ -7128,7 +7151,7 @@ ${!readonly ? `
 // File: lookup.ts
 System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/admin/layout"], function (exports_40, context_40) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_6, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, Perm, layout_7, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_40 && context_40.id;
     return {
         setters: [
@@ -7150,8 +7173,8 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
             function (Perm_6) {
                 Perm = Perm_6;
             },
-            function (layout_6_1) {
-                layout_6 = layout_6_1;
+            function (layout_7_1) {
+                layout_7 = layout_7_1;
             }
         ],
         execute: function () {
@@ -7194,8 +7217,8 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_6.buildTitle(xtra, !isNew ? i18n("lookup Details") : i18n("New lookup"));
-                let subtitle = layout_6.buildSubtitle(xtra, i18n("lookup subtitle"));
+                let title = layout_7.buildTitle(xtra, !isNew ? i18n("lookup Details") : i18n("New lookup"));
+                let subtitle = layout_7.buildSubtitle(xtra, i18n("lookup subtitle"));
                 return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -7204,7 +7227,7 @@ System.register("src/admin/lookup", ["_BaseApp/src/core/app", "_BaseApp/src/core
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_6.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_7.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -7246,7 +7269,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 let id = +params[0];
                 let groupe = (params.length > 1 ? params[1] : null);
                 App.prepareRender(NS, i18n("lookup"));
-                layout_6.prepareMenu();
+                layout_7.prepareMenu();
                 fetchState(id, groupe)
                     .then(App.render)
                     .catch(App.render);
@@ -7262,7 +7285,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 let lookup_cIE = Lookup.get_cIE(year);
                 let cie = Theme.renderOptions(lookup_cIE, state.cie, true);
                 const form = formTemplate(state, cie);
-                const tab = layout_6.tabTemplate(state.id, /*state.groupe.toLowerCase(),*/ null);
+                const tab = layout_7.tabTemplate(state.id, /*state.groupe.toLowerCase(),*/ null);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -7436,21 +7459,21 @@ System.register("src/admin/main", ["_BaseApp/src/core/router", "src/admin/accoun
 });
 System.register("src/support/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_42, context_42) {
     "use strict";
-    var App, layout_7, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var App, layout_8, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_42 && context_42.id;
     return {
         setters: [
             function (App_14) {
                 App = App_14;
             },
-            function (layout_7_1) {
-                layout_7 = layout_7_1;
+            function (layout_8_1) {
+                layout_8 = layout_8_1;
             }
         ],
         execute: function () {
-            exports_42("icon", icon = "far fa-user");
+            exports_42("icon", icon = "far fa-copyright");
             exports_42("prepareMenu", prepareMenu = () => {
-                layout_7.setOpenedMenu("Administration-Management");
+                layout_8.setOpenedMenu("Administration-Management");
             });
             exports_42("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isCompanys = App.inContext("App_companys");
@@ -7515,7 +7538,7 @@ ${isFile ? `
 // File: companys.ts
 System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/support/layout"], function (exports_43, context_43) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_8, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_9, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
     var __moduleName = context_43 && context_43.id;
     return {
         setters: [
@@ -7540,8 +7563,8 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (Lookup_5) {
                 Lookup = Lookup_5;
             },
-            function (layout_8_1) {
-                layout_8 = layout_8_1;
+            function (layout_9_1) {
+                layout_9 = layout_9_1;
             }
         ],
         execute: function () {
@@ -7591,8 +7614,8 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
                 let buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/admin/company/new", i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_8.buildTitle(xtra, i18n("companys title"));
-                let subtitle = layout_8.buildSubtitle(xtra, i18n("companys subtitle"));
+                let title = layout_9.buildTitle(xtra, i18n("Compagnies"));
+                let subtitle = layout_9.buildSubtitle(xtra, i18n("Liste des compagnies"));
                 return `
 <form onsubmit="return false;">
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -7601,7 +7624,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_8.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_9.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -7670,7 +7693,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
-                const tab = layout_8.tabTemplate(null, null);
+                const tab = layout_9.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
             exports_43("postRender", postRender = () => {
@@ -7716,7 +7739,7 @@ System.register("src/support/companys", ["_BaseApp/src/core/app", "_BaseApp/src/
 // File: network.ts
 System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/permission", "src/admin/layout"], function (exports_44, context_44) {
     "use strict";
-    var App, Router, Misc, Theme, Perm, layout_9, NS, key, state, fetchedState, isNew, isDirty, thKindTemplate, thRoleTemplate, trTemplate, tableTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, rowClick, cancel, create, save, dirtyExit;
+    var App, Router, Misc, Theme, Perm, layout_10, NS, key, state, fetchedState, isNew, isDirty, thKindTemplate, thRoleTemplate, trTemplate, tableTemplate, pageTemplate, dirtyTemplate, clearState, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, rowClick, cancel, create, save, dirtyExit;
     var __moduleName = context_44 && context_44.id;
     return {
         setters: [
@@ -7735,8 +7758,8 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (Perm_8) {
                 Perm = Perm_8;
             },
-            function (layout_9_1) {
-                layout_9 = layout_9_1;
+            function (layout_10_1) {
+                layout_10 = layout_10_1;
             }
         ],
         execute: function () {
@@ -7819,7 +7842,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_9.icon}"></i> <span>${Misc.toInputText(item.xtra && item.xtra.title)}</span></div>
+            <div class="title"><i class="${layout_10.icon}"></i> <span>${Misc.toInputText(item.xtra && item.xtra.title)}</span></div>
             <div class="subtitle">Editing Network Security</div>
         </div>
         <div>
@@ -7885,7 +7908,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
                 const tbody = state.items
                     .reduce((html, item) => html + item.item.reduce((html2, item2, index) => html2 + trTemplate(item, item2, index, masks, titles), ""), "");
                 const table = tableTemplate(thead1, thead2, tbody);
-                const tab = layout_9.tabTemplate(key.cie, null, isNew);
+                const tab = layout_10.tabTemplate(key.cie, null, isNew);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
                 return pageTemplate(state, table, tab, warning, dirty);
@@ -7980,7 +8003,7 @@ System.register("src/support/security", ["_BaseApp/src/core/app", "_BaseApp/src/
 // File: permmetas.ts
 System.register("src/support/permmetas", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/support/layout"], function (exports_45, context_45) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_2, Lookup, layout_10, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, filter_parentid, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_2, Lookup, layout_11, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_groupe, filter_parentid, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
     var __moduleName = context_45 && context_45.id;
     return {
         setters: [
@@ -8008,8 +8031,8 @@ System.register("src/support/permmetas", ["_BaseApp/src/core/app", "_BaseApp/src
             function (Lookup_6) {
                 Lookup = Lookup_6;
             },
-            function (layout_10_1) {
-                layout_10 = layout_10_1;
+            function (layout_11_1) {
+                layout_11 = layout_11_1;
             }
         ],
         execute: function () {
@@ -8151,8 +8174,8 @@ ${!readonly ? `
                 let readonly = false;
                 let buttons = [];
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_10.buildTitle(xtra, i18n("AAA: AAA"));
-                let subtitle = layout_10.buildSubtitle(xtra, i18n("AAA"));
+                let title = layout_11.buildTitle(xtra, i18n("Compagnies"));
+                let subtitle = layout_11.buildSubtitle(xtra, i18n("Liste des Permission Metadata"));
                 let table = `<div style="display: flex;">
     <div>${tableLeft}</div>
     <div style="width:calc(100% - 99px)">${tableRight}</div>
@@ -8165,7 +8188,7 @@ ${!readonly ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_10.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_11.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -8205,7 +8228,7 @@ ${!readonly ? `
             exports_45("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("permmeta"));
-                layout_10.prepareMenu();
+                //prepareMenu();
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
@@ -8257,7 +8280,7 @@ ${!readonly ? `
                 const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
                 const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
                 const tableRight = tableTemplateRight(tbodyRight, state.pager);
-                const tab = layout_10.tabTemplate(null, null);
+                const tab = layout_11.tabTemplate(null, null);
                 const dirty = dirtyTemplate();
                 let warning = App.warningTemplate();
                 return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
@@ -8440,7 +8463,7 @@ ${!readonly ? `
 // File: lookup.ts
 System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/support/layout"], function (exports_46, context_46) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_3, Lookup, layout_11, NS, table_id, blackList, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_cie, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_3, Lookup, layout_12, NS, table_id, blackList, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_cie, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
     var __moduleName = context_46 && context_46.id;
     return {
         setters: [
@@ -8468,8 +8491,8 @@ System.register("src/support/any-lookups", ["_BaseApp/src/core/app", "_BaseApp/s
             function (Lookup_7) {
                 Lookup = Lookup_7;
             },
-            function (layout_11_1) {
-                layout_11 = layout_11_1;
+            function (layout_12_1) {
+                layout_12 = layout_12_1;
             }
         ],
         execute: function () {
@@ -8619,8 +8642,8 @@ ${!readonly ? `
                 let readonly = false;
                 let buttons = [];
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_11.buildTitle(xtra, i18n("AAA: AAA"));
-                let subtitle = layout_11.buildSubtitle(xtra, i18n("AAA"));
+                let title = layout_12.buildTitle(xtra, i18n("Compagnies"));
+                let subtitle = layout_12.buildSubtitle(xtra, i18n("Liste des lookups"));
                 let table = `<div style="display: flex;">
     <div>${tableLeft}</div>
     <div style="width:calc(100% - 99px)">${tableRight}</div>
@@ -8633,7 +8656,7 @@ ${!readonly ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_11.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_12.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -8671,7 +8694,7 @@ ${!readonly ? `
             exports_46("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("lookup"));
-                layout_11.prepareMenu();
+                //prepareMenu();
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
@@ -8720,7 +8743,7 @@ ${!readonly ? `
                 const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
                 const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
                 const tableRight = tableTemplateRight(tbodyRight, state.pager);
-                const tab = layout_11.tabTemplate(null, null);
+                const tab = layout_12.tabTemplate(null, null);
                 const dirty = dirtyTemplate();
                 let warning = App.warningTemplate();
                 return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
@@ -8961,21 +8984,21 @@ System.register("src/support/main", ["_BaseApp/src/core/router", "src/support/co
 });
 System.register("src/christian/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_48, context_48) {
     "use strict";
-    var App, layout_12, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var App, layout_13, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_48 && context_48.id;
     return {
         setters: [
             function (App_19) {
                 App = App_19;
             },
-            function (layout_12_1) {
-                layout_12 = layout_12_1;
+            function (layout_13_1) {
+                layout_13 = layout_13_1;
             }
         ],
         execute: function () {
             exports_48("icon", icon = "far fa-user");
             exports_48("prepareMenu", prepareMenu = () => {
-                layout_12.setOpenedMenu("Christian");
+                layout_13.setOpenedMenu("Application-Support");
             });
             exports_48("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 var _a, _b, _c, _d;
@@ -9078,7 +9101,7 @@ ${isFile ? `
 // File: offices.ts
 System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/christian/layout"], function (exports_49, context_49) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, layout_13, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, layout_14, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
     var __moduleName = context_49 && context_49.id;
     return {
         setters: [
@@ -9100,8 +9123,8 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
             function (Pager_6) {
                 Pager = Pager_6;
             },
-            function (layout_13_1) {
-                layout_13 = layout_13_1;
+            function (layout_14_1) {
+                layout_14 = layout_14_1;
             }
         ],
         execute: function () {
@@ -9151,8 +9174,8 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
                 let buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, `#/office/new`, i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_13.buildTitle(xtra, i18n("offices title"));
-                let subtitle = layout_13.buildSubtitle(xtra, i18n("offices subtitle"));
+                let title = layout_14.buildTitle(xtra, i18n("offices title"));
+                let subtitle = layout_14.buildSubtitle(xtra, i18n("offices subtitle"));
                 return `
 <form onsubmit="return false;">
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -9161,7 +9184,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_13.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_14.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -9193,7 +9216,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
             exports_49("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("offices"));
-                layout_13.prepareMenu();
+                layout_14.prepareMenu();
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
@@ -9225,7 +9248,7 @@ System.register("src/christian/offices", ["_BaseApp/src/core/app", "_BaseApp/src
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
-                const tab = layout_13.tabTemplate(null, null);
+                const tab = layout_14.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
             exports_49("postRender", postRender = () => {
@@ -9517,7 +9540,7 @@ ${Theme.wrapContent("js-uc-list", table)}
 // File: office.ts
 System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "src/permission", "src/christian/layout", "src/christian/staffs_3"], function (exports_51, context_51) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_4, Perm, layout_14, inline_staffs_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, openedonCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, calendar_4, Perm, layout_15, inline_staffs_3, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, openedonCalendar, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_51 && context_51.id;
     return {
         setters: [
@@ -9539,8 +9562,8 @@ System.register("src/christian/office", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (Perm_13) {
                 Perm = Perm_13;
             },
-            function (layout_14_1) {
-                layout_14 = layout_14_1;
+            function (layout_15_1) {
+                layout_15 = layout_15_1;
             },
             function (inline_staffs_3_1) {
                 inline_staffs_3 = inline_staffs_3_1;
@@ -9587,8 +9610,8 @@ ${isNew ? `
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS, inline_dirty));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_14.buildTitle(xtra, !isNew ? i18n("office Details") : i18n("New office"));
-                let subtitle = layout_14.buildSubtitle(xtra, i18n("office subtitle"));
+                let title = layout_15.buildTitle(xtra, !isNew ? i18n("office Details") : i18n("New office"));
+                let subtitle = layout_15.buildSubtitle(xtra, i18n("office subtitle"));
                 return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -9597,7 +9620,7 @@ ${isNew ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_14.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_15.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -9639,7 +9662,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
             exports_51("fetch", fetch = (params) => {
                 let id = +params[0];
                 App.prepareRender(NS, i18n("office"));
-                layout_14.prepareMenu();
+                layout_15.prepareMenu();
                 fetchState(id)
                     .then(App.render)
                     .catch(App.render);
@@ -9656,7 +9679,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                     inline_staffs_3.preRender();
                 let staffs_3 = !isNew ? inline_staffs_3.render() : "";
                 const form = formTemplate(state, staffs_3);
-                const tab = layout_14.tabTemplate(state.id, xtra, isNew);
+                const tab = layout_15.tabTemplate(state.id, xtra, isNew);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -9760,7 +9783,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 // File: staffs.ts
 System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/christian/layout"], function (exports_52, context_52) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_15, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_jobid, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_16, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_jobid, gotoDetail;
     var __moduleName = context_52 && context_52.id;
     return {
         setters: [
@@ -9785,8 +9808,8 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
             function (Lookup_9) {
                 Lookup = Lookup_9;
             },
-            function (layout_15_1) {
-                layout_15 = layout_15_1;
+            function (layout_16_1) {
+                layout_16 = layout_16_1;
             }
         ],
         execute: function () {
@@ -9841,8 +9864,8 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                 let buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, `#/staff/new/${key.officeid}`, i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_15.buildTitle(xtra, i18n("staffs title"));
-                let subtitle = layout_15.buildSubtitle(xtra, i18n("staffs subtitle"));
+                let title = layout_16.buildTitle(xtra, i18n("staffs title"));
+                let subtitle = layout_16.buildSubtitle(xtra, i18n("staffs subtitle"));
                 return `
 <form onsubmit="return false;">
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -9851,7 +9874,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_15.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_16.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -9885,7 +9908,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
             exports_52("fetch", fetch = (params) => {
                 let officeid = +params[0];
                 App.prepareRender(NS, i18n("staffs"));
-                layout_15.prepareMenu();
+                //prepareMenu();
                 fetchState(officeid)
                     .then(App.render)
                     .catch(App.render);
@@ -9919,7 +9942,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
-                const tab = layout_15.tabTemplate(key.officeid, xtra);
+                const tab = layout_16.tabTemplate(key.officeid, xtra);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
             exports_52("postRender", postRender = () => {
@@ -9974,7 +9997,7 @@ System.register("src/christian/staffs", ["_BaseApp/src/core/app", "_BaseApp/src/
 // File: staff.ts
 System.register("src/christian/staff", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/permission", "src/christian/layout"], function (exports_53, context_53) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, Perm, layout_16, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, Perm, layout_17, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_53 && context_53.id;
     return {
         setters: [
@@ -9996,8 +10019,8 @@ System.register("src/christian/staff", ["_BaseApp/src/core/app", "_BaseApp/src/c
             function (Perm_15) {
                 Perm = Perm_15;
             },
-            function (layout_16_1) {
-                layout_16 = layout_16_1;
+            function (layout_17_1) {
+                layout_17 = layout_17_1;
             }
         ],
         execute: function () {
@@ -10038,8 +10061,8 @@ ${isNew ? `
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_16.buildTitle(xtra, !isNew ? i18n("staff Details") : i18n("New staff"));
-                let subtitle = layout_16.buildSubtitle(xtra, `${i18n("Editing staff")}: <span>${item.firstname}</span>`);
+                let title = layout_17.buildTitle(xtra, !isNew ? i18n("staff Details") : i18n("New staff"));
+                let subtitle = layout_17.buildSubtitle(xtra, `${i18n("Editing staff")}: <span>${item.firstname}</span>`);
                 return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -10048,7 +10071,7 @@ ${isNew ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_16.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_17.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -10090,7 +10113,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 let id = +params[0];
                 let officeid = +params[1];
                 App.prepareRender(NS, i18n("staff"));
-                layout_16.prepareMenu();
+                layout_17.prepareMenu();
                 fetchState(id, officeid)
                     .then(App.render)
                     .catch(App.render);
@@ -10106,7 +10129,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 let lookup_job = Lookup.get_job(year);
                 let jobid = Theme.renderOptions(lookup_job, state.jobid, true);
                 const form = formTemplate(state, jobid);
-                const tab = layout_16.tabTemplate(state.officeid, xtra, isNew);
+                const tab = layout_17.tabTemplate(state.officeid, xtra, isNew);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -10202,21 +10225,21 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 });
 System.register("src/christian/layout_2", ["_BaseApp/src/core/app", "src/layout"], function (exports_54, context_54) {
     "use strict";
-    var App, layout_17, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var App, layout_18, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_54 && context_54.id;
     return {
         setters: [
             function (App_25) {
                 App = App_25;
             },
-            function (layout_17_1) {
-                layout_17 = layout_17_1;
+            function (layout_18_1) {
+                layout_18 = layout_18_1;
             }
         ],
         execute: function () {
             exports_54("icon", icon = "far fa-user");
             exports_54("prepareMenu", prepareMenu = () => {
-                layout_17.setOpenedMenu("Christian");
+                layout_18.setOpenedMenu("Application-Support");
             });
             exports_54("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 var _a, _b;
@@ -10755,7 +10778,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
 // File: staff.ts
 System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "_BaseApp/src/theme/calendar", "src/admin/lookupdata", "src/christian/layout"], function (exports_57, context_57) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, calendar_5, Lookup, layout_18, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_jobid, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
+    var App, Router, Perm, Misc, Theme, Pager, calendar_5, Lookup, layout_19, NS, table_id, blackList, key, state, fetchedState, xtra, isNew, isDirty, filterTemplate, trTemplateLeft, trTemplateRight, tableTemplateLeft, tableTemplateRight, pageTemplate, dirtyTemplate, fetchState, fetch, refresh, render, postRender, inContext, goto, sortBy, search, filter_jobid, getFormState, valid, html5Valid, onchange, ondate, undo, addNew, create, save, selectfordrop, drop, hasChanges, dirtyExit, clearFilterPlus, addFilterPlus, removeFilterPlus;
     var __moduleName = context_57 && context_57.id;
     return {
         setters: [
@@ -10783,8 +10806,8 @@ System.register("src/christian/staffs_4", ["_BaseApp/src/core/app", "_BaseApp/sr
             function (Lookup_13) {
                 Lookup = Lookup_13;
             },
-            function (layout_18_1) {
-                layout_18 = layout_18_1;
+            function (layout_19_1) {
+                layout_19 = layout_19_1;
             }
         ],
         execute: function () {
@@ -10916,8 +10939,8 @@ ${!readonly ? `
                 let readonly = false;
                 let buttons = [];
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_18.buildTitle(xtra, i18n("AAA: AAA"));
-                let subtitle = layout_18.buildSubtitle(xtra, i18n("AAA"));
+                let title = layout_19.buildTitle(xtra, i18n("INVALID"));
+                let subtitle = layout_19.buildSubtitle(xtra, i18n("staffs_4 subtitle"));
                 let table = `<div style="display: flex;">
     <div>${tableLeft}</div>
     <div style="width:calc(100% - 99px)">${tableRight}</div>
@@ -10930,7 +10953,7 @@ ${!readonly ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_18.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_19.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -10970,7 +10993,7 @@ ${!readonly ? `
             exports_57("fetch", fetch = (params) => {
                 let officeid = +params[0];
                 App.prepareRender(NS, i18n("staff"));
-                layout_18.prepareMenu();
+                layout_19.prepareMenu();
                 fetchState(officeid)
                     .then(App.render)
                     .catch(App.render);
@@ -11019,7 +11042,7 @@ ${!readonly ? `
                 const pager = Pager.render(state.pager, NS, [10, 20, 50], search, filter);
                 const tableLeft = tableTemplateLeft(tbodyLeft, editId, deleteId);
                 const tableRight = tableTemplateRight(tbodyRight, state.pager);
-                const tab = layout_18.tabTemplate(key.officeid, xtra);
+                const tab = layout_19.tabTemplate(key.officeid, xtra);
                 const dirty = dirtyTemplate();
                 let warning = App.warningTemplate();
                 return pageTemplate(xtra, pager, tableLeft, tableRight, tab, dirty, warning);
@@ -11734,21 +11757,21 @@ System.register("src/christian/main", ["_BaseApp/src/core/router", "src/christia
 });
 System.register("src/fournisseur/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_61, context_61) {
     "use strict";
-    var App, layout_19, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var App, layout_20, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_61 && context_61.id;
     return {
         setters: [
             function (App_31) {
                 App = App_31;
             },
-            function (layout_19_1) {
-                layout_19 = layout_19_1;
+            function (layout_20_1) {
+                layout_20 = layout_20_1;
             }
         ],
         execute: function () {
             exports_61("icon", icon = "far fa-user");
             exports_61("prepareMenu", prepareMenu = () => {
-                layout_19.setOpenedMenu("Fournisseur-Propriétaires");
+                layout_20.setOpenedMenu("Fournisseur-Propriétaires");
             });
             exports_61("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isProprietaires = App.inContext("App_proprietaires");
@@ -11810,7 +11833,7 @@ ${showFile ? `
 // File: proprietaires.ts
 System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/fournisseur/layout"], function (exports_62, context_62) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_20, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_21, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, filter_nom, gotoDetail;
     var __moduleName = context_62 && context_62.id;
     return {
         setters: [
@@ -11835,8 +11858,8 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
             function (Lookup_16) {
                 Lookup = Lookup_16;
             },
-            function (layout_20_1) {
-                layout_20 = layout_20_1;
+            function (layout_21_1) {
+                layout_21 = layout_21_1;
             }
         ],
         execute: function () {
@@ -11998,8 +12021,8 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 let buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/proprietaire/new", i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_20.buildTitle(xtra, i18n("fournisseurs title"));
-                let subtitle = layout_20.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
+                let title = layout_21.buildTitle(xtra, i18n("fournisseurs title"));
+                let subtitle = layout_21.buildSubtitle(xtra, i18n("fournisseurs subtitle"));
                 return `
 <form onsubmit="return false;">
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -12008,7 +12031,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_20.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_21.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -12073,7 +12096,7 @@ System.register("src/fournisseur/proprietaires", ["_BaseApp/src/core/app", "_Bas
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
-                const tab = layout_20.tabTemplate(null, null);
+                const tab = layout_21.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
             exports_62("postRender", postRender = () => {
@@ -12462,7 +12485,7 @@ ${Theme.wrapContent("js-uc-list", table)}
 // File: proprietaire.ts
 System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "src/admin/lookupdata", "src/fournisseur/layout", "src/fournisseur/lots2"], function (exports_64, context_64) {
     "use strict";
-    var App, Router, Misc, Theme, Lookup, layout_21, app_inline2, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, block_address, block_telephone, block_ciel, block_internet, block_autres, block_depotdirect, block_representant, block_camions, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, Lookup, layout_22, app_inline2, NS, blackList, key, state, xtra, fetchedState, isNew, isDirty, block_address, block_telephone, block_ciel, block_internet, block_autres, block_depotdirect, block_representant, block_camions, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_64 && context_64.id;
     return {
         setters: [
@@ -12481,8 +12504,8 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
             function (Lookup_18) {
                 Lookup = Lookup_18;
             },
-            function (layout_21_1) {
-                layout_21 = layout_21_1;
+            function (layout_22_1) {
+                layout_22 = layout_22_1;
             },
             function (app_inline2_1) {
                 app_inline2 = app_inline2_1;
@@ -12651,8 +12674,8 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS, inline2_dirty));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_21.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
-                let subtitle = layout_21.buildSubtitle(xtra, i18n("fournisseur subtitle"));
+                let title = layout_22.buildTitle(xtra, !isNew ? i18n("fournisseur Details") : i18n("New fournisseur"));
+                let subtitle = layout_22.buildSubtitle(xtra, i18n("fournisseur subtitle"));
                 return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -12661,7 +12684,7 @@ System.register("src/fournisseur/proprietaire", ["_BaseApp/src/core/app", "_Base
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_21.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_22.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -12723,7 +12746,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 app_inline2.preRender();
                 let inline2 = app_inline2.render();
                 const form = formTemplate(state, paysid, institutionbanquaireid, inline2);
-                const tab = layout_21.tabTemplate(state.id, xtra, isNew);
+                const tab = layout_22.tabTemplate(state.id, xtra, isNew);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);
@@ -12926,21 +12949,21 @@ System.register("src/fournisseur/main", ["_BaseApp/src/core/router", "src/fourni
 });
 System.register("src/territoire/layout", ["_BaseApp/src/core/app", "src/layout"], function (exports_66, context_66) {
     "use strict";
-    var App, layout_22, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
+    var App, layout_23, icon, prepareMenu, tabTemplate, buildTitle, buildSubtitle;
     var __moduleName = context_66 && context_66.id;
     return {
         setters: [
             function (App_35) {
                 App = App_35;
             },
-            function (layout_22_1) {
-                layout_22 = layout_22_1;
+            function (layout_23_1) {
+                layout_23 = layout_23_1;
             }
         ],
         execute: function () {
             exports_66("icon", icon = "far fa-user");
             exports_66("prepareMenu", prepareMenu = () => {
-                layout_22.setOpenedMenu("Territoire-Lots");
+                layout_23.setOpenedMenu("Territoire-Lots");
             });
             exports_66("tabTemplate", tabTemplate = (id, xtra, isNew = false) => {
                 let isLots = App.inContext("App_lots");
@@ -13002,7 +13025,7 @@ ${showFile ? `
 // File: lots.ts
 System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "src/permission", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/pager", "src/admin/lookupdata", "src/territoire/layout"], function (exports_67, context_67) {
     "use strict";
-    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_23, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
+    var App, Router, Perm, Misc, Theme, Pager, Lookup, layout_24, NS, key, state, xtra, uiSelectedRow, filterTemplate, trTemplate, tableTemplate, pageTemplate, fetchState, fetch, refresh, render, postRender, inContext, setSelectedRow, isSelectedRow, goto, sortBy, search, gotoDetail;
     var __moduleName = context_67 && context_67.id;
     return {
         setters: [
@@ -13027,8 +13050,8 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
             function (Lookup_19) {
                 Lookup = Lookup_19;
             },
-            function (layout_23_1) {
-                layout_23 = layout_23_1;
+            function (layout_24_1) {
+                layout_24 = layout_24_1;
             }
         ],
         execute: function () {
@@ -13121,8 +13144,8 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                 let buttons = [];
                 buttons.push(Theme.buttonAddNew(NS, "#/lot/new", i18n("Add New")));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_23.buildTitle(xtra, i18n("lots title"));
-                let subtitle = layout_23.buildSubtitle(xtra, i18n("lots subtitle"));
+                let title = layout_24.buildTitle(xtra, i18n("lots title"));
+                let subtitle = layout_24.buildSubtitle(xtra, i18n("lots subtitle"));
                 return `
 <form onsubmit="return false;">
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -13131,7 +13154,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_23.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_24.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -13200,7 +13223,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
                 const search = Pager.searchTemplate(state.pager, NS);
                 const pager = Pager.render(state.pager, NS, [20, 50], search, filter);
                 const table = tableTemplate(tbody, state.pager);
-                const tab = layout_23.tabTemplate(null, null);
+                const tab = layout_24.tabTemplate(null, null);
                 return pageTemplate(pager, table, tab, dirty, warning);
             });
             exports_67("postRender", postRender = () => {
@@ -13246,7 +13269,7 @@ System.register("src/territoire/lots", ["_BaseApp/src/core/app", "_BaseApp/src/c
 // File: lot.ts
 System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/core/router", "_BaseApp/src/lib-ts/misc", "_BaseApp/src/theme/theme", "_BaseApp/src/theme/calendar", "_BaseApp/src/theme/autocomplete", "src/admin/lookupdata", "src/permission", "src/territoire/layout"], function (exports_68, context_68) {
     "use strict";
-    var App, Router, Misc, Theme, calendar_6, autocomplete_1, Lookup, Perm, layout_24, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
+    var App, Router, Misc, Theme, calendar_6, autocomplete_1, Lookup, Perm, layout_25, NS, blackList, key, state, fetchedState, xtra, isNew, isDirty, contingent_dateCalendar, droit_coupe_dateCalendar, entente_paiement_dateCalendar, state_proprietaireid, proprietaireidAutocomplete, formTemplate, pageTemplate, dirtyTemplate, fetchState, fetch, render, postRender, inContext, getFormState, valid, html5Valid, oncalendar, onautocomplete, onchange, cancel, create, save, drop, dirtyExit;
     var __moduleName = context_68 && context_68.id;
     return {
         setters: [
@@ -13274,8 +13297,8 @@ System.register("src/territoire/lot", ["_BaseApp/src/core/app", "_BaseApp/src/co
             function (Perm_24) {
                 Perm = Perm_24;
             },
-            function (layout_24_1) {
-                layout_24 = layout_24_1;
+            function (layout_25_1) {
+                layout_25 = layout_25_1;
             }
         ],
         execute: function () {
@@ -13354,8 +13377,8 @@ ${isNew ? `
                 if (canUpdate)
                     buttons.push(Theme.buttonUpdate(NS));
                 let actions = Theme.renderButtons(buttons);
-                let title = layout_24.buildTitle(xtra, !isNew ? i18n("lot Details") : i18n("New lot"));
-                let subtitle = layout_24.buildSubtitle(xtra, i18n("lot subtitle"));
+                let title = layout_25.buildTitle(xtra, !isNew ? i18n("lot Details") : i18n("New lot"));
+                let subtitle = layout_25.buildSubtitle(xtra, i18n("lot subtitle"));
                 return `
 <form onsubmit="return false;" ${readonly ? "class='js-readonly'" : ""}>
 <input type="submit" style="display:none;" id="${NS}_dummy_submit">
@@ -13364,7 +13387,7 @@ ${isNew ? `
 <div class="js-head">
     <div class="content js-uc-heading js-flex-space">
         <div>
-            <div class="title"><i class="${layout_24.icon}"></i> <span>${title}</span></div>
+            <div class="title"><i class="${layout_25.icon}"></i> <span>${title}</span></div>
             <div class="subtitle">${subtitle}</div>
         </div>
         <div>
@@ -13437,7 +13460,7 @@ ${Theme.renderModalDelete(`modalDelete_${NS}`, `${NS}.drop()`)}
                 let entente_paiementid = Theme.renderOptions(lookup_entente_paiement, state.entente_paiementid, true);
                 proprietaireidAutocomplete.pagedList = state_proprietaireid;
                 const form = formTemplate(state, cantonid, municipaliteid, proprietaireidAutocomplete, contingentid, droit_coupeid, entente_paiementid);
-                const tab = layout_24.tabTemplate(state.id, xtra, isNew);
+                const tab = layout_25.tabTemplate(state.id, xtra, isNew);
                 const dirty = dirtyTemplate();
                 const warning = App.warningTemplate();
                 return pageTemplate(state, form, tab, warning, dirty);

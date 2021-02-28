@@ -17,7 +17,7 @@ export interface ISummary {
 export let icon = "far fa-user";
 
 export const prepareMenu = () => {
-    setOpenedMenu("Christian");
+    setOpenedMenu("Application-Support");
 }
 
 export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {

@@ -185,8 +185,8 @@ const pageTemplate = (xtra, pager: string, tableLeft: string, tableRight: string
     let buttons: string[] = [];
     let actions = Theme.renderButtons(buttons);
 
-    let title = buildTitle(xtra, i18n("AAA: AAA"));
-    let subtitle = buildSubtitle(xtra, i18n("AAA"));
+    let title = buildTitle(xtra, i18n("INVALID"));
+    let subtitle = buildSubtitle(xtra, i18n("staffs_4 subtitle"));
 
     let table = `<div style="display: flex;">
     <div>${tableLeft}</div>

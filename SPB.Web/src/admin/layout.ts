@@ -13,10 +13,10 @@ export interface ISummary {
     fileCount: number
 }
 
-export let icon = "far fa-user";
+export let icon = "far fa-copyright";
 
 export const prepareMenu = () => {
-    setOpenedMenu("Administration-Management");
+    setOpenedMenu("Application-Gestion");
 }
 
 export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) => {
@@ -39,20 +39,20 @@ export const tabTemplate = (id: number, xtra: ISummary, isNew: boolean = false) 
         <li ${isCompany ? "class='is-active'" : ""}>
             <a href="#/admin/company">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Company Details")}</span>
+                <span>${i18n("Details de la compagnie")}</span>
             </a>
         </li>
         <li ${isAccounts ? "class='is-active'" : ""}>
             <a href="#/admin/accounts">
                 <span class="icon"><i class="fas fa-list-ol" aria-hidden="true"></i></span>
-                <span>${i18n("Accounts")}</span>
+                <span>${i18n("Comptes")}</span>
             </a>
         </li>
 ${isAccount ? `
         <li class="is-active">
             <a href="#/admin/account/${id}">
-                <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Account Details")}</span>
+                <span class="icon"><i class="fal fa-user" aria-hidden="true"></i></span>
+                <span>${i18n("Details du compte")}</span>
             </a>
         </li>
 ` : ``}
@@ -67,7 +67,7 @@ ${isLookup ? `
         <li class="is-active">
             <a href="#/admin/lookup/${id}">
                 <span class="icon"><i class="${icon}" aria-hidden="true"></i></span>
-                <span>${i18n("Entry Details")}</span>
+                <span>${i18n("Details du lookup")}</span>
             </a>
         </li>
 ` : ``}
